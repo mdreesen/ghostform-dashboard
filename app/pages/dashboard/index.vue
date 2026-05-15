@@ -13,6 +13,12 @@ useHead({
 const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
 const { data: status } = useNuxtData('status');
+
+const cardData = [
+  { title: 'Total Intake', value: `${leads.value?.length ?? 0}` },
+  { title: 'Active Leads', value: `${status.value?.allStatus?.active?.length}` },
+  { title: 'New Leads', value: `${status.value?.allStatus?.new?.length}` }
+]
 </script>
 
 <template>
@@ -48,8 +54,8 @@ const { data: status } = useNuxtData('status');
 
       <section class="flex flex-wrap justify-between gap-6 mb-12">
         <template 
-          v-for="(val, label) in { 'Total Intake': leads?.length ?? 0, 'Active Leads': `${status?.allStatus?.active?.length}`, 'New Leads': `${status?.allStatus?.new?.length}` }">
-          <baseCard :label="label" :value="val" />
+          v-for="data in cardData">
+          <baseCard :label="data.title" :value="data.value" />
         </template>
       </section>
 

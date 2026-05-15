@@ -1,4 +1,4 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { toRef as toRef$1, inject, computed, shallowRef, defineComponent, useSlots, ref, mergeProps, unref, withCtx, renderSlot, openBlock, createBlock, createCommentVNode, toDisplayString, createVNode, toValue, resolveDynamicComponent, h, watch, provide, Teleport, getCurrentInstance, camelize as camelize$1, hasInjectionContext, cloneVNode, createElementBlock, getCurrentScope, onScopeDispose, nextTick, effectScope, toHandlerKey, toRefs, useAttrs, isRef, Comment, useModel, createTextVNode, mergeModels, reactive, onServerPrefetch, resolveComponent, Fragment, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, customRef, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, watchEffect, normalizeStyle, markRaw, shallowReadonly, isReadonly, isShallow, isReactive } from 'vue';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { toRef as toRef$1, inject, computed, shallowRef, defineComponent, useSlots, ref, mergeProps, unref, withCtx, renderSlot, openBlock, createBlock, createCommentVNode, toDisplayString, createVNode, toValue, resolveDynamicComponent, h, watch, provide, Teleport, getCurrentInstance, camelize as camelize$1, hasInjectionContext, cloneVNode, createElementBlock, getCurrentScope, onScopeDispose, nextTick, effectScope, toHandlerKey, toRefs, isRef, Comment, useModel, createTextVNode, mergeModels, reactive, onServerPrefetch, useAttrs, resolveComponent, Fragment, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, customRef, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, watchEffect, normalizeStyle, markRaw, shallowReadonly, isReadonly, isShallow, isReactive } from 'vue';
 import { v as serialize, w as klona, x as defu, y as hasProtocol, z as isScriptProtocol, q as joinURL, A as defuFn, B as parseQuery, C as appendResponseHeader, D as withQuery, E as sanitizeStatusCode, F as parseURL, G as encodePath, H as decodePath, I as isEqual, J as getContext, K as withTrailingSlash, L as withoutTrailingSlash, M as withLeadingSlash, c as createError$1, $ as $fetch$1, N as baseURL, O as hash, P as createHooks, Q as encodeParam, R as executeAsync } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { Icon, getIcon, loadIcon as loadIcon$1, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
@@ -564,7 +564,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-yBlB2RHa.mjs')
+    component: () => import('./index-DRbe-5ol.mjs')
   },
   {
     name: "forgotpassword",
@@ -741,6 +741,125 @@ const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to, from) => {
   });
   return error;
 });
+const useStateKeyPrefix = "$s";
+function useState(...args) {
+  const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
+  if (typeof args[0] !== "string") {
+    args.unshift(autoKey);
+  }
+  const [_key, init] = args;
+  if (!_key || typeof _key !== "string") {
+    throw new TypeError("[nuxt] [useState] key must be a string: " + _key);
+  }
+  if (init !== void 0 && typeof init !== "function") {
+    throw new Error("[nuxt] [useState] init must be a function: " + init);
+  }
+  const key = useStateKeyPrefix + _key;
+  const nuxtApp = useNuxtApp();
+  const state = toRef$1(nuxtApp.payload.state, key);
+  if (init) {
+    nuxtApp._state[key] ??= { _default: init };
+  }
+  if (state.value === void 0 && init) {
+    const initialValue = init();
+    if (isRef(initialValue)) {
+      nuxtApp.payload.state[key] = initialValue;
+      return initialValue;
+    }
+    state.value = initialValue;
+  }
+  return state;
+}
+function injectHead(nuxtApp) {
+  const nuxt = nuxtApp || useNuxtApp();
+  return nuxt.ssrContext?.head || nuxt.runWithContext(() => {
+    if (hasInjectionContext()) {
+      const head = inject(headSymbol);
+      if (!head) {
+        throw new Error("[nuxt] [unhead] Missing Unhead instance.");
+      }
+      return head;
+    }
+  });
+}
+function useHead(input, options = {}) {
+  const head = options.head || injectHead(options.nuxt);
+  return useHead$1(input, { head, ...options });
+}
+function useSeoMeta(input, options = {}) {
+  const head = options.head || injectHead(options.nuxt);
+  return useSeoMeta$1(input, { head, ...options });
+}
+function useRequestEvent(nuxtApp) {
+  nuxtApp ||= useNuxtApp();
+  return nuxtApp.ssrContext?.event;
+}
+function useRequestFetch() {
+  return useRequestEvent()?.$fetch || globalThis.$fetch;
+}
+function useUserSession() {
+  const serverEvent = useRequestEvent();
+  const sessionState = useState("nuxt-session", () => null);
+  const authReadyState = useState("nuxt-auth-ready", () => false);
+  const clear = async () => {
+    await useRequestFetch()("/api/_auth/session", {
+      method: "DELETE",
+      onResponse({ response: { headers } }) {
+        if (serverEvent) {
+          for (const setCookie of headers.getSetCookie()) {
+            appendResponseHeader(serverEvent, "Set-Cookie", setCookie);
+          }
+        }
+      }
+    });
+    sessionState.value = null;
+  };
+  const fetch2 = async () => {
+    sessionState.value = await useRequestFetch()("/api/_auth/session", {
+      headers: {
+        accept: "application/json"
+      },
+      retry: false
+    }).catch(() => null);
+    if (!authReadyState.value) {
+      authReadyState.value = true;
+    }
+  };
+  const popupListener = (e) => {
+    if (e.key === "temp-nuxt-auth-utils-popup") {
+      fetch2();
+      (void 0).removeEventListener("storage", popupListener);
+    }
+  };
+  const openInPopup = (route, size = {}) => {
+    localStorage.setItem("temp-nuxt-auth-utils-popup", "true");
+    const width = size.width ?? 960;
+    const height = size.height ?? 600;
+    const top = ((void 0).top?.outerHeight ?? 0) / 2 + ((void 0).top?.screenY ?? 0) - height / 2;
+    const left = ((void 0).top?.outerWidth ?? 0) / 2 + ((void 0).top?.screenX ?? 0) - width / 2;
+    (void 0).open(
+      route,
+      "nuxt-auth-utils-popup",
+      `width=${width}, height=${height}, top=${top}, left=${left}, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no`
+    );
+    (void 0).addEventListener("storage", popupListener);
+  };
+  return {
+    ready: computed(() => authReadyState.value),
+    loggedIn: computed(() => Boolean(sessionState.value?.user)),
+    user: computed(() => sessionState.value?.user || null),
+    session: sessionState,
+    fetch: fetch2,
+    openInPopup,
+    clear
+  };
+}
+const auth_45global = /* @__PURE__ */ defineNuxtRouteMiddleware((to, from) => {
+  const { loggedIn } = useUserSession();
+  if (!loggedIn.value || to.path === "/") {
+    return navigateTo("/login");
+  }
+});
 const manifest_45route_45rule = /* @__PURE__ */ defineNuxtRouteMiddleware((to) => {
   {
     return;
@@ -748,11 +867,10 @@ const manifest_45route_45rule = /* @__PURE__ */ defineNuxtRouteMiddleware((to) =
 });
 const globalMiddleware = [
   validate,
+  auth_45global,
   manifest_45route_45rule
 ];
-const namedMiddleware = {
-  auth: () => import('./auth-DIxQ9sm4.mjs')
-};
+const namedMiddleware = {};
 const plugin = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:router",
   enforce: "pre",
@@ -951,119 +1069,6 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     return { provide: { router } };
   }
 });
-function injectHead(nuxtApp) {
-  const nuxt = nuxtApp || useNuxtApp();
-  return nuxt.ssrContext?.head || nuxt.runWithContext(() => {
-    if (hasInjectionContext()) {
-      const head = inject(headSymbol);
-      if (!head) {
-        throw new Error("[nuxt] [unhead] Missing Unhead instance.");
-      }
-      return head;
-    }
-  });
-}
-function useHead(input, options = {}) {
-  const head = options.head || injectHead(options.nuxt);
-  return useHead$1(input, { head, ...options });
-}
-function useSeoMeta(input, options = {}) {
-  const head = options.head || injectHead(options.nuxt);
-  return useSeoMeta$1(input, { head, ...options });
-}
-function useRequestEvent(nuxtApp) {
-  nuxtApp ||= useNuxtApp();
-  return nuxtApp.ssrContext?.event;
-}
-function useRequestFetch() {
-  return useRequestEvent()?.$fetch || globalThis.$fetch;
-}
-const useStateKeyPrefix = "$s";
-function useState(...args) {
-  const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
-  if (typeof args[0] !== "string") {
-    args.unshift(autoKey);
-  }
-  const [_key, init] = args;
-  if (!_key || typeof _key !== "string") {
-    throw new TypeError("[nuxt] [useState] key must be a string: " + _key);
-  }
-  if (init !== void 0 && typeof init !== "function") {
-    throw new Error("[nuxt] [useState] init must be a function: " + init);
-  }
-  const key = useStateKeyPrefix + _key;
-  const nuxtApp = useNuxtApp();
-  const state = toRef$1(nuxtApp.payload.state, key);
-  if (init) {
-    nuxtApp._state[key] ??= { _default: init };
-  }
-  if (state.value === void 0 && init) {
-    const initialValue = init();
-    if (isRef(initialValue)) {
-      nuxtApp.payload.state[key] = initialValue;
-      return initialValue;
-    }
-    state.value = initialValue;
-  }
-  return state;
-}
-function useUserSession() {
-  const serverEvent = useRequestEvent();
-  const sessionState = useState("nuxt-session", () => null);
-  const authReadyState = useState("nuxt-auth-ready", () => false);
-  const clear = async () => {
-    await useRequestFetch()("/api/_auth/session", {
-      method: "DELETE",
-      onResponse({ response: { headers } }) {
-        if (serverEvent) {
-          for (const setCookie of headers.getSetCookie()) {
-            appendResponseHeader(serverEvent, "Set-Cookie", setCookie);
-          }
-        }
-      }
-    });
-    sessionState.value = null;
-  };
-  const fetch2 = async () => {
-    sessionState.value = await useRequestFetch()("/api/_auth/session", {
-      headers: {
-        accept: "application/json"
-      },
-      retry: false
-    }).catch(() => null);
-    if (!authReadyState.value) {
-      authReadyState.value = true;
-    }
-  };
-  const popupListener = (e) => {
-    if (e.key === "temp-nuxt-auth-utils-popup") {
-      fetch2();
-      (void 0).removeEventListener("storage", popupListener);
-    }
-  };
-  const openInPopup = (route, size = {}) => {
-    localStorage.setItem("temp-nuxt-auth-utils-popup", "true");
-    const width = size.width ?? 960;
-    const height = size.height ?? 600;
-    const top = ((void 0).top?.outerHeight ?? 0) / 2 + ((void 0).top?.screenY ?? 0) - height / 2;
-    const left = ((void 0).top?.outerWidth ?? 0) / 2 + ((void 0).top?.screenX ?? 0) - width / 2;
-    (void 0).open(
-      route,
-      "nuxt-auth-utils-popup",
-      `width=${width}, height=${height}, top=${top}, left=${left}, toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no`
-    );
-    (void 0).addEventListener("storage", popupListener);
-  };
-  return {
-    ready: computed(() => authReadyState.value),
-    loggedIn: computed(() => Boolean(sessionState.value?.user)),
-    user: computed(() => sessionState.value?.user || null),
-    session: sessionState,
-    fetch: fetch2,
-    openInPopup,
-    clear
-  };
-}
 const session_server_fi7D7q_WjeXZl2Hh05GOWPuIxZQWSnpY3ifY_sSGHJo = /* @__PURE__ */ defineNuxtPlugin({
   name: "session-fetch-plugin",
   enforce: "pre",
@@ -1444,7 +1449,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // For type portability
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
-const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-Bkr-xIoD.mjs').then((r) => r["default"] || r.default || r));
+const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-CSwHATsT.mjs').then((r) => r["default"] || r.default || r));
 const LazyIcon = defineAsyncComponent(() => Promise.resolve().then(() => index).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
   ["ToastContainer", LazyToastContainer],
@@ -10158,7 +10163,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-1OHOrpv4.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-C9sIsGtO.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-CzCAA_Gf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-ChLjqg4G.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))
@@ -10578,5 +10583,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { __nuxt_component_1$1 as $, AUTOFOCUS_ON_MOUNT as A, useLocale as B, useAppConfig as C, useComponentUI as D, EVENT_OPTIONS as E, useForwardPropsEmits as F, reactivePick as G, usePortal as H, createReusableTemplate as I, tv as J, _sfc_main$8 as K, useRuntimeConfig as L, useFieldGroup as M, useComponentIcons as N, _sfc_main$e as O, Primitive as P, _sfc_main$b as Q, useFormField as R, looseToNumber as S, Teleport_default as T, createRef as U, VisuallyHidden_default as V, useForwardProps as W, useMotion as X, defineNuxtRouteMiddleware as Y, __nuxt_component_0$1 as Z, __nuxt_component_0$2 as _, useRoute as a, useFetch as b, __nuxt_component_3$1 as c, useNuxtData as d, entry_default as default, useUserSession as e, createSharedComposable as f, unrefElement as g, useVModel as h, injectConfigProviderContext as i, createContext as j, useForwardExpose as k, isNullish as l, createGlobalState as m, navigateTo as n, onKeyStroke as o, getActiveElement as p, focusFirst as q, refreshNuxtData as r, getTabbableCandidates as s, tryOnBeforeUnmount as t, useHead as u, focus as v, AUTOFOCUS_ON_UNMOUNT as w, getTabbableEdges as x, useEmitAsProps as y, Presence_default as z };
+export { AUTOFOCUS_ON_MOUNT as A, useLocale as B, useAppConfig as C, useComponentUI as D, EVENT_OPTIONS as E, useForwardPropsEmits as F, reactivePick as G, usePortal as H, createReusableTemplate as I, tv as J, _sfc_main$8 as K, useRuntimeConfig as L, useFieldGroup as M, useComponentIcons as N, _sfc_main$e as O, Primitive as P, _sfc_main$b as Q, useFormField as R, looseToNumber as S, Teleport_default as T, createRef as U, VisuallyHidden_default as V, useForwardProps as W, useMotion as X, __nuxt_component_0$1 as Y, __nuxt_component_1$1 as Z, __nuxt_component_0$2 as _, useRoute as a, useFetch as b, __nuxt_component_3$1 as c, useNuxtData as d, entry_default as default, useUserSession as e, createSharedComposable as f, unrefElement as g, useVModel as h, injectConfigProviderContext as i, createContext as j, useForwardExpose as k, isNullish as l, createGlobalState as m, navigateTo as n, onKeyStroke as o, getActiveElement as p, focusFirst as q, refreshNuxtData as r, getTabbableCandidates as s, tryOnBeforeUnmount as t, useHead as u, focus as v, AUTOFOCUS_ON_UNMOUNT as w, getTabbableEdges as x, useEmitAsProps as y, Presence_default as z };
 //# sourceMappingURL=server.mjs.map
