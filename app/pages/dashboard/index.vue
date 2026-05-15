@@ -14,11 +14,12 @@ const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
 const { data: status } = useNuxtData('status');
 
-const cardData = [
-  { title: 'Total Intake', value: `${leads.value?.length ?? 0}` },
-  { title: 'Active Leads', value: `${status.value?.allStatus?.active?.length}` },
-  { title: 'New Leads', value: `${status.value?.allStatus?.new?.length}` }
-]
+const cardData = computed(() => [
+    { title: 'Total Intake', value: `${leads.value?.length ?? 0}` },
+    { title: 'Active Leads', value: `${status.value?.allStatus?.active?.length}` },
+    { title: 'New Leads', value: `${status.value?.allStatus?.new?.length}` }
+  ]
+)
 </script>
 
 <template>
@@ -53,10 +54,12 @@ const cardData = [
     <main class="max-w-350 mx-auto relative z-10">
 
       <section class="flex flex-wrap justify-between gap-6 mb-12">
-        <template 
-          v-for="data in cardData">
-          <baseCard :label="data.title" :value="data.value" />
-        </template>
+        <ClientOnly>
+          <template 
+            v-for="data in cardData">
+            <baseCard :label="data.title" :value="data.value" />
+          </template>
+        </ClientOnly>
       </section>
 
       <div class="flex w-full">

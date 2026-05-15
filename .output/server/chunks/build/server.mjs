@@ -534,7 +534,7 @@ const _routes = [
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-BO1hCVkv.mjs')
+    component: () => import('./details-Ct08xWw9.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
@@ -558,13 +558,13 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-CvXNoJoz.mjs')
+    component: () => import('./index-CwPNgDB7.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DRbe-5ol.mjs')
+    component: () => import('./index-DDTvsY1T.mjs')
   },
   {
     name: "forgotpassword",
@@ -856,7 +856,7 @@ function useUserSession() {
 }
 const auth_45global = /* @__PURE__ */ defineNuxtRouteMiddleware((to, from) => {
   const { loggedIn } = useUserSession();
-  if (!loggedIn.value || to.path === "/") {
+  if (!loggedIn.value && to.path === "/") {
     return navigateTo("/login");
   }
 });
@@ -1484,7 +1484,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
-const __nuxt_component_3$1 = defineComponent({
+const __nuxt_component_5 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -10583,5 +10583,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { AUTOFOCUS_ON_MOUNT as A, useLocale as B, useAppConfig as C, useComponentUI as D, EVENT_OPTIONS as E, useForwardPropsEmits as F, reactivePick as G, usePortal as H, createReusableTemplate as I, tv as J, _sfc_main$8 as K, useRuntimeConfig as L, useFieldGroup as M, useComponentIcons as N, _sfc_main$e as O, Primitive as P, _sfc_main$b as Q, useFormField as R, looseToNumber as S, Teleport_default as T, createRef as U, VisuallyHidden_default as V, useForwardProps as W, useMotion as X, __nuxt_component_0$1 as Y, __nuxt_component_1$1 as Z, __nuxt_component_0$2 as _, useRoute as a, useFetch as b, __nuxt_component_3$1 as c, useNuxtData as d, entry_default as default, useUserSession as e, createSharedComposable as f, unrefElement as g, useVModel as h, injectConfigProviderContext as i, createContext as j, useForwardExpose as k, isNullish as l, createGlobalState as m, navigateTo as n, onKeyStroke as o, getActiveElement as p, focusFirst as q, refreshNuxtData as r, getTabbableCandidates as s, tryOnBeforeUnmount as t, useHead as u, focus as v, AUTOFOCUS_ON_UNMOUNT as w, getTabbableEdges as x, useEmitAsProps as y, Presence_default as z };
+export { AUTOFOCUS_ON_MOUNT as A, useLocale as B, useAppConfig as C, useComponentUI as D, EVENT_OPTIONS as E, useForwardPropsEmits as F, reactivePick as G, usePortal as H, createReusableTemplate as I, tv as J, _sfc_main$8 as K, useRuntimeConfig as L, useFieldGroup as M, useComponentIcons as N, _sfc_main$e as O, Primitive as P, _sfc_main$b as Q, useFormField as R, looseToNumber as S, Teleport_default as T, createRef as U, VisuallyHidden_default as V, useForwardProps as W, useMotion as X, __nuxt_component_0$1 as Y, __nuxt_component_1$1 as Z, __nuxt_component_0$2 as _, useRoute as a, useFetch as b, __nuxt_component_5 as c, useNuxtData as d, entry_default as default, useUserSession as e, createSharedComposable as f, unrefElement as g, useVModel as h, injectConfigProviderContext as i, createContext as j, useForwardExpose as k, isNullish as l, createGlobalState as m, navigateTo as n, onKeyStroke as o, getActiveElement as p, focusFirst as q, refreshNuxtData as r, getTabbableCandidates as s, tryOnBeforeUnmount as t, useHead as u, focus as v, AUTOFOCUS_ON_UNMOUNT as w, getTabbableEdges as x, useEmitAsProps as y, Presence_default as z };
 //# sourceMappingURL=server.mjs.map
