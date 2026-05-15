@@ -22,6 +22,7 @@ interface _GlobalComponents {
   AppStats: typeof import("../../app/components/app/stats.vue")['default']
   BaseButtonNavigate: typeof import("../../app/components/base/ButtonNavigate.vue")['default']
   BaseButtonSubmit: typeof import("../../app/components/base/ButtonSubmit.vue")['default']
+  BaseCard: typeof import("../../app/components/base/Card.vue")['default']
   BaseDeleteProfile: typeof import("../../app/components/base/DeleteProfile.vue")['default']
   BaseEngineActive: typeof import("../../app/components/base/EngineActive.vue")['default']
   BaseGhostForm: typeof import("../../app/components/base/GhostForm.vue")['default']
@@ -213,6 +214,7 @@ interface _GlobalComponents {
   LazyAppStats: LazyComponent<typeof import("../../app/components/app/stats.vue")['default']>
   LazyBaseButtonNavigate: LazyComponent<typeof import("../../app/components/base/ButtonNavigate.vue")['default']>
   LazyBaseButtonSubmit: LazyComponent<typeof import("../../app/components/base/ButtonSubmit.vue")['default']>
+  LazyBaseCard: LazyComponent<typeof import("../../app/components/base/Card.vue")['default']>
   LazyBaseDeleteProfile: LazyComponent<typeof import("../../app/components/base/DeleteProfile.vue")['default']>
   LazyBaseEngineActive: LazyComponent<typeof import("../../app/components/base/EngineActive.vue")['default']>
   LazyBaseGhostForm: LazyComponent<typeof import("../../app/components/base/GhostForm.vue")['default']>

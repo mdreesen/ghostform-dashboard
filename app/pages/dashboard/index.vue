@@ -46,13 +46,11 @@ const { data: status } = useNuxtData('status');
 
     <main class="max-w-350 mx-auto relative z-10">
 
-      <section class="flex flex-wrap justify-around gap-6 mb-12">
-        <div
-          v-for="(val, label) in { 'Total Intake': leads?.length ?? 0, 'Active Leads': `${status?.allStatus?.active?.length}`, 'New Leads': `${status?.allStatus?.new?.length}` }"
-          :key="label" class="backdrop-blur-xl bg-white/2 border border-white/8 p-8 rounded-3xl w-full sm:w-62.5">
-          <p class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-4">{{ label }}</p>
-          <p class="text-3xl font-bold tabular-nums">{{ val }}</p>
-        </div>
+      <section class="flex flex-wrap justify-between gap-6 mb-12">
+        <template 
+          v-for="(val, label) in { 'Total Intake': leads?.length ?? 0, 'Active Leads': `${status?.allStatus?.active?.length}`, 'New Leads': `${status?.allStatus?.new?.length}` }">
+          <baseCard :label="label" :value="val" />
+        </template>
       </section>
 
       <div class="flex w-full">

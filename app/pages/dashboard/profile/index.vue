@@ -8,7 +8,7 @@ definePageMeta({
     layout: 'authenticated',
 });
 
-const { data } = useNuxtData('profile');
+// const { data } = useNuxtData('user');
 
 const { clear: clearSession } = useUserSession();
 
@@ -40,7 +40,7 @@ async function logout() {
                 <span>Date: {{ formatDate() }}</span>
                 <span>Time zone: {{ timeZone() }}</span>
                 <span>Version: {{ packageJson.version }}</span>
-                <NuxtLink to="/dashboard/privacy-policy" class="underline">Privacy Policy</NuxtLink>
+                <NuxtLink to="/privacy-policy" class="underline">Privacy Policy</NuxtLink>
             </div>
 
             <!-- Action Button Example -->

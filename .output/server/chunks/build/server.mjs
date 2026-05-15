@@ -534,7 +534,7 @@ const _routes = [
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-D0nsZsao.mjs')
+    component: () => import('./details-BO1hCVkv.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
@@ -552,19 +552,19 @@ const _routes = [
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CcQ0_mNI.mjs')
+    component: () => import('./index-DEjxS65d.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-CPUOZyps.mjs')
+    component: () => import('./index-CvXNoJoz.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-Ds0DBARr.mjs')
+    component: () => import('./index-yBlB2RHa.mjs')
   },
   {
     name: "forgotpassword",
@@ -577,6 +577,11 @@ const _routes = [
     path: "/login",
     meta: { "groups": ["authentication"] },
     component: () => import('./login-B_Lv6Q89.mjs')
+  },
+  {
+    name: "privacy-policy",
+    path: "/privacy-policy",
+    component: () => import('./privacy-policy-Bu-PXzVj.mjs')
   },
   {
     name: "signup",
