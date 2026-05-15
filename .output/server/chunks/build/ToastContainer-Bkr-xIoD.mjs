@@ -85,7 +85,6 @@ const _sfc_main$1 = {
     };
     const cx = (...parts) => parts.filter(Boolean).join(" ");
     const ui = computed(() => {
-      var _a, _b, _c;
       const color = props.toast.color || "primary";
       const orientation = props.toast.orientation || "vertical";
       const o = props.toast.ui || {};
@@ -94,7 +93,7 @@ const _sfc_main$1 = {
           "w-full relative group overflow-hidden bg-white dark:bg-gray-900 shadow-lg rounded-lg ring-1 ring-gray-200 dark:ring-gray-800 p-4 flex gap-2.5",
           "focus:outline-none transition-all duration-300 pointer-events-auto cursor-pointer",
           orientation === "horizontal" ? "items-center" : "items-start",
-          (_a = colorClasses[color]) == null ? void 0 : _a.root,
+          colorClasses[color]?.root,
           o.root
         ),
         // universal wrapper that centers @nuxt/icon SVGs
@@ -107,13 +106,13 @@ const _sfc_main$1 = {
           o.description
         ),
         // toast icon
-        icon: cx("w-5 h-5", (_b = colorClasses[color]) == null ? void 0 : _b.icon, o.icon),
+        icon: cx("w-5 h-5", colorClasses[color]?.icon, o.icon),
         // avatar
         avatar: cx(
           "shrink-0 w-10 h-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center",
           o.avatar
         ),
-        avatarIcon: cx("w-5 h-5", (_c = colorClasses[color]) == null ? void 0 : _c.icon),
+        avatarIcon: cx("w-5 h-5", colorClasses[color]?.icon),
         actions: cx(
           "flex gap-1.5 shrink-0",
           orientation === "horizontal" ? "items-center" : "items-start mt-2.5",
@@ -142,8 +141,7 @@ const _sfc_main$1 = {
     });
     const toastClasses = computed(() => ui.value.root);
     const shouldShowIcon = computed(() => {
-      var _a, _b, _c;
-      const globalShowIcon = (_c = (_b = (_a = runtimeConfig.public) == null ? void 0 : _a.notify) == null ? void 0 : _b.showIcon) != null ? _c : true;
+      const globalShowIcon = runtimeConfig.public?.notify?.showIcon ?? true;
       if (props.toast.showIcon === false) return false;
       if (props.toast.showIcon === true) return true;
       return globalShowIcon;
@@ -301,8 +299,7 @@ const _sfc_main = {
     const { toasts, remove } = useToast();
     const config = useRuntimeConfig();
     const containerClasses = computed(() => {
-      var _a, _b, _c;
-      const position = (_c = (_b = (_a = config.public) == null ? void 0 : _a.notify) == null ? void 0 : _b.position) != null ? _c : "top-right";
+      const position = config.public?.notify?.position ?? "top-right";
       const base = "fixed pointer-events-none w-full max-w-md sm:max-w-sm md:max-w-md flex flex-col";
       const zIndex = "z-[99999]";
       const padding = "p-4";

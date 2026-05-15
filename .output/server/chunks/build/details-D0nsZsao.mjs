@@ -47,7 +47,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     )), __temp = await __temp, __restore(), __temp);
     const lead = ref(data.value);
     return (_ctx, _push, _parent, _attrs) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
       const _component_baseHeaderAuth = __nuxt_component_1;
       const _component_baseButtonNavigate = __nuxt_component_1$1;
       const _component_baseHeaderSection = __nuxt_component_5;
@@ -55,7 +54,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (!unref(pending_data)) {
         _push(`<div${ssrRenderAttrs(mergeProps({ class: "min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden" }, _attrs))}><main class="max-w-5xl mx-auto relative z-10"><section class="flex flex-wrap gap-8 mb-12"><div><div class="flex items-center gap-6">`);
         _push(ssrRenderComponent(_component_baseHeaderAuth, {
-          text: (_a = unref(lead)) == null ? void 0 : _a.name
+          text: unref(lead)?.name
         }, null, _parent));
         _push(ssrRenderComponent(_component_baseButtonNavigate, {
           class: "w-25",
@@ -65,37 +64,37 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         _push(`</div><div class="flex flex-wrap gap-6 mt-5 text-zinc-400"><div class="flex flex-col">`);
         _push(ssrRenderComponent(_component_baseHeaderSection, {
           text: "Email",
-          subText: (_b = unref(lead)) == null ? void 0 : _b.email
+          subText: unref(lead)?.email
         }, null, _parent));
         _push(`</div><div class="flex flex-col">`);
         _push(ssrRenderComponent(_component_baseHeaderSection, {
           text: "Phone",
-          subText: (_c = unref(lead)) == null ? void 0 : _c.phone
+          subText: unref(lead)?.phone
         }, null, _parent));
         _push(`</div><div class="flex flex-col">`);
         _push(ssrRenderComponent(_component_baseHeaderSection, {
           text: "Address",
-          subText: (_d = unref(lead)) == null ? void 0 : _d.address
+          subText: unref(lead)?.address
         }, null, _parent));
         _push(`</div><div class="flex flex-col">`);
         _push(ssrRenderComponent(_component_baseHeaderSection, {
           text: "Status",
-          subText: (_e = unref(lead)) == null ? void 0 : _e.status
+          subText: unref(lead)?.status
         }, null, _parent));
         _push(`</div></div></div></section><div class="grid grid-cols-1 lg:grid-cols-12 gap-8"><div class="lg:col-span-4 space-y-8"><div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">`);
         _push(ssrRenderComponent(_component_baseHeaderSection, { text: "Lead Submission" }, null, _parent));
         _push(`<div class="space-y-6"><!--[-->`);
         ssrRenderList({
-          "Est. Value": ((_f = unref(lead)) == null ? void 0 : _f.price) ? `$${(_h = (_g = unref(lead)) == null ? void 0 : _g.price) == null ? void 0 : _h.toLocaleString()}` : "",
-          "Budget": `$${(_k = (_j = (_i = unref(lead)) == null ? void 0 : _i.budget) == null ? void 0 : _j.toLocaleString()) != null ? _k : ""}`,
-          "Sq Footage": ((_l = unref(lead)) == null ? void 0 : _l.sqft) ? `${(_m = unref(lead)) == null ? void 0 : _m.sqft} ft\xB2` : "",
-          "Intent (Buy, Sell, or Both)": (_n = unref(lead)) == null ? void 0 : _n.buy_sell_both
+          "Est. Value": unref(lead)?.price ? `$${unref(lead)?.price?.toLocaleString()}` : "",
+          "Budget": `$${unref(lead)?.budget?.toLocaleString() ?? ""}`,
+          "Sq Footage": unref(lead)?.sqft ? `${unref(lead)?.sqft} ft²` : "",
+          "Intent (Buy, Sell, or Both)": unref(lead)?.buy_sell_both
         }, (val, label) => {
           _push(`<div class="flex justify-between items-end border-b border-white/5 pb-2"><span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">${ssrInterpolate(label)}</span><span class="text-sm font-bold">${ssrInterpolate(val)}</span></div>`);
         });
         _push(`<!--]--></div></div><div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">`);
         _push(ssrRenderComponent(_component_baseHeaderSection, { text: "Other Details" }, null, _parent));
-        _push(`<p class="text-sm text-zinc-300 leading-relaxed italic-none">&quot;${ssrInterpolate(((_o = unref(lead)) == null ? void 0 : _o.message) ? (_p = unref(lead)) == null ? void 0 : _p.message : "No other details")}&quot;</p></div></div>`);
+        _push(`<p class="text-sm text-zinc-300 leading-relaxed italic-none">&quot;${ssrInterpolate(unref(lead)?.message ? unref(lead)?.message : "No other details")}&quot;</p></div></div>`);
         _push(ssrRenderComponent(_component_ClientOnly, null, {}, _parent));
         _push(`</div></main></div>`);
       } else {

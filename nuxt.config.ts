@@ -27,7 +27,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'Ascend', // default fallback title
+      title: 'GhostForm', // default fallback title
       htmlAttrs: {
         lang: 'en',
       },
@@ -85,31 +85,31 @@ export default defineNuxtConfig({
   pwa: {
     /* PWA options */
     manifest: {
-      name: 'Ascend',
-      short_name: 'Ascend',
+      name: 'GhostForm',
+      short_name: 'GhostForm',
       description: 'Set goals. Achieve greatness.',
       orientation: 'natural',
       lang: 'en',
       display: 'standalone',
-      background_color: '#272727',
-      theme_color: '#272727',
+      background_color: '#020203',
+      theme_color: '#020203',
       icons: [
         {
-          src: '/images/logo-icon.webp',
+          src: '/images/maskable-icon.png',
           sizes: '445x445',
-          type: 'image/webp',
+          type: 'image/png',
           purpose: "any"
         },
         {
-          src: '/images/logo-icon.webp',
+          src: '/images/maskable-icon.png',
           sizes: '445x445',
           type: 'image/webp',
-          purpose: "monochrome"
+          purpose: "png"
         },
         {
-          src: '/images/logo-icon.webp',
+          src: '/images/maskable-icon.png',
           sizes: '445x445',
-          type: 'image/webp',
+          type: 'image/png',
           purpose: "maskable"
         },
         {
@@ -118,9 +118,9 @@ export default defineNuxtConfig({
           type: 'image/webp',
         },
         {
-          src: '/images/logo-icon.webp',
+          src: '/images/maskable-icon.png',
           sizes: '445x445',
-          type: 'image/webp',
+          type: 'image/png',
         }
       ],
       categories: [

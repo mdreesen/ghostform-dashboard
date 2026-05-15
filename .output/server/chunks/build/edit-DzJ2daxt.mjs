@@ -106,7 +106,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       });
     }
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       const _component_baseHeaderBase = __nuxt_component_0;
       const _component_baseLabel = __nuxt_component_0$1;
       const _component_baseButtonSubmit = __nuxt_component_1;
@@ -115,7 +114,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (!unref(pending_data)) {
         _push(`<div${ssrRenderAttrs(mergeProps({ class: "min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden" }, _attrs))}>`);
         _push(ssrRenderComponent(_component_baseHeaderBase, {
-          text: `Edit ${(_a = unref(lead)) == null ? void 0 : _a.name}`
+          text: `Edit ${unref(lead)?.name}`
         }, null, _parent));
         _push(`<form class="space-y-6"><div${ssrRenderAttrs(ssrGetDirectiveProps(_ctx, _directive_motion, { ...("inputVarient" in _ctx ? _ctx.inputVarient : unref(inputVarient))() }))}>`);
         _push(ssrRenderComponent(_component_baseLabel, { text: "Status" }, null, _parent));

@@ -22,7 +22,7 @@ var PaginationEllipsis_vue_vue_type_script_setup_true_lang_default = /* @__PURE_
     useForwardExpose();
     return (_ctx, _cache) => {
       return openBlock(), createBlock(unref(Primitive), mergeProps(props, { "data-type": "ellipsis" }), {
-        default: withCtx(() => [renderSlot(_ctx.$slots, "default", {}, () => [_cache[0] || (_cache[0] = createTextVNode("\u2026"))])]),
+        default: withCtx(() => [renderSlot(_ctx.$slots, "default", {}, () => [_cache[0] || (_cache[0] = createTextVNode("…"))])]),
         _: 3
       }, 16);
     };
@@ -637,59 +637,52 @@ const _sfc_main$4 = {
     const uiProp = useComponentUI("badge", props);
     const { orientation, size: fieldGroupSize } = useFieldGroup(props);
     const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
-    const ui = computed(() => {
-      var _a;
-      return tv({ extend: tv(theme$3), ...((_a = appConfig.ui) == null ? void 0 : _a.badge) || {} })({
-        color: props.color,
-        variant: props.variant,
-        size: fieldGroupSize.value || props.size,
-        square: props.square || !slots.default && !props.label,
-        fieldGroup: orientation.value
-      });
-    });
+    const ui = computed(() => tv({ extend: tv(theme$3), ...appConfig.ui?.badge || {} })({
+      color: props.color,
+      variant: props.variant,
+      size: fieldGroupSize.value || props.size,
+      square: props.square || !slots.default && !props.label,
+      fieldGroup: orientation.value
+    }));
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: __props.as,
         "data-slot": "base",
-        class: ui.value.base({ class: [(_a = unref(uiProp)) == null ? void 0 : _a.base, props.class] })
+        class: ui.value.base({ class: [unref(uiProp)?.base, props.class] })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             ssrRenderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
-              var _a2, _b, _c;
               if (unref(isLeading) && unref(leadingIconName)) {
                 _push2(ssrRenderComponent(_sfc_main$e, {
                   name: unref(leadingIconName),
                   "data-slot": "leadingIcon",
-                  class: ui.value.leadingIcon({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.leadingIcon })
+                  class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon })
                 }, null, _parent2, _scopeId));
               } else if (!!__props.avatar) {
                 _push2(ssrRenderComponent(_sfc_main$b, mergeProps({
-                  size: ((_b = unref(uiProp)) == null ? void 0 : _b.leadingAvatarSize) || ui.value.leadingAvatarSize()
+                  size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
                 }, __props.avatar, {
                   "data-slot": "leadingAvatar",
-                  class: ui.value.leadingAvatar({ class: (_c = unref(uiProp)) == null ? void 0 : _c.leadingAvatar })
+                  class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar })
                 }), null, _parent2, _scopeId));
               } else {
                 _push2(`<!---->`);
               }
             }, _push2, _parent2, _scopeId);
             ssrRenderSlot(_ctx.$slots, "default", { ui: ui.value }, () => {
-              var _a2;
               if (__props.label !== void 0 && __props.label !== null) {
-                _push2(`<span data-slot="label" class="${ssrRenderClass(ui.value.label({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.label }))}"${_scopeId}>${ssrInterpolate(__props.label)}</span>`);
+                _push2(`<span data-slot="label" class="${ssrRenderClass(ui.value.label({ class: unref(uiProp)?.label }))}"${_scopeId}>${ssrInterpolate(__props.label)}</span>`);
               } else {
                 _push2(`<!---->`);
               }
             }, _push2, _parent2, _scopeId);
             ssrRenderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => {
-              var _a2;
               if (unref(isTrailing) && unref(trailingIconName)) {
                 _push2(ssrRenderComponent(_sfc_main$e, {
                   name: unref(trailingIconName),
                   "data-slot": "trailingIcon",
-                  class: ui.value.trailingIcon({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.trailingIcon })
+                  class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon })
                 }, null, _parent2, _scopeId));
               } else {
                 _push2(`<!---->`);
@@ -697,44 +690,35 @@ const _sfc_main$4 = {
             }, _push2, _parent2, _scopeId);
           } else {
             return [
-              renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
-                var _a2, _b, _c;
-                return [
-                  unref(isLeading) && unref(leadingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
-                    key: 0,
-                    name: unref(leadingIconName),
-                    "data-slot": "leadingIcon",
-                    class: ui.value.leadingIcon({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.leadingIcon })
-                  }, null, 8, ["name", "class"])) : !!__props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
-                    key: 1,
-                    size: ((_b = unref(uiProp)) == null ? void 0 : _b.leadingAvatarSize) || ui.value.leadingAvatarSize()
-                  }, __props.avatar, {
-                    "data-slot": "leadingAvatar",
-                    class: ui.value.leadingAvatar({ class: (_c = unref(uiProp)) == null ? void 0 : _c.leadingAvatar })
-                  }), null, 16, ["size", "class"])) : createCommentVNode("", true)
-                ];
-              }),
-              renderSlot(_ctx.$slots, "default", { ui: ui.value }, () => {
-                var _a2;
-                return [
-                  __props.label !== void 0 && __props.label !== null ? (openBlock(), createBlock("span", {
-                    key: 0,
-                    "data-slot": "label",
-                    class: ui.value.label({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.label })
-                  }, toDisplayString(__props.label), 3)) : createCommentVNode("", true)
-                ];
-              }),
-              renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => {
-                var _a2;
-                return [
-                  unref(isTrailing) && unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
-                    key: 0,
-                    name: unref(trailingIconName),
-                    "data-slot": "trailingIcon",
-                    class: ui.value.trailingIcon({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.trailingIcon })
-                  }, null, 8, ["name", "class"])) : createCommentVNode("", true)
-                ];
-              })
+              renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => [
+                unref(isLeading) && unref(leadingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
+                  key: 0,
+                  name: unref(leadingIconName),
+                  "data-slot": "leadingIcon",
+                  class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon })
+                }, null, 8, ["name", "class"])) : !!__props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                  key: 1,
+                  size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
+                }, __props.avatar, {
+                  "data-slot": "leadingAvatar",
+                  class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar })
+                }), null, 16, ["size", "class"])) : createCommentVNode("", true)
+              ]),
+              renderSlot(_ctx.$slots, "default", { ui: ui.value }, () => [
+                __props.label !== void 0 && __props.label !== null ? (openBlock(), createBlock("span", {
+                  key: 0,
+                  "data-slot": "label",
+                  class: ui.value.label({ class: unref(uiProp)?.label })
+                }, toDisplayString(__props.label), 3)) : createCommentVNode("", true)
+              ]),
+              renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => [
+                unref(isTrailing) && unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
+                  key: 0,
+                  name: unref(trailingIconName),
+                  "data-slot": "trailingIcon",
+                  class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon })
+                }, null, 8, ["name", "class"])) : createCommentVNode("", true)
+              ])
             ];
           }
         }),
@@ -1080,52 +1064,46 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
     const { orientation, size: fieldGroupSize } = useFieldGroup(props);
     const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
     const inputSize = computed(() => fieldGroupSize.value || formGroupSize.value);
-    const ui = computed(() => {
-      var _a;
-      return tv({ extend: tv(theme$2), ...((_a = appConfig.ui) == null ? void 0 : _a.input) || {} })({
-        type: props.type,
-        color: color.value,
-        variant: props.variant,
-        size: inputSize == null ? void 0 : inputSize.value,
-        loading: props.loading,
-        highlight: highlight.value,
-        fixed: props.fixed,
-        leading: isLeading.value || !!props.avatar || !!slots.leading,
-        trailing: isTrailing.value || !!slots.trailing,
-        fieldGroup: orientation.value
-      });
-    });
+    const ui = computed(() => tv({ extend: tv(theme$2), ...appConfig.ui?.input || {} })({
+      type: props.type,
+      color: color.value,
+      variant: props.variant,
+      size: inputSize?.value,
+      loading: props.loading,
+      highlight: highlight.value,
+      fixed: props.fixed,
+      leading: isLeading.value || !!props.avatar || !!slots.leading,
+      trailing: isTrailing.value || !!slots.trailing,
+      fieldGroup: orientation.value
+    }));
     const inputRef = useTemplateRef("inputRef");
     function updateInput(value) {
-      var _a, _b, _c, _d, _e, _f;
-      if (((_a = props.modelModifiers) == null ? void 0 : _a.trim) && (typeof value === "string" || value === null || value === void 0)) {
-        value = (_b = value == null ? void 0 : value.trim()) != null ? _b : null;
+      if (props.modelModifiers?.trim && (typeof value === "string" || value === null || value === void 0)) {
+        value = value?.trim() ?? null;
       }
-      if (((_c = props.modelModifiers) == null ? void 0 : _c.number) || props.type === "number") {
+      if (props.modelModifiers?.number || props.type === "number") {
         value = looseToNumber(value);
       }
-      if ((_d = props.modelModifiers) == null ? void 0 : _d.nullable) {
-        value || (value = null);
+      if (props.modelModifiers?.nullable) {
+        value ||= null;
       }
-      if (((_e = props.modelModifiers) == null ? void 0 : _e.optional) && !((_f = props.modelModifiers) == null ? void 0 : _f.nullable) && value !== null) {
-        value || (value = void 0);
+      if (props.modelModifiers?.optional && !props.modelModifiers?.nullable && value !== null) {
+        value ||= void 0;
       }
       modelValue.value = value;
       emitFormInput();
     }
     function onInput(event) {
-      var _a;
-      if (!((_a = props.modelModifiers) == null ? void 0 : _a.lazy)) {
+      if (!props.modelModifiers?.lazy) {
         updateInput(event.target.value);
       }
     }
     function onChange(event) {
-      var _a, _b;
       const value = event.target.value;
-      if ((_a = props.modelModifiers) == null ? void 0 : _a.lazy) {
+      if (props.modelModifiers?.lazy) {
         updateInput(value);
       }
-      if ((_b = props.modelModifiers) == null ? void 0 : _b.trim) {
+      if (props.modelModifiers?.trim) {
         event.target.value = value.trim();
       }
       emitFormChange();
@@ -1139,14 +1117,12 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
       inputRef
     });
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: __props.as,
         "data-slot": "root",
-        class: ui.value.root({ class: [(_a = unref(uiProp)) == null ? void 0 : _a.root, props.class] })
+        class: ui.value.root({ class: [unref(uiProp)?.root, props.class] })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
-          var _a2, _b, _c, _d, _e, _f;
           if (_push2) {
             _push2(`<input${ssrRenderAttrs(mergeProps({
               id: unref(id),
@@ -1157,28 +1133,27 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               name: unref(name),
               placeholder: __props.placeholder,
               "data-slot": "base",
-              class: ui.value.base({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.base }),
+              class: ui.value.base({ class: unref(uiProp)?.base }),
               disabled: unref(disabled),
               required: __props.required,
               autocomplete: __props.autocomplete
             }, { ..._ctx.$attrs, ...unref(ariaAttrs) }))}${_scopeId}>`);
             ssrRenderSlot(_ctx.$slots, "default", { ui: ui.value }, null, _push2, _parent2, _scopeId);
             if (unref(isLeading) || !!__props.avatar || !!slots.leading) {
-              _push2(`<span data-slot="leading" class="${ssrRenderClass(ui.value.leading({ class: (_b = unref(uiProp)) == null ? void 0 : _b.leading }))}"${_scopeId}>`);
+              _push2(`<span data-slot="leading" class="${ssrRenderClass(ui.value.leading({ class: unref(uiProp)?.leading }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
-                var _a3, _b2, _c2;
                 if (unref(isLeading) && unref(leadingIconName)) {
                   _push2(ssrRenderComponent(_sfc_main$e, {
                     name: unref(leadingIconName),
                     "data-slot": "leadingIcon",
-                    class: ui.value.leadingIcon({ class: (_a3 = unref(uiProp)) == null ? void 0 : _a3.leadingIcon })
+                    class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon })
                   }, null, _parent2, _scopeId));
                 } else if (!!__props.avatar) {
                   _push2(ssrRenderComponent(_sfc_main$b, mergeProps({
-                    size: ((_b2 = unref(uiProp)) == null ? void 0 : _b2.leadingAvatarSize) || ui.value.leadingAvatarSize()
+                    size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
                   }, __props.avatar, {
                     "data-slot": "leadingAvatar",
-                    class: ui.value.leadingAvatar({ class: (_c2 = unref(uiProp)) == null ? void 0 : _c2.leadingAvatar })
+                    class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar })
                   }), null, _parent2, _scopeId));
                 } else {
                   _push2(`<!---->`);
@@ -1189,14 +1164,13 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               _push2(`<!---->`);
             }
             if (unref(isTrailing) || !!slots.trailing) {
-              _push2(`<span data-slot="trailing" class="${ssrRenderClass(ui.value.trailing({ class: (_c = unref(uiProp)) == null ? void 0 : _c.trailing }))}"${_scopeId}>`);
+              _push2(`<span data-slot="trailing" class="${ssrRenderClass(ui.value.trailing({ class: unref(uiProp)?.trailing }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => {
-                var _a3;
                 if (unref(trailingIconName)) {
                   _push2(ssrRenderComponent(_sfc_main$e, {
                     name: unref(trailingIconName),
                     "data-slot": "trailingIcon",
-                    class: ui.value.trailingIcon({ class: (_a3 = unref(uiProp)) == null ? void 0 : _a3.trailingIcon })
+                    class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon })
                   }, null, _parent2, _scopeId));
                 } else {
                   _push2(`<!---->`);
@@ -1217,7 +1191,7 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                 name: unref(name),
                 placeholder: __props.placeholder,
                 "data-slot": "base",
-                class: ui.value.base({ class: (_d = unref(uiProp)) == null ? void 0 : _d.base }),
+                class: ui.value.base({ class: unref(uiProp)?.base }),
                 disabled: unref(disabled),
                 required: __props.required,
                 autocomplete: __props.autocomplete
@@ -1231,42 +1205,36 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               unref(isLeading) || !!__props.avatar || !!slots.leading ? (openBlock(), createBlock("span", {
                 key: 0,
                 "data-slot": "leading",
-                class: ui.value.leading({ class: (_e = unref(uiProp)) == null ? void 0 : _e.leading })
+                class: ui.value.leading({ class: unref(uiProp)?.leading })
               }, [
-                renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
-                  var _a3, _b2, _c2;
-                  return [
-                    unref(isLeading) && unref(leadingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
-                      key: 0,
-                      name: unref(leadingIconName),
-                      "data-slot": "leadingIcon",
-                      class: ui.value.leadingIcon({ class: (_a3 = unref(uiProp)) == null ? void 0 : _a3.leadingIcon })
-                    }, null, 8, ["name", "class"])) : !!__props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
-                      key: 1,
-                      size: ((_b2 = unref(uiProp)) == null ? void 0 : _b2.leadingAvatarSize) || ui.value.leadingAvatarSize()
-                    }, __props.avatar, {
-                      "data-slot": "leadingAvatar",
-                      class: ui.value.leadingAvatar({ class: (_c2 = unref(uiProp)) == null ? void 0 : _c2.leadingAvatar })
-                    }), null, 16, ["size", "class"])) : createCommentVNode("", true)
-                  ];
-                })
+                renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => [
+                  unref(isLeading) && unref(leadingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
+                    key: 0,
+                    name: unref(leadingIconName),
+                    "data-slot": "leadingIcon",
+                    class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon })
+                  }, null, 8, ["name", "class"])) : !!__props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                    key: 1,
+                    size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
+                  }, __props.avatar, {
+                    "data-slot": "leadingAvatar",
+                    class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar })
+                  }), null, 16, ["size", "class"])) : createCommentVNode("", true)
+                ])
               ], 2)) : createCommentVNode("", true),
               unref(isTrailing) || !!slots.trailing ? (openBlock(), createBlock("span", {
                 key: 1,
                 "data-slot": "trailing",
-                class: ui.value.trailing({ class: (_f = unref(uiProp)) == null ? void 0 : _f.trailing })
+                class: ui.value.trailing({ class: unref(uiProp)?.trailing })
               }, [
-                renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => {
-                  var _a3;
-                  return [
-                    unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
-                      key: 0,
-                      name: unref(trailingIconName),
-                      "data-slot": "trailingIcon",
-                      class: ui.value.trailingIcon({ class: (_a3 = unref(uiProp)) == null ? void 0 : _a3.trailingIcon })
-                    }, null, 8, ["name", "class"])) : createCommentVNode("", true)
-                  ];
-                })
+                renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => [
+                  unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
+                    key: 0,
+                    name: unref(trailingIconName),
+                    "data-slot": "trailingIcon",
+                    class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon })
+                  }, null, 8, ["name", "class"])) : createCommentVNode("", true)
+                ])
               ], 2)) : createCommentVNode("", true)
             ];
           }
@@ -1508,21 +1476,14 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
   }),
   emits: ["update:globalFilter", "update:columnFilters", "update:columnOrder", "update:columnVisibility", "update:columnPinning", "update:columnSizing", "update:columnSizingInfo", "update:rowSelection", "update:rowPinning", "update:sorting", "update:grouping", "update:expanded", "update:pagination"],
   setup(__props, { expose: __expose }) {
-    var _a, _b;
     const props = __props;
     const slots = useSlots();
     const { t } = useLocale();
     const appConfig = useAppConfig();
     const uiProp = useComponentUI("table", props);
-    const data = createRef((_a = props.data) != null ? _a : [], ((_b = props.watchOptions) == null ? void 0 : _b.deep) !== false);
-    const meta = computed(() => {
-      var _a2;
-      return (_a2 = props.meta) != null ? _a2 : {};
-    });
-    const columns = computed(() => {
-      var _a2, _b2;
-      return processColumns((_b2 = props.columns) != null ? _b2 : Object.keys((_a2 = data.value[0]) != null ? _a2 : {}).map((accessorKey) => ({ accessorKey, header: upperFirst(accessorKey) })));
-    });
+    const data = createRef(props.data ?? [], props.watchOptions?.deep !== false);
+    const meta = computed(() => props.meta ?? {});
+    const columns = computed(() => processColumns(props.columns ?? Object.keys(data.value[0] ?? {}).map((accessorKey) => ({ accessorKey, header: upperFirst(accessorKey) }))));
     function processColumns(columns2) {
       return columns2.map((column) => {
         const col = { ...column };
@@ -1533,7 +1494,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
           col.cell = ({ getValue }) => {
             const value = getValue();
             if (value === "" || value === null || value === void 0) {
-              return "\xA0";
+              return " ";
             }
             return String(value);
           };
@@ -1541,16 +1502,13 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
         return col;
       });
     }
-    const ui = computed(() => {
-      var _a2;
-      return tv({ extend: tv(theme$1), ...((_a2 = appConfig.ui) == null ? void 0 : _a2.table) || {} })({
-        sticky: props.virtualize ? false : props.sticky,
-        loading: props.loading,
-        loadingColor: props.loadingColor,
-        loadingAnimation: props.loadingAnimation,
-        virtualize: !!props.virtualize
-      });
-    });
+    const ui = computed(() => tv({ extend: tv(theme$1), ...appConfig.ui?.table || {} })({
+      sticky: props.virtualize ? false : props.sticky,
+      loading: props.loading,
+      loadingColor: props.loadingColor,
+      loadingAnimation: props.loadingAnimation,
+      virtualize: !!props.virtualize
+    }));
     const [DefineTableTemplate, ReuseTableTemplate] = createReusableTemplate();
     const [DefineRowTemplate, ReuseRowTemplate] = createReusableTemplate({
       props: {
@@ -1687,10 +1645,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
       get count() {
         return centerRows.value.length;
       },
-      getScrollElement: () => {
-        var _a2;
-        return (_a2 = rootRef.value) == null ? void 0 : _a2.$el;
-      },
+      getScrollElement: () => rootRef.value?.$el,
       estimateSize: (index) => {
         const estimate = virtualizerProps.value.estimateSize;
         return typeof estimate === "function" ? estimate(index) : estimate;
@@ -1701,7 +1656,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
         return 0;
       }
       const virtualItems = virtualizer.value.getVirtualItems();
-      if (!(virtualItems == null ? void 0 : virtualItems.length)) {
+      if (!virtualItems?.length) {
         return 0;
       }
       return virtualItems.reduce((sum, item) => sum + item.size, 0);
@@ -1759,36 +1714,32 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
     }, props.watchOptions);
     __expose({
       get $el() {
-        var _a2;
-        return (_a2 = rootRef.value) == null ? void 0 : _a2.$el;
+        return rootRef.value?.$el;
       },
       tableRef,
       tableApi
     });
     return (_ctx, _push, _parent, _attrs) => {
-      var _a2;
       _push(`<!--[-->`);
       _push(ssrRenderComponent(unref(DefineRowTemplate), null, {
         default: withCtx(({ row, style }, _push2, _parent2, _scopeId) => {
-          var _a3, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n;
           if (_push2) {
             _push2(`<tr${ssrRenderAttr("data-selected", row.getIsSelected())}${ssrRenderAttr("data-selectable", !!props.onSelect || !!props.onHover || !!props.onContextmenu)}${ssrRenderAttr("data-expanded", row.getIsExpanded())}${ssrRenderAttr("data-pinned", row.getIsPinned() || void 0)}${ssrRenderAttr("role", props.onSelect ? "button" : void 0)}${ssrRenderAttr("tabindex", props.onSelect ? 0 : void 0)} data-slot="tr" class="${ssrRenderClass(ui.value.tr({
               class: [
-                (_a3 = unref(uiProp)) == null ? void 0 : _a3.tr,
-                resolveValue((_c = (_b2 = unref(tableApi).options.meta) == null ? void 0 : _b2.class) == null ? void 0 : _c.tr, row)
+                unref(uiProp)?.tr,
+                resolveValue(unref(tableApi).options.meta?.class?.tr, row)
               ]
-            }))}" style="${ssrRenderStyle([resolveValue((_e = (_d = unref(tableApi).options.meta) == null ? void 0 : _d.style) == null ? void 0 : _e.tr, row), style])}"${_scopeId}><!--[-->`);
+            }))}" style="${ssrRenderStyle([resolveValue(unref(tableApi).options.meta?.style?.tr, row), style])}"${_scopeId}><!--[-->`);
             ssrRenderList(row.getVisibleCells(), (cell) => {
-              var _a4, _b3, _c2, _d2, _e2, _f2, _g2, _h2, _i2;
-              _push2(`<td${ssrRenderAttr("data-pinned", cell.column.getIsPinned())}${ssrRenderAttr("colspan", resolveValue((_b3 = (_a4 = cell.column.columnDef.meta) == null ? void 0 : _a4.colspan) == null ? void 0 : _b3.td, cell))}${ssrRenderAttr("rowspan", resolveValue((_d2 = (_c2 = cell.column.columnDef.meta) == null ? void 0 : _c2.rowspan) == null ? void 0 : _d2.td, cell))} data-slot="td" class="${ssrRenderClass(ui.value.td({
+              _push2(`<td${ssrRenderAttr("data-pinned", cell.column.getIsPinned())}${ssrRenderAttr("colspan", resolveValue(cell.column.columnDef.meta?.colspan?.td, cell))}${ssrRenderAttr("rowspan", resolveValue(cell.column.columnDef.meta?.rowspan?.td, cell))} data-slot="td" class="${ssrRenderClass(ui.value.td({
                 class: [
-                  (_e2 = unref(uiProp)) == null ? void 0 : _e2.td,
-                  resolveValue((_g2 = (_f2 = cell.column.columnDef.meta) == null ? void 0 : _f2.class) == null ? void 0 : _g2.td, cell)
+                  unref(uiProp)?.td,
+                  resolveValue(cell.column.columnDef.meta?.class?.td, cell)
                 ],
                 pinned: !!cell.column.getIsPinned()
               }))}" style="${ssrRenderStyle([
                 getColumnStyles(cell.column),
-                resolveValue((_i2 = (_h2 = cell.column.columnDef.meta) == null ? void 0 : _h2.style) == null ? void 0 : _i2.td, cell)
+                resolveValue(cell.column.columnDef.meta?.style?.td, cell)
               ])}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, `${cell.column.id}-cell`, mergeProps({ ref_for: true }, cell.getContext()), () => {
                 _push2(ssrRenderComponent(unref(FlexRender), {
@@ -1800,7 +1751,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
             });
             _push2(`<!--]--></tr>`);
             if (row.getIsExpanded()) {
-              _push2(`<tr data-slot="tr" class="${ssrRenderClass(ui.value.tr({ class: [(_f = unref(uiProp)) == null ? void 0 : _f.tr] }))}"${_scopeId}><td${ssrRenderAttr("colspan", row.getAllCells().length)} data-slot="td" class="${ssrRenderClass(ui.value.td({ class: [(_g = unref(uiProp)) == null ? void 0 : _g.td] }))}"${_scopeId}>`);
+              _push2(`<tr data-slot="tr" class="${ssrRenderClass(ui.value.tr({ class: [unref(uiProp)?.tr] }))}"${_scopeId}><td${ssrRenderAttr("colspan", row.getAllCells().length)} data-slot="td" class="${ssrRenderClass(ui.value.td({ class: [unref(uiProp)?.td] }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "expanded", { row }, null, _push2, _parent2, _scopeId);
               _push2(`</td></tr>`);
             } else {
@@ -1818,34 +1769,33 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                 "data-slot": "tr",
                 class: ui.value.tr({
                   class: [
-                    (_h = unref(uiProp)) == null ? void 0 : _h.tr,
-                    resolveValue((_j = (_i = unref(tableApi).options.meta) == null ? void 0 : _i.class) == null ? void 0 : _j.tr, row)
+                    unref(uiProp)?.tr,
+                    resolveValue(unref(tableApi).options.meta?.class?.tr, row)
                   ]
                 }),
-                style: [resolveValue((_l = (_k = unref(tableApi).options.meta) == null ? void 0 : _k.style) == null ? void 0 : _l.tr, row), style],
+                style: [resolveValue(unref(tableApi).options.meta?.style?.tr, row), style],
                 onClick: ($event) => onRowSelect($event, row),
                 onPointerenter: ($event) => onRowHover($event, row),
                 onPointerleave: ($event) => onRowHover($event, null),
                 onContextmenu: ($event) => onRowContextmenu($event, row)
               }, [
                 (openBlock(true), createBlock(Fragment, null, renderList(row.getVisibleCells(), (cell) => {
-                  var _a4, _b3, _c2, _d2, _e2, _f2, _g2, _h2, _i2;
                   return openBlock(), createBlock("td", {
                     key: cell.id,
                     "data-pinned": cell.column.getIsPinned(),
-                    colspan: resolveValue((_b3 = (_a4 = cell.column.columnDef.meta) == null ? void 0 : _a4.colspan) == null ? void 0 : _b3.td, cell),
-                    rowspan: resolveValue((_d2 = (_c2 = cell.column.columnDef.meta) == null ? void 0 : _c2.rowspan) == null ? void 0 : _d2.td, cell),
+                    colspan: resolveValue(cell.column.columnDef.meta?.colspan?.td, cell),
+                    rowspan: resolveValue(cell.column.columnDef.meta?.rowspan?.td, cell),
                     "data-slot": "td",
                     class: ui.value.td({
                       class: [
-                        (_e2 = unref(uiProp)) == null ? void 0 : _e2.td,
-                        resolveValue((_g2 = (_f2 = cell.column.columnDef.meta) == null ? void 0 : _f2.class) == null ? void 0 : _g2.td, cell)
+                        unref(uiProp)?.td,
+                        resolveValue(cell.column.columnDef.meta?.class?.td, cell)
                       ],
                       pinned: !!cell.column.getIsPinned()
                     }),
                     style: [
                       getColumnStyles(cell.column),
-                      resolveValue((_i2 = (_h2 = cell.column.columnDef.meta) == null ? void 0 : _h2.style) == null ? void 0 : _i2.td, cell)
+                      resolveValue(cell.column.columnDef.meta?.style?.td, cell)
                     ]
                   }, [
                     renderSlot(_ctx.$slots, `${cell.column.id}-cell`, mergeProps({ ref_for: true }, cell.getContext()), () => [
@@ -1860,12 +1810,12 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               row.getIsExpanded() ? (openBlock(), createBlock("tr", {
                 key: 0,
                 "data-slot": "tr",
-                class: ui.value.tr({ class: [(_m = unref(uiProp)) == null ? void 0 : _m.tr] })
+                class: ui.value.tr({ class: [unref(uiProp)?.tr] })
               }, [
                 createVNode("td", {
                   colspan: row.getAllCells().length,
                   "data-slot": "td",
-                  class: ui.value.td({ class: [(_n = unref(uiProp)) == null ? void 0 : _n.td] })
+                  class: ui.value.td({ class: [unref(uiProp)?.td] })
                 }, [
                   renderSlot(_ctx.$slots, "expanded", { row })
                 ], 10, ["colspan"])
@@ -1877,11 +1827,10 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
       }, _parent));
       _push(ssrRenderComponent(unref(DefineTableTemplate), null, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
-          var _a3, _b2, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
           if (_push2) {
-            _push2(`<table data-slot="base" class="${ssrRenderClass(ui.value.base({ class: [(_a3 = unref(uiProp)) == null ? void 0 : _a3.base] }))}"${_scopeId}>`);
+            _push2(`<table data-slot="base" class="${ssrRenderClass(ui.value.base({ class: [unref(uiProp)?.base] }))}"${_scopeId}>`);
             if (__props.caption || !!slots.caption) {
-              _push2(`<caption data-slot="caption" class="${ssrRenderClass(ui.value.caption({ class: [(_b2 = unref(uiProp)) == null ? void 0 : _b2.caption] }))}"${_scopeId}>`);
+              _push2(`<caption data-slot="caption" class="${ssrRenderClass(ui.value.caption({ class: [unref(uiProp)?.caption] }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "caption", {}, () => {
                 _push2(`${ssrInterpolate(__props.caption)}`);
               }, _push2, _parent2, _scopeId);
@@ -1889,21 +1838,19 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
             } else {
               _push2(`<!---->`);
             }
-            _push2(`<thead data-slot="thead" class="${ssrRenderClass(ui.value.thead({ class: [(_c = unref(uiProp)) == null ? void 0 : _c.thead] }))}"${_scopeId}><!--[-->`);
+            _push2(`<thead data-slot="thead" class="${ssrRenderClass(ui.value.thead({ class: [unref(uiProp)?.thead] }))}"${_scopeId}><!--[-->`);
             ssrRenderList(unref(tableApi).getHeaderGroups(), (headerGroup) => {
-              var _a4;
-              _push2(`<tr data-slot="tr" class="${ssrRenderClass(ui.value.tr({ class: [(_a4 = unref(uiProp)) == null ? void 0 : _a4.tr] }))}"${_scopeId}><!--[-->`);
+              _push2(`<tr data-slot="tr" class="${ssrRenderClass(ui.value.tr({ class: [unref(uiProp)?.tr] }))}"${_scopeId}><!--[-->`);
               ssrRenderList(headerGroup.headers, (header) => {
-                var _a5, _b3, _c2, _d2, _e2;
                 _push2(`<th${ssrRenderAttr("data-pinned", header.column.getIsPinned())}${ssrRenderAttr("scope", header.colSpan > 1 ? "colgroup" : "col")}${ssrRenderAttr("colspan", header.colSpan > 1 ? header.colSpan : void 0)}${ssrRenderAttr("rowspan", header.rowSpan > 1 ? header.rowSpan : void 0)} data-slot="th" class="${ssrRenderClass(ui.value.th({
                   class: [
-                    (_a5 = unref(uiProp)) == null ? void 0 : _a5.th,
-                    resolveValue((_c2 = (_b3 = header.column.columnDef.meta) == null ? void 0 : _b3.class) == null ? void 0 : _c2.th, header)
+                    unref(uiProp)?.th,
+                    resolveValue(header.column.columnDef.meta?.class?.th, header)
                   ],
                   pinned: !!header.column.getIsPinned()
                 }))}" style="${ssrRenderStyle([
                   getColumnStyles(header.column),
-                  resolveValue((_e2 = (_d2 = header.column.columnDef.meta) == null ? void 0 : _d2.style) == null ? void 0 : _e2.th, header)
+                  resolveValue(header.column.columnDef.meta?.style?.th, header)
                 ])}"${_scopeId}>`);
                 ssrRenderSlot(_ctx.$slots, `${header.id}-header`, mergeProps({ ref_for: true }, header.getContext()), () => {
                   if (!header.isPlaceholder) {
@@ -1919,7 +1866,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               });
               _push2(`<!--]--></tr>`);
             });
-            _push2(`<!--]--><tr data-slot="separator" class="${ssrRenderClass(ui.value.separator({ class: [(_d = unref(uiProp)) == null ? void 0 : _d.separator] }))}"${_scopeId}></tr></thead><tbody data-slot="tbody" class="${ssrRenderClass(ui.value.tbody({ class: [(_e = unref(uiProp)) == null ? void 0 : _e.tbody] }))}"${_scopeId}>`);
+            _push2(`<!--]--><tr data-slot="separator" class="${ssrRenderClass(ui.value.separator({ class: [unref(uiProp)?.separator] }))}"${_scopeId}></tr></thead><tbody data-slot="tbody" class="${ssrRenderClass(ui.value.tbody({ class: [unref(uiProp)?.tbody] }))}"${_scopeId}>`);
             ssrRenderSlot(_ctx.$slots, "body-top", {}, null, _push2, _parent2, _scopeId);
             if (rows.value.length) {
               _push2(`<!--[--><!--[-->`);
@@ -1961,11 +1908,11 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               });
               _push2(`<!--]--><!--]-->`);
             } else if (__props.loading && !!slots["loading"]) {
-              _push2(`<tr${_scopeId}><td${ssrRenderAttr("colspan", unref(tableApi).getAllLeafColumns().length)} data-slot="loading" class="${ssrRenderClass(ui.value.loading({ class: (_f = unref(uiProp)) == null ? void 0 : _f.loading }))}"${_scopeId}>`);
+              _push2(`<tr${_scopeId}><td${ssrRenderAttr("colspan", unref(tableApi).getAllLeafColumns().length)} data-slot="loading" class="${ssrRenderClass(ui.value.loading({ class: unref(uiProp)?.loading }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "loading", {}, null, _push2, _parent2, _scopeId);
               _push2(`</td></tr>`);
             } else {
-              _push2(`<tr${_scopeId}><td${ssrRenderAttr("colspan", unref(tableApi).getAllLeafColumns().length)} data-slot="empty" class="${ssrRenderClass(ui.value.empty({ class: (_g = unref(uiProp)) == null ? void 0 : _g.empty }))}"${_scopeId}>`);
+              _push2(`<tr${_scopeId}><td${ssrRenderAttr("colspan", unref(tableApi).getAllLeafColumns().length)} data-slot="empty" class="${ssrRenderClass(ui.value.empty({ class: unref(uiProp)?.empty }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "empty", {}, () => {
                 _push2(`${ssrInterpolate(__props.empty || unref(t)("table.noData"))}`);
               }, _push2, _parent2, _scopeId);
@@ -1974,23 +1921,21 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
             ssrRenderSlot(_ctx.$slots, "body-bottom", {}, null, _push2, _parent2, _scopeId);
             _push2(`</tbody>`);
             if (hasFooter.value) {
-              _push2(`<tfoot data-slot="tfoot" class="${ssrRenderClass(ui.value.tfoot({ class: [(_h = unref(uiProp)) == null ? void 0 : _h.tfoot] }))}" style="${ssrRenderStyle(unref(virtualizer) ? {
+              _push2(`<tfoot data-slot="tfoot" class="${ssrRenderClass(ui.value.tfoot({ class: [unref(uiProp)?.tfoot] }))}" style="${ssrRenderStyle(unref(virtualizer) ? {
                 transform: `translateY(${unref(virtualizer).getTotalSize() - renderedSize.value}px)`
-              } : void 0)}"${_scopeId}><tr data-slot="separator" class="${ssrRenderClass(ui.value.separator({ class: [(_i = unref(uiProp)) == null ? void 0 : _i.separator] }))}"${_scopeId}></tr><!--[-->`);
+              } : void 0)}"${_scopeId}><tr data-slot="separator" class="${ssrRenderClass(ui.value.separator({ class: [unref(uiProp)?.separator] }))}"${_scopeId}></tr><!--[-->`);
               ssrRenderList(unref(tableApi).getFooterGroups(), (footerGroup) => {
-                var _a4;
-                _push2(`<tr data-slot="tr" class="${ssrRenderClass(ui.value.tr({ class: [(_a4 = unref(uiProp)) == null ? void 0 : _a4.tr] }))}"${_scopeId}><!--[-->`);
+                _push2(`<tr data-slot="tr" class="${ssrRenderClass(ui.value.tr({ class: [unref(uiProp)?.tr] }))}"${_scopeId}><!--[-->`);
                 ssrRenderList(footerGroup.headers, (header) => {
-                  var _a5, _b3, _c2, _d2, _e2;
                   _push2(`<th${ssrRenderAttr("data-pinned", header.column.getIsPinned())}${ssrRenderAttr("colspan", header.colSpan > 1 ? header.colSpan : void 0)}${ssrRenderAttr("rowspan", header.rowSpan > 1 ? header.rowSpan : void 0)} data-slot="th" class="${ssrRenderClass(ui.value.th({
                     class: [
-                      (_a5 = unref(uiProp)) == null ? void 0 : _a5.th,
-                      resolveValue((_c2 = (_b3 = header.column.columnDef.meta) == null ? void 0 : _b3.class) == null ? void 0 : _c2.th, header)
+                      unref(uiProp)?.th,
+                      resolveValue(header.column.columnDef.meta?.class?.th, header)
                     ],
                     pinned: !!header.column.getIsPinned()
                   }))}" style="${ssrRenderStyle([
                     getColumnStyles(header.column),
-                    resolveValue((_e2 = (_d2 = header.column.columnDef.meta) == null ? void 0 : _d2.style) == null ? void 0 : _e2.th, header)
+                    resolveValue(header.column.columnDef.meta?.style?.th, header)
                   ])}"${_scopeId}>`);
                   ssrRenderSlot(_ctx.$slots, `${header.id}-footer`, mergeProps({ ref_for: true }, header.getContext()), () => {
                     if (!header.isPlaceholder) {
@@ -2017,12 +1962,12 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                 ref_key: "tableRef",
                 ref: tableRef,
                 "data-slot": "base",
-                class: ui.value.base({ class: [(_j = unref(uiProp)) == null ? void 0 : _j.base] })
+                class: ui.value.base({ class: [unref(uiProp)?.base] })
               }, [
                 __props.caption || !!slots.caption ? (openBlock(), createBlock("caption", {
                   key: 0,
                   "data-slot": "caption",
-                  class: ui.value.caption({ class: [(_k = unref(uiProp)) == null ? void 0 : _k.caption] })
+                  class: ui.value.caption({ class: [unref(uiProp)?.caption] })
                 }, [
                   renderSlot(_ctx.$slots, "caption", {}, () => [
                     createTextVNode(toDisplayString(__props.caption), 1)
@@ -2030,17 +1975,15 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                 ], 2)) : createCommentVNode("", true),
                 createVNode("thead", {
                   "data-slot": "thead",
-                  class: ui.value.thead({ class: [(_l = unref(uiProp)) == null ? void 0 : _l.thead] })
+                  class: ui.value.thead({ class: [unref(uiProp)?.thead] })
                 }, [
                   (openBlock(true), createBlock(Fragment, null, renderList(unref(tableApi).getHeaderGroups(), (headerGroup) => {
-                    var _a4;
                     return openBlock(), createBlock("tr", {
                       key: headerGroup.id,
                       "data-slot": "tr",
-                      class: ui.value.tr({ class: [(_a4 = unref(uiProp)) == null ? void 0 : _a4.tr] })
+                      class: ui.value.tr({ class: [unref(uiProp)?.tr] })
                     }, [
                       (openBlock(true), createBlock(Fragment, null, renderList(headerGroup.headers, (header) => {
-                        var _a5, _b3, _c2, _d2, _e2;
                         return openBlock(), createBlock("th", {
                           key: header.id,
                           "data-pinned": header.column.getIsPinned(),
@@ -2050,14 +1993,14 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                           "data-slot": "th",
                           class: ui.value.th({
                             class: [
-                              (_a5 = unref(uiProp)) == null ? void 0 : _a5.th,
-                              resolveValue((_c2 = (_b3 = header.column.columnDef.meta) == null ? void 0 : _b3.class) == null ? void 0 : _c2.th, header)
+                              unref(uiProp)?.th,
+                              resolveValue(header.column.columnDef.meta?.class?.th, header)
                             ],
                             pinned: !!header.column.getIsPinned()
                           }),
                           style: [
                             getColumnStyles(header.column),
-                            resolveValue((_e2 = (_d2 = header.column.columnDef.meta) == null ? void 0 : _d2.style) == null ? void 0 : _e2.th, header)
+                            resolveValue(header.column.columnDef.meta?.style?.th, header)
                           ]
                         }, [
                           renderSlot(_ctx.$slots, `${header.id}-header`, mergeProps({ ref_for: true }, header.getContext()), () => [
@@ -2073,12 +2016,12 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                   }), 128)),
                   createVNode("tr", {
                     "data-slot": "separator",
-                    class: ui.value.separator({ class: [(_m = unref(uiProp)) == null ? void 0 : _m.separator] })
+                    class: ui.value.separator({ class: [unref(uiProp)?.separator] })
                   }, null, 2)
                 ], 2),
                 createVNode("tbody", {
                   "data-slot": "tbody",
-                  class: ui.value.tbody({ class: [(_n = unref(uiProp)) == null ? void 0 : _n.tbody] })
+                  class: ui.value.tbody({ class: [unref(uiProp)?.tbody] })
                 }, [
                   renderSlot(_ctx.$slots, "body-top"),
                   rows.value.length ? (openBlock(), createBlock(Fragment, { key: 0 }, [
@@ -2089,9 +2032,8 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                       }, null, 8, ["row"]);
                     }), 128)),
                     unref(virtualizer) ? (openBlock(true), createBlock(Fragment, { key: 0 }, renderList(unref(virtualizer).getVirtualItems(), (virtualRow, index) => {
-                      var _a4;
                       return openBlock(), createBlock(unref(ReuseRowTemplate), {
-                        key: (_a4 = centerRows.value[virtualRow.index]) == null ? void 0 : _a4.id,
+                        key: centerRows.value[virtualRow.index]?.id,
                         row: centerRows.value[virtualRow.index],
                         style: {
                           height: `${virtualRow.size}px`,
@@ -2114,7 +2056,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                     createVNode("td", {
                       colspan: unref(tableApi).getAllLeafColumns().length,
                       "data-slot": "loading",
-                      class: ui.value.loading({ class: (_o = unref(uiProp)) == null ? void 0 : _o.loading })
+                      class: ui.value.loading({ class: unref(uiProp)?.loading })
                     }, [
                       renderSlot(_ctx.$slots, "loading")
                     ], 10, ["colspan"])
@@ -2122,7 +2064,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                     createVNode("td", {
                       colspan: unref(tableApi).getAllLeafColumns().length,
                       "data-slot": "empty",
-                      class: ui.value.empty({ class: (_p = unref(uiProp)) == null ? void 0 : _p.empty })
+                      class: ui.value.empty({ class: unref(uiProp)?.empty })
                     }, [
                       renderSlot(_ctx.$slots, "empty", {}, () => [
                         createTextVNode(toDisplayString(__props.empty || unref(t)("table.noData")), 1)
@@ -2134,24 +2076,22 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                 hasFooter.value ? (openBlock(), createBlock("tfoot", {
                   key: 1,
                   "data-slot": "tfoot",
-                  class: ui.value.tfoot({ class: [(_q = unref(uiProp)) == null ? void 0 : _q.tfoot] }),
+                  class: ui.value.tfoot({ class: [unref(uiProp)?.tfoot] }),
                   style: unref(virtualizer) ? {
                     transform: `translateY(${unref(virtualizer).getTotalSize() - renderedSize.value}px)`
                   } : void 0
                 }, [
                   createVNode("tr", {
                     "data-slot": "separator",
-                    class: ui.value.separator({ class: [(_r = unref(uiProp)) == null ? void 0 : _r.separator] })
+                    class: ui.value.separator({ class: [unref(uiProp)?.separator] })
                   }, null, 2),
                   (openBlock(true), createBlock(Fragment, null, renderList(unref(tableApi).getFooterGroups(), (footerGroup) => {
-                    var _a4;
                     return openBlock(), createBlock("tr", {
                       key: footerGroup.id,
                       "data-slot": "tr",
-                      class: ui.value.tr({ class: [(_a4 = unref(uiProp)) == null ? void 0 : _a4.tr] })
+                      class: ui.value.tr({ class: [unref(uiProp)?.tr] })
                     }, [
                       (openBlock(true), createBlock(Fragment, null, renderList(footerGroup.headers, (header) => {
-                        var _a5, _b3, _c2, _d2, _e2;
                         return openBlock(), createBlock("th", {
                           key: header.id,
                           "data-pinned": header.column.getIsPinned(),
@@ -2160,14 +2100,14 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
                           "data-slot": "th",
                           class: ui.value.th({
                             class: [
-                              (_a5 = unref(uiProp)) == null ? void 0 : _a5.th,
-                              resolveValue((_c2 = (_b3 = header.column.columnDef.meta) == null ? void 0 : _b3.class) == null ? void 0 : _c2.th, header)
+                              unref(uiProp)?.th,
+                              resolveValue(header.column.columnDef.meta?.class?.th, header)
                             ],
                             pinned: !!header.column.getIsPinned()
                           }),
                           style: [
                             getColumnStyles(header.column),
-                            resolveValue((_e2 = (_d2 = header.column.columnDef.meta) == null ? void 0 : _d2.style) == null ? void 0 : _e2.th, header)
+                            resolveValue(header.column.columnDef.meta?.style?.th, header)
                           ]
                         }, [
                           renderSlot(_ctx.$slots, `${header.id}-footer`, mergeProps({ ref_for: true }, header.getContext()), () => [
@@ -2194,7 +2134,7 @@ const _sfc_main$2 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
         as: __props.as
       }, _ctx.$attrs, {
         "data-slot": "root",
-        class: ui.value.root({ class: [(_a2 = unref(uiProp)) == null ? void 0 : _a2.root, props.class] })
+        class: ui.value.root({ class: [unref(uiProp)?.root, props.class] })
       }), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -2285,58 +2225,48 @@ const _sfc_main$1 = {
     const prevIcon = computed(() => props.prevIcon || (dir.value === "rtl" ? appConfig.ui.icons.chevronRight : appConfig.ui.icons.chevronLeft));
     const nextIcon = computed(() => props.nextIcon || (dir.value === "rtl" ? appConfig.ui.icons.chevronLeft : appConfig.ui.icons.chevronRight));
     const lastIcon = computed(() => props.lastIcon || (dir.value === "rtl" ? appConfig.ui.icons.chevronDoubleLeft : appConfig.ui.icons.chevronDoubleRight));
-    const ui = computed(() => {
-      var _a;
-      return tv({ extend: tv(theme), ...((_a = appConfig.ui) == null ? void 0 : _a.pagination) || {} })();
-    });
+    const ui = computed(() => tv({ extend: tv(theme), ...appConfig.ui?.pagination || {} })());
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       _push(ssrRenderComponent(unref(PaginationRoot_default), mergeProps(unref(rootProps), {
         "data-slot": "root",
-        class: ui.value.root({ class: [(_a = unref(uiProp)) == null ? void 0 : _a.root, props.class] })
+        class: ui.value.root({ class: [unref(uiProp)?.root, props.class] })
       }, _attrs), {
         default: withCtx(({ page, pageCount }, _push2, _parent2, _scopeId) => {
-          var _a2, _b;
           if (_push2) {
             _push2(ssrRenderComponent(unref(PaginationList_default), {
               "data-slot": "list",
-              class: ui.value.list({ class: (_a2 = unref(uiProp)) == null ? void 0 : _a2.list })
+              class: ui.value.list({ class: unref(uiProp)?.list })
             }, {
               default: withCtx(({ items }, _push3, _parent3, _scopeId2) => {
-                var _a3, _b2, _c, _d, _e, _f, _g, _h;
                 if (_push3) {
                   if (__props.showControls || !!slots.first) {
                     _push3(ssrRenderComponent(unref(PaginationFirst_default), {
                       "as-child": "",
                       "data-slot": "first",
-                      class: ui.value.first({ class: (_a3 = unref(uiProp)) == null ? void 0 : _a3.first })
+                      class: ui.value.first({ class: unref(uiProp)?.first })
                     }, {
                       default: withCtx((_, _push4, _parent4, _scopeId3) => {
                         if (_push4) {
                           ssrRenderSlot(_ctx.$slots, "first", {}, () => {
-                            var _a4;
                             _push4(ssrRenderComponent(_sfc_main$8, {
                               color: __props.color,
                               variant: __props.variant,
                               size: __props.size,
                               icon: firstIcon.value,
-                              to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, 1)
+                              to: __props.to?.(1)
                             }, null, _parent4, _scopeId3));
                           }, _push4, _parent4, _scopeId3);
                         } else {
                           return [
-                            renderSlot(_ctx.$slots, "first", {}, () => {
-                              var _a4;
-                              return [
-                                createVNode(_sfc_main$8, {
-                                  color: __props.color,
-                                  variant: __props.variant,
-                                  size: __props.size,
-                                  icon: firstIcon.value,
-                                  to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, 1)
-                                }, null, 8, ["color", "variant", "size", "icon", "to"])
-                              ];
-                            })
+                            renderSlot(_ctx.$slots, "first", {}, () => [
+                              createVNode(_sfc_main$8, {
+                                color: __props.color,
+                                variant: __props.variant,
+                                size: __props.size,
+                                icon: firstIcon.value,
+                                to: __props.to?.(1)
+                              }, null, 8, ["color", "variant", "size", "icon", "to"])
+                            ])
                           ];
                         }
                       }),
@@ -2349,34 +2279,30 @@ const _sfc_main$1 = {
                     _push3(ssrRenderComponent(unref(PaginationPrev_default), {
                       "as-child": "",
                       "data-slot": "prev",
-                      class: ui.value.prev({ class: (_b2 = unref(uiProp)) == null ? void 0 : _b2.prev })
+                      class: ui.value.prev({ class: unref(uiProp)?.prev })
                     }, {
                       default: withCtx((_, _push4, _parent4, _scopeId3) => {
                         if (_push4) {
                           ssrRenderSlot(_ctx.$slots, "prev", {}, () => {
-                            var _a4;
                             _push4(ssrRenderComponent(_sfc_main$8, {
                               color: __props.color,
                               variant: __props.variant,
                               size: __props.size,
                               icon: prevIcon.value,
-                              to: page > 1 ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page - 1) : void 0
+                              to: page > 1 ? __props.to?.(page - 1) : void 0
                             }, null, _parent4, _scopeId3));
                           }, _push4, _parent4, _scopeId3);
                         } else {
                           return [
-                            renderSlot(_ctx.$slots, "prev", {}, () => {
-                              var _a4;
-                              return [
-                                createVNode(_sfc_main$8, {
-                                  color: __props.color,
-                                  variant: __props.variant,
-                                  size: __props.size,
-                                  icon: prevIcon.value,
-                                  to: page > 1 ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page - 1) : void 0
-                                }, null, 8, ["color", "variant", "size", "icon", "to"])
-                              ];
-                            })
+                            renderSlot(_ctx.$slots, "prev", {}, () => [
+                              createVNode(_sfc_main$8, {
+                                color: __props.color,
+                                variant: __props.variant,
+                                size: __props.size,
+                                icon: prevIcon.value,
+                                to: page > 1 ? __props.to?.(page - 1) : void 0
+                              }, null, 8, ["color", "variant", "size", "icon", "to"])
+                            ])
                           ];
                         }
                       }),
@@ -2387,45 +2313,40 @@ const _sfc_main$1 = {
                   }
                   _push3(`<!--[-->`);
                   ssrRenderList(items, (item, index) => {
-                    var _a4, _b3;
                     _push3(`<!--[-->`);
                     if (item.type === "page") {
                       _push3(ssrRenderComponent(unref(PaginationListItem_default), {
                         "as-child": "",
                         value: item.value,
                         "data-slot": "item",
-                        class: ui.value.item({ class: (_a4 = unref(uiProp)) == null ? void 0 : _a4.item })
+                        class: ui.value.item({ class: unref(uiProp)?.item })
                       }, {
                         default: withCtx((_, _push4, _parent4, _scopeId3) => {
                           if (_push4) {
                             ssrRenderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => {
-                              var _a5;
                               _push4(ssrRenderComponent(_sfc_main$8, {
                                 color: page === item.value ? __props.activeColor : __props.color,
                                 variant: page === item.value ? __props.activeVariant : __props.variant,
                                 size: __props.size,
                                 label: String(item.value),
                                 ui: { label: ui.value.label() },
-                                to: (_a5 = __props.to) == null ? void 0 : _a5.call(__props, item.value),
+                                to: __props.to?.(item.value),
                                 square: ""
                               }, null, _parent4, _scopeId3));
                             }, _push4, _parent4, _scopeId3);
                           } else {
                             return [
-                              renderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => {
-                                var _a5;
-                                return [
-                                  createVNode(_sfc_main$8, {
-                                    color: page === item.value ? __props.activeColor : __props.color,
-                                    variant: page === item.value ? __props.activeVariant : __props.variant,
-                                    size: __props.size,
-                                    label: String(item.value),
-                                    ui: { label: ui.value.label() },
-                                    to: (_a5 = __props.to) == null ? void 0 : _a5.call(__props, item.value),
-                                    square: ""
-                                  }, null, 8, ["color", "variant", "size", "label", "ui", "to"])
-                                ];
-                              })
+                              renderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => [
+                                createVNode(_sfc_main$8, {
+                                  color: page === item.value ? __props.activeColor : __props.color,
+                                  variant: page === item.value ? __props.activeVariant : __props.variant,
+                                  size: __props.size,
+                                  label: String(item.value),
+                                  ui: { label: ui.value.label() },
+                                  to: __props.to?.(item.value),
+                                  square: ""
+                                }, null, 8, ["color", "variant", "size", "label", "ui", "to"])
+                              ])
                             ];
                           }
                         }),
@@ -2435,7 +2356,7 @@ const _sfc_main$1 = {
                       _push3(ssrRenderComponent(unref(PaginationEllipsis_default), {
                         "as-child": "",
                         "data-slot": "ellipsis",
-                        class: ui.value.ellipsis({ class: (_b3 = unref(uiProp)) == null ? void 0 : _b3.ellipsis })
+                        class: ui.value.ellipsis({ class: unref(uiProp)?.ellipsis })
                       }, {
                         default: withCtx((_, _push4, _parent4, _scopeId3) => {
                           if (_push4) {
@@ -2472,34 +2393,30 @@ const _sfc_main$1 = {
                     _push3(ssrRenderComponent(unref(PaginationNext_default), {
                       "as-child": "",
                       "data-slot": "next",
-                      class: ui.value.next({ class: (_c = unref(uiProp)) == null ? void 0 : _c.next })
+                      class: ui.value.next({ class: unref(uiProp)?.next })
                     }, {
                       default: withCtx((_, _push4, _parent4, _scopeId3) => {
                         if (_push4) {
                           ssrRenderSlot(_ctx.$slots, "next", {}, () => {
-                            var _a4;
                             _push4(ssrRenderComponent(_sfc_main$8, {
                               color: __props.color,
                               variant: __props.variant,
                               size: __props.size,
                               icon: nextIcon.value,
-                              to: page < pageCount ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page + 1) : void 0
+                              to: page < pageCount ? __props.to?.(page + 1) : void 0
                             }, null, _parent4, _scopeId3));
                           }, _push4, _parent4, _scopeId3);
                         } else {
                           return [
-                            renderSlot(_ctx.$slots, "next", {}, () => {
-                              var _a4;
-                              return [
-                                createVNode(_sfc_main$8, {
-                                  color: __props.color,
-                                  variant: __props.variant,
-                                  size: __props.size,
-                                  icon: nextIcon.value,
-                                  to: page < pageCount ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page + 1) : void 0
-                                }, null, 8, ["color", "variant", "size", "icon", "to"])
-                              ];
-                            })
+                            renderSlot(_ctx.$slots, "next", {}, () => [
+                              createVNode(_sfc_main$8, {
+                                color: __props.color,
+                                variant: __props.variant,
+                                size: __props.size,
+                                icon: nextIcon.value,
+                                to: page < pageCount ? __props.to?.(page + 1) : void 0
+                              }, null, 8, ["color", "variant", "size", "icon", "to"])
+                            ])
                           ];
                         }
                       }),
@@ -2512,34 +2429,30 @@ const _sfc_main$1 = {
                     _push3(ssrRenderComponent(unref(PaginationLast_default), {
                       "as-child": "",
                       "data-slot": "last",
-                      class: ui.value.last({ class: (_d = unref(uiProp)) == null ? void 0 : _d.last })
+                      class: ui.value.last({ class: unref(uiProp)?.last })
                     }, {
                       default: withCtx((_, _push4, _parent4, _scopeId3) => {
                         if (_push4) {
                           ssrRenderSlot(_ctx.$slots, "last", {}, () => {
-                            var _a4;
                             _push4(ssrRenderComponent(_sfc_main$8, {
                               color: __props.color,
                               variant: __props.variant,
                               size: __props.size,
                               icon: lastIcon.value,
-                              to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, pageCount)
+                              to: __props.to?.(pageCount)
                             }, null, _parent4, _scopeId3));
                           }, _push4, _parent4, _scopeId3);
                         } else {
                           return [
-                            renderSlot(_ctx.$slots, "last", {}, () => {
-                              var _a4;
-                              return [
-                                createVNode(_sfc_main$8, {
-                                  color: __props.color,
-                                  variant: __props.variant,
-                                  size: __props.size,
-                                  icon: lastIcon.value,
-                                  to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, pageCount)
-                                }, null, 8, ["color", "variant", "size", "icon", "to"])
-                              ];
-                            })
+                            renderSlot(_ctx.$slots, "last", {}, () => [
+                              createVNode(_sfc_main$8, {
+                                color: __props.color,
+                                variant: __props.variant,
+                                size: __props.size,
+                                icon: lastIcon.value,
+                                to: __props.to?.(pageCount)
+                              }, null, 8, ["color", "variant", "size", "icon", "to"])
+                            ])
                           ];
                         }
                       }),
@@ -2554,21 +2467,18 @@ const _sfc_main$1 = {
                       key: 0,
                       "as-child": "",
                       "data-slot": "first",
-                      class: ui.value.first({ class: (_e = unref(uiProp)) == null ? void 0 : _e.first })
+                      class: ui.value.first({ class: unref(uiProp)?.first })
                     }, {
                       default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "first", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: firstIcon.value,
-                              to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, 1)
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
+                        renderSlot(_ctx.$slots, "first", {}, () => [
+                          createVNode(_sfc_main$8, {
+                            color: __props.color,
+                            variant: __props.variant,
+                            size: __props.size,
+                            icon: firstIcon.value,
+                            to: __props.to?.(1)
+                          }, null, 8, ["color", "variant", "size", "icon", "to"])
+                        ])
                       ]),
                       _: 3
                     }, 8, ["class"])) : createCommentVNode("", true),
@@ -2576,56 +2486,49 @@ const _sfc_main$1 = {
                       key: 1,
                       "as-child": "",
                       "data-slot": "prev",
-                      class: ui.value.prev({ class: (_f = unref(uiProp)) == null ? void 0 : _f.prev })
+                      class: ui.value.prev({ class: unref(uiProp)?.prev })
                     }, {
                       default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "prev", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: prevIcon.value,
-                              to: page > 1 ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page - 1) : void 0
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
+                        renderSlot(_ctx.$slots, "prev", {}, () => [
+                          createVNode(_sfc_main$8, {
+                            color: __props.color,
+                            variant: __props.variant,
+                            size: __props.size,
+                            icon: prevIcon.value,
+                            to: page > 1 ? __props.to?.(page - 1) : void 0
+                          }, null, 8, ["color", "variant", "size", "icon", "to"])
+                        ])
                       ]),
                       _: 2
                     }, 1032, ["class"])) : createCommentVNode("", true),
                     (openBlock(true), createBlock(Fragment, null, renderList(items, (item, index) => {
-                      var _a4, _b3;
                       return openBlock(), createBlock(Fragment, { key: index }, [
                         item.type === "page" ? (openBlock(), createBlock(unref(PaginationListItem_default), {
                           key: 0,
                           "as-child": "",
                           value: item.value,
                           "data-slot": "item",
-                          class: ui.value.item({ class: (_a4 = unref(uiProp)) == null ? void 0 : _a4.item })
+                          class: ui.value.item({ class: unref(uiProp)?.item })
                         }, {
                           default: withCtx(() => [
-                            renderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => {
-                              var _a5;
-                              return [
-                                createVNode(_sfc_main$8, {
-                                  color: page === item.value ? __props.activeColor : __props.color,
-                                  variant: page === item.value ? __props.activeVariant : __props.variant,
-                                  size: __props.size,
-                                  label: String(item.value),
-                                  ui: { label: ui.value.label() },
-                                  to: (_a5 = __props.to) == null ? void 0 : _a5.call(__props, item.value),
-                                  square: ""
-                                }, null, 8, ["color", "variant", "size", "label", "ui", "to"])
-                              ];
-                            })
+                            renderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => [
+                              createVNode(_sfc_main$8, {
+                                color: page === item.value ? __props.activeColor : __props.color,
+                                variant: page === item.value ? __props.activeVariant : __props.variant,
+                                size: __props.size,
+                                label: String(item.value),
+                                ui: { label: ui.value.label() },
+                                to: __props.to?.(item.value),
+                                square: ""
+                              }, null, 8, ["color", "variant", "size", "label", "ui", "to"])
+                            ])
                           ]),
                           _: 2
                         }, 1032, ["value", "class"])) : (openBlock(), createBlock(unref(PaginationEllipsis_default), {
                           key: 1,
                           "as-child": "",
                           "data-slot": "ellipsis",
-                          class: ui.value.ellipsis({ class: (_b3 = unref(uiProp)) == null ? void 0 : _b3.ellipsis })
+                          class: ui.value.ellipsis({ class: unref(uiProp)?.ellipsis })
                         }, {
                           default: withCtx(() => [
                             renderSlot(_ctx.$slots, "ellipsis", { ui: ui.value }, () => [
@@ -2646,21 +2549,18 @@ const _sfc_main$1 = {
                       key: 2,
                       "as-child": "",
                       "data-slot": "next",
-                      class: ui.value.next({ class: (_g = unref(uiProp)) == null ? void 0 : _g.next })
+                      class: ui.value.next({ class: unref(uiProp)?.next })
                     }, {
                       default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "next", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: nextIcon.value,
-                              to: page < pageCount ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page + 1) : void 0
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
+                        renderSlot(_ctx.$slots, "next", {}, () => [
+                          createVNode(_sfc_main$8, {
+                            color: __props.color,
+                            variant: __props.variant,
+                            size: __props.size,
+                            icon: nextIcon.value,
+                            to: page < pageCount ? __props.to?.(page + 1) : void 0
+                          }, null, 8, ["color", "variant", "size", "icon", "to"])
+                        ])
                       ]),
                       _: 2
                     }, 1032, ["class"])) : createCommentVNode("", true),
@@ -2668,21 +2568,18 @@ const _sfc_main$1 = {
                       key: 3,
                       "as-child": "",
                       "data-slot": "last",
-                      class: ui.value.last({ class: (_h = unref(uiProp)) == null ? void 0 : _h.last })
+                      class: ui.value.last({ class: unref(uiProp)?.last })
                     }, {
                       default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "last", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: lastIcon.value,
-                              to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, pageCount)
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
+                        renderSlot(_ctx.$slots, "last", {}, () => [
+                          createVNode(_sfc_main$8, {
+                            color: __props.color,
+                            variant: __props.variant,
+                            size: __props.size,
+                            icon: lastIcon.value,
+                            to: __props.to?.(pageCount)
+                          }, null, 8, ["color", "variant", "size", "icon", "to"])
+                        ])
                       ]),
                       _: 2
                     }, 1032, ["class"])) : createCommentVNode("", true)
@@ -2695,149 +2592,130 @@ const _sfc_main$1 = {
             return [
               createVNode(unref(PaginationList_default), {
                 "data-slot": "list",
-                class: ui.value.list({ class: (_b = unref(uiProp)) == null ? void 0 : _b.list })
+                class: ui.value.list({ class: unref(uiProp)?.list })
               }, {
-                default: withCtx(({ items }) => {
-                  var _a3, _b2, _c, _d;
-                  return [
-                    __props.showControls || !!slots.first ? (openBlock(), createBlock(unref(PaginationFirst_default), {
-                      key: 0,
-                      "as-child": "",
-                      "data-slot": "first",
-                      class: ui.value.first({ class: (_a3 = unref(uiProp)) == null ? void 0 : _a3.first })
-                    }, {
-                      default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "first", {}, () => {
-                          var _a4;
-                          return [
+                default: withCtx(({ items }) => [
+                  __props.showControls || !!slots.first ? (openBlock(), createBlock(unref(PaginationFirst_default), {
+                    key: 0,
+                    "as-child": "",
+                    "data-slot": "first",
+                    class: ui.value.first({ class: unref(uiProp)?.first })
+                  }, {
+                    default: withCtx(() => [
+                      renderSlot(_ctx.$slots, "first", {}, () => [
+                        createVNode(_sfc_main$8, {
+                          color: __props.color,
+                          variant: __props.variant,
+                          size: __props.size,
+                          icon: firstIcon.value,
+                          to: __props.to?.(1)
+                        }, null, 8, ["color", "variant", "size", "icon", "to"])
+                      ])
+                    ]),
+                    _: 3
+                  }, 8, ["class"])) : createCommentVNode("", true),
+                  __props.showControls || !!slots.prev ? (openBlock(), createBlock(unref(PaginationPrev_default), {
+                    key: 1,
+                    "as-child": "",
+                    "data-slot": "prev",
+                    class: ui.value.prev({ class: unref(uiProp)?.prev })
+                  }, {
+                    default: withCtx(() => [
+                      renderSlot(_ctx.$slots, "prev", {}, () => [
+                        createVNode(_sfc_main$8, {
+                          color: __props.color,
+                          variant: __props.variant,
+                          size: __props.size,
+                          icon: prevIcon.value,
+                          to: page > 1 ? __props.to?.(page - 1) : void 0
+                        }, null, 8, ["color", "variant", "size", "icon", "to"])
+                      ])
+                    ]),
+                    _: 2
+                  }, 1032, ["class"])) : createCommentVNode("", true),
+                  (openBlock(true), createBlock(Fragment, null, renderList(items, (item, index) => {
+                    return openBlock(), createBlock(Fragment, { key: index }, [
+                      item.type === "page" ? (openBlock(), createBlock(unref(PaginationListItem_default), {
+                        key: 0,
+                        "as-child": "",
+                        value: item.value,
+                        "data-slot": "item",
+                        class: ui.value.item({ class: unref(uiProp)?.item })
+                      }, {
+                        default: withCtx(() => [
+                          renderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => [
                             createVNode(_sfc_main$8, {
+                              color: page === item.value ? __props.activeColor : __props.color,
+                              variant: page === item.value ? __props.activeVariant : __props.variant,
+                              size: __props.size,
+                              label: String(item.value),
+                              ui: { label: ui.value.label() },
+                              to: __props.to?.(item.value),
+                              square: ""
+                            }, null, 8, ["color", "variant", "size", "label", "ui", "to"])
+                          ])
+                        ]),
+                        _: 2
+                      }, 1032, ["value", "class"])) : (openBlock(), createBlock(unref(PaginationEllipsis_default), {
+                        key: 1,
+                        "as-child": "",
+                        "data-slot": "ellipsis",
+                        class: ui.value.ellipsis({ class: unref(uiProp)?.ellipsis })
+                      }, {
+                        default: withCtx(() => [
+                          renderSlot(_ctx.$slots, "ellipsis", { ui: ui.value }, () => [
+                            createVNode(_sfc_main$8, {
+                              as: "div",
                               color: __props.color,
                               variant: __props.variant,
                               size: __props.size,
-                              icon: firstIcon.value,
-                              to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, 1)
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
-                      ]),
-                      _: 3
-                    }, 8, ["class"])) : createCommentVNode("", true),
-                    __props.showControls || !!slots.prev ? (openBlock(), createBlock(unref(PaginationPrev_default), {
-                      key: 1,
-                      "as-child": "",
-                      "data-slot": "prev",
-                      class: ui.value.prev({ class: (_b2 = unref(uiProp)) == null ? void 0 : _b2.prev })
-                    }, {
-                      default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "prev", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: prevIcon.value,
-                              to: page > 1 ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page - 1) : void 0
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
-                      ]),
-                      _: 2
-                    }, 1032, ["class"])) : createCommentVNode("", true),
-                    (openBlock(true), createBlock(Fragment, null, renderList(items, (item, index) => {
-                      var _a4, _b3;
-                      return openBlock(), createBlock(Fragment, { key: index }, [
-                        item.type === "page" ? (openBlock(), createBlock(unref(PaginationListItem_default), {
-                          key: 0,
-                          "as-child": "",
-                          value: item.value,
-                          "data-slot": "item",
-                          class: ui.value.item({ class: (_a4 = unref(uiProp)) == null ? void 0 : _a4.item })
-                        }, {
-                          default: withCtx(() => [
-                            renderSlot(_ctx.$slots, "item", mergeProps({ ref_for: true }, { item, index, page, pageCount }), () => {
-                              var _a5;
-                              return [
-                                createVNode(_sfc_main$8, {
-                                  color: page === item.value ? __props.activeColor : __props.color,
-                                  variant: page === item.value ? __props.activeVariant : __props.variant,
-                                  size: __props.size,
-                                  label: String(item.value),
-                                  ui: { label: ui.value.label() },
-                                  to: (_a5 = __props.to) == null ? void 0 : _a5.call(__props, item.value),
-                                  square: ""
-                                }, null, 8, ["color", "variant", "size", "label", "ui", "to"])
-                              ];
-                            })
-                          ]),
-                          _: 2
-                        }, 1032, ["value", "class"])) : (openBlock(), createBlock(unref(PaginationEllipsis_default), {
-                          key: 1,
-                          "as-child": "",
-                          "data-slot": "ellipsis",
-                          class: ui.value.ellipsis({ class: (_b3 = unref(uiProp)) == null ? void 0 : _b3.ellipsis })
-                        }, {
-                          default: withCtx(() => [
-                            renderSlot(_ctx.$slots, "ellipsis", { ui: ui.value }, () => [
-                              createVNode(_sfc_main$8, {
-                                as: "div",
-                                color: __props.color,
-                                variant: __props.variant,
-                                size: __props.size,
-                                icon: __props.ellipsisIcon || unref(appConfig).ui.icons.ellipsis
-                              }, null, 8, ["color", "variant", "size", "icon"])
-                            ])
-                          ]),
-                          _: 3
-                        }, 8, ["class"]))
-                      ], 64);
-                    }), 128)),
-                    __props.showControls || !!slots.next ? (openBlock(), createBlock(unref(PaginationNext_default), {
-                      key: 2,
-                      "as-child": "",
-                      "data-slot": "next",
-                      class: ui.value.next({ class: (_c = unref(uiProp)) == null ? void 0 : _c.next })
-                    }, {
-                      default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "next", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: nextIcon.value,
-                              to: page < pageCount ? (_a4 = __props.to) == null ? void 0 : _a4.call(__props, page + 1) : void 0
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
-                      ]),
-                      _: 2
-                    }, 1032, ["class"])) : createCommentVNode("", true),
-                    __props.showControls || !!slots.last ? (openBlock(), createBlock(unref(PaginationLast_default), {
-                      key: 3,
-                      "as-child": "",
-                      "data-slot": "last",
-                      class: ui.value.last({ class: (_d = unref(uiProp)) == null ? void 0 : _d.last })
-                    }, {
-                      default: withCtx(() => [
-                        renderSlot(_ctx.$slots, "last", {}, () => {
-                          var _a4;
-                          return [
-                            createVNode(_sfc_main$8, {
-                              color: __props.color,
-                              variant: __props.variant,
-                              size: __props.size,
-                              icon: lastIcon.value,
-                              to: (_a4 = __props.to) == null ? void 0 : _a4.call(__props, pageCount)
-                            }, null, 8, ["color", "variant", "size", "icon", "to"])
-                          ];
-                        })
-                      ]),
-                      _: 2
-                    }, 1032, ["class"])) : createCommentVNode("", true)
-                  ];
-                }),
+                              icon: __props.ellipsisIcon || unref(appConfig).ui.icons.ellipsis
+                            }, null, 8, ["color", "variant", "size", "icon"])
+                          ])
+                        ]),
+                        _: 3
+                      }, 8, ["class"]))
+                    ], 64);
+                  }), 128)),
+                  __props.showControls || !!slots.next ? (openBlock(), createBlock(unref(PaginationNext_default), {
+                    key: 2,
+                    "as-child": "",
+                    "data-slot": "next",
+                    class: ui.value.next({ class: unref(uiProp)?.next })
+                  }, {
+                    default: withCtx(() => [
+                      renderSlot(_ctx.$slots, "next", {}, () => [
+                        createVNode(_sfc_main$8, {
+                          color: __props.color,
+                          variant: __props.variant,
+                          size: __props.size,
+                          icon: nextIcon.value,
+                          to: page < pageCount ? __props.to?.(page + 1) : void 0
+                        }, null, 8, ["color", "variant", "size", "icon", "to"])
+                      ])
+                    ]),
+                    _: 2
+                  }, 1032, ["class"])) : createCommentVNode("", true),
+                  __props.showControls || !!slots.last ? (openBlock(), createBlock(unref(PaginationLast_default), {
+                    key: 3,
+                    "as-child": "",
+                    "data-slot": "last",
+                    class: ui.value.last({ class: unref(uiProp)?.last })
+                  }, {
+                    default: withCtx(() => [
+                      renderSlot(_ctx.$slots, "last", {}, () => [
+                        createVNode(_sfc_main$8, {
+                          color: __props.color,
+                          variant: __props.variant,
+                          size: __props.size,
+                          icon: lastIcon.value,
+                          to: __props.to?.(pageCount)
+                        }, null, 8, ["color", "variant", "size", "icon", "to"])
+                      ])
+                    ]),
+                    _: 2
+                  }, 1032, ["class"])) : createCommentVNode("", true)
+                ]),
                 _: 2
               }, 1032, ["class"])
             ];
@@ -2956,20 +2834,16 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       pageSize: 5
     });
     return (_ctx, _push, _parent, _attrs) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h, _i;
       const _component_UInput = _sfc_main$3;
       const _component_UTable = _sfc_main$2;
       const _component_NuxtLink = __nuxt_component_0$2;
       const _component_UPagination = _sfc_main$1;
       _push(`<div${ssrRenderAttrs(mergeProps({ class: "flex flex-col flex-1 w-full p-5" }, _attrs))}><div class="flex px-4 py-3.5 border-b border-accented">`);
       _push(ssrRenderComponent(_component_UInput, {
-        "model-value": (_c = (_b = (_a = unref(table)) == null ? void 0 : _a.tableApi) == null ? void 0 : _b.getColumn("email")) == null ? void 0 : _c.getFilterValue(),
+        "model-value": unref(table)?.tableApi?.getColumn("email")?.getFilterValue(),
         class: "max-w-sm",
         placeholder: "Filter emails...",
-        "onUpdate:modelValue": ($event) => {
-          var _a2, _b2, _c2;
-          return (_c2 = (_b2 = (_a2 = unref(table)) == null ? void 0 : _a2.tableApi) == null ? void 0 : _b2.getColumn("email")) == null ? void 0 : _c2.setFilterValue($event);
-        }
+        "onUpdate:modelValue": ($event) => unref(table)?.tableApi?.getColumn("email")?.setFilterValue($event)
       }, null, _parent));
       _push(`</div>`);
       _push(ssrRenderComponent(_component_UTable, {
@@ -2987,19 +2861,17 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         class: "flex-1"
       }, {
         "email-cell": withCtx(({ row }, _push2, _parent2, _scopeId) => {
-          var _a2, _b2;
           if (_push2) {
             _push2(ssrRenderComponent(_component_NuxtLink, {
-              to: `/dashboard/leads/${(_a2 = row.original) == null ? void 0 : _a2._id}/details`,
+              to: `/dashboard/leads/${row.original?._id}/details`,
               class: "text-cyan-400 hover:text-cyan-700 underline font-medium"
             }, {
               default: withCtx((_, _push3, _parent3, _scopeId2) => {
-                var _a3, _b3;
                 if (_push3) {
-                  _push3(`${ssrInterpolate((_a3 = row.original) == null ? void 0 : _a3.email)}`);
+                  _push3(`${ssrInterpolate(row.original?.email)}`);
                 } else {
                   return [
-                    createTextVNode(toDisplayString((_b3 = row.original) == null ? void 0 : _b3.email), 1)
+                    createTextVNode(toDisplayString(row.original?.email), 1)
                   ];
                 }
               }),
@@ -3008,15 +2880,12 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
           } else {
             return [
               createVNode(_component_NuxtLink, {
-                to: `/dashboard/leads/${(_b2 = row.original) == null ? void 0 : _b2._id}/details`,
+                to: `/dashboard/leads/${row.original?._id}/details`,
                 class: "text-cyan-400 hover:text-cyan-700 underline font-medium"
               }, {
-                default: withCtx(() => {
-                  var _a3;
-                  return [
-                    createTextVNode(toDisplayString((_a3 = row.original) == null ? void 0 : _a3.email), 1)
-                  ];
-                }),
+                default: withCtx(() => [
+                  createTextVNode(toDisplayString(row.original?.email), 1)
+                ]),
                 _: 2
               }, 1032, ["to"])
             ];
@@ -3026,13 +2895,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }, _parent));
       _push(`<div class="flex justify-end border-t border-default pt-4 px-4 color-cyan-400">`);
       _push(ssrRenderComponent(_component_UPagination, {
-        page: (((_e = (_d = unref(table)) == null ? void 0 : _d.tableApi) == null ? void 0 : _e.getState().pagination.pageIndex) || 0) + 1,
-        "items-per-page": (_g = (_f = unref(table)) == null ? void 0 : _f.tableApi) == null ? void 0 : _g.getState().pagination.pageSize,
-        total: (_i = (_h = unref(table)) == null ? void 0 : _h.tableApi) == null ? void 0 : _i.getFilteredRowModel().rows.length,
-        "onUpdate:page": (p) => {
-          var _a2, _b2;
-          return (_b2 = (_a2 = unref(table)) == null ? void 0 : _a2.tableApi) == null ? void 0 : _b2.setPageIndex(p - 1);
-        }
+        page: (unref(table)?.tableApi?.getState().pagination.pageIndex || 0) + 1,
+        "items-per-page": unref(table)?.tableApi?.getState().pagination.pageSize,
+        total: unref(table)?.tableApi?.getFilteredRowModel().rows.length,
+        "onUpdate:page": (p) => unref(table)?.tableApi?.setPageIndex(p - 1)
       }, null, _parent));
       _push(`</div></div>`);
     };
