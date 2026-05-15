@@ -4,9 +4,9 @@ import { useMotion } from '@vueuse/motion';
 import { formVarient, containerVarient, inputVarient } from '~/utils/varients';
 
 useHead({
-  title: 'Ascend | Forgot Password',
+  title: 'GhostForm | Forgot Password',
   meta: [
-    { name: 'description', content: 'Ascend Forgot Password.' },
+    { name: 'description', content: 'GhostForm Forgot Password.' },
   ],
 });
 

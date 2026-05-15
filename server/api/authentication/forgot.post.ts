@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
     const htmlBody = `
     <div>
-        <h1>Welcome to Ascend</h1>
+        <h1>Welcome to GhostForm</h1>
         <a href="${process.env.PROJECT_DOMAIN}/${token}/resetpassword">Click here to reset password</a>
     </div>
     `;

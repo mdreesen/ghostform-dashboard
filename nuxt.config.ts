@@ -34,9 +34,6 @@ export default defineNuxtConfig({
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       ],
-      script: [
-        { src: 'https://ghostform-zeta.vercel.app/embed.js', async: true }
-      ]
     }
   },
   notify: {
@@ -87,7 +84,7 @@ export default defineNuxtConfig({
     manifest: {
       name: 'GhostForm',
       short_name: 'GhostForm',
-      description: 'Set goals. Achieve greatness.',
+      description: 'Manifest your leads instantly.',
       orientation: 'natural',
       lang: 'en',
       display: 'standalone',
@@ -112,11 +109,11 @@ export default defineNuxtConfig({
           type: 'image/png',
           purpose: "maskable"
         },
-        {
-          src: '/images/logo_transparent_512x512.webp',
-          sizes: '512x512',
-          type: 'image/webp',
-        },
+        // {
+        //   src: '/images/logo_transparent_512x512.webp',
+        //   sizes: '512x512',
+        //   type: 'image/webp',
+        // },
         {
           src: '/images/maskable-icon.png',
           sizes: '445x445',
@@ -124,11 +121,11 @@ export default defineNuxtConfig({
         }
       ],
       categories: [
-        "fitness",
-        "health",
-        "lifestyle",
-        "productivity",
-        "books",
+        "realtor",
+        "housing",
+        "leads",
+        "lead generation",
+        "scheduling",
         "personalization"
       ],
       display_override: [

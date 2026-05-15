@@ -6,9 +6,9 @@
 // });
 
 useHead({
-    title: 'Ascend | Main',
+    title: 'GhostForm | Main',
     meta: [
-        { name: 'description', content: 'Ascend Main.' },
+        { name: 'description', content: 'GhostForm Main.' },
     ],
 });
 

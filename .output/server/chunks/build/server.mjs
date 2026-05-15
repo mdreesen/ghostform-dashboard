@@ -570,7 +570,7 @@ const _routes = [
     name: "forgotpassword",
     path: "/forgotpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./forgotpassword-BfPLZoVy.mjs')
+    component: () => import('./forgotpassword-DzH7sxGh.mjs')
   },
   {
     name: "login",
@@ -594,13 +594,13 @@ const _routes = [
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./resetpassword-CYo86FuL.mjs')
+    component: () => import('./resetpassword-B_1_8iNJ.mjs')
   },
   {
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import('./index-Cyt6YUW_.mjs')
+    component: () => import('./index-Ddy3yYYn.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -10154,7 +10154,7 @@ _sfc_main$3.setup = (props, ctx) => {
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
   authenticated: defineAsyncComponent(() => import('./authenticated-1OHOrpv4.mjs').then((m) => m.default || m)),
-  default: defineAsyncComponent(() => import('./default-euCfg4bU.mjs').then((m) => m.default || m)),
+  default: defineAsyncComponent(() => import('./default-CzCAA_Gf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-ChLjqg4G.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))
 };

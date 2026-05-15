@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import bcrypt from 'bcrypt';
+import bcrypt, { compareSync } from 'bcrypt';
 import { connectDB } from "../../../lib/database/mongodb";
 
 import { Model } from 'mongoose';
@@ -27,17 +27,31 @@ export default defineEventHandler(async (event) => {
       await setUserSession(event, {
         user: {
           _id: user?._id!,
-          username: user?.username || '',
-          first_name: user?.first_name || 'Ascender',
+          company: user?.company || '',
+          company_hashed: user?.company_hashed || '',
+          role: user?.role || '',
+          category: user?.category || '',
+          category_hashed: user?.category_hashed || '',
+          qr_code_slug: user?.qr_code_slug || '',
+          total_scans: user?.total_scans || '',
+          leads_captured: user?.leads_captured || '',
+          first_name: user?.first_name || '',
           last_name: user?.last_name || '',
-          name: `${user?.first_name} ${user?.last_name}` || 'Ascender',
-          email: user?.email,
+          email: user?.email || '',
+          email_hashed: user?.email_hashed || '',
           phone: user?.phone || '',
-          country: user?.country || '',
+          password: user?.password || '',
           street_address: user?.street_address || '',
           city: user?.city || '',
-          region: user?.region || '',
+          country: user?.country || '',
           postal_code: user?.postal_code || '',
+          reset_password_token: user?.reset_password_token || '',
+          privacy_policy: user?.privacy_policy || '',
+          paid: user?.paid || '',
+          paid_tier: user?.paid_tier || '',
+          // leads: [lead] || '',
+          createdAt: user?.createdAt || '',
+          updatedAt: user?.updatedAt || ''
         }
       });
     }

@@ -33,17 +33,31 @@ const login_post = defineEventHandler(async (event) => {
       await setUserSession(event, {
         user: {
           _id: user == null ? void 0 : user._id,
-          username: (user == null ? void 0 : user.username) || "",
-          first_name: (user == null ? void 0 : user.first_name) || "Ascender",
+          company: (user == null ? void 0 : user.company) || "",
+          company_hashed: (user == null ? void 0 : user.company_hashed) || "",
+          role: (user == null ? void 0 : user.role) || "",
+          category: (user == null ? void 0 : user.category) || "",
+          category_hashed: (user == null ? void 0 : user.category_hashed) || "",
+          qr_code_slug: (user == null ? void 0 : user.qr_code_slug) || "",
+          total_scans: (user == null ? void 0 : user.total_scans) || "",
+          leads_captured: (user == null ? void 0 : user.leads_captured) || "",
+          first_name: (user == null ? void 0 : user.first_name) || "",
           last_name: (user == null ? void 0 : user.last_name) || "",
-          name: `${user == null ? void 0 : user.first_name} ${user == null ? void 0 : user.last_name}` || "Ascender",
-          email: user == null ? void 0 : user.email,
+          email: (user == null ? void 0 : user.email) || "",
+          email_hashed: (user == null ? void 0 : user.email_hashed) || "",
           phone: (user == null ? void 0 : user.phone) || "",
-          country: (user == null ? void 0 : user.country) || "",
+          password: (user == null ? void 0 : user.password) || "",
           street_address: (user == null ? void 0 : user.street_address) || "",
           city: (user == null ? void 0 : user.city) || "",
-          region: (user == null ? void 0 : user.region) || "",
-          postal_code: (user == null ? void 0 : user.postal_code) || ""
+          country: (user == null ? void 0 : user.country) || "",
+          postal_code: (user == null ? void 0 : user.postal_code) || "",
+          reset_password_token: (user == null ? void 0 : user.reset_password_token) || "",
+          privacy_policy: (user == null ? void 0 : user.privacy_policy) || "",
+          paid: (user == null ? void 0 : user.paid) || "",
+          paid_tier: (user == null ? void 0 : user.paid_tier) || "",
+          // leads: [lead] || '',
+          createdAt: (user == null ? void 0 : user.createdAt) || "",
+          updatedAt: (user == null ? void 0 : user.updatedAt) || ""
         }
       });
     } else {
