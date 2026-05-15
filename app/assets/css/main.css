@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+* {
+  --ui-bg: #020203;
+  --ui-bg-elevated: #020203;
+  --ui-primary: oklch(78.9% 0.154 211.53);
+  /* opacity: 1; */
+}
+
+body {
+    min-height: 100vh;
+};
+
+textarea {
+  field-sizing: content;
+};
+
+.background {
+  background-color: #020203;
+}

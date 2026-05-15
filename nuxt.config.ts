@@ -1,0 +1,184 @@
+// https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineNuxtConfig({
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
+  css: ["~/assets/css/main.css"],
+  modules: [
+    'nuxt-auth-utils',
+    '@vueuse/motion/nuxt',
+    '@nuxt/image',
+    '@nuxtjs/color-mode',
+    '@nuxt/ui',
+    'nuxt-vitalizer',
+    'nuxt-google-auth',
+    'nuxt-notify',
+    'nuxt-qrcode',
+    '@vite-pwa/nuxt'
+  ],
+
+  googleAuth: {
+    clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
+    autoLoadScript: true,         // load Google script automatically
+    promptOneTap: true,           // show One Tap prompt
+    enableServerVerify: true      // enable server-side token verification endpoint
+},
+
+  app: {
+    head: {
+      title: 'Ascend', // default fallback title
+      htmlAttrs: {
+        lang: 'en',
+      },
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      ],
+      script: [
+        { src: 'https://ghostform-zeta.vercel.app/embed.js', async: true }
+      ]
+    }
+  },
+  notify: {
+    position: "top-right",
+    duration: 5000,
+    maxToasts: 5,
+    theme: "system",
+    showIcon: true,
+  },
+  qrcode: {
+    options: {
+      variant: 'circle',
+      // OR
+      // variant: {
+      //   inner: 'circle',
+      //   marker: 'rounded',
+      //   pixel: 'rounded',
+      // },
+      radius: 1,
+      blackColor: 'currentColor',
+      whiteColor: 'transparent',
+    },
+  },
+  vite: {
+    plugins: [
+      tailwindcss()
+    ],
+    optimizeDeps: {
+      include: [
+        'vue-chrts',
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'date-fns',
+        'lucide-vue-next',
+      ]
+    }
+  },
+  typescript: {
+    strict: false
+  },
+  colorMode: {
+    dataValue: 'theme',
+    classSuffix: '',
+  },
+
+  pwa: {
+    /* PWA options */
+    manifest: {
+      name: 'Ascend',
+      short_name: 'Ascend',
+      description: 'Set goals. Achieve greatness.',
+      orientation: 'natural',
+      lang: 'en',
+      display: 'standalone',
+      background_color: '#272727',
+      theme_color: '#272727',
+      icons: [
+        {
+          src: '/images/logo-icon.webp',
+          sizes: '445x445',
+          type: 'image/webp',
+          purpose: "any"
+        },
+        {
+          src: '/images/logo-icon.webp',
+          sizes: '445x445',
+          type: 'image/webp',
+          purpose: "monochrome"
+        },
+        {
+          src: '/images/logo-icon.webp',
+          sizes: '445x445',
+          type: 'image/webp',
+          purpose: "maskable"
+        },
+        {
+          src: '/images/logo_transparent_512x512.webp',
+          sizes: '512x512',
+          type: 'image/webp',
+        },
+        {
+          src: '/images/logo-icon.webp',
+          sizes: '445x445',
+          type: 'image/webp',
+        }
+      ],
+      categories: [
+        "fitness",
+        "health",
+        "lifestyle",
+        "productivity",
+        "books",
+        "personalization"
+      ],
+      display_override: [
+        "standalone",
+        "window-controls-overlay"
+      ],
+      related_applications: [
+        {
+          "platform": "play",
+          "url": "https://play.google.com/store/apps/details?id=app.vercel.goals_io.twa.pwa&hl=en-US&ah=LK08Pcp_p9aSBNro6Va1uM424v4",
+          "id": "app.vercel.goals_io.twa.pwa"
+        },
+        {
+          "platform": "windows",
+          "url": "https://www.ascendpod.com"
+        }
+      ],
+      prefer_related_applications: true,
+    },
+    workbox: {
+      'navigateFallback': '/login',
+      globPatterns: ['**/*.{js,css,html,svg,webp,ico}'],
+      cleanupOutdatedCaches: true,
+      clientsClaim: true,
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module'
+    },
+  },
+
+  // @vueuse/motion/nuxt
+  runtimeConfig: {
+    public: {
+      motion: {
+        directives: {
+          'pop-bottom': {
+            initial: {
+              scale: 0,
+              opacity: 0,
+              y: 100,
+            },
+            visible: {
+              scale: 1,
+              opacity: 1,
+              y: 0,
+            }
+          }
+        }
+      }
+    }
+  }
+})
