@@ -3,6 +3,10 @@ await useFetch('/api/user', { key: 'user', lazy: true });
 await useFetch('/api/leads', { key: 'leads', lazy: true });
 await useFetch('/api/leads/status', { key: 'status', lazy: true });
 
+definePageMeta({
+      middleware: ['auth'],
+  });
+
 const { data: user } = useNuxtData('user');
 
 const authenticated = computed(() => {
@@ -20,7 +24,7 @@ const authenticated = computed(() => {
       <div class="absolute bottom-[10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div>
     </div>
         <template v-if="authenticated">
-            <baseNavigationAuth />
+            <baseNavBar />
             <slot />
         </template>
 

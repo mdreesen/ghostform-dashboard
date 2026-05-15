@@ -29,8 +29,7 @@ export const BaseHeaderAuth: typeof import("../app/components/base/Header/Auth.v
 export const BaseHeaderBase: typeof import("../app/components/base/Header/Base.vue")['default']
 export const BaseHeaderSection: typeof import("../app/components/base/Header/Section.vue")['default']
 export const BaseLabel: typeof import("../app/components/base/Label.vue")['default']
-export const BaseNavigationAuth: typeof import("../app/components/base/Navigation/Auth.vue")['default']
-export const BaseNavigationBase: typeof import("../app/components/base/Navigation/Base.vue")['default']
+export const BaseNavBar: typeof import("../app/components/base/NavBar.vue")['default']
 export const BaseQrCode: typeof import("../app/components/base/QrCode.vue")['default']
 export const BaseTable: typeof import("../app/components/base/Table.vue")['default']
 export const BaseButton: typeof import("../app/components/base/button.vue")['default']
@@ -221,8 +220,7 @@ export const LazyBaseHeaderAuth: LazyComponent<typeof import("../app/components/
 export const LazyBaseHeaderBase: LazyComponent<typeof import("../app/components/base/Header/Base.vue")['default']>
 export const LazyBaseHeaderSection: LazyComponent<typeof import("../app/components/base/Header/Section.vue")['default']>
 export const LazyBaseLabel: LazyComponent<typeof import("../app/components/base/Label.vue")['default']>
-export const LazyBaseNavigationAuth: LazyComponent<typeof import("../app/components/base/Navigation/Auth.vue")['default']>
-export const LazyBaseNavigationBase: LazyComponent<typeof import("../app/components/base/Navigation/Base.vue")['default']>
+export const LazyBaseNavBar: LazyComponent<typeof import("../app/components/base/NavBar.vue")['default']>
 export const LazyBaseQrCode: LazyComponent<typeof import("../app/components/base/QrCode.vue")['default']>
 export const LazyBaseTable: LazyComponent<typeof import("../app/components/base/Table.vue")['default']>
 export const LazyBaseButton: LazyComponent<typeof import("../app/components/base/button.vue")['default']>

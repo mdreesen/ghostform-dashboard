@@ -61,9 +61,6 @@ export default defineNuxtConfig({
     },
   },
   vite: {
-    plugins: [
-      tailwindcss()
-    ],
     optimizeDeps: {
       include: [
         'vue-chrts',
@@ -71,6 +68,9 @@ export default defineNuxtConfig({
         '@vue/devtools-kit',
         'date-fns',
         'lucide-vue-next',
+        'vue-qrcode-reader',
+        '@tanstack/vue-table',
+        'nuxt-notify'
       ]
     }
   },
@@ -134,17 +134,6 @@ export default defineNuxtConfig({
       display_override: [
         "standalone",
         "window-controls-overlay"
-      ],
-      related_applications: [
-        {
-          "platform": "play",
-          "url": "https://play.google.com/store/apps/details?id=app.vercel.goals_io.twa.pwa&hl=en-US&ah=LK08Pcp_p9aSBNro6Va1uM424v4",
-          "id": "app.vercel.goals_io.twa.pwa"
-        },
-        {
-          "platform": "windows",
-          "url": "https://www.ascendpod.com"
-        }
       ],
       prefer_related_applications: true,
     },

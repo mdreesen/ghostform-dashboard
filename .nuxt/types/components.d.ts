@@ -29,8 +29,7 @@ interface _GlobalComponents {
   BaseHeaderBase: typeof import("../../app/components/base/Header/Base.vue")['default']
   BaseHeaderSection: typeof import("../../app/components/base/Header/Section.vue")['default']
   BaseLabel: typeof import("../../app/components/base/Label.vue")['default']
-  BaseNavigationAuth: typeof import("../../app/components/base/Navigation/Auth.vue")['default']
-  BaseNavigationBase: typeof import("../../app/components/base/Navigation/Base.vue")['default']
+  BaseNavBar: typeof import("../../app/components/base/NavBar.vue")['default']
   BaseQrCode: typeof import("../../app/components/base/QrCode.vue")['default']
   BaseTable: typeof import("../../app/components/base/Table.vue")['default']
   BaseButton: typeof import("../../app/components/base/button.vue")['default']
@@ -221,8 +220,7 @@ interface _GlobalComponents {
   LazyBaseHeaderBase: LazyComponent<typeof import("../../app/components/base/Header/Base.vue")['default']>
   LazyBaseHeaderSection: LazyComponent<typeof import("../../app/components/base/Header/Section.vue")['default']>
   LazyBaseLabel: LazyComponent<typeof import("../../app/components/base/Label.vue")['default']>
-  LazyBaseNavigationAuth: LazyComponent<typeof import("../../app/components/base/Navigation/Auth.vue")['default']>
-  LazyBaseNavigationBase: LazyComponent<typeof import("../../app/components/base/Navigation/Base.vue")['default']>
+  LazyBaseNavBar: LazyComponent<typeof import("../../app/components/base/NavBar.vue")['default']>
   LazyBaseQrCode: LazyComponent<typeof import("../../app/components/base/QrCode.vue")['default']>
   LazyBaseTable: LazyComponent<typeof import("../../app/components/base/Table.vue")['default']>
   LazyBaseButton: LazyComponent<typeof import("../../app/components/base/button.vue")['default']>

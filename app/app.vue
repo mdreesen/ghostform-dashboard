@@ -10,6 +10,9 @@ useSeoMeta({
   twitterDescription: 'Client-side image compression that saves your server and doubles your conversion rate.',
   themeColor: '#020203', // Matches your deep black background
 })
+definePageMeta({
+      middleware: ['auth'],
+  });
 </script>
 <template>
   <div>
