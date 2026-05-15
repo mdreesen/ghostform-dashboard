@@ -1,1 +1,0 @@
-import{e,u as n,c as t,o as a}from"./DOESqv4b.js";const r=e({__name:"index",setup(c){return n({title:"Ascend | Main",meta:[{name:"description",content:"Ascend Main."}]}),(o,s)=>(a(),t("div"))}});export{r as default};

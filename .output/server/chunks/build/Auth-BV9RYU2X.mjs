@@ -15,9 +15,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<!--[--><h1 class="text-4xl md:text-5xl font-bold tracking-tighter">${__props.text ?? ""}</h1>`);
+      var _a, _b;
+      _push(`<!--[--><h1 class="text-4xl md:text-5xl font-bold tracking-tighter">${(_a = __props.text) != null ? _a : ""}</h1>`);
       if (__props.subText) {
-        _push(`<span class="font-bold tracking-tighter">${__props.subText ?? ""}</span>`);
+        _push(`<span class="font-bold tracking-tighter">${(_b = __props.subText) != null ? _b : ""}</span>`);
       } else {
         _push(`<!---->`);
       }
