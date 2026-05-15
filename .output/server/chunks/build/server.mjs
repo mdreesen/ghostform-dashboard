@@ -1474,7 +1474,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
-const __nuxt_component_3 = defineComponent({
+const __nuxt_component_3$1 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -10310,6 +10310,26 @@ const LayoutProvider = defineComponent({
     };
   }
 });
+const pwaInfo = { "webManifest": { "href": "/manifest.webmanifest" } };
+const __nuxt_component_2 = defineComponent({
+  async setup() {
+    if (pwaInfo) {
+      const meta = ref({ link: [] });
+      useHead(meta);
+      const { webManifest } = pwaInfo;
+      if (webManifest) {
+        const { href } = webManifest;
+        {
+          meta.value.link.push({
+            rel: "manifest",
+            href
+          });
+        }
+      }
+    }
+    return () => null;
+  }
+});
 const defineRouteProvider = (name = "RouteProvider") => defineComponent({
   name,
   props: {
@@ -10342,7 +10362,7 @@ const defineRouteProvider = (name = "RouteProvider") => defineComponent({
   }
 });
 const RouteProvider = defineRouteProvider();
-const __nuxt_component_2 = defineComponent({
+const __nuxt_component_3 = defineComponent({
   name: "NuxtPage",
   inheritAttrs: false,
   props: {
@@ -10413,7 +10433,8 @@ const _sfc_main$2 = {
     return (_ctx, _push, _parent, _attrs) => {
       const _component_UApp = __nuxt_component_0;
       const _component_NuxtLayout = __nuxt_component_1;
-      const _component_NuxtPage = __nuxt_component_2;
+      const _component_VitePwaManifest = __nuxt_component_2;
+      const _component_NuxtPage = __nuxt_component_3;
       _push(`<div${ssrRenderAttrs(_attrs)}>`);
       _push(ssrRenderComponent(_component_UApp, null, {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
@@ -10421,9 +10442,11 @@ const _sfc_main$2 = {
             _push2(ssrRenderComponent(_component_NuxtLayout, null, {
               default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
+                  _push3(ssrRenderComponent(_component_VitePwaManifest, null, null, _parent3, _scopeId2));
                   _push3(ssrRenderComponent(_component_NuxtPage, null, null, _parent3, _scopeId2));
                 } else {
                   return [
+                    createVNode(_component_VitePwaManifest),
                     createVNode(_component_NuxtPage)
                   ];
                 }
@@ -10434,6 +10457,7 @@ const _sfc_main$2 = {
             return [
               createVNode(_component_NuxtLayout, null, {
                 default: withCtx(() => [
+                  createVNode(_component_VitePwaManifest),
                   createVNode(_component_NuxtPage)
                 ]),
                 _: 1
@@ -10549,5 +10573,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { __nuxt_component_1$1 as $, AUTOFOCUS_ON_MOUNT as A, useLocale as B, useAppConfig as C, useComponentUI as D, EVENT_OPTIONS as E, useForwardPropsEmits as F, reactivePick as G, usePortal as H, createReusableTemplate as I, tv as J, _sfc_main$8 as K, useRuntimeConfig as L, useFieldGroup as M, useComponentIcons as N, _sfc_main$e as O, Primitive as P, _sfc_main$b as Q, useFormField as R, looseToNumber as S, Teleport_default as T, createRef as U, VisuallyHidden_default as V, useForwardProps as W, useMotion as X, defineNuxtRouteMiddleware as Y, __nuxt_component_0$1 as Z, __nuxt_component_0$2 as _, useRoute as a, useFetch as b, __nuxt_component_3 as c, useNuxtData as d, entry_default as default, useUserSession as e, createSharedComposable as f, unrefElement as g, useVModel as h, injectConfigProviderContext as i, createContext as j, useForwardExpose as k, isNullish as l, createGlobalState as m, navigateTo as n, onKeyStroke as o, getActiveElement as p, focusFirst as q, refreshNuxtData as r, getTabbableCandidates as s, tryOnBeforeUnmount as t, useHead as u, focus as v, AUTOFOCUS_ON_UNMOUNT as w, getTabbableEdges as x, useEmitAsProps as y, Presence_default as z };
+export { __nuxt_component_1$1 as $, AUTOFOCUS_ON_MOUNT as A, useLocale as B, useAppConfig as C, useComponentUI as D, EVENT_OPTIONS as E, useForwardPropsEmits as F, reactivePick as G, usePortal as H, createReusableTemplate as I, tv as J, _sfc_main$8 as K, useRuntimeConfig as L, useFieldGroup as M, useComponentIcons as N, _sfc_main$e as O, Primitive as P, _sfc_main$b as Q, useFormField as R, looseToNumber as S, Teleport_default as T, createRef as U, VisuallyHidden_default as V, useForwardProps as W, useMotion as X, defineNuxtRouteMiddleware as Y, __nuxt_component_0$1 as Z, __nuxt_component_0$2 as _, useRoute as a, useFetch as b, __nuxt_component_3$1 as c, useNuxtData as d, entry_default as default, useUserSession as e, createSharedComposable as f, unrefElement as g, useVModel as h, injectConfigProviderContext as i, createContext as j, useForwardExpose as k, isNullish as l, createGlobalState as m, navigateTo as n, onKeyStroke as o, getActiveElement as p, focusFirst as q, refreshNuxtData as r, getTabbableCandidates as s, tryOnBeforeUnmount as t, useHead as u, focus as v, AUTOFOCUS_ON_UNMOUNT as w, getTabbableEdges as x, useEmitAsProps as y, Presence_default as z };
 //# sourceMappingURL=server.mjs.map

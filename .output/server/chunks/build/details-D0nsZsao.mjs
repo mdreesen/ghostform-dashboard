@@ -1,7 +1,7 @@
 import { _ as __nuxt_component_1 } from './Auth-BV9RYU2X.mjs';
 import { _ as __nuxt_component_1$1 } from './ButtonNavigate-BydwpjZB.mjs';
 import { _ as __nuxt_component_5 } from './Section-B46_LQt-.mjs';
-import { a as useRoute, b as useFetch, c as __nuxt_component_3 } from './server.mjs';
+import { a as useRoute, b as useFetch, c as __nuxt_component_3$1 } from './server.mjs';
 import { defineComponent, withAsyncContext, ref, unref, mergeProps, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderList, ssrInterpolate } from 'vue/server-renderer';
 import '../nitro/nitro.mjs';
@@ -50,7 +50,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       const _component_baseHeaderAuth = __nuxt_component_1;
       const _component_baseButtonNavigate = __nuxt_component_1$1;
       const _component_baseHeaderSection = __nuxt_component_5;
-      const _component_ClientOnly = __nuxt_component_3;
+      const _component_ClientOnly = __nuxt_component_3$1;
       if (!unref(pending_data)) {
         _push(`<div${ssrRenderAttrs(mergeProps({ class: "min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden" }, _attrs))}><main class="max-w-5xl mx-auto relative z-10"><section class="flex flex-wrap gap-8 mb-12"><div><div class="flex items-center gap-6">`);
         _push(ssrRenderComponent(_component_baseHeaderAuth, {
