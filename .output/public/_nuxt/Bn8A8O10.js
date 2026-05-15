@@ -1,1 +1,0 @@
-import{e,u as t,c as n,o}from"./BPF4cXX3.js";const i=e({__name:"index",setup(a){return t({title:"GhostForm | Main",meta:[{name:"description",content:"GhostForm Main."}]}),(s,r)=>(o(),n("div"))}});export{i as default};

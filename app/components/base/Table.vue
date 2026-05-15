@@ -14,6 +14,8 @@ const props = defineProps({
   },
 });
 
+const useData = computed(() => props.data);
+
 const columns: TableColumn<Lead>[] = [
   {
     accessorKey: 'name',
@@ -123,7 +125,7 @@ const pagination = ref({
       ref="table"
       v-model:pagination="pagination"
       v-model:column-filters="columnFilters" 
-      :data="data"
+      :data="useData"
       :columns="columns"
       :pagination-options="{
         getPaginationRowModel: getPaginationRowModel()

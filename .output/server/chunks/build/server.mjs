@@ -540,7 +540,7 @@ const _routes = [
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./edit-DzJ2daxt.mjs')
+    component: () => import('./edit-Dvts07GZ.mjs')
   },
   {
     name: "dashboard-form",
@@ -552,7 +552,7 @@ const _routes = [
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CX8QAs_O.mjs')
+    component: () => import('./index-CcQ0_mNI.mjs')
   },
   {
     name: "dashboard-profile",
@@ -564,7 +564,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-BeZroxVe.mjs')
+    component: () => import('./index-Ds0DBARr.mjs')
   },
   {
     name: "forgotpassword",
@@ -576,13 +576,13 @@ const _routes = [
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import('./login-XTAb6kmj.mjs')
+    component: () => import('./login-B_Lv6Q89.mjs')
   },
   {
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import('./signup-cVI32MeO.mjs')
+    component: () => import('./signup-B9TiZpNL.mjs')
   },
   {
     name: "subscribe",
@@ -600,7 +600,7 @@ const _routes = [
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import('./index-Ddy3yYYn.mjs')
+    component: () => import('./index-C63uGmBb.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -746,7 +746,7 @@ const globalMiddleware = [
   manifest_45route_45rule
 ];
 const namedMiddleware = {
-  auth: () => import('./auth-Do_x1-RL.mjs')
+  auth: () => import('./auth-DIxQ9sm4.mjs')
 };
 const plugin = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:router",
