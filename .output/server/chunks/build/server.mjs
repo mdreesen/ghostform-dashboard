@@ -534,7 +534,7 @@ const _routes = [
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-Ct08xWw9.mjs')
+    component: () => import('./details-BuxENM1U.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
@@ -552,7 +552,7 @@ const _routes = [
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-DEjxS65d.mjs')
+    component: () => import('./index-BUOR2U-r.mjs')
   },
   {
     name: "dashboard-profile",
@@ -564,7 +564,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DDTvsY1T.mjs')
+    component: () => import('./index-UFY5lnU4.mjs')
   },
   {
     name: "forgotpassword",

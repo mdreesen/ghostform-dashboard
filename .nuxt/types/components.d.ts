@@ -30,12 +30,14 @@ interface _GlobalComponents {
   BaseHeaderBase: typeof import("../../app/components/base/Header/Base.vue")['default']
   BaseHeaderSection: typeof import("../../app/components/base/Header/Section.vue")['default']
   BaseLabel: typeof import("../../app/components/base/Label.vue")['default']
+  BaseMessage: typeof import("../../app/components/base/Message.vue")['default']
   BaseNavBar: typeof import("../../app/components/base/NavBar.vue")['default']
   BaseQrCode: typeof import("../../app/components/base/QrCode.vue")['default']
   BaseTable: typeof import("../../app/components/base/Table.vue")['default']
   BaseButton: typeof import("../../app/components/base/button.vue")['default']
   BaseFooter: typeof import("../../app/components/base/footer.vue")['default']
   BaseIcon: typeof import("../../app/components/base/icon.vue")['default']
+  BaseMaps: typeof import("../../app/components/base/maps.vue")['default']
   AuthState: typeof import("../../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
   UColorModeAvatar: typeof import("../../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']
   UColorModeButton: typeof import("../../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.vue")['default']
@@ -222,12 +224,14 @@ interface _GlobalComponents {
   LazyBaseHeaderBase: LazyComponent<typeof import("../../app/components/base/Header/Base.vue")['default']>
   LazyBaseHeaderSection: LazyComponent<typeof import("../../app/components/base/Header/Section.vue")['default']>
   LazyBaseLabel: LazyComponent<typeof import("../../app/components/base/Label.vue")['default']>
+  LazyBaseMessage: LazyComponent<typeof import("../../app/components/base/Message.vue")['default']>
   LazyBaseNavBar: LazyComponent<typeof import("../../app/components/base/NavBar.vue")['default']>
   LazyBaseQrCode: LazyComponent<typeof import("../../app/components/base/QrCode.vue")['default']>
   LazyBaseTable: LazyComponent<typeof import("../../app/components/base/Table.vue")['default']>
   LazyBaseButton: LazyComponent<typeof import("../../app/components/base/button.vue")['default']>
   LazyBaseFooter: LazyComponent<typeof import("../../app/components/base/footer.vue")['default']>
   LazyBaseIcon: LazyComponent<typeof import("../../app/components/base/icon.vue")['default']>
+  LazyBaseMaps: LazyComponent<typeof import("../../app/components/base/maps.vue")['default']>
   LazyAuthState: LazyComponent<typeof import("../../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']>
   LazyUColorModeAvatar: LazyComponent<typeof import("../../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']>
   LazyUColorModeButton: LazyComponent<typeof import("../../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.vue")['default']>

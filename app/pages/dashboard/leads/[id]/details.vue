@@ -26,13 +26,16 @@ const lead = ref(data.value);
           </div>
           <div class="flex flex-wrap gap-6 mt-5 text-zinc-400">
             <div class="flex flex-col">
-              <baseHeaderSection text="Email" :subText="lead?.email" />
+              <baseHeaderSection text="Email" />
+              <baseMessage :label="lead?.email" message_type="mailto" communication_type="email" />
             </div>
             <div class="flex flex-col">
-              <baseHeaderSection text="Phone" :subText="lead?.phone" />
+              <baseHeaderSection text="Phone" />
+              <baseMessage :label="lead?.phone" message_type="sms" communication_type="phone" />
             </div>
             <div class="flex flex-col">
-              <baseHeaderSection text="Address" :subText="lead?.address" />
+              <baseHeaderSection text="Address" />
+              <baseMaps :address="lead.address" />
             </div>
             <div class="flex flex-col">
               <baseHeaderSection text="Status" :subText="lead?.status" />

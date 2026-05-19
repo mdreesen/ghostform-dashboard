@@ -132,13 +132,25 @@ const pagination = ref({
       }"
       class="flex-1"
     >
-    <template #email-cell="{ row }">
+    <template #name-cell="{ row }">
       <NuxtLink 
         :to="`/dashboard/leads/${row.original?._id}/details`"
         class="text-cyan-400 hover:text-cyan-700 underline font-medium"
       >
-      {{ row.original?.email }}
+      {{ row.original?.name }}
       </NuxtLink>
+    </template>
+
+    <template #email-cell="{ row }">
+      <baseMessage :label="row.original?.email" message_type="mailto" :communication_type="row.original?.email" />
+    </template>
+
+    <template #phone-cell="{ row }">
+      <baseMessage :label="row.original?.phone" message_type="sms" :communication_type="row.original?.phone" />
+    </template>
+
+    <template #address-cell="{ row }">
+      <baseMaps :address="row.original?.address" />
     </template>
   </UTable>
 
