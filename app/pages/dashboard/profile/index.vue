@@ -8,7 +8,7 @@ definePageMeta({
     layout: 'authenticated',
 });
 
-// const { data } = useNuxtData('user');
+const { data } = useNuxtData('user');
 
 const { clear: clearSession } = useUserSession();
 
@@ -17,6 +17,52 @@ async function logout() {
     await clearSession();
     await navigateTo('/login');
 };
+
+/**
+ * GHOSTFORM CLIENT PROFILE MODULE
+ * NUXT 4 / UI v3 + ZOD SPECIFICATION
+ */
+import { z } from 'zod'
+import type { FormSubmitEvent } from '#ui/types'
+
+// 1. Structural Schema Validation
+const schema = z.object({
+    name: z.string().min(2, 'Identity tag required'),
+    email: z.string().email('Invalid intelligence routing link'),
+    phone: z.string().min(10, 'Contact telemetry sequence incomplete'),
+    company: z.string().min(2, 'Professional affiliation required'),
+    region: z.string().min(2, 'Operational area baseline required')
+})
+console.log(data.value)
+type Schema = z.infer<typeof schema>
+
+// 2. Client Profile Local Handshake
+const state = reactive<Schema>({
+    name: data.value?.name,
+    email: data.value?.email,
+    phone: data.value?.phone,
+    company: data.value?.company,
+    region: 'Kalispell, MT'
+})
+
+const isEditing = ref(false)
+const toast = useToast()
+
+// 3. Database Write Synchronization
+const onSubmit = async (event: FormSubmitEvent<Schema>) => {
+    try {
+        // Send persistent updates to your MongoDB user profile handler
+        await $fetch('/api/user/profile', {
+            method: 'PUT',
+            body: event.data
+        })
+
+        isEditing.value = false
+        toast.add({ title: 'Profile Config Synced', color: 'neutral' })
+    } catch (error) {
+        toast.add({ title: 'Write Transaction Aborted', description: 'Database failed to acknowledge update.', color: 'warning' })
+    }
+}
 
 </script>
 
@@ -31,8 +77,85 @@ async function logout() {
             </header>
 
             <div>
-                CONSTRUCTION ZONE<br>
-                WORK IN PROGRESS
+                <main class="max-w-4xl mx-auto relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <section class="lg:col-span-4 space-y-6">
+                            <div
+                                class="backdrop-blur-xl bg-white/1 border border-white/6 rounded-4xl p-6 space-y-4">
+                                <div
+                                    class="flex justify-between items-center text-xs font-mono border-b border-white/5 pb-3">
+                                    <span class="text-zinc-500 uppercase tracking-wider">Account Node</span>
+                                    <UBadge color="neutral" variant="subtle"
+                                        class="font-black text-[9px] uppercase tracking-widest px-2.5">Phantom Tier
+                                    </UBadge>
+                                </div>
+                                <div class="flex justify-between items-center text-xs font-mono">
+                                    <span class="text-zinc-500 uppercase tracking-wider">Stripe Sync</span>
+                                    <span class="text-zinc-400 font-bold">Active</span>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="lg:col-span-8">
+                            <UButton v-if="!isEditing" variant="subtle" color="neutral"
+                                    icon="i-heroicons-pencil-square"
+                                    class="rounded-xl px-5 py-2.5 text-xs font-black tracking-wider uppercase"
+                                    @click="isEditing = true">
+                                    Modify Profile
+                                </UButton>
+                            <div
+                                class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] p-8 lg:p-10 shadow-2xl">
+
+                                <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <UFormField label="Name" name="name">
+                                            <UInput v-model="state.name" :disabled="!isEditing" variant="none"
+                                                class="profile-input" />
+                                        </UFormField>
+
+                                        <UFormField label="Email" name="email">
+                                            <UInput v-model="state.email" :disabled="!isEditing" type="email"
+                                                variant="none" class="profile-input" />
+                                        </UFormField>
+                                    </div>
+
+                                    <UFormField label="Mobile (SMS)" name="phone">
+                                        <UInput v-model="state.phone" :disabled="!isEditing" type="tel" variant="none"
+                                            class="profile-input" />
+                                    </UFormField>
+
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                                        <UFormField label="Company" name="brokerage">
+                                            <UInput v-model="state.company" :disabled="!isEditing" variant="none"
+                                                class="profile-input" />
+                                        </UFormField>
+
+                                        <UFormField label="Primary Location" name="region">
+                                            <UInput v-model="state.region" :disabled="!isEditing" variant="none"
+                                                class="profile-input" />
+                                        </UFormField>
+                                    </div>
+
+                                    <div v-if="isEditing"
+                                        class="flex justify-end gap-3 pt-6 border-t border-white/5 mt-8">
+                                        <UButton variant="ghost" color="neutral"
+                                            class="rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
+                                            @click="isEditing = false">
+                                            Cancel Changes
+                                        </UButton>
+                                        <UButton type="submit" color="neutral"
+                                            class="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(48,207,67,0.2)]">
+                                            Commit Sync
+                                        </UButton>
+                                    </div>
+                                </UForm>
+
+                            </div>
+                        </section>
+
+                    </div>
+                </main>
             </div>
 
             <!-- Action Button Example -->

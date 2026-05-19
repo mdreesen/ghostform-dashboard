@@ -44,6 +44,7 @@ declare module "nitropack/types" {
     }
     '/api/user': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/index.get').default>>>>
+      'put': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/index.put').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>
