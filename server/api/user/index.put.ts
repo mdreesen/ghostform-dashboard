@@ -13,7 +13,7 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
-    const { username, first_name, last_name } = await readValidatedBody(event, bodySchema.parse);
+    const { name, company, phone, email, } = await readValidatedBody(event, bodySchema.parse);
 
     const obj = {
         username: username,
