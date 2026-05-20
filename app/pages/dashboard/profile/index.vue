@@ -33,7 +33,7 @@ const schema = z.object({
     company: z.string().min(2, 'Professional affiliation required'),
     region: z.string().min(2, 'Operational area baseline required')
 })
-console.log(data.value)
+
 type Schema = z.infer<typeof schema>
 
 // 2. Client Profile Local Handshake
@@ -42,7 +42,7 @@ const state = reactive<Schema>({
     email: data.value?.email,
     phone: data.value?.phone,
     company: data.value?.company,
-    region: 'Kalispell, MT'
+    region: data.value.region
 })
 
 const isEditing = ref(false)
@@ -80,8 +80,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                 <main class="max-w-4xl mx-auto relative z-10">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                         <section class="lg:col-span-4 space-y-6">
-                            <div
-                                class="backdrop-blur-xl bg-white/1 border border-white/6 rounded-4xl p-6 space-y-4">
+                            <div class="backdrop-blur-xl bg-white/1 border border-white/6 rounded-4xl p-6 space-y-4">
                                 <div
                                     class="flex justify-between items-center text-xs font-mono border-b border-white/5 pb-3">
                                     <span class="text-zinc-500 uppercase tracking-wider">Account Node</span>
@@ -97,43 +96,40 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                         </section>
 
                         <section class="lg:col-span-8">
-                            <UButton v-if="!isEditing" variant="subtle" color="neutral"
+                            <div
+                                class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] shadow-2xl p-4">
+                                <UButton v-if="!isEditing" variant="subtle" color="neutral"
                                     icon="i-heroicons-pencil-square"
                                     class="rounded-xl px-5 py-2.5 text-xs font-black tracking-wider uppercase"
                                     @click="isEditing = true">
                                     Modify Profile
                                 </UButton>
-                            <div
-                                class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] p-8 lg:p-10 shadow-2xl">
 
-                                <UForm :schema="schema" :state="state" class="space-y-6" @submit="onSubmit">
+                                <UForm :schema="schema" :state="state" class="space-y-6 p-8 lg:p-10" @submit="onSubmit">
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <UFormField label="Name" name="name">
-                                            <UInput v-model="state.name" :disabled="!isEditing" variant="none"
-                                                class="profile-input" />
+                                            <UInput v-model="state.name" :disabled="!isEditing" variant="none" />
                                         </UFormField>
 
                                         <UFormField label="Email" name="email">
                                             <UInput v-model="state.email" :disabled="!isEditing" type="email"
-                                                variant="none" class="profile-input" />
+                                                variant="none" />
                                         </UFormField>
                                     </div>
 
                                     <UFormField label="Mobile (SMS)" name="phone">
-                                        <UInput v-model="state.phone" :disabled="!isEditing" type="tel" variant="none"
-                                            class="profile-input" />
+                                        <UInput v-model="state.phone" :disabled="!isEditing" type="tel"
+                                            variant="none" />
                                     </UFormField>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                                         <UFormField label="Company" name="brokerage">
-                                            <UInput v-model="state.company" :disabled="!isEditing" variant="none"
-                                                class="profile-input" />
+                                            <UInput v-model="state.company" :disabled="!isEditing" variant="none" />
                                         </UFormField>
 
                                         <UFormField label="Primary Location" name="region">
-                                            <UInput v-model="state.region" :disabled="!isEditing" variant="none"
-                                                class="profile-input" />
+                                            <UInput v-model="state.region" :disabled="!isEditing" variant="none" />
                                         </UFormField>
                                     </div>
 

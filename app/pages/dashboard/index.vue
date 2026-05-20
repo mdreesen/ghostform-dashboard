@@ -15,11 +15,11 @@ const { data: leads } = useNuxtData('leads');
 const { data: status } = useNuxtData('status');
 
 const cardData = computed(() => [
-    { title: 'Total Intake', value: `${leads.value?.length ?? 0}` },
-    { title: 'Active Leads', value: `${status.value?.allStatus?.active?.length}` },
-    { title: 'New Leads', value: `${status.value?.allStatus?.new?.length}` }
-  ]
-)
+  { title: 'Total Intake', value: `${leads.value?.length ?? 0}` },
+  { title: 'Active Leads', value: `${status.value?.allStatus?.active?.length}` },
+  { title: 'New Leads', value: `${status.value?.allStatus?.new?.length}` }
+]
+);
 </script>
 
 <template>
@@ -33,7 +33,7 @@ const cardData = computed(() => [
         <div class="flex items-center gap-3 mb-2">
           <baseEngineActive />
         </div>
-        <baseHeaderAuth :text="user?.company" :subText="user?.category" />
+        <baseHeaderAuth v-if="user" :text="user?.company" :subText="user?.category" />
       </div>
 
       <div class="flex gap-4">
@@ -55,8 +55,7 @@ const cardData = computed(() => [
 
       <section class="flex flex-wrap justify-between gap-6 mb-12">
         <ClientOnly>
-          <template 
-            v-for="data in cardData">
+          <template v-if="status" v-for="data in cardData">
             <baseCard :label="data.title" :value="data.value" />
           </template>
         </ClientOnly>
@@ -66,11 +65,11 @@ const cardData = computed(() => [
 
         <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
-            <baseHeaderSection text="Lead Tracking" />
+            <baseHeaderSection v-if="leads" text="Lead Tracking" />
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
-            <baseTable :data="leads" />
+            <baseTable v-if="leads" :data="leads" />
           </div>
         </div>
       </div>

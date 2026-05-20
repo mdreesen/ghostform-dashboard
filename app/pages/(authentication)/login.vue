@@ -159,16 +159,7 @@ useMotion(formRef, { ...formVarient() });
             Authorized personnel only. Sessions are logged and analyzed for regional compliance.
           </p>
         </div>
-
       </div>
-
-      <footer class="mt-8 flex justify-between items-center px-4">
-        <div class="flex items-center gap-2">
-          <div class="w-1.5 h-1.5 rounded-full bg-[#30cf43] shadow-[0_0_8px_#30cf43]"></div>
-          <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Ghost-Node Active</span>
-        </div>
-        <span class="text-[10px] font-mono text-zinc-600 italic-none">v3.0.4-LITE</span>
-      </footer>
     </main>
   </div>
 </template>
