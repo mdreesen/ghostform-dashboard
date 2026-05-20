@@ -1052,7 +1052,7 @@ const _inlineRuntimeConfig = {
       "position": "top-right",
       "duration": 5000,
       "maxToasts": 5,
-      "theme": "system",
+      "theme": "dark",
       "showIcon": true
     },
     "qrcode": {
@@ -4021,10 +4021,8 @@ const userSchema = new Schema(
     email_hashed: String,
     phone: String,
     password: String,
-    street_address: String,
-    city: String,
+    region: String,
     country: String,
-    postal_code: String,
     reset_password_token: String,
     privacy_policy: Boolean,
     paid: Boolean,
@@ -4557,16 +4555,20 @@ const index_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 
 const User = User$b;
 const bodySchema = z.object({
-  username: z.string().nullable(),
-  first_name: z.string().nullable(),
-  last_name: z.string().nullable()
+  name: z.string().nullable(),
+  company: z.string().nullable(),
+  phone: z.string().nullable(),
+  email: z.string().nullable(),
+  region: z.string().nullable()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { name, company, phone, email } = await readValidatedBody(event, bodySchema.parse);
+  const { name, company, phone, email, region } = await readValidatedBody(event, bodySchema.parse);
   const obj = {
-    username,
-    first_name,
-    last_name
+    name,
+    company,
+    phone,
+    email,
+    region
   };
   try {
     const user = await loggedInUser(event);

@@ -7,18 +7,22 @@ import { User } from '~/types/user';
 const User = UserModel as Model<User>;
 
 const bodySchema = z.object({
-    username: z.string().nullable(),
-    first_name: z.string().nullable(),
-    last_name: z.string().nullable()
+    name: z.string().nullable(),
+    company: z.string().nullable(),
+    phone: z.string().nullable(),
+    email: z.string().nullable(),
+    region: z.string().nullable(),
 })
 
 export default defineEventHandler(async (event) => {
-    const { name, company, phone, email, } = await readValidatedBody(event, bodySchema.parse);
+    const { name, company, phone, email, region } = await readValidatedBody(event, bodySchema.parse);
 
     const obj = {
-        username: username,
-        first_name: first_name,
-        last_name: last_name
+        name: name,
+        company: company,
+        phone: phone,
+        email: email,
+        region: region
     };
 
     try {

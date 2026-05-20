@@ -40,7 +40,7 @@ export default defineNuxtConfig({
     position: "top-right",
     duration: 5000,
     maxToasts: 5,
-    theme: "system",
+    theme: "dark",
     showIcon: true,
   },
   qrcode: {

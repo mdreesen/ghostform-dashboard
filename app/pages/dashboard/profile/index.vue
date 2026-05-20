@@ -18,10 +18,6 @@ async function logout() {
     await navigateTo('/login');
 };
 
-/**
- * GHOSTFORM CLIENT PROFILE MODULE
- * NUXT 4 / UI v3 + ZOD SPECIFICATION
- */
 import { z } from 'zod'
 import type { FormSubmitEvent } from '#ui/types'
 
@@ -43,7 +39,7 @@ const state = reactive<Schema>({
     phone: data.value?.phone,
     company: data.value?.company,
     region: data.value.region
-})
+});
 
 const isEditing = ref(false)
 const toast = useToast()
@@ -52,15 +48,15 @@ const toast = useToast()
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     try {
         // Send persistent updates to your MongoDB user profile handler
-        await $fetch('/api/user/profile', {
+        await $fetch('/api/user', {
             method: 'PUT',
             body: event.data
         })
 
         isEditing.value = false
-        toast.add({ title: 'Profile Config Synced', color: 'neutral' })
+        toast.success('Updated Profile');
     } catch (error) {
-        toast.add({ title: 'Write Transaction Aborted', description: 'Database failed to acknowledge update.', color: 'warning' })
+        toast.error("Failed to delete", 'Try again');
     }
 }
 
@@ -97,13 +93,16 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
                         <section class="lg:col-span-8">
                             <div
-                                class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] shadow-2xl p-4">
-                                <UButton v-if="!isEditing" variant="subtle" color="neutral"
+                                class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] shadow-2xl">
+
+                                <div class="px-8 py-4">
+                                    <UButton v-if="!isEditing" variant="subtle" color="neutral"
                                     icon="i-heroicons-pencil-square"
                                     class="rounded-xl px-5 py-2.5 text-xs font-black tracking-wider uppercase"
                                     @click="isEditing = true">
                                     Modify Profile
                                 </UButton>
+                                </div>
 
                                 <UForm :schema="schema" :state="state" class="space-y-6 p-8 lg:p-10" @submit="onSubmit">
 
