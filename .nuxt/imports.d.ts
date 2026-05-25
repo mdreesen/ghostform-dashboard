@@ -34,6 +34,7 @@ export { definePageMeta, PageMeta } from '#app/composables/pages';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
 export { exportLeadsCSV } from '../app/utils/csv';
 export { date, timeZone, formatDate, useFormatDate, yearMonthDayFormat } from '../app/utils/date';
+export { ghostFormUrl } from '../app/utils/ghostFormUrl';
 export { default as loggedInUser } from '../app/utils/loggedInUser';
 export { formVarient, containerVarient, itemVarient, inputVarient, navVarient, navMenuVarient } from '../app/utils/varients';
 export { reactiveStyle, reactiveTransform, useElementStyle, useElementTransform, useMotion, useMotionControls, useMotionProperties, useMotions, useMotionTransitions, useMotionVariants, useSpring, useReducedMotion } from '../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index';

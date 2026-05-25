@@ -1,0 +1,1 @@
+function e(o,c,n,t){const r=o?`category=${o}`:"",a=n?`&company_email=${n}`:"",$=c?`&company_name=${c}`:"",F=t?`&calendar=${t}`:"";return`https://ghostform-zeta.vercel.app/?${r}${$}${a}${F}&background_color=0f0b0b&font_color=FFFFFF`}export{e as g};

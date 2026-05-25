@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ghostFormUrl } from '~/utils/ghostFormUrl';
+
 definePageMeta({
   layout: 'authenticated',
 });
@@ -12,6 +14,7 @@ useHead({
 
 const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
+console.log(user.value)
 
 const cardData = computed(() => [
   { title: 'Total Intake', value: `${leads.value.all?.length ?? 0}` },
@@ -43,7 +46,7 @@ const cardData = computed(() => [
 
           <template #body>
             <baseQrCode class="p-5 sm:p-10 md:p-40 lg:p-60 xl:p-130"
-              :value="`https://ghostform-zeta.vercel.app/?category=${user?.category}&company_name=${user?.company_hashed}&company_email=${user?.email_hashed}&background_color=0f0b0b&font_color=FFFFFF`" />
+              :value="ghostFormUrl(user?.category, user?.company_hashed, user?.email_hashed, user?.calendar_link)" />
           </template>
         </UModal>
 

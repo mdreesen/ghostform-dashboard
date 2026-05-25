@@ -17,6 +17,7 @@ const { data: user } = useNuxtData('get_user');
                     :category="user.category"
                     :company="user.company_hashed"
                     :email="user.email_hashed"
+                    :calendar="user.calendar_link"
                 />
             </div>
         </main>

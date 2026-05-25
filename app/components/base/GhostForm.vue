@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ghostFormUrl } from '~/utils/ghostFormUrl';
 const props = defineProps({
     category: {
         type: String,
@@ -11,8 +12,16 @@ const props = defineProps({
     email: {
         type: String,
         required: true,
+    },
+    calendar: {
+        type: String,
     }
-})
+});
+
+const useCategory = props.category ? `category=${props.category}` : '';
+const useEmail = props.email ? `&company_email=${props.email}` : '';
+const useName = props.company ? `&company_name=${props.company}` : '';
+const useCalendar = props.calendar ? `&calendar=${props.calendar}` : '';
 </script>
 
 <template>
@@ -38,7 +47,7 @@ const props = defineProps({
   
         <iframe
             v-else
-            :src="`https://ghostform-zeta.vercel.app/?category=${props.category}&company_name=${props.company}&company_email=${props.email}&background_color=0f0b0b&font_color=FFFFFF`"
+            :src="ghostFormUrl(useCategory, useName, useEmail, useCalendar)"
             style="width: 100%; height: 500px; border: none; background: transparent; border-radius: 20px;"
             allowtransparency="true" scrolling="no" />
   
