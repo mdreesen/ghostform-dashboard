@@ -1,13 +1,13 @@
 <script setup>
 useSeoMeta({
-  title: 'GhostForm | The High-Performance Multi-Step Form Engine',
+  title: 'GhostForm | The High-Performance Lead Dashboard for GhostForm',
   ogTitle: 'GhostForm | Capture Leads Like a Ghost in the Machine',
-  description: 'Stop losing leads to "File Too Large" errors. GhostForm shrinks massive 10MB phone uploads into lightweight, high-quality images instantly.',
-  ogDescription: 'Automated image compression, Resend integration, and ultra-fast multi-step flows for Nuxt 4.',
+  description: 'GhostForm Dashboard to manage your leads.',
+  ogDescription: 'GhostForm Dashboard to manage your leads.',
   ogImage: '/og-image.png', // Create a 1200x630 image of your new logo
   twitterCard: 'summary_large_image',
-  twitterTitle: 'GhostForm - Stop the 413 Payload Error',
-  twitterDescription: 'Client-side image compression that saves your server and doubles your conversion rate.',
+  twitterTitle: 'GhostForm - GhostForm Dashboard to manage your leads.',
+  twitterDescription: 'GhostForm Dashboard to manage your leads.',
   themeColor: '#020203', // Matches your deep black background
 })
 </script>
