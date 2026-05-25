@@ -116,7 +116,7 @@ async function handler() {
                     </form>
 
                     <p class="text-center text-xs text-zinc-500">
-                        Already have a node? <NuxtLink to="/login" class="text-cyan-400 hover:underline">Access Login
+                        Already have an account? <NuxtLink to="/login" class="text-cyan-400 hover:underline">Access Login
                         </NuxtLink>
                     </p>
                 </div>

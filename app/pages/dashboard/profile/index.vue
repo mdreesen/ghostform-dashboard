@@ -27,7 +27,8 @@ const schema = z.object({
     email: z.string().email('Invalid intelligence routing link'),
     phone: z.string().min(10, 'Contact telemetry sequence incomplete'),
     company: z.string().min(2, 'Professional affiliation required'),
-    region: z.string().min(2, 'Operational area baseline required')
+    region: z.string().min(2, 'Operational area baseline required'),
+    calendar_link: z.string().nullable()
 })
 
 type Schema = z.infer<typeof schema>
@@ -38,16 +39,15 @@ const state = reactive<Schema>({
     email: data.value?.email,
     phone: data.value?.phone,
     company: data.value?.company,
-    region: data.value.region
+    region: data.value.region,
+    calendar_link: data.value.calendar_link
 });
 
 const isEditing = ref(false)
 const toast = useToast()
 
-// 3. Database Write Synchronization
 const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     try {
-        // Send persistent updates to your MongoDB user profile handler
         await $fetch('/api/user', {
             method: 'PUT',
             body: event.data
@@ -129,6 +129,11 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
                                         <UFormField label="Primary Location" name="region">
                                             <UInput v-model="state.region" :disabled="!isEditing" variant="none" />
+                                        </UFormField>
+
+
+                                        <UFormField label="Calendar Link" name="calendar_link">
+                                            <UInput v-model="state.calendar_link" :disabled="!isEditing" variant="none" />
                                         </UFormField>
                                     </div>
 

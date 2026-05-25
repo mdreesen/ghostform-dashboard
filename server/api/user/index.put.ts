@@ -12,17 +12,19 @@ const bodySchema = z.object({
     phone: z.string().nullable(),
     email: z.string().nullable(),
     region: z.string().nullable(),
+    calendar_link: z.string().nullable(),
 })
 
 export default defineEventHandler(async (event) => {
-    const { name, company, phone, email, region } = await readValidatedBody(event, bodySchema.parse);
+    const { name, company, phone, email, region, calendar_link } = await readValidatedBody(event, bodySchema.parse);
 
     const obj = {
         name: name,
         company: company,
         phone: phone,
         email: email,
-        region: region
+        region: region,
+        calendar_link: calendar_link
     };
 
     try {

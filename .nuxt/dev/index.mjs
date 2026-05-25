@@ -4027,6 +4027,7 @@ const userSchema = new Schema(
     privacy_policy: Boolean,
     paid: Boolean,
     paid_tier: String,
+    calendar_link: String,
     leads: [lead],
     createdAt: String,
     updatedAt: String
@@ -4559,16 +4560,18 @@ const bodySchema = z.object({
   company: z.string().nullable(),
   phone: z.string().nullable(),
   email: z.string().nullable(),
-  region: z.string().nullable()
+  region: z.string().nullable(),
+  calendar_link: z.string().nullable()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { name, company, phone, email, region } = await readValidatedBody(event, bodySchema.parse);
+  const { name, company, phone, email, region, calendar_link } = await readValidatedBody(event, bodySchema.parse);
   const obj = {
     name,
     company,
     phone,
     email,
-    region
+    region,
+    calendar_link
   };
   try {
     const user = await loggedInUser(event);

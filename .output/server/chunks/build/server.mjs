@@ -558,7 +558,7 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-ClAo8hzC.mjs')
+    component: () => import('./index-CghKFnDd.mjs')
   },
   {
     name: "dashboard",
@@ -587,7 +587,7 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import('./signup-DOGx860g.mjs')
+    component: () => import('./signup-BZ8VaCI_.mjs')
   },
   {
     name: "subscribe",
@@ -599,7 +599,7 @@ const _routes = [
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./resetpassword-CLp63Eka.mjs')
+    component: () => import('./resetpassword-07d6QfDd.mjs')
   },
   {
     name: "index",

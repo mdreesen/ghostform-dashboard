@@ -50,6 +50,7 @@ const userSchema = new Schema(
         privacy_policy: Boolean,
         paid: Boolean,
         paid_tier: String,
+        calendar_link: String,
         leads: [lead],
         createdAt: String,
         updatedAt: String
