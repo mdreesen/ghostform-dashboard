@@ -22,7 +22,7 @@ const { data: leads } = useNuxtData('leads');
         </div>
 
         <div class="flex gap-4">
-          <baseButton @click="exportLeadsCSV(leads)" text="EXPORT CSV" />
+          <baseButton @click="exportLeadsCSV(leads.all)" text="EXPORT CSV" />
         </div>
       </header>
 
