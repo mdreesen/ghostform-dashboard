@@ -196,6 +196,12 @@ interface _GlobalComponents {
   PwaFaviconImage: typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaFaviconImage")['default']
   PwaMaskableImage: typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaMaskableImage")['default']
   PwaTransparentImage: typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaTransparentImage")['default']
+  AreaChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaChart']
+  AreaStackedChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaStackedChart']
+  LineChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['LineChart']
+  BarChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BarChart']
+  DonutChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DonutChart']
+  BubbleChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BubbleChart']
   NuxtPage: typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']
   NoScript: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']
   Link: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -390,6 +396,12 @@ interface _GlobalComponents {
   LazyPwaFaviconImage: LazyComponent<typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaFaviconImage")['default']>
   LazyPwaMaskableImage: LazyComponent<typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaMaskableImage")['default']>
   LazyPwaTransparentImage: LazyComponent<typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaTransparentImage")['default']>
+  LazyAreaChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaChart']>
+  LazyAreaStackedChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaStackedChart']>
+  LazyLineChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['LineChart']>
+  LazyBarChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BarChart']>
+  LazyDonutChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DonutChart']>
+  LazyBubbleChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BubbleChart']>
   LazyNuxtPage: LazyComponent<typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']>
   LazyNoScript: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
   LazyLink: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']>

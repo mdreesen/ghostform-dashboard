@@ -11,6 +11,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/eslint": "^1.15.2",
     "@nuxt/image": "^1.11.0",
     "@nuxt/kit": "^4.2.2",
     "@nuxt/ui": "^4.3.0",

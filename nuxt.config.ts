@@ -6,6 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   modules: [
+    '@nuxt/eslint',
     'nuxt-auth-utils',
     '@vueuse/motion/nuxt',
     '@nuxt/image',
@@ -15,7 +16,8 @@ export default defineNuxtConfig({
     'nuxt-google-auth',
     'nuxt-notify',
     'nuxt-qrcode',
-    '@vite-pwa/nuxt'
+    '@vite-pwa/nuxt',
+    'nuxt-charts'
   ],
 
   googleAuth: {
@@ -67,7 +69,8 @@ export default defineNuxtConfig({
         'lucide-vue-next',
         'vue-qrcode-reader',
         '@tanstack/vue-table',
-        'nuxt-notify'
+        'nuxt-notify',
+        'zod',
       ]
     }
   },

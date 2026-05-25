@@ -204,6 +204,7 @@
   "exclude": [
     "../node_modules",
     "../node_modules/nuxt/node_modules",
+    "../node_modules/@nuxt/eslint/node_modules",
     "../node_modules/nuxt-auth-utils/node_modules",
     "../node_modules/@vueuse/motion/node_modules",
     "../node_modules/@nuxt/image/node_modules",
@@ -214,6 +215,7 @@
     "../node_modules/nuxt-notify/node_modules",
     "../node_modules/nuxt-qrcode/node_modules",
     "../node_modules/@vite-pwa/nuxt/node_modules",
+    "../node_modules/nuxt-charts/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../node_modules/@nuxt/icon/node_modules",
