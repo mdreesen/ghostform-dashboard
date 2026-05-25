@@ -15,8 +15,8 @@ const { data: leads } = useNuxtData('leads');
 
 const cardData = computed(() => [
   { title: 'Total Intake', value: `${leads.value.all?.length ?? 0}` },
-  { title: 'Active Leads', value: `${leads.value?.active?.length}` },
-  { title: 'New Leads', value: `${leads.value?.new?.length}` }
+  { title: 'Active Leads', value: `${leads.value?.active?.length ?? 0}` },
+  { title: 'New Leads', value: `${leads.value?.new?.length ?? 0}` }
 ]
 );
 </script>

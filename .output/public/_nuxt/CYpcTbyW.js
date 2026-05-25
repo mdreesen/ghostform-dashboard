@@ -1,1 +1,0 @@
-import{e as s,g as r,c as n,D as o,h as _,o as c}from"./CurcNcwS.js";const m=s({__name:"form",async setup(l){let e,t;return[e,t]=r(()=>_("/api/user",{key:"get_user",lazy:!0},"$ajMpr-DZMw")),await e,t(),(a,p)=>(c(),n("main",null,[o(a.$slots,"default")]))}});export{m as default};
