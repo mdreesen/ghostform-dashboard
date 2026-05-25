@@ -552,7 +552,7 @@ const _routes = [
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-DhYeuhpr.mjs')
+    component: () => import('./index-CRtnZXE1.mjs')
   },
   {
     name: "dashboard-profile",

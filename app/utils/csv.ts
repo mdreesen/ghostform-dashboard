@@ -1,14 +1,14 @@
 export function exportLeadsCSV(leads: Array<any>) {
     // 1. Define Headers
     const headers = ['Name', 'Email', 'Phone', 'Age', 'Address', 'Status', 'Date', 'buy | sell | both', 'Estimated home price', 'Sqft', 'Bedrooms', 'Bathrooms', 'Budget',];
-
+console.log('Leads here', leads)
     // 2. Map data to rows
     const rows = leads.map(lead => [
         lead.name,
         lead.email,
         lead.phone,
         lead.age,
-        lead.address,
+        lead.address.replace(/[,.]/g, ""),
         lead.status,
         lead.date,
         lead.buy_sell_both,
