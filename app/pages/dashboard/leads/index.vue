@@ -20,10 +20,6 @@ const { data: leads } = useNuxtData('leads');
         <div>
           <baseHeaderAuth text="LEAD ARCHIVE" subText="Intake Intelligence" />
         </div>
-
-        <div class="flex gap-4">
-          <baseButton @click="exportLeadsCSV(leads.all)" text="EXPORT CSV" />
-        </div>
       </header>
 
       <section class="flex flex-col gap-10">
@@ -31,6 +27,7 @@ const { data: leads } = useNuxtData('leads');
         <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
             <baseHeaderSection v-if="leads" text="<span class='text-blue-400'>New</span> Leads" />
+            <baseButton @click="exportLeadsCSV(leads.new)" text="EXPORT CSV" />
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
@@ -44,6 +41,7 @@ const { data: leads } = useNuxtData('leads');
         <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
             <baseHeaderSection v-if="leads" text="<span class='text-green-400'>Active</span> Leads" />
+            <baseButton @click="exportLeadsCSV(leads.active)" text="EXPORT CSV" />
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
@@ -57,6 +55,7 @@ const { data: leads } = useNuxtData('leads');
         <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
             <baseHeaderSection v-if="leads" text="All Leads" />
+            <baseButton @click="exportLeadsCSV(leads.all)" text="EXPORT CSV" />
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
