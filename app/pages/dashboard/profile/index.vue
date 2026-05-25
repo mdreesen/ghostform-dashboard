@@ -33,7 +33,6 @@ const schema = z.object({
 
 type Schema = z.infer<typeof schema>
 
-// 2. Client Profile Local Handshake
 const state = reactive<Schema>({
     name: data.value?.name,
     email: data.value?.email,
@@ -92,16 +91,15 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                         </section>
 
                         <section class="lg:col-span-8">
-                            <div
-                                class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] shadow-2xl">
+                            <div class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] shadow-2xl">
 
                                 <div class="px-8 py-4">
                                     <UButton v-if="!isEditing" variant="subtle" color="neutral"
-                                    icon="i-heroicons-pencil-square"
-                                    class="rounded-xl px-5 py-2.5 text-xs font-black tracking-wider uppercase"
-                                    @click="isEditing = true">
-                                    Modify Profile
-                                </UButton>
+                                        icon="i-heroicons-pencil-square"
+                                        class="rounded-xl px-5 py-2.5 text-xs font-black tracking-wider uppercase"
+                                        @click="isEditing = true">
+                                        Modify Profile
+                                    </UButton>
                                 </div>
 
                                 <UForm :schema="schema" :state="state" class="space-y-6 p-8 lg:p-10" @submit="onSubmit">
@@ -133,7 +131,8 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
 
                                         <UFormField label="Calendar Link" name="calendar_link">
-                                            <UInput v-model="state.calendar_link" :disabled="!isEditing" variant="none" />
+                                            <UInput v-model="state.calendar_link" :disabled="!isEditing"
+                                                variant="none" />
                                         </UFormField>
                                     </div>
 
