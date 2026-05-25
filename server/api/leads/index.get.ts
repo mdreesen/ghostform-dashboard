@@ -1,8 +1,14 @@
 import loggedInUser from '~/utils/loggedInUser';
-import { latestData } from '~/utils/formatters/latestData';
 
 export default defineEventHandler(async (event) => {
     const user = await loggedInUser(event);
 
-    return user?.leads?.reverse();
+    const status_new = user?.leads.filter((item) => item.status.includes('new'));
+    const status_active = user?.leads.filter((item) => item.status.includes('active'));
+
+    return {
+      all: user?.leads?.reverse(),
+      new: status_new,
+      active: status_active
+    }
   });

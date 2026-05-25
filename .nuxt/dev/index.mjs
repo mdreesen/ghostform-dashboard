@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"26e4d-Kp70zdXTonbJt4wPFDUuPCdPMtY\"",
+    "mtime": "2026-05-25T15:48:03.531Z",
+    "size": 159309,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"8d815-lhEy3YYvPLde/0h5BtlowROxlZc\"",
+    "mtime": "2026-05-25T15:48:03.532Z",
+    "size": 579605,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4363,7 +4378,13 @@ const index_put$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 const index_get$4 = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
-  return (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.reverse();
+  const status_new = user == null ? void 0 : user.leads.filter((item) => item.status.includes("new"));
+  const status_active = user == null ? void 0 : user.leads.filter((item) => item.status.includes("active"));
+  return {
+    all: (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.reverse(),
+    new: status_new,
+    active: status_active
+  };
 });
 
 const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({

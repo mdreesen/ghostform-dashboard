@@ -12,12 +12,11 @@ useHead({
 
 const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
-const { data: status } = useNuxtData('status');
 
 const cardData = computed(() => [
-  { title: 'Total Intake', value: `${leads.value?.length ?? 0}` },
-  { title: 'Active Leads', value: `${status.value?.allStatus?.active?.length}` },
-  { title: 'New Leads', value: `${status.value?.allStatus?.new?.length}` }
+  { title: 'Total Intake', value: `${leads.value.all?.length ?? 0}` },
+  { title: 'Active Leads', value: `${leads.value?.active?.length}` },
+  { title: 'New Leads', value: `${leads.value?.new?.length}` }
 ]
 );
 </script>
@@ -54,11 +53,11 @@ const cardData = computed(() => [
     <main class="max-w-350 mx-auto relative z-10">
 
       <section class="flex flex-wrap justify-between gap-6 mb-12">
-        <ClientOnly>
-          <template v-if="status" v-for="data in cardData">
+        <template v-if="leads" v-for="data in cardData">
+          <ClientOnly>
             <baseCard :label="data.title" :value="data.value" />
-          </template>
-        </ClientOnly>
+          </ClientOnly>
+        </template>
       </section>
 
       <div class="flex w-full">
@@ -69,7 +68,9 @@ const cardData = computed(() => [
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
-            <baseTable v-if="leads" :data="leads" />
+            <ClientOnly>
+              <baseTable v-if="leads" :data="leads.all" />
+            </ClientOnly>
           </div>
         </div>
       </div>

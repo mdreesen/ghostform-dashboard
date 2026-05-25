@@ -20,7 +20,13 @@ import 'zod';
 const index_get = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
-  return (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.reverse();
+  const status_new = user == null ? void 0 : user.leads.filter((item) => item.status.includes("new"));
+  const status_active = user == null ? void 0 : user.leads.filter((item) => item.status.includes("active"));
+  return {
+    all: (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.reverse(),
+    new: status_new,
+    active: status_active
+  };
 });
 
 export { index_get as default };

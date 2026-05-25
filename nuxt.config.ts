@@ -60,6 +60,9 @@ export default defineNuxtConfig({
     },
   },
   vite: {
+    plugins: [
+      tailwindcss()
+    ],
     optimizeDeps: {
       include: [
         'vue-chrts',
@@ -71,6 +74,7 @@ export default defineNuxtConfig({
         '@tanstack/vue-table',
         'nuxt-notify',
         'zod',
+        'workbox-window',
       ]
     }
   },
@@ -112,11 +116,6 @@ export default defineNuxtConfig({
           type: 'image/png',
           purpose: "maskable"
         },
-        // {
-        //   src: '/images/logo_transparent_512x512.webp',
-        //   sizes: '512x512',
-        //   type: 'image/webp',
-        // },
         {
           src: '/images/maskable-icon.png',
           sizes: '445x445',
