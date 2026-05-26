@@ -13,7 +13,7 @@ const authenticated = computed(() => {
 </script>
 
 <template>
-    <main class="bg-[#020203] text-zinc-100 selection:bg-cyan-500/30 font-sans min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden">
+    <main class="bg-[#020203] text-zinc-100 selection:bg-cyan-500/30 font-sans min-h-screen relative overflow-hidden">
         <div class="fixed inset-0 pointer-events-none">
             <div class="absolute top-0 right-0 w-150 h-150 bg-cyan-400 rounded-full blur-[200px] opacity-[0.03]"></div>
             <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/10 blur-[120px] rounded-full"></div>
@@ -22,7 +22,9 @@ const authenticated = computed(() => {
 
         <template v-if="authenticated">
             <baseNavBar />
-            <slot />
+            <main class="py-20 p-6 lg:py-18">
+                <slot />
+            </main>
         </template>
 
         <template v-else>
