@@ -88,7 +88,7 @@ async function delete_log() {
 </script>
 
 <template>
-    <div v-if="!pending_data" class="min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden">
+    <div v-if="!pending_data">
         <baseHeaderBase :text="`Edit ${lead?.name}`" />
         <form @submit.prevent="log" class="space-y-6">
 

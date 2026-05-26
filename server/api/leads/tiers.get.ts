@@ -16,8 +16,6 @@ export default defineEventHandler(async (event) => {
             tierThree: tierThree
         }
     });
-
-    console.log(findTiers)
     return {
         totalTiers: findTiers
     }

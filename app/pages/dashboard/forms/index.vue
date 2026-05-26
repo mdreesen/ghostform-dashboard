@@ -1,29 +1,32 @@
 <script setup lang="ts">
+import { ghostFormUrl } from '~/utils/ghostFormUrl';
+
 definePageMeta({
     layout: 'authenticated',
 });
 
-const { data: user } = useNuxtData('get_user');
+const { data: user } = useNuxtData('user');
 
 </script>
 
 <template>
-  <div class="min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden">
+    <div>
+        <appHeader label="Forms" subLabel="Form Selection" />
 
-        <section class="flex flex-wrap justify-between gap-6 mb-12">
+        <div>
+            <baseHeaderSection text="Form Selections" />
 
-            <div>
-                <baseCardForm label="Data Entry" />
-            </div>
+            <section class="flex flex-wrap justify-between gap-6">
+                <baseCardForm label="Data Entry"
+                    :qr_code_url="ghostFormUrl(user?.category, 'default', user?.company_hashed, user?.email_hashed, user?.calendar_link)" />
 
-            <div>
-                <baseCardForm label="Open House" />
-            </div>
+                <baseCardForm label="Open House"
+                    :qr_code_url="ghostFormUrl(user?.category, 'open_house', user?.company_hashed, user?.email_hashed, user?.calendar_link)" />
 
-            <div>
-                <baseCardForm label="House Details" />
-            </div>
-      </section>
+                <baseCardForm label="House On Market"
+                    :qr_code_url="ghostFormUrl(user?.category, 'on_market', user?.company_hashed, user?.email_hashed, user?.calendar_link)" />
+            </section>
+        </div>
     </div>
 </template>
 

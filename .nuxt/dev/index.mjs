@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"26c96-LzGLVhx+GcKBMOYJxGEEoH/SrWs\"",
+    "mtime": "2026-05-26T19:21:41.669Z",
+    "size": 158870,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"8d8cd-kDG0bo4zyagRTdBBLMQTDCSnZs0\"",
+    "mtime": "2026-05-26T19:21:41.670Z",
+    "size": 579789,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3984,17 +3999,13 @@ mongoose.connect(`${env.MONGO_URI}`);
 mongoose.Promise = global.Promise;
 const lead = new Schema(
   {
+    source: String || void 0,
     name: String || void 0,
+    age: Number || void 0,
     email: String || void 0,
     phone: String || void 0,
-    age: Number || void 0,
+    best_communication_method: String || void 0,
     address: String || void 0,
-    ai_analysis: String || void 0,
-    status: String || void 0,
-    date: String || void 0,
-    // Construction Data
-    goal: String || void 0,
-    // Realtor Data
     want_to_move: String || void 0,
     buy_sell_both: String || void 0,
     price: Number || void 0,
@@ -4002,7 +4013,11 @@ const lead = new Schema(
     bedrooms: Number || void 0,
     bathrooms: Number || void 0,
     budget: Number || void 0,
-    message: String || void 0
+    notes: String || void 0,
+    seeing_an_agent: String || void 0,
+    ai_analysis: String || void 0,
+    status: String || void 0,
+    date: String || void 0
   },
   { timestamps: false }
 );
@@ -4441,7 +4456,6 @@ const tiers_get = defineEventHandler(async (event) => {
       tierThree
     };
   });
-  console.log(findTiers);
   return {
     totalTiers: findTiers
   };

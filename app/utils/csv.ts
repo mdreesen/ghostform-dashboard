@@ -1,22 +1,22 @@
 export function exportLeadsCSV(leads: Array<any>) {
     // 1. Define Headers
     const headers = ['Name', 'Email', 'Phone', 'Age', 'Address', 'Status', 'Date', 'buy | sell | both', 'Estimated home price', 'Sqft', 'Bedrooms', 'Bathrooms', 'Budget',];
-console.log('Leads here', leads)
+
     // 2. Map data to rows
     const rows = leads.map(lead => [
-        lead.name,
-        lead.email,
-        lead.phone,
-        lead.age,
-        lead.address.replace(/[,.]/g, ""),
-        lead.status,
-        lead.date,
-        lead.buy_sell_both,
-        lead.price,
-        lead.sqft,
-        lead.bedrooms,
-        lead.bathrooms,
-        lead.budget.toString().replace(/[^0-9.-]+/g, ""), // Strip currency symbols for spreadsheet math
+        lead?.name,
+        lead?.email,
+        lead?.phone,
+        lead?.age,
+        lead?.address?.replace(/[,.]/g, ""),
+        lead?.status,
+        lead?.date,
+        lead?.buy_sell_both,
+        lead?.price,
+        lead?.sqft,
+        lead?.bedrooms,
+        lead?.bathrooms,
+        lead?.budget?.toString()?.replace(/[^0-9.-]+/g, ""), // Strip currency symbols for spreadsheet math
     ]);
 
     // 3. Construct CSV String
