@@ -549,7 +549,7 @@ const _routes = [
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./edit-DhjEHvF4.mjs')
+    component: () => import('./edit-BBeZKtzw.mjs')
   },
   {
     name: "dashboard-forms",
@@ -573,7 +573,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DRwCcsk8.mjs')
+    component: () => import('./index-CGPqN69z.mjs')
   },
   {
     name: "forgotpassword",

@@ -33,35 +33,34 @@ const input = reactive({
     budget: 0,
     notes: '',
     seeing_an_agent: '',
-    ai_analysis: ''
 });
 
 if (data.value) {
-    input.source = data.value.source,
-    input.name = data.value.name,
+    input.source = data.value.source  ?? '',
+    input.name = data.value.name ?? '',
     input.age = data.value.age ?? 0,
-    input.email = data.value.email,
+    input.email = data.value.email  ?? '',
     input.phone = data.value.phone ?? 0,
-    input.date = data.value.date,
-    input.status = data.value.status,
-    input.best_communication_method = data.value.best_communication_method,
-    input.address = data.value.address,
-    input.want_to_move = data.value.want_to_move,
-    input.buy_sell_both = data.value.buy_sell_both,
+    input.date = data.value.date  ?? '',
+    input.status = data.value.status  ?? '',
+    input.best_communication_method = data.value.best_communication_method  ?? '',
+    input.address = data.value.address  ?? '',
+    input.want_to_move = data.value.want_to_move  ?? '',
+    input.buy_sell_both = data.value.buy_sell_both  ?? '',
     input.price = data.value.price ?? 0,
     input.sqft = data.value.sqft ?? 0,
     input.bedrooms = data.value.bedrooms ?? 0,
     input.bathrooms = data.value.bathrooms ?? 0,
     input.budget = data.value.budget ?? 0,
-    input.notes = data.value.notes,
-    input.seeing_an_agent = data.value.seeing_an_agent
+    input.notes = data.value.notes ?? '',
+    input.seeing_an_agent = data.value.seeing_an_agent ?? ''
 };
 
 async function log() {
     isLoading.value = true;
     $fetch(`/api/leads/${route.params.id}`, {
         method: 'PUT',
-        body: { _id: lead.value._id, ...input, ai_analysis: lead.value.ai_analysis }
+        body: { _id: lead.value._id, ...input, ai_analysis: lead.value.ai_analysis ?? '' }
     })
         .then(async () => {
             await refreshNuxtData('leads');

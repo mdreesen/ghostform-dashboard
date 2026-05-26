@@ -31,31 +31,6 @@ const bodySchema = z.object({
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
 
-  // const obj = {
-  //   _id: _id,
-  //   source: source,
-  //   name: name,
-  //   age: age,
-  //   email: email,
-  //   phone: phone,
-  //   date: date,
-  //   status: status,
-  //   best_communication_method: best_communication_method,
-  //   address: address,
-  //   want_to_move: want_to_move,
-  //   buy_sell_both: buy_sell_both,
-  //   price: price,
-  //   sqft: sqft,
-  //   bedrooms: bedrooms,
-  //   bathrooms: bathrooms,
-  //   budget: budget,
-  //   notes: notes,
-  //   seeing_an_agent: seeing_an_agent,
-  //   ai_analysis: ai_analysis
-  // };
-
-  console.log(body)
-
   try {
     await User.findOneAndUpdate(
       { 'leads._id': body._id },

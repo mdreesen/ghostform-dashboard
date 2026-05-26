@@ -14,10 +14,13 @@ useHead({
 const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
 
+const leads_new = leads.value.status.find((item) => item.label.includes('new'));
+const leads_active = leads.value.status.find((item) => item.label.includes('active'));
+
 const cardData = computed(() => [
   { title: 'Total Intake', value: `${leads.value.all?.length ?? 0}` },
-  { title: 'Active Leads', value: `${leads.value?.active?.length ?? 0}` },
-  { title: 'New Leads', value: `${leads.value?.new?.length ?? 0}` }
+  { title: 'Active Leads', value: `${leads_active.leads.length ?? 0}` },
+  { title: 'New Leads', value: `${leads_new.leads.length ?? 0}` }
 ]
 );
 </script>

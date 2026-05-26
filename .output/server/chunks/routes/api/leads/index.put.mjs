@@ -40,7 +40,6 @@ const bodySchema = z.object({
 });
 const index_put = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
-  console.log(body);
   try {
     await User.findOneAndUpdate(
       { "leads._id": body._id },
