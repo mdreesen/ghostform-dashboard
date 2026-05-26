@@ -15,14 +15,12 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 interface _GlobalComponents {
   AppAccess: typeof import("../../app/components/app/Access.vue")['default']
-  AppComparison: typeof import("../../app/components/app/comparison.vue")['default']
-  AppFeatures: typeof import("../../app/components/app/features.vue")['default']
-  AppHero: typeof import("../../app/components/app/hero.vue")['default']
-  AppPricing: typeof import("../../app/components/app/pricing.vue")['default']
-  AppStats: typeof import("../../app/components/app/stats.vue")['default']
+  AppHeader: typeof import("../../app/components/app/Header.vue")['default']
+  AppPricing: typeof import("../../app/components/app/Pricing.vue")['default']
   BaseButtonNavigate: typeof import("../../app/components/base/ButtonNavigate.vue")['default']
   BaseButtonSubmit: typeof import("../../app/components/base/ButtonSubmit.vue")['default']
-  BaseCard: typeof import("../../app/components/base/Card.vue")['default']
+  BaseCardDetail: typeof import("../../app/components/base/Card/Detail.vue")['default']
+  BaseCardForm: typeof import("../../app/components/base/Card/Form.vue")['default']
   BaseDeleteProfile: typeof import("../../app/components/base/DeleteProfile.vue")['default']
   BaseEngineActive: typeof import("../../app/components/base/EngineActive.vue")['default']
   BaseGhostForm: typeof import("../../app/components/base/GhostForm.vue")['default']
@@ -215,14 +213,12 @@ interface _GlobalComponents {
   Icon: typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
   LazyAppAccess: LazyComponent<typeof import("../../app/components/app/Access.vue")['default']>
-  LazyAppComparison: LazyComponent<typeof import("../../app/components/app/comparison.vue")['default']>
-  LazyAppFeatures: LazyComponent<typeof import("../../app/components/app/features.vue")['default']>
-  LazyAppHero: LazyComponent<typeof import("../../app/components/app/hero.vue")['default']>
-  LazyAppPricing: LazyComponent<typeof import("../../app/components/app/pricing.vue")['default']>
-  LazyAppStats: LazyComponent<typeof import("../../app/components/app/stats.vue")['default']>
+  LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
+  LazyAppPricing: LazyComponent<typeof import("../../app/components/app/Pricing.vue")['default']>
   LazyBaseButtonNavigate: LazyComponent<typeof import("../../app/components/base/ButtonNavigate.vue")['default']>
   LazyBaseButtonSubmit: LazyComponent<typeof import("../../app/components/base/ButtonSubmit.vue")['default']>
-  LazyBaseCard: LazyComponent<typeof import("../../app/components/base/Card.vue")['default']>
+  LazyBaseCardDetail: LazyComponent<typeof import("../../app/components/base/Card/Detail.vue")['default']>
+  LazyBaseCardForm: LazyComponent<typeof import("../../app/components/base/Card/Form.vue")['default']>
   LazyBaseDeleteProfile: LazyComponent<typeof import("../../app/components/base/DeleteProfile.vue")['default']>
   LazyBaseEngineActive: LazyComponent<typeof import("../../app/components/base/EngineActive.vue")['default']>
   LazyBaseGhostForm: LazyComponent<typeof import("../../app/components/base/GhostForm.vue")['default']>

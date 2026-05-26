@@ -18,48 +18,32 @@ import 'mongoose';
 const User = User$1;
 const bodySchema = z.object({
   _id: z.string(),
-  address: z.string().nullable(),
-  age: z.number().nullable(),
-  bathrooms: z.number().nullable(),
-  bedrooms: z.number().nullable(),
-  budget: z.number().nullable(),
-  buy_sell_both: z.string().nullable(),
-  date: z.string().nullable(),
-  email: z.string().nullable(),
-  message: z.string().nullable(),
+  source: z.string().nullable(),
   name: z.string().nullable(),
-  phone: z.string().nullable(),
+  age: z.number().nullable(),
+  email: z.string().nullable(),
+  phone: z.number().nullable(),
+  date: z.string().nullable(),
+  status: z.string().nullable(),
+  best_communication_method: z.string().nullable(),
+  address: z.string().nullable(),
+  want_to_move: z.string().nullable(),
+  buy_sell_both: z.string().nullable(),
   price: z.number().nullable(),
   sqft: z.number().nullable(),
-  status: z.string().nullable(),
-  want_to_move: z.string().nullable(),
+  bedrooms: z.number().nullable(),
+  bathrooms: z.number().nullable(),
+  budget: z.number().nullable(),
+  notes: z.string().nullable(),
+  seeing_an_agent: z.string().nullable(),
   ai_analysis: z.string().nullable()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { _id, address, age, bathrooms, bedrooms, budget, buy_sell_both, date, email, message, name, phone, price, sqft, status, want_to_move, ai_analysis } = await readValidatedBody(event, bodySchema.parse);
-  const obj = {
-    _id,
-    address,
-    age,
-    bathrooms,
-    bedrooms,
-    budget,
-    buy_sell_both,
-    date,
-    email,
-    message,
-    name,
-    phone,
-    price,
-    sqft,
-    status,
-    want_to_move,
-    ai_analysis
-  };
+  const body = await readValidatedBody(event, bodySchema.parse);
   try {
     await User.findOneAndUpdate(
-      { "leads._id": _id },
-      { $set: { "leads.$": { ...obj } } }
+      { "leads._id": body._id },
+      { $set: { "leads.$": { ...body } } }
     );
   } catch (error) {
     console.log(error);

@@ -1,55 +1,39 @@
 <script setup lang="ts">
 import { exportLeadsCSV } from '~/utils/csv';
+import { capitalizeFirstLetter } from '~/composables/useCapitalizeFirstLetter';
+
 definePageMeta({
   layout: 'authenticated',
 });
 
 const { data: leads } = useNuxtData('leads');
-
 </script>
 
 <template>
-  <div class="min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden">
+  <div>
 
-    <div class="absolute top-[-10%] left-[-10%] w-125 h-125 bg-[#30cf43] rounded-full blur-[180px] opacity-[0.03]">
-    </div>
+    <section class="flex flex-wrap justify-between">
+      <appHeader label="Lead Archive" subLabel="Intake Intelligence" />
+      <baseButtonNavigate text="+ Create Lead" path="/dashboard/leads/create" />
+    </section>
 
     <main class="max-w-7xl mx-auto relative z-10">
-
-      <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
-        <div>
-          <baseHeaderAuth text="LEAD ARCHIVE" subText="Intake Intelligence" />
-        </div>
-      </header>
-
       <section class="flex flex-col gap-10">
-        <!-- New Leads-->
-        <div class="space-y-6 w-full">
+
+        <template v-for="item in leads?.status">
+          <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
-            <baseHeaderSection v-if="leads" text="<span class='text-blue-400'>New</span> Leads" />
-            <baseButton @click="exportLeadsCSV(leads.new)" text="EXPORT CSV" />
+            <baseHeaderSection v-if="leads" :text="capitalizeFirstLetter(item.label)" />
+            <baseButton @click="exportLeadsCSV(leads.new)" :text="`Export ${item?.label} csv`" />
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
             <ClientOnly>
-              <baseTable v-if="leads" :data="leads.new" />
+              <baseTable v-if="leads" :data="item.leads" />
             </ClientOnly>
           </div>
         </div>
-
-        <!-- Active Leads-->
-        <div class="space-y-6 w-full">
-          <div class="flex justify-between items-end mb-4">
-            <baseHeaderSection v-if="leads" text="<span class='text-green-400'>Active</span> Leads" />
-            <baseButton @click="exportLeadsCSV(leads.active)" text="EXPORT CSV" />
-          </div>
-
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
-            <ClientOnly>
-              <baseTable v-if="leads" :data="leads.active" />
-            </ClientOnly>
-          </div>
-        </div>
+        </template>
 
         <!-- All Leads -->
         <div class="space-y-6 w-full">

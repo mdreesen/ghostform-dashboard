@@ -17,15 +17,25 @@ import 'mongoose';
 import '../../_/User.mjs';
 import 'zod';
 
+const selection_status_lead = [
+  { label: "lead (new)", value: "new" },
+  { label: "appointment", value: "appointment" },
+  { label: "active", value: "active" },
+  { label: "under contract", value: "under contract" },
+  { label: "closed", value: "closed" },
+  { label: "archive", value: "archive" }
+];
+
 const index_get = defineEventHandler(async (event) => {
-  var _a;
   const user = await loggedInUser(event);
-  const status_new = user == null ? void 0 : user.leads.filter((item) => item.status.includes("new"));
-  const status_active = user == null ? void 0 : user.leads.filter((item) => item.status.includes("active"));
+  const findLeadStatus = selection_status_lead.map((item) => {
+    const status = item.value;
+    const filterLeads = user == null ? void 0 : user.leads.filter((lead) => lead.status.includes(status));
+    return { label: item.value, leads: filterLeads };
+  });
   return {
-    all: (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.reverse(),
-    new: status_new,
-    active: status_active
+    all: user == null ? void 0 : user.leads.reverse(),
+    status: findLeadStatus
   };
 });
 

@@ -9,7 +9,7 @@ const credentials = reactive({
     confirm_password: '',
     privacy_policy: false
 });
-// const formRef = ref();
+
 const isLoading = ref(false);
 let errorMessage = ref('');
 const { fetch: refreshSession } = useUserSession();

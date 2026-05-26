@@ -32,6 +32,8 @@ export { setInterval } from '#app/compat/interval';
 export { BulletLegendItemInterface, CurveType, LegendPosition, Orientation } from '../node_modules/nuxt-charts/dist/runtime/vue-chrts';
 export { definePageMeta, PageMeta } from '#app/composables/pages';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
+export { capitalizeFirstLetter } from '../app/composables/useCapitalizeFirstLetter';
+export { useLocalDB } from '../app/composables/useLocalDB';
 export { exportLeadsCSV } from '../app/utils/csv';
 export { date, timeZone, formatDate, useFormatDate, yearMonthDayFormat } from '../app/utils/date';
 export { ghostFormUrl } from '../app/utils/ghostFormUrl';

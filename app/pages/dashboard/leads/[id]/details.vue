@@ -13,7 +13,7 @@ const lead = ref(data.value);
 </script>
 
 <template>
-  <div v-if="!pending_data" class="min-h-screen py-20 p-6 lg:py-18 relative overflow-hidden">
+  <div v-if="!pending_data">
     
     <main class="max-w-5xl mx-auto relative z-10">
 

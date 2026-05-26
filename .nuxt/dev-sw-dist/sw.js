@@ -67,13 +67,9 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-5a5d9309'], (function (workbox) { 'use strict';
+define(['./workbox-92c947ee'], (function (workbox) { 'use strict';
 
-  self.addEventListener('message', event => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
-    }
-  });
+  self.skipWaiting();
   workbox.clientsClaim();
 
   /**
@@ -83,12 +79,17 @@ define(['./workbox-5a5d9309'], (function (workbox) { 'use strict';
    */
   workbox.precacheAndRoute([{
     "url": "/login",
-    "revision": "0.1b1h9virrtk"
+    "revision": "0.ollcgkganos"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("/login"), {
     allowlist: [/^\/$/]
   }));
+  workbox.registerRoute(/\/api\/leads\/sync/, new workbox.NetworkOnly({
+    plugins: [new workbox.BackgroundSyncPlugin("mongodb-sync-queue", {
+      maxRetentionTime: 1440
+    })]
+  }), 'POST');
 
 }));
 //# sourceMappingURL=sw.js.map

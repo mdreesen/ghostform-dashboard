@@ -62,8 +62,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 </script>
 
 <template>
-    <!-- Removed ref="pageRef" -->
-    <div class="min-h-screen p-4 sm:p-8">
+    <div>
         <div class="max-w-4xl mx-auto py-10 flex flex-col gap-8">
 
             <!-- Header -->
