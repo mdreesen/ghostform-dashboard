@@ -515,7 +515,7 @@ const __nuxt_page_meta$5 = {
   layout: "authenticated"
 };
 const __nuxt_page_meta$4 = {
-  layout: "form"
+  layout: "authenticated"
 };
 const __nuxt_page_meta$3 = {
   layout: "authenticated"
@@ -543,10 +543,10 @@ const _routes = [
     component: () => import('./edit-ClVJ4ka6.mjs')
   },
   {
-    name: "dashboard-form",
-    path: "/dashboard/form",
+    name: "dashboard-forms",
+    path: "/dashboard/forms",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-Cn3eDNZ6.mjs')
+    component: () => import('./index-CUooST8L.mjs')
   },
   {
     name: "dashboard-leads",
@@ -558,13 +558,13 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-CgSE-E9C.mjs')
+    component: () => import('./index-D4DaWKFh.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-CUnXYpBQ.mjs')
+    component: () => import('./index-WcbbSvjZ.mjs')
   },
   {
     name: "forgotpassword",
@@ -10202,7 +10202,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-BuvlppLw.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-CrdK9q-6.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-CzCAA_Gf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-ChLjqg4G.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))
