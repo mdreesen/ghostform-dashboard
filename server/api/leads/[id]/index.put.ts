@@ -7,51 +7,59 @@ const User = UserModel as Model<User>;
 
 const bodySchema = z.object({
     _id: z.string(),
-    address: z.string().nullable(),
-    age: z.number().nullable(),
-    bathrooms: z.number().nullable(),
-    bedrooms: z.number().nullable(),
-    budget: z.number().nullable(),
-    buy_sell_both: z.string().nullable(),
-    date: z.string().nullable(),
-    email: z.string().nullable(),
-    message: z.string().nullable(),
+    source: z.string().nullable(),
     name: z.string().nullable(),
-    phone: z.string().nullable(),
+    age: z.number().nullable(),
+    email: z.string().nullable(),
+    phone: z.number().nullable(),
+    date: z.string().nullable(),
+    status: z.string().nullable(),
+    best_communication_method: z.string().nullable(),
+    address: z.string().nullable(),
+    want_to_move: z.string().nullable(),
+    buy_sell_both: z.string().nullable(),
     price: z.number().nullable(),
     sqft: z.number().nullable(),
-    status: z.string().nullable(),
-    want_to_move: z.string().nullable(),
-    ai_analysis: z.string().nullable(),
+    bedrooms: z.number().nullable(),
+    bathrooms: z.number().nullable(),
+    budget: z.number().nullable(),
+    notes: z.string().nullable(),
+    seeing_an_agent: z.string().nullable(),
+    ai_analysis: z.string().nullable()
 })
 
 export default defineEventHandler(async (event) => {
-  const { _id, address, age, bathrooms, bedrooms, budget, buy_sell_both, date, email, message, name, phone, price, sqft, status, want_to_move, ai_analysis } = await readValidatedBody(event, bodySchema.parse);
+  const body = await readValidatedBody(event, bodySchema.parse);
 
-  const obj = {
-    _id: _id,
-    address: address,
-    age: age,
-    bathrooms: bathrooms,
-    bedrooms: bedrooms,
-    budget: budget,
-    buy_sell_both: buy_sell_both,
-    date: date,
-    email: email,
-    message: message,
-    name: name,
-    phone: phone,
-    price: price,
-    sqft: sqft,
-    status: status,
-    want_to_move: want_to_move,
-    ai_analysis: ai_analysis
-  };
+  // const obj = {
+  //   _id: _id,
+  //   source: source,
+  //   name: name,
+  //   age: age,
+  //   email: email,
+  //   phone: phone,
+  //   date: date,
+  //   status: status,
+  //   best_communication_method: best_communication_method,
+  //   address: address,
+  //   want_to_move: want_to_move,
+  //   buy_sell_both: buy_sell_both,
+  //   price: price,
+  //   sqft: sqft,
+  //   bedrooms: bedrooms,
+  //   bathrooms: bathrooms,
+  //   budget: budget,
+  //   notes: notes,
+  //   seeing_an_agent: seeing_an_agent,
+  //   ai_analysis: ai_analysis
+  // };
+
+  console.log(body)
 
   try {
     await User.findOneAndUpdate(
-      { 'leads._id': _id },
-      { $set: { 'leads.$': { ...obj } } });
+      { 'leads._id': body._id },
+      { $set: { 'leads.$': { ...body } } });
 
   } catch (error) {
     console.log(error);

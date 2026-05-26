@@ -549,7 +549,7 @@ const _routes = [
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./edit-DXh4WZMP.mjs')
+    component: () => import('./edit-DhjEHvF4.mjs')
   },
   {
     name: "dashboard-forms",

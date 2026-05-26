@@ -19,22 +19,6 @@ import '../../../_/mongodb.mjs';
 
 const User = User$1;
 const bodySchema = z.object({
-  // address: z.string().nullable(),
-  // age: z.number().nullable(),
-  // bathrooms: z.number().nullable(),
-  // bedrooms: z.number().nullable(),
-  // budget: z.number().nullable(),
-  // buy_sell_both: z.string().nullable(),
-  // date: z.string().nullable(),
-  // email: z.string().nullable(),
-  // message: z.string().nullable(),
-  // name: z.string().nullable(),
-  // phone: z.string().nullable(),
-  // price: z.number().nullable(),
-  // sqft: z.number().nullable(),
-  // status: z.string().nullable(),
-  // want_to_move: z.string().nullable(),
-  // ai_analysis: z.string().nullable(),
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.string().nullable(),

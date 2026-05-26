@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,22 +2935,7 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"277a0-Qbs00i8zyVRYQ+OnDI1GFIWEIWQ\"",
-    "mtime": "2026-05-26T22:00:35.000Z",
-    "size": 161696,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"8f701-RHeL8vfdB8jBRYff6a6jmBtP0K4\"",
-    "mtime": "2026-05-26T22:00:35.000Z",
-    "size": 587521,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4005,7 +3990,7 @@ const lead = new Schema(
     name: String || void 0,
     age: Number || void 0,
     email: String || void 0,
-    phone: String || void 0,
+    phone: Number || void 0,
     best_communication_method: String || void 0,
     address: String || void 0,
     want_to_move: String || void 0,
@@ -4320,48 +4305,33 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 const User$4 = User$c;
 const bodySchema$3 = z.object({
   _id: z.string(),
-  address: z.string().nullable(),
-  age: z.number().nullable(),
-  bathrooms: z.number().nullable(),
-  bedrooms: z.number().nullable(),
-  budget: z.number().nullable(),
-  buy_sell_both: z.string().nullable(),
-  date: z.string().nullable(),
-  email: z.string().nullable(),
-  message: z.string().nullable(),
+  source: z.string().nullable(),
   name: z.string().nullable(),
-  phone: z.string().nullable(),
+  age: z.number().nullable(),
+  email: z.string().nullable(),
+  phone: z.number().nullable(),
+  date: z.string().nullable(),
+  status: z.string().nullable(),
+  best_communication_method: z.string().nullable(),
+  address: z.string().nullable(),
+  want_to_move: z.string().nullable(),
+  buy_sell_both: z.string().nullable(),
   price: z.number().nullable(),
   sqft: z.number().nullable(),
-  status: z.string().nullable(),
-  want_to_move: z.string().nullable(),
+  bedrooms: z.number().nullable(),
+  bathrooms: z.number().nullable(),
+  budget: z.number().nullable(),
+  notes: z.string().nullable(),
+  seeing_an_agent: z.string().nullable(),
   ai_analysis: z.string().nullable()
 });
 const index_put$4 = defineEventHandler(async (event) => {
-  const { _id, address, age, bathrooms, bedrooms, budget, buy_sell_both, date, email, message, name, phone, price, sqft, status, want_to_move, ai_analysis } = await readValidatedBody(event, bodySchema$3.parse);
-  const obj = {
-    _id,
-    address,
-    age,
-    bathrooms,
-    bedrooms,
-    budget,
-    buy_sell_both,
-    date,
-    email,
-    message,
-    name,
-    phone,
-    price,
-    sqft,
-    status,
-    want_to_move,
-    ai_analysis
-  };
+  const body = await readValidatedBody(event, bodySchema$3.parse);
+  console.log(body);
   try {
     await User$4.findOneAndUpdate(
-      { "leads._id": _id },
-      { $set: { "leads.$": { ...obj } } }
+      { "leads._id": body._id },
+      { $set: { "leads.$": { ...body } } }
     );
   } catch (error) {
     console.log(error);
@@ -4379,22 +4349,6 @@ const index_put$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 
 const User$3 = User$c;
 const bodySchema$2 = z.object({
-  // address: z.string().nullable(),
-  // age: z.number().nullable(),
-  // bathrooms: z.number().nullable(),
-  // bedrooms: z.number().nullable(),
-  // budget: z.number().nullable(),
-  // buy_sell_both: z.string().nullable(),
-  // date: z.string().nullable(),
-  // email: z.string().nullable(),
-  // message: z.string().nullable(),
-  // name: z.string().nullable(),
-  // phone: z.string().nullable(),
-  // price: z.number().nullable(),
-  // sqft: z.number().nullable(),
-  // status: z.string().nullable(),
-  // want_to_move: z.string().nullable(),
-  // ai_analysis: z.string().nullable(),
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.string().nullable(),

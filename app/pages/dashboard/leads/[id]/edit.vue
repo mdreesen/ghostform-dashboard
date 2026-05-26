@@ -15,39 +15,46 @@ const isLoading = ref(false);
 let errorMessage = ref('');
 
 const input = reactive({
-    address: '',
-    age: 0,
-    bathrooms: 0,
-    bedrooms: 0,
-    budget: 0,
-    buy_sell_both: '',
-    date: '',
-    email: '',
-    message: '',
+    source: '',
     name: '',
-    phone: '',
+    age: 0,
+    email: '',
+    phone: 0,
+    date: '',
+    status: '',
+    best_communication_method: '',
+    address: '',
+    want_to_move: '',
+    buy_sell_both: '',
     price: 0,
     sqft: 0,
-    status: '',
-    want_to_move: '',
+    bedrooms: 0,
+    bathrooms: 0,
+    budget: 0,
+    notes: '',
+    seeing_an_agent: '',
+    ai_analysis: ''
 });
 
 if (data.value) {
-    input.address = data.value.address;
-    input.age = data.value.age;
-    input.bathrooms = data.value.bathrooms;
-    input.bedrooms = data.value.bedrooms;
-    input.budget = data.value.budget;
-    input.buy_sell_both = data.value.buy_sell_both;
-    input.date = data.value.date;
-    input.email = data.value.email;
-    input.message = data.value.message;
-    input.name = data.value.name;
-    input.phone = data.value.phone;
-    input.price = data.value.price
-    input.sqft = data.value.sqft;
-    input.status = data.value.status;
-    input.want_to_move = data.value.want_to_move
+    input.source = data.value.source,
+    input.name = data.value.name,
+    input.age = data.value.age ?? 0,
+    input.email = data.value.email,
+    input.phone = data.value.phone ?? 0,
+    input.date = data.value.date,
+    input.status = data.value.status,
+    input.best_communication_method = data.value.best_communication_method,
+    input.address = data.value.address,
+    input.want_to_move = data.value.want_to_move,
+    input.buy_sell_both = data.value.buy_sell_both,
+    input.price = data.value.price ?? 0,
+    input.sqft = data.value.sqft ?? 0,
+    input.bedrooms = data.value.bedrooms ?? 0,
+    input.bathrooms = data.value.bathrooms ?? 0,
+    input.budget = data.value.budget ?? 0,
+    input.notes = data.value.notes,
+    input.seeing_an_agent = data.value.seeing_an_agent
 };
 
 async function log() {
@@ -57,7 +64,7 @@ async function log() {
         body: { _id: lead.value._id, ...input, ai_analysis: lead.value.ai_analysis }
     })
         .then(async () => {
-            await refreshNuxtData(['leads', 'status']);
+            await refreshNuxtData('leads');
             await navigateTo(`/dashboard/leads/${route.params.id}/details`);
         })
         .catch(async (error) => {
@@ -105,74 +112,98 @@ async function delete_log() {
             </div>
 
             <div v-motion="{ ...inputVarient() }">
+                <baseLabel text="Source" />
+                <input id="source" type="text" v-model="input.source" placeholder="Source (where the lead came from)" required
+                    class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Name" />
-                <input id="text" type="text" v-model="input.name" placeholder="Name" required
+                <input id="name" type="text" v-model="input.name" placeholder="Name" required
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Age" />
-                <input id="text" type="number" v-model="input.age" placeholder="Age"
+                <input id="age" type="number" v-model="input.age" placeholder="Age"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Email" />
-                <input id="text" type="text" v-model="input.email" placeholder="Email" required
+                <input id="email" type="text" v-model="input.email" placeholder="Email" required
+                    class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div v-motion="{ ...inputVarient() }">
+                <baseLabel text="Phone" />
+                <input id="phone" type="number" v-model="input.phone" placeholder="Phone" required
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Address" />
-                <input id="text" type="text" v-model="input.address" placeholder="Address"
+                <input id="address" type="text" v-model="input.address" placeholder="Address"
+                    class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div v-motion="{ ...inputVarient() }">
+                <baseLabel text="Best communication method" />
+                <input id="best_communication_method" type="text" v-model="input.best_communication_method" placeholder="Email, calling, texting..."
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Wants to move" />
-                <input id="text" type="text" v-model="input.want_to_move" placeholder="Wants to move"
+                <input id="want_to_move" type="text" v-model="input.want_to_move" placeholder="Wants to move"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Buy, sell, or both" />
-                <input id="text" type="text" v-model="input.buy_sell_both" placeholder="Buy, sell, or both"
+                <input id="buy_sell_both" type="text" v-model="input.buy_sell_both" placeholder="Buy, sell, or both"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Estimated home price" />
-                <input id="text" type="number" v-model="input.price" placeholder="Estimated home price"
+                <input id="price" type="number" v-model="input.price" placeholder="Estimated home price"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Sqft of home" />
-                <input id="text" type="number" v-model="input.sqft" placeholder="Sqft of home"
+                <input id="sqft" type="number" v-model="input.sqft" placeholder="Sqft of home"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Bedrooms" />
-                <input id="text" type="number" v-model="input.bedrooms" placeholder="Bedrooms"
+                <input id="bedrooms" type="number" v-model="input.bedrooms" placeholder="Bedrooms"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Bathrooms" />
-                <input id="text" type="number" v-model="input.bathrooms" placeholder="Bathrooms"
+                <input id="bathrooms" type="number" v-model="input.bathrooms" placeholder="Bathrooms"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Budget" />
-                <input id="text" type="text" v-model="input.budget" placeholder="Budget"
+                <input id="budget" type="number" v-model="input.budget" placeholder="Budget"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
-                <baseLabel text="Message" />
-                <input id="text" type="text" v-model="input.message" placeholder="Message"
+                <baseLabel text="Seeing an agent" />
+                <input id="seeing_an_agent" type="text" v-model="input.seeing_an_agent" placeholder="Yes, no, agents name perhaps..."
+                    class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <div v-motion="{ ...inputVarient() }">
+                <baseLabel text="Notes" />
+                <input id="notes" type="text" v-model="input.notes" placeholder="Notes about lead"
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 
