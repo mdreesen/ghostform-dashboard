@@ -136,11 +136,30 @@ export default defineNuxtConfig({
       ],
       prefer_related_applications: true,
     },
+    registerType: 'autoUpdate',
     workbox: {
       'navigateFallback': '/login',
-      globPatterns: ['**/*.{js,css,html,svg,webp,ico}'],
+      // Cache static routes and core UI structures
+      globPatterns: ['**/*.{js,css,html,png,svg}'],
       cleanupOutdatedCaches: true,
       clientsClaim: true,
+      // Enable Background Sync API for deferred network payloads
+      runtimeCaching: [
+        {
+          // Intercepts your background synchronization endpoint
+          urlPattern: /\/api\/leads\/sync/,
+          handler: 'NetworkOnly',
+          method: 'POST',
+          options: {
+            backgroundSync: {
+              name: 'mongodb-sync-queue',
+              options: {
+                maxRetentionTime: 24 * 60 // Max retry duration in minutes (24 Hours)
+              }
+            }
+          }
+        }
+      ]
     },
     devOptions: {
       enabled: true,
