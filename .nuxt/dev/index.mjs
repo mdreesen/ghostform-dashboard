@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"277a0-Qbs00i8zyVRYQ+OnDI1GFIWEIWQ\"",
+    "mtime": "2026-05-26T22:00:35.000Z",
+    "size": 161696,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"8f701-RHeL8vfdB8jBRYff6a6jmBtP0K4\"",
+    "mtime": "2026-05-26T22:00:35.000Z",
+    "size": 587521,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4421,15 +4436,25 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: create_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const selection_status_lead = [
+  { label: "lead (new)", value: "new" },
+  { label: "appointment", value: "appointment" },
+  { label: "active", value: "active" },
+  { label: "under contract", value: "under contract" },
+  { label: "closed", value: "closed" },
+  { label: "archive", value: "archive" }
+];
+
 const index_get$4 = defineEventHandler(async (event) => {
-  var _a;
   const user = await loggedInUser(event);
-  const status_new = user == null ? void 0 : user.leads.filter((item) => item.status.includes("new"));
-  const status_active = user == null ? void 0 : user.leads.filter((item) => item.status.includes("active"));
+  const findLeadStatus = selection_status_lead.map((item) => {
+    const status = item.value;
+    const filterLeads = user == null ? void 0 : user.leads.filter((lead) => lead.status.includes(status));
+    return { label: item.value, leads: filterLeads };
+  });
   return {
-    all: (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.reverse(),
-    new: status_new,
-    active: status_active
+    all: user == null ? void 0 : user.leads.reverse(),
+    status: findLeadStatus
   };
 });
 

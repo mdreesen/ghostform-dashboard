@@ -1,14 +1,19 @@
 import loggedInUser from '~/utils/loggedInUser';
+import { selection_status_lead } from '~/utils/dropdowns/selections';
+import type { Lead } from '~/types/lead';
 
 export default defineEventHandler(async (event) => {
     const user = await loggedInUser(event);
 
-    const status_new = user?.leads.filter((item) => item.status.includes('new'));
-    const status_active = user?.leads.filter((item) => item.status.includes('active'));
+    const findLeadStatus = selection_status_lead.map((item) => {
+      const status = item.value;
+      const filterLeads = user?.leads.filter((lead: Lead) => lead.status.includes(status))
+
+      return { label: item.value, leads: filterLeads }
+    });
 
     return {
-      all: user?.leads?.reverse(),
-      new: status_new,
-      active: status_active
-    }
+      all: user?.leads.reverse(),
+      status: findLeadStatus
+    };
   });

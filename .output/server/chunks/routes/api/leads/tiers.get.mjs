@@ -29,7 +29,6 @@ const tiers_get = defineEventHandler(async (event) => {
       tierThree
     };
   });
-  console.log(findTiers);
   return {
     totalTiers: findTiers
   };
