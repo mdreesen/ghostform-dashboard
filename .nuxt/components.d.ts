@@ -22,7 +22,8 @@ export const AppPricing: typeof import("../app/components/app/pricing.vue")['def
 export const AppStats: typeof import("../app/components/app/stats.vue")['default']
 export const BaseButtonNavigate: typeof import("../app/components/base/ButtonNavigate.vue")['default']
 export const BaseButtonSubmit: typeof import("../app/components/base/ButtonSubmit.vue")['default']
-export const BaseCard: typeof import("../app/components/base/Card.vue")['default']
+export const BaseCardDetail: typeof import("../app/components/base/Card/Detail.vue")['default']
+export const BaseCardForm: typeof import("../app/components/base/Card/Form.vue")['default']
 export const BaseDeleteProfile: typeof import("../app/components/base/DeleteProfile.vue")['default']
 export const BaseEngineActive: typeof import("../app/components/base/EngineActive.vue")['default']
 export const BaseGhostForm: typeof import("../app/components/base/GhostForm.vue")['default']
@@ -222,7 +223,8 @@ export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/
 export const LazyAppStats: LazyComponent<typeof import("../app/components/app/stats.vue")['default']>
 export const LazyBaseButtonNavigate: LazyComponent<typeof import("../app/components/base/ButtonNavigate.vue")['default']>
 export const LazyBaseButtonSubmit: LazyComponent<typeof import("../app/components/base/ButtonSubmit.vue")['default']>
-export const LazyBaseCard: LazyComponent<typeof import("../app/components/base/Card.vue")['default']>
+export const LazyBaseCardDetail: LazyComponent<typeof import("../app/components/base/Card/Detail.vue")['default']>
+export const LazyBaseCardForm: LazyComponent<typeof import("../app/components/base/Card/Form.vue")['default']>
 export const LazyBaseDeleteProfile: LazyComponent<typeof import("../app/components/base/DeleteProfile.vue")['default']>
 export const LazyBaseEngineActive: LazyComponent<typeof import("../app/components/base/EngineActive.vue")['default']>
 export const LazyBaseGhostForm: LazyComponent<typeof import("../app/components/base/GhostForm.vue")['default']>

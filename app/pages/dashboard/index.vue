@@ -58,7 +58,7 @@ const cardData = computed(() => [
       <section class="flex flex-wrap justify-between gap-6 mb-12">
         <template v-if="leads" v-for="data in cardData">
           <ClientOnly>
-            <baseCard :label="data.title" :value="data.value" />
+            <baseCardDetail :label="data.title" :value="data.value" />
           </ClientOnly>
         </template>
       </section>
