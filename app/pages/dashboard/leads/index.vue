@@ -10,7 +10,11 @@ const { data: leads } = useNuxtData('leads');
 
 <template>
   <div>
-    <appHeader label="Lead Archive" subLabel="Intake Intelligence" />
+
+    <section class="flex flex-wrap justify-between">
+      <appHeader label="Lead Archive" subLabel="Intake Intelligence" />
+      <baseButtonNavigate text="+ Create Lead" path="/dashboard/leads/create" />
+    </section>
 
     <main class="max-w-7xl mx-auto relative z-10">
       <section class="flex flex-col gap-10">

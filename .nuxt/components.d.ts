@@ -16,7 +16,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 export const AppAccess: typeof import("../app/components/app/Access.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
-export const AppPricing: typeof import("../app/components/app/pricing.vue")['default']
+export const AppPricing: typeof import("../app/components/app/Pricing.vue")['default']
 export const BaseButtonNavigate: typeof import("../app/components/base/ButtonNavigate.vue")['default']
 export const BaseButtonSubmit: typeof import("../app/components/base/ButtonSubmit.vue")['default']
 export const BaseCardDetail: typeof import("../app/components/base/Card/Detail.vue")['default']
@@ -214,7 +214,7 @@ export const Icon: typeof import("../node_modules/@nuxt/icon/dist/runtime/compon
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const LazyAppAccess: LazyComponent<typeof import("../app/components/app/Access.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
-export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/pricing.vue")['default']>
+export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/Pricing.vue")['default']>
 export const LazyBaseButtonNavigate: LazyComponent<typeof import("../app/components/base/ButtonNavigate.vue")['default']>
 export const LazyBaseButtonSubmit: LazyComponent<typeof import("../app/components/base/ButtonSubmit.vue")['default']>
 export const LazyBaseCardDetail: LazyComponent<typeof import("../app/components/base/Card/Detail.vue")['default']>

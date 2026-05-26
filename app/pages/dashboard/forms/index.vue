@@ -14,7 +14,7 @@ const { data: user } = useNuxtData('user');
         <appHeader label="Forms" subLabel="Form Selection" />
 
         <div>
-            <baseHeaderSection text="Form Selections" />
+            <baseHeaderSection text="Select available forms" />
 
             <section class="flex flex-wrap justify-between gap-6">
                 <baseCardForm label="Data Entry"

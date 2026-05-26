@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ghostFormUrl } from '~/utils/ghostFormUrl';
 
 definePageMeta({
   layout: 'authenticated',
@@ -54,9 +53,3 @@ const cardData = computed(() => [
     </main>
   </div>
 </template>
-
-<style scoped>
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
-</style>
