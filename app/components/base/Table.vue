@@ -8,13 +8,13 @@ const UBadge = resolveComponent('UBadge');
 
 const props = defineProps({
   data: {
-    type: Array,
+    type: Array<Lead>,
     default: () => [],
     required: true
   },
 });
 
-const useData = computed(() => props.data);
+// const useData = computed(() => props.data.all);
 
 const columns: TableColumn<Lead>[] = [
   {
@@ -111,41 +111,43 @@ const pagination = ref({
 </script>
 
 <template>
-  <div class="flex flex-col flex-1 w-full p-5">
-    <div class="flex px-4 py-3.5 border-b border-accented">
-      <UInput :model-value="table?.tableApi?.getColumn('email')?.getFilterValue() as string" class="max-w-sm"
-        placeholder="Filter emails..."
-        @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)" />
-    </div>
-    <UTable ref="table" v-model:pagination="pagination" v-model:column-filters="columnFilters" :data="useData"
-      :columns="columns" :pagination-options="{
-        getPaginationRowModel: getPaginationRowModel()
-      }" class="flex-1">
-      <template #name-cell="{ row }">
-        <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
-          class="text-cyan-400 hover:text-cyan-700 underline font-medium">
-          {{ row.original?.name }}
-        </NuxtLink>
-      </template>
+  <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
+    <div class="flex flex-col flex-1 w-full p-5">
+      <div class="flex px-4 py-3.5 border-b border-accented">
+        <UInput :model-value="table?.tableApi?.getColumn('email')?.getFilterValue() as string" class="max-w-sm"
+          placeholder="Filter emails..."
+          @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)" />
+      </div>
+      <UTable ref="table" v-model:pagination="pagination" v-model:column-filters="columnFilters" :data="data"
+        :columns="columns" :pagination-options="{
+          getPaginationRowModel: getPaginationRowModel()
+        }" class="flex-1">
+        <template #name-cell="{ row }">
+          <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
+            class="text-cyan-400 hover:text-cyan-700 underline font-medium">
+            {{ row.original?.name }}
+          </NuxtLink>
+        </template>
 
-      <template #email-cell="{ row }">
-        <baseMessage :label="row.original?.email" message_type="mailto" :communication_type="row.original?.email" />
-      </template>
+        <template #email-cell="{ row }">
+          <baseMessage :label="row.original?.email" message_type="mailto" :communication_type="row.original?.email" />
+        </template>
 
-      <template #phone-cell="{ row }">
-        <baseMessage :label="row.original?.phone" message_type="sms" :communication_type="row.original?.phone" />
-      </template>
+        <template #phone-cell="{ row }">
+          <baseMessage :label="row.original?.phone.toString()" message_type="sms" communication_type="sms" />
+        </template>
 
-      <template #address-cell="{ row }">
-        <baseMaps :address="row.original?.address" />
-      </template>
-    </UTable>
+        <template #address-cell="{ row }">
+          <baseMaps :address="row.original?.address" />
+        </template>
+      </UTable>
 
-    <div class="flex justify-end border-t border-default pt-4 px-4 color-cyan-400">
-      <UPagination :page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
-        :items-per-page="table?.tableApi?.getState().pagination.pageSize"
-        :total="table?.tableApi?.getFilteredRowModel().rows.length"
-        @update:page="(p) => table?.tableApi?.setPageIndex(p - 1)" />
+      <div class="flex justify-end border-t border-default pt-4 px-4 color-cyan-400">
+        <UPagination :page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
+          :items-per-page="table?.tableApi?.getState().pagination.pageSize"
+          :total="table?.tableApi?.getFilteredRowModel().rows.length"
+          @update:page="(p) => table?.tableApi?.setPageIndex(p - 1)" />
+      </div>
     </div>
   </div>
 </template>

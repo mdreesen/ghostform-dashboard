@@ -15,6 +15,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 interface _GlobalComponents {
   AppAccess: typeof import("../../app/components/app/Access.vue")['default']
+  AppCardsOverview: typeof import("../../app/components/app/CardsOverview.vue")['default']
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppPricing: typeof import("../../app/components/app/Pricing.vue")['default']
   BaseButtonNavigate: typeof import("../../app/components/base/ButtonNavigate.vue")['default']
@@ -213,6 +214,7 @@ interface _GlobalComponents {
   Icon: typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
   LazyAppAccess: LazyComponent<typeof import("../../app/components/app/Access.vue")['default']>
+  LazyAppCardsOverview: LazyComponent<typeof import("../../app/components/app/CardsOverview.vue")['default']>
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/Pricing.vue")['default']>
   LazyBaseButtonNavigate: LazyComponent<typeof import("../../app/components/base/ButtonNavigate.vue")['default']>

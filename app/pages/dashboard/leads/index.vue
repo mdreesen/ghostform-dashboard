@@ -22,17 +22,15 @@ const { data: leads } = useNuxtData('leads');
 
         <template v-for="item in leads?.status">
           <div class="space-y-6 w-full">
-          <div class="flex justify-between items-end mb-4">
-            <baseHeaderSection v-if="leads" :text="capitalizeFirstLetter(item.label)" />
-            <baseButton @click="exportLeadsCSV(leads.new)" :text="`Export ${item?.label} csv`" />
-          </div>
+            <div class="flex justify-between items-end mb-4">
+              <baseHeaderSection v-if="leads" :text="capitalizeFirstLetter(item.label)" />
+              <baseButton @click="exportLeadsCSV(leads.new)" :text="`Export ${item?.label} csv`" />
+            </div>
 
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
             <ClientOnly>
               <baseTable v-if="leads" :data="item.leads" />
             </ClientOnly>
           </div>
-        </div>
         </template>
 
         <!-- All Leads -->
@@ -42,11 +40,9 @@ const { data: leads } = useNuxtData('leads');
             <baseButton @click="exportLeadsCSV(leads.all)" text="EXPORT CSV" />
           </div>
 
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
-            <ClientOnly>
-              <baseTable v-if="leads" :data="leads.all" />
-            </ClientOnly>
-          </div>
+          <ClientOnly>
+            <baseTable v-if="leads" :data="leads.all" />
+          </ClientOnly>
         </div>
       </section>
     </main>

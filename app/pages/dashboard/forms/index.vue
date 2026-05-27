@@ -29,21 +29,3 @@ const { data: user } = useNuxtData('user');
         </div>
     </div>
 </template>
-
-<style scoped>
-@keyframes bounce-slow {
-
-    0%,
-    100% {
-        transform: translate(-50%, 0);
-    }
-
-    50% {
-        transform: translate(-50%, -10px);
-    }
-}
-
-.animate-bounce-slow {
-    animation: bounce-slow 3s ease-in-out infinite;
-}
-</style>

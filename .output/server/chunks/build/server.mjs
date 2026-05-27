@@ -543,7 +543,7 @@ const _routes = [
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-D5dutM2o.mjs')
+    component: () => import('./details-XwgwTYJO.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
@@ -555,13 +555,13 @@ const _routes = [
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-CN5EHpka.mjs')
+    component: () => import('./index-DVlTAT7G.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CMnoMu5d.mjs')
+    component: () => import('./index-CnYGNFjm.mjs')
   },
   {
     name: "dashboard-profile",
@@ -573,7 +573,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-CGPqN69z.mjs')
+    component: () => import('./index-DFo-XMcS.mjs')
   },
   {
     name: "forgotpassword",
@@ -1493,7 +1493,7 @@ defineComponent({
   }
 });
 const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
-const __nuxt_component_1$2 = defineComponent({
+const __nuxt_component_3$1 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -10631,5 +10631,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { formFieldInjectionKey as $, AUTOFOCUS_ON_MOUNT as A, useComponentUI as B, useForwardPropsEmits as C, reactivePick as D, EVENT_OPTIONS as E, usePortal as F, createReusableTemplate as G, tv as H, _sfc_main$8 as I, useRuntimeConfig as J, useNuxtData as K, useFieldGroup as L, useComponentIcons as M, _sfc_main$e as N, _sfc_main$b as O, Primitive as P, formBusInjectionKey as Q, formStateInjectionKey as R, formErrorsInjectionKey as S, Teleport_default as T, formInputsInjectionKey as U, VisuallyHidden_default as V, formLoadingInjectionKey as W, formOptionsInjectionKey as X, useEventBus as Y, inputIdInjectionKey as Z, __nuxt_component_0$2 as _, useRoute as a, useFormField as a0, looseToNumber as a1, useUserSession as a2, useMotion as a3, __nuxt_component_0$1 as a4, __nuxt_component_1$1 as a5, useFetch as b, __nuxt_component_1$2 as c, createSharedComposable as d, entry_default as default, unrefElement as e, useVModel as f, createContext as g, useForwardExpose as h, injectConfigProviderContext as i, isNullish as j, createGlobalState as k, getActiveElement as l, focusFirst as m, navigateTo as n, onKeyStroke as o, getTabbableCandidates as p, focus as q, refreshNuxtData as r, AUTOFOCUS_ON_UNMOUNT as s, tryOnBeforeUnmount as t, useHead as u, getTabbableEdges as v, useEmitAsProps as w, Presence_default as x, useLocale as y, useAppConfig as z };
+export { formFieldInjectionKey as $, AUTOFOCUS_ON_MOUNT as A, useComponentUI as B, useForwardPropsEmits as C, reactivePick as D, EVENT_OPTIONS as E, usePortal as F, createReusableTemplate as G, tv as H, _sfc_main$8 as I, useRuntimeConfig as J, useNuxtData as K, useFieldGroup as L, useComponentIcons as M, _sfc_main$e as N, _sfc_main$b as O, Primitive as P, formBusInjectionKey as Q, formStateInjectionKey as R, formErrorsInjectionKey as S, Teleport_default as T, formInputsInjectionKey as U, VisuallyHidden_default as V, formLoadingInjectionKey as W, formOptionsInjectionKey as X, useEventBus as Y, inputIdInjectionKey as Z, __nuxt_component_0$2 as _, useRoute as a, useFormField as a0, looseToNumber as a1, useUserSession as a2, useMotion as a3, __nuxt_component_0$1 as a4, __nuxt_component_1$1 as a5, useFetch as b, __nuxt_component_3$1 as c, createSharedComposable as d, entry_default as default, unrefElement as e, useVModel as f, createContext as g, useForwardExpose as h, injectConfigProviderContext as i, isNullish as j, createGlobalState as k, getActiveElement as l, focusFirst as m, navigateTo as n, onKeyStroke as o, getTabbableCandidates as p, focus as q, refreshNuxtData as r, AUTOFOCUS_ON_UNMOUNT as s, tryOnBeforeUnmount as t, useHead as u, getTabbableEdges as v, useEmitAsProps as w, Presence_default as x, useLocale as y, useAppConfig as z };
 //# sourceMappingURL=server.mjs.map
