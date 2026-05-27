@@ -4350,9 +4350,9 @@ const User$3 = User$c;
 const bodySchema$2 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
-  age: z.string().nullable(),
+  age: z.number().nullable(),
   email: z.string().nullable(),
-  phone: z.string().nullable(),
+  phone: z.number().nullable(),
   date: z.string().nullable(),
   status: z.string().nullable(),
   best_communication_method: z.string().nullable(),
@@ -4371,10 +4371,7 @@ const create_post = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema$2.parse);
   const user = await loggedInUser(event);
   try {
-    await User$3.findOneAndUpdate(
-      { email: user == null ? void 0 : user.email },
-      { $set: { "leads.$": body } }
-    );
+    await User$3.findOneAndUpdate({ email: user == null ? void 0 : user.email }, { $addToSet: { leads: body } }, { new: true });
   } catch (error) {
     console.log(error);
     throw createError({

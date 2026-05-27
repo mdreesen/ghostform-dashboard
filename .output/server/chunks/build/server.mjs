@@ -537,7 +537,7 @@ const _routes = [
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-BvkcsPAi.mjs')
+    component: () => import('./index-F0cQfJj1.mjs')
   },
   {
     name: "dashboard-leads-id-details",
@@ -567,7 +567,7 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-C8Q8ABL2.mjs')
+    component: () => import('./index-Hi38JO5Y.mjs')
   },
   {
     name: "dashboard",
