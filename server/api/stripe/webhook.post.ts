@@ -9,23 +9,25 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 export default defineEventHandler(async (event) => {
   const signature = getHeader(event, 'stripe-signature')
   const rawBody = await readRawBody(event);
-
   let stripeEvent;
-  try {
-    stripeEvent = stripe.webhooks.constructEvent(
-      rawBody!, signature!, process.env.STRIPE_WEBHOOK_SECRET!
-    )
-  } catch (err) {
-    throw createError({ statusCode: 400, message: 'Webhook Error' })
-  };
 
-  const session = stripeEvent.data.object;
+  stripeEvent = stripe.webhooks.constructEvent(
+    rawBody!, signature!, process.env.STRIPE_WEBHOOK_SECRET!
+  )
+  const session = stripeEvent.data.object
 
   if (stripeEvent.type === 'checkout.session.completed') {
-    await User.findOneAndUpdate(
-      { _id: session?.metadata?.userId },
-      { paid: true }
-    );
+    // 👈 Extract the user ID passed from the URL parameter
+    const mongoUserId = session.client_reference_id
+
+    if (mongoUserId) {
+      console.log(`Success: Found client reference mapping to user ${mongoUserId}`)
+
+      // Update your MongoDB document safely
+      await User.updateOne({ _id: mongoUserId }, { $set: { plan: 'phantom', paid: true } })
+    } else {
+      console.error('⚠️ Warning: Payment completed without a client_reference_id link.')
+    }
   }
 
   return { received: true }

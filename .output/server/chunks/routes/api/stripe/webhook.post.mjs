@@ -1,4 +1,4 @@
-import { d as defineEventHandler, e as getHeader, f as readRawBody, c as createError } from '../../../nitro/nitro.mjs';
+import { d as defineEventHandler, e as getHeader, f as readRawBody } from '../../../nitro/nitro.mjs';
 import { U as User$1 } from '../../../_/User.mjs';
 import Stripe from 'stripe';
 import 'node:http';
@@ -19,25 +19,23 @@ import 'zod';
 const User = User$1;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhook_post = defineEventHandler(async (event) => {
-  var _a;
   const signature = getHeader(event, "stripe-signature");
   const rawBody = await readRawBody(event);
   let stripeEvent;
-  try {
-    stripeEvent = stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    throw createError({ statusCode: 400, message: "Webhook Error" });
-  }
+  stripeEvent = stripe.webhooks.constructEvent(
+    rawBody,
+    signature,
+    process.env.STRIPE_WEBHOOK_SECRET
+  );
   const session = stripeEvent.data.object;
   if (stripeEvent.type === "checkout.session.completed") {
-    await User.findOneAndUpdate(
-      { _id: (_a = session == null ? void 0 : session.metadata) == null ? void 0 : _a.userId },
-      { paid: true }
-    );
+    const mongoUserId = session.client_reference_id;
+    if (mongoUserId) {
+      console.log(`Success: Found client reference mapping to user ${mongoUserId}`);
+      await User.updateOne({ _id: mongoUserId }, { $set: { plan: "phantom", paid: true } });
+    } else {
+      console.error("\u26A0\uFE0F Warning: Payment completed without a client_reference_id link.");
+    }
   }
   return { received: true };
 });

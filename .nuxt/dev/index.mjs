@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"274ca-FDmE4E8WU7Mt5/WmjKrRC32F/LA\"",
+    "mtime": "2026-05-28T19:41:19.311Z",
+    "size": 160970,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"8e7ec-3ek0hilVk1ws8lNbZ0Bp/ugr1qo\"",
+    "mtime": "2026-05-28T19:41:19.312Z",
+    "size": 583660,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4549,25 +4564,23 @@ const subscribe_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePr
 const User$1 = User$c;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhook_post = defineEventHandler(async (event) => {
-  var _a;
   const signature = getHeader(event, "stripe-signature");
   const rawBody = await readRawBody(event);
   let stripeEvent;
-  try {
-    stripeEvent = stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    throw createError({ statusCode: 400, message: "Webhook Error" });
-  }
+  stripeEvent = stripe.webhooks.constructEvent(
+    rawBody,
+    signature,
+    process.env.STRIPE_WEBHOOK_SECRET
+  );
   const session = stripeEvent.data.object;
   if (stripeEvent.type === "checkout.session.completed") {
-    await User$1.findOneAndUpdate(
-      { _id: (_a = session == null ? void 0 : session.metadata) == null ? void 0 : _a.userId },
-      { paid: true }
-    );
+    const mongoUserId = session.client_reference_id;
+    if (mongoUserId) {
+      console.log(`Success: Found client reference mapping to user ${mongoUserId}`);
+      await User$1.updateOne({ _id: mongoUserId }, { $set: { plan: "phantom", paid: true } });
+    } else {
+      console.error("\u26A0\uFE0F Warning: Payment completed without a client_reference_id link.");
+    }
   }
   return { received: true };
 });
