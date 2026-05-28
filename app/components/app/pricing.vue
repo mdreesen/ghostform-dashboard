@@ -1,10 +1,10 @@
 <script setup lang="ts">
 
 const props = defineProps({
-    stripe: {
-        type: Boolean,
-        default: false
-    }
+  stripe: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const { data: user } = useNuxtData('user');
@@ -48,7 +48,8 @@ const tiers = [
           ? 'bg-zinc-900 border-cyan-500/50 shadow-[0_0_40px_rgba(6,182,212,0.15)] scale-105 z-10'
           : 'bg-zinc-950/50 border-white hover:border-white/20'
       ]">
-        <div v-if="tier.highlighted" class="absolute -top-4 left-1/2 -translate-x-1/2 bg-cyan-500 text-black text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full">
+        <div v-if="tier.highlighted"
+          class="absolute -top-4 left-1/2 -translate-x-1/2 bg-cyan-500 text-black text-[10px] font-black uppercase tracking-widest px-4 py-1 rounded-full">
           Most Popular
         </div>
 
@@ -73,10 +74,8 @@ const tiers = [
           </li>
         </ul>
 
-        <nuxtLink         v-if="stripe"
-        :to="tier.stripe">
-          <button 
-        :class="[
+        <nuxtLink v-if="stripe" :to="tier.stripe">
+          <button :class="[
             'w-full py-4 rounded-2xl font-black transition-all transform active:scale-95',
             tier.highlighted
               ? 'bg-cyan-500 text-black hover:bg-cyan-400 shadow-lg shadow-cyan-500/20'
