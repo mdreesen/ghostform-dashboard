@@ -1,0 +1,1 @@
+import{e as t,c as n,t as a,o as s}from"./JBOcQyLJ.js";const o={class:"text-4xl font-black mb-12 text-center"},r=t({__name:"Base",props:{text:{type:String,required:!0,default:"Header"}},setup(e){return(c,_)=>(s(),n("h2",o,a(e.text),1))}}),i=Object.assign(r,{__name:"BaseHeaderBase"});export{i as _};

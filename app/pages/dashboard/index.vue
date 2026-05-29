@@ -28,6 +28,12 @@ const { data: leads } = useNuxtData('leads');
         </div>
       </section>
 
+      <section>
+        <ClientOnly>
+          <baseChartsLine />
+        </ClientOnly>
+      </section>
+
       <section class="space-y-6 w-full">
         <baseHeaderSection text="Lead Tracking" />
         <ClientOnly>

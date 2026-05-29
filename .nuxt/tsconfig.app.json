@@ -124,6 +124,12 @@
       "#pwa": [
         "../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index"
       ],
+      "@unovis/ts": [
+        "../node_modules/@unovis/ts"
+      ],
+      "@unovis/ts/*": [
+        "../node_modules/@unovis/ts/*"
+      ],
       "#vue-router": [
         "../node_modules/vue-router"
       ],

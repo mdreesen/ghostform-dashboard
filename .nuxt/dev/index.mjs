@@ -41,7 +41,6 @@ import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:/
 import { renderToString } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/vue/server-renderer/index.mjs';
 import { walkResolver } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/unhead/dist/utils.mjs';
 import { createHooks } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/hookable/dist/index.mjs';
-import * as jose from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/jose/dist/webapi/index.js';
 import { getIcons } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@iconify/utils/lib/index.js';
 import { collections } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/.nuxt/nuxt-icon-server-bundle.mjs';
 import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/ipx/dist/index.mjs';
@@ -1044,9 +1043,9 @@ const _inlineRuntimeConfig = {
       "loadStrategy": "server-first"
     },
     "googleAuth": {
-      "clientId": "253639218199-e98nuetmbvso9nrk14k4n5rm7ivl4s0e.apps.googleusercontent.com",
-      "promptOneTap": true,
-      "enableServerVerify": true
+      "clientId": "",
+      "promptOneTap": false,
+      "enableServerVerify": false
     },
     "notify": {
       "position": "top-right",
@@ -2938,16 +2937,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"272e8-qbTZKdOPJc3i29/5xV7jykL4LFU\"",
-    "mtime": "2026-05-29T18:58:26.751Z",
-    "size": 160488,
+    "etag": "\"27190-TJqEPGxfGRB03oo4OJcDpcjfo6I\"",
+    "mtime": "2026-05-29T20:12:43.500Z",
+    "size": 160144,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"8e7dc-SYT7OafoDkiR1ZGUSQDzNEz2hyg\"",
-    "mtime": "2026-05-29T18:58:26.752Z",
-    "size": 583644,
+    "etag": "\"8d6c8-q3qr/qmADpR36uKezHDELJqs2+Q\"",
+    "mtime": "2026-05-29T20:12:43.500Z",
+    "size": 579272,
     "path": "index.mjs.map"
   }
 };
@@ -3554,38 +3553,6 @@ const _PIx1yT = eventHandler(async (event) => {
   return data;
 });
 
-const _aTDxdC = defineEventHandler(async (event) => {
-  const { credential } = await readBody(event);
-  if (!credential) {
-    return { ok: false, reason: "missing_credential" };
-  }
-  const runtime = useRuntimeConfig();
-  const aud = runtime.public?.googleAuth?.clientId;
-  try {
-    const JWKS = jose.createRemoteJWKSet(
-      new URL("https://www.googleapis.com/oauth2/v3/certs")
-    );
-    const { payload } = await jose.jwtVerify(credential, JWKS, {
-      audience: aud,
-      issuer: "https://accounts.google.com"
-    });
-    return {
-      ok: true,
-      sub: payload.sub,
-      // Google user ID
-      email: payload.email,
-      name: payload.name,
-      picture: payload.picture
-    };
-  } catch (err) {
-    return {
-      ok: false,
-      reason: "invalid_token",
-      message: err?.message || "Verification failed"
-    };
-  }
-});
-
 const warnOnceSet = /* @__PURE__ */ new Set();
 const DEFAULT_ENDPOINT = "https://api.iconify.design";
 const _qRkvEo = defineCachedEventHandler(async (event) => {
@@ -3669,6 +3636,7 @@ const _lazy_P6vtRH = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_48PoLn = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_q9BYK6 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_Zz2IBk = () => Promise.resolve().then(function () { return signup_post$1; });
+const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$5; });
@@ -3691,6 +3659,7 @@ const handlers = [
   { route: '/api/authentication/login', handler: _lazy_48PoLn, lazy: true, middleware: false, method: "post" },
   { route: '/api/authentication/reset', handler: _lazy_q9BYK6, lazy: true, middleware: false, method: undefined },
   { route: '/api/authentication/signup', handler: _lazy_Zz2IBk, lazy: true, middleware: false, method: "post" },
+  { route: '/api/charts/lead', handler: _lazy_yNGGpv, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_9lw3wc, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_dDJNJ5, lazy: true, middleware: false, method: "put" },
@@ -3708,7 +3677,6 @@ const handlers = [
   { route: '/__nuxt_island/**', handler: handler$1, lazy: false, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _jFnSje, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _PIx1yT, lazy: false, middleware: false, method: "get" },
-  { route: '/api/auth/google/verify', handler: _aTDxdC, lazy: false, middleware: false, method: "post" },
   { route: '/api/_nuxt_icon/:collection', handler: _qRkvEo, lazy: false, middleware: false, method: undefined },
   { route: '/_ipx/**', handler: _CYV0Kr, lazy: false, middleware: false, method: undefined },
   { route: '/_fonts/**', handler: _lazy_DNxl9_, lazy: true, middleware: false, method: undefined },
@@ -4272,6 +4240,33 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const selection_status_lead = [
+  { label: "lead (new)", value: "new" },
+  { label: "appointment", value: "appointment" },
+  { label: "active", value: "active" },
+  { label: "under contract", value: "under contract" },
+  { label: "closed", value: "closed" },
+  { label: "archive", value: "archive" }
+];
+
+const lead_get = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  const findLeadStatus = selection_status_lead.map((item) => {
+    const status = item.value;
+    const filterLeads = user == null ? void 0 : user.leads.filter((lead) => lead.status.includes(status));
+    return { label: item.value, leads: filterLeads };
+  });
+  return {
+    all: user == null ? void 0 : user.leads.reverse(),
+    status: findLeadStatus
+  };
+});
+
+const lead_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: lead_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const User$5 = User$c;
 const index_delete = defineEventHandler(async (event) => {
   try {
@@ -4400,15 +4395,6 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   __proto__: null,
   default: create_post
 }, Symbol.toStringTag, { value: 'Module' }));
-
-const selection_status_lead = [
-  { label: "lead (new)", value: "new" },
-  { label: "appointment", value: "appointment" },
-  { label: "active", value: "active" },
-  { label: "under contract", value: "under contract" },
-  { label: "closed", value: "closed" },
-  { label: "archive", value: "archive" }
-];
 
 const index_get$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);

@@ -1,1 +1,0 @@
-import{e as s,s as r,c as n,C as o,z as _,o as c}from"./LOQ3QCPB.js";const m=s({__name:"form",async setup(l){let e,t;return[e,t]=r(()=>_("/api/user",{key:"get_user",lazy:!0},"$ajMpr-DZMw")),await e,t(),(a,p)=>(c(),n("main",null,[o(a.$slots,"default")]))}});export{m as default};

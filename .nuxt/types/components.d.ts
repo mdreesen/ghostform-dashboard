@@ -23,6 +23,7 @@ interface _GlobalComponents {
   BaseButtonSubmit: typeof import("../../app/components/base/ButtonSubmit.vue")['default']
   BaseCardDetail: typeof import("../../app/components/base/Card/Detail.vue")['default']
   BaseCardForm: typeof import("../../app/components/base/Card/Form.vue")['default']
+  BaseChartsLine: typeof import("../../app/components/base/Charts/Line.vue")['default']
   BaseDeleteProfile: typeof import("../../app/components/base/DeleteProfile.vue")['default']
   BaseEngineActive: typeof import("../../app/components/base/EngineActive.vue")['default']
   BaseGhostForm: typeof import("../../app/components/base/GhostForm.vue")['default']
@@ -197,11 +198,16 @@ interface _GlobalComponents {
   PwaMaskableImage: typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaMaskableImage")['default']
   PwaTransparentImage: typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaTransparentImage")['default']
   AreaChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaChart']
-  AreaStackedChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaStackedChart']
   LineChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['LineChart']
   BarChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BarChart']
   DonutChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DonutChart']
   BubbleChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BubbleChart']
+  GanttChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['GanttChart']
+  DagreGraph: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DagreGraph']
+  DualChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DualChart']
+  SankeyChart: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['SankeyChart']
+  TopoJSONMap: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['TopoJSONMap']
+  DottedMap: typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DottedMap']
   NuxtPage: typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']
   NoScript: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']
   Link: typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -223,6 +229,7 @@ interface _GlobalComponents {
   LazyBaseButtonSubmit: LazyComponent<typeof import("../../app/components/base/ButtonSubmit.vue")['default']>
   LazyBaseCardDetail: LazyComponent<typeof import("../../app/components/base/Card/Detail.vue")['default']>
   LazyBaseCardForm: LazyComponent<typeof import("../../app/components/base/Card/Form.vue")['default']>
+  LazyBaseChartsLine: LazyComponent<typeof import("../../app/components/base/Charts/Line.vue")['default']>
   LazyBaseDeleteProfile: LazyComponent<typeof import("../../app/components/base/DeleteProfile.vue")['default']>
   LazyBaseEngineActive: LazyComponent<typeof import("../../app/components/base/EngineActive.vue")['default']>
   LazyBaseGhostForm: LazyComponent<typeof import("../../app/components/base/GhostForm.vue")['default']>
@@ -397,11 +404,16 @@ interface _GlobalComponents {
   LazyPwaMaskableImage: LazyComponent<typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaMaskableImage")['default']>
   LazyPwaTransparentImage: LazyComponent<typeof import("../../node_modules/@vite-pwa/nuxt/dist/runtime/components/nuxt4/PwaTransparentImage")['default']>
   LazyAreaChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaChart']>
-  LazyAreaStackedChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['AreaStackedChart']>
   LazyLineChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['LineChart']>
   LazyBarChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BarChart']>
   LazyDonutChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DonutChart']>
   LazyBubbleChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['BubbleChart']>
+  LazyGanttChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['GanttChart']>
+  LazyDagreGraph: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DagreGraph']>
+  LazyDualChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DualChart']>
+  LazySankeyChart: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['SankeyChart']>
+  LazyTopoJSONMap: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['TopoJSONMap']>
+  LazyDottedMap: LazyComponent<typeof import("../../node_modules/nuxt-charts/dist/runtime/vue-chrts")['DottedMap']>
   LazyNuxtPage: LazyComponent<typeof import("../../node_modules/nuxt/dist/pages/runtime/page")['default']>
   LazyNoScript: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['NoScript']>
   LazyLink: LazyComponent<typeof import("../../node_modules/nuxt/dist/head/runtime/components")['Link']>
