@@ -21,7 +21,7 @@ export interface LeadRecord {
 export function useSpreadsheet() {
     const isGenerating = ref(false)
 
-    const exportLeadsToXLSX = async (leadsArray: LeadRecord[], fileName = nameSpreadsheet('xlsx')) => {
+    const exportLeadsToXLSX = async (leadsArray: LeadRecord[]) => {
         // Drop execution gracefully if user has empty pipeline tables
         if (!leadsArray || leadsArray.length === 0) {
             console.warn('Excel pipeline process skipped: Array payload empty.')
@@ -195,10 +195,10 @@ export function useSpreadsheet() {
             const link = document.createElement('a')
             const blobUrl = URL.createObjectURL(blob)
 
-            link.href = blobUrl
-            link.download = fileName
-            document.body.appendChild(link)
-            link.click()
+            link.href = blobUrl;
+            link.download = nameSpreadsheet('xlsx');
+            document.body.appendChild(link);
+            link.click();
 
             // Cleanup garbage allocations to preserve memory space
             document.body.removeChild(link)

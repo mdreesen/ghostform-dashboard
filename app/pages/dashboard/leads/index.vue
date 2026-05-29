@@ -36,7 +36,7 @@ const { data: leads } = useNuxtData('leads');
         <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
             <baseHeaderSection v-if="leads" text="All Leads" />
-            <baseButtonExport :data="leads.map((item: any) => item.all)" />
+            <baseButtonExport :data="leads.all" />
           </div>
 
           <ClientOnly>

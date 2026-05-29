@@ -43,7 +43,7 @@ const executeExport = async () => {
         case currentFormat.value.includes('CSV'):
             return useCSV(props.data);
         default:
-            return exportLeadsToXLSX(props.data, 'hello');
+            return exportLeadsToXLSX(props.data);
 
     };
   } catch (error) {
