@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     const findLeadStatus = selection_status_lead.map((item) => {
       const status = item.value;
-      const filterLeads = user?.leads.filter((lead: Lead) => lead.status.includes(status))
+      const filterLeads = user?.leads.filter((lead: Lead) => lead.status.includes(status));
 
       return { label: item.value, leads: filterLeads }
     });

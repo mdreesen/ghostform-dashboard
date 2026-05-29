@@ -21,9 +21,11 @@ const { data: leads } = useNuxtData('leads');
 
     <main class="max-w-350 mx-auto relative z-10">
 
-      <section class="flex flex-wrap justify-between gap-6 mb-12">
+      <section class="flex flex-col space-y-6 ">
         <baseHeaderSection text="Overview" />
-        <appCardsOverview v-if="leads?.all" :leads="leads" />
+        <div class="flex flex-wrap justify-between gap-6 mb-12">
+          <appCardsOverview v-if="leads?.all" :leads="leads" />
+        </div>
       </section>
 
       <section class="space-y-6 w-full">
