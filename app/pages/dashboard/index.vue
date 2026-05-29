@@ -23,13 +23,13 @@ const { data: leads } = useNuxtData('leads');
 
       <section class="flex flex-wrap justify-between gap-6 mb-12">
         <baseHeaderSection text="Overview" />
-        <appCardsOverview v-if="leads.all" :leads="leads" />
+        <appCardsOverview v-if="leads?.all" :leads="leads" />
       </section>
 
       <section class="space-y-6 w-full">
         <baseHeaderSection text="Lead Tracking" />
         <ClientOnly>
-          <baseTable v-if="leads" :data="leads.all" />
+          <baseTable v-if="leads" :data="leads?.all" />
         </ClientOnly>
       </section>
     </main>

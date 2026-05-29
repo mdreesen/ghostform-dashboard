@@ -561,7 +561,7 @@ const _routes = [
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CnYGNFjm.mjs')
+    component: () => import('./index--GbY7nN4.mjs')
   },
   {
     name: "dashboard-profile",
@@ -573,7 +573,7 @@ const _routes = [
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DFo-XMcS.mjs')
+    component: () => import('./index-DVpA8_Tr.mjs')
   },
   {
     name: "forgotpassword",
