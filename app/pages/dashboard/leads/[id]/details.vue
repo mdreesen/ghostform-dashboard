@@ -63,8 +63,8 @@ const lead = ref(data.value);
           </div>
 
           <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
-            <baseHeaderSection text="Other Details" />
-            <p class="text-sm text-zinc-300 leading-relaxed italic-none">"{{ lead?.message ? lead?.message : 'No other details' }}"</p>
+            <baseHeaderSection text="Other Notes" />
+            <p class="text-sm text-zinc-300 leading-relaxed italic-none">"{{ lead?.notes ? lead?.notes : 'No other notes' }}"</p>
           </div>
         </div>
 
