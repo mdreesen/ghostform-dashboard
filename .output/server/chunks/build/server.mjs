@@ -20,7 +20,6 @@ import 'node:buffer';
 import 'node:fs';
 import 'node:path';
 import 'node:url';
-import 'jose';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
@@ -543,7 +542,7 @@ const _routes = [
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-C9tBZbTd.mjs')
+    component: () => import('./details-NAtmrH6w.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
@@ -555,25 +554,25 @@ const _routes = [
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-CVJ8Wjen.mjs')
+    component: () => import('./index-oslyDU1n.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-DWdXp94r.mjs')
+    component: () => import('./index-COPIfPIa.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-DsgOFvDQ.mjs')
+    component: () => import('./index-D6kKLuKO.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DS6WNdka.mjs')
+    component: () => import('./index-sbkYhFVS.mjs')
   },
   {
     name: "forgotpassword",
@@ -1459,9 +1458,31 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
 const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-CKTg1RpN.mjs').then((r) => r["default"] || r.default || r));
+const AreaChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["AreaChart"] || r.default || r));
+const LineChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["LineChart"] || r.default || r));
+const BarChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["BarChart"] || r.default || r));
+const DonutChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["DonutChart"] || r.default || r));
+const BubbleChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["BubbleChart"] || r.default || r));
+const GanttChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["GanttChart"] || r.default || r));
+const DagreGraph = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["DagreGraph"] || r.default || r));
+const DualChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["DualChart"] || r.default || r));
+const SankeyChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["SankeyChart"] || r.default || r));
+const TopoJSONMap = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["TopoJSONMap"] || r.default || r));
+const DottedMap = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["DottedMap"] || r.default || r));
 const LazyIcon = defineAsyncComponent(() => Promise.resolve().then(() => index).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
   ["ToastContainer", LazyToastContainer],
+  ["AreaChart", AreaChart],
+  ["LineChart", LineChart],
+  ["BarChart", BarChart],
+  ["DonutChart", DonutChart],
+  ["BubbleChart", BubbleChart],
+  ["GanttChart", GanttChart],
+  ["DagreGraph", DagreGraph],
+  ["DualChart", DualChart],
+  ["SankeyChart", SankeyChart],
+  ["TopoJSONMap", TopoJSONMap],
+  ["DottedMap", DottedMap],
   ["Icon", LazyIcon]
 ];
 const components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8 = /* @__PURE__ */ defineNuxtPlugin({
@@ -1486,12 +1507,16 @@ const pwa_icons_plugin_OtOZ6CGly_Vz5_PCGGLA9qHLz2Y5_d5czYAX7q_3Lug = /* @__PURE_
     }
   };
 });
-defineComponent({
+const ServerPlaceholder = defineComponent({
   name: "ServerPlaceholder",
   render() {
     return createElementBlock("div");
   }
 });
+const serverPlaceholder = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: ServerPlaceholder
+}, Symbol.toStringTag, { value: "Module" }));
 const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
 const __nuxt_component_3$1 = defineComponent({
   name: "ClientOnly",
@@ -10250,7 +10275,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-DtOpO8VD.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-DYe9Mp-d.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-CzCAA_Gf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-ChLjqg4G.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))

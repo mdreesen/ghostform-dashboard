@@ -61,6 +61,7 @@ export default defineNuxtConfig({
         'nuxt-notify',
         'zod',
         'workbox-window',
+        'exceljs', // CJS
       ]
     },
   },

@@ -2818,7 +2818,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2934,22 +2934,7 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"27190-TJqEPGxfGRB03oo4OJcDpcjfo6I\"",
-    "mtime": "2026-05-29T20:12:43.500Z",
-    "size": 160144,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"8d6c8-q3qr/qmADpR36uKezHDELJqs2+Q\"",
-    "mtime": "2026-05-29T20:12:43.500Z",
-    "size": 579272,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4240,25 +4225,30 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const selection_status_lead = [
-  { label: "lead (new)", value: "new" },
-  { label: "appointment", value: "appointment" },
-  { label: "active", value: "active" },
-  { label: "under contract", value: "under contract" },
-  { label: "closed", value: "closed" },
-  { label: "archive", value: "archive" }
-];
+function month(date2) {
+  const dateObj = new Date(date2);
+  return dateObj.toLocaleString("default", { month: "long" });
+}
 
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const findLeadStatus = selection_status_lead.map((item) => {
-    const status = item.value;
-    const filterLeads = user == null ? void 0 : user.leads.filter((lead) => lead.status.includes(status));
-    return { label: item.value, leads: filterLeads };
+  const leadByMonth = user == null ? void 0 : user.leads.map((item) => {
+    const createdDate = item == null ? void 0 : item.date;
+    return month(createdDate);
+  });
+  const leadCountsByMonth = leadByMonth == null ? void 0 : leadByMonth.reduce((accumulator, month2) => {
+    if (month2 === "Invalid Date" || !month2) return accumulator;
+    accumulator[month2] = (accumulator[month2] || 0) + 1;
+    return accumulator;
+  }, {});
+  const useMonthlyData = Object.entries(leadCountsByMonth != null ? leadCountsByMonth : {}).map(([month2, count]) => {
+    return {
+      month: month2,
+      count
+    };
   });
   return {
-    all: user == null ? void 0 : user.leads.reverse(),
-    status: findLeadStatus
+    monthly: useMonthlyData
   };
 });
 
@@ -4395,6 +4385,15 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   __proto__: null,
   default: create_post
 }, Symbol.toStringTag, { value: 'Module' }));
+
+const selection_status_lead = [
+  { label: "lead (new)", value: "new" },
+  { label: "appointment", value: "appointment" },
+  { label: "active", value: "active" },
+  { label: "under contract", value: "under contract" },
+  { label: "closed", value: "closed" },
+  { label: "archive", value: "archive" }
+];
 
 const index_get$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
