@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { exportLeadsCSV } from '~/utils/csv';
+// import { exportLeadsCSV } from '~/utils/csv';
 import { capitalizeFirstLetter } from '~/composables/useCapitalizeFirstLetter';
 
 definePageMeta({
@@ -24,7 +24,8 @@ const { data: leads } = useNuxtData('leads');
           <div class="space-y-6 w-full">
             <div class="flex justify-between items-end mb-4">
               <baseHeaderSection v-if="leads" :text="capitalizeFirstLetter(item.label)" />
-              <baseButton @click="exportLeadsCSV(item.leads)" :text="`Export ${item?.label} csv`" />
+              <!-- <baseButton @click="exportLeadsCSV(item.leads)" :text="`Export ${item?.label} csv`" /> -->
+              <baseButtonExport :data="item.leads" />
             </div>
 
             <ClientOnly>
@@ -37,7 +38,7 @@ const { data: leads } = useNuxtData('leads');
         <div class="space-y-6 w-full">
           <div class="flex justify-between items-end mb-4">
             <baseHeaderSection v-if="leads" text="All Leads" />
-            <baseButton @click="exportLeadsCSV(leads.all)" text="EXPORT CSV" />
+            <!-- <baseButton @click="exportLeadsCSV(leads.all)" text="EXPORT CSV" /> -->
           </div>
 
           <ClientOnly>

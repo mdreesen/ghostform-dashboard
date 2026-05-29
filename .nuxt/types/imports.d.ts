@@ -35,7 +35,6 @@ declare global {
   const defineShortcuts: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts').defineShortcuts
   const effect: typeof import('vue').effect
   const effectScope: typeof import('vue').effectScope
-  const exportLeadsCSV: typeof import('../../app/utils/csv').exportLeadsCSV
   const extendLocale: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineLocale').extendLocale
   const extractShortcuts: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts').extractShortcuts
   const formVarient: typeof import('../../app/utils/varients').formVarient
@@ -63,6 +62,7 @@ declare global {
   const loadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload').loadPayload
   const loggedInUser: typeof import('../../app/utils/loggedInUser').default
   const markRaw: typeof import('vue').markRaw
+  const nameSpreadsheet: typeof import('../../app/utils/names').nameSpreadsheet
   const navMenuVarient: typeof import('../../app/utils/varients').navMenuVarient
   const navVarient: typeof import('../../app/utils/varients').navVarient
   const navigateTo: typeof import('../../node_modules/nuxt/dist/app/composables/router').navigateTo
@@ -124,6 +124,7 @@ declare global {
   const useAppleSplashScreenPwaIcon: typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index').useAppleSplashScreenPwaIcon
   const useAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useAsyncData
   const useAttrs: typeof import('vue').useAttrs
+  const useCSV: typeof import('../../app/utils/csv').useCSV
   const useColorMode: typeof import('../../node_modules/@nuxtjs/color-mode/dist/runtime/composables').useColorMode
   const useContentSearch: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useContentSearch').useContentSearch
   const useCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie').useCookie
@@ -216,6 +217,7 @@ declare global {
   const useServerSeoMeta: typeof import('../../node_modules/nuxt/dist/app/composables/head').useServerSeoMeta
   const useShadowRoot: typeof import('vue').useShadowRoot
   const useSlots: typeof import('vue').useSlots
+  const useSpreadsheet: typeof import('../../app/utils/spreadsheet').useSpreadsheet
   const useSpring: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').useSpring
   const useState: typeof import('../../node_modules/nuxt/dist/app/composables/state').useState
   const useTemplateRef: typeof import('vue').useTemplateRef
@@ -246,6 +248,9 @@ declare global {
   // @ts-ignore
   export type { PageMeta } from '../../node_modules/nuxt/dist/app/composables/pages'
   import('../../node_modules/nuxt/dist/app/composables/pages')
+  // @ts-ignore
+  export type { LeadRecord } from '../../app/utils/spreadsheet'
+  import('../../app/utils/spreadsheet')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -285,7 +290,6 @@ declare module 'vue' {
     readonly defineShortcuts: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts')['defineShortcuts']>
     readonly effect: UnwrapRef<typeof import('vue')['effect']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
-    readonly exportLeadsCSV: UnwrapRef<typeof import('../../app/utils/csv')['exportLeadsCSV']>
     readonly extendLocale: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineLocale')['extendLocale']>
     readonly extractShortcuts: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts')['extractShortcuts']>
     readonly formVarient: UnwrapRef<typeof import('../../app/utils/varients')['formVarient']>
@@ -313,6 +317,7 @@ declare module 'vue' {
     readonly loadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['loadPayload']>
     readonly loggedInUser: UnwrapRef<typeof import('../../app/utils/loggedInUser')['default']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
+    readonly nameSpreadsheet: UnwrapRef<typeof import('../../app/utils/names')['nameSpreadsheet']>
     readonly navMenuVarient: UnwrapRef<typeof import('../../app/utils/varients')['navMenuVarient']>
     readonly navVarient: UnwrapRef<typeof import('../../app/utils/varients')['navVarient']>
     readonly navigateTo: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['navigateTo']>
@@ -374,6 +379,7 @@ declare module 'vue' {
     readonly useAppleSplashScreenPwaIcon: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['useAppleSplashScreenPwaIcon']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
+    readonly useCSV: UnwrapRef<typeof import('../../app/utils/csv')['useCSV']>
     readonly useColorMode: UnwrapRef<typeof import('../../node_modules/@nuxtjs/color-mode/dist/runtime/composables')['useColorMode']>
     readonly useContentSearch: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useContentSearch')['useContentSearch']>
     readonly useCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['useCookie']>
@@ -466,6 +472,7 @@ declare module 'vue' {
     readonly useServerSeoMeta: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['useServerSeoMeta']>
     readonly useShadowRoot: UnwrapRef<typeof import('vue')['useShadowRoot']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useSpreadsheet: UnwrapRef<typeof import('../../app/utils/spreadsheet')['useSpreadsheet']>
     readonly useSpring: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['useSpring']>
     readonly useState: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/state')['useState']>
     readonly useTemplateRef: UnwrapRef<typeof import('vue')['useTemplateRef']>

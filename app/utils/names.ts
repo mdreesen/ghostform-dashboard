@@ -1,0 +1,1 @@
+export const nameSpreadsheet = (format: string) => `GhostForm_Leads_${new Date().toISOString().split('T')[0]}.${format}`;
