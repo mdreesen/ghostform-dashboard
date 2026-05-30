@@ -35,7 +35,7 @@ const lead = ref(data.value);
             </div>
             <div class="flex flex-col">
               <baseHeaderSection text="Address" />
-              <baseMaps :address="lead.address" />
+              <baseMaps :address="lead?.address" />
             </div>
             <div class="flex flex-col">
               <baseHeaderSection text="Status" :subText="lead?.status" />

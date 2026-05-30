@@ -1,8 +1,8 @@
 import { d as defineEventHandler, h as requireUserSession, c as createError } from '../nitro/nitro.mjs';
 import { c as connectDB } from './mongodb.mjs';
-import { U as User$1 } from './User.mjs';
+import { U as UserModel } from './User.mjs';
 
-const User = User$1;
+const User = UserModel;
 const loggedInUser = defineEventHandler(async (event) => {
   try {
     await connectDB();

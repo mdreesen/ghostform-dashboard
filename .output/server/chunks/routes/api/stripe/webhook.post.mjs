@@ -1,5 +1,5 @@
 import { d as defineEventHandler, e as getHeader, f as readRawBody } from '../../../nitro/nitro.mjs';
-import { U as User$1 } from '../../../_/User.mjs';
+import { U as UserModel } from '../../../_/User.mjs';
 import Stripe from 'stripe';
 import 'node:http';
 import 'node:https';
@@ -9,14 +9,12 @@ import 'node:buffer';
 import 'node:fs';
 import 'node:path';
 import 'node:url';
-import 'jose';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
 import 'mongoose';
-import 'zod';
 
-const User = User$1;
+const User = UserModel;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const webhook_post = defineEventHandler(async (event) => {
   const signature = getHeader(event, "stripe-signature");

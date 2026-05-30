@@ -17,15 +17,8 @@ export default defineNuxtConfig({
     'nuxt-notify',
     'nuxt-qrcode',
     '@vite-pwa/nuxt',
-    'nuxt-charts'
+    'nuxt-charts',
   ],
-
-  googleAuth: {
-    clientId: process.env.NUXT_PUBLIC_GOOGLE_CLIENT_ID,
-    autoLoadScript: true,         // load Google script automatically
-    promptOneTap: true,           // show One Tap prompt
-    enableServerVerify: true      // enable server-side token verification endpoint
-},
 
   app: {
     head: {
@@ -47,13 +40,7 @@ export default defineNuxtConfig({
   },
   qrcode: {
     options: {
-      variant: 'circle',
-      // OR
-      // variant: {
-      //   inner: 'circle',
-      //   marker: 'rounded',
-      //   pixel: 'rounded',
-      // },
+      variant: 'circle', // rounded, circle
       radius: 1,
       blackColor: 'currentColor',
       whiteColor: 'transparent',
@@ -65,7 +52,6 @@ export default defineNuxtConfig({
     ],
     optimizeDeps: {
       include: [
-        'vue-chrts',
         '@vue/devtools-core',
         '@vue/devtools-kit',
         'date-fns',
@@ -75,9 +61,11 @@ export default defineNuxtConfig({
         'nuxt-notify',
         'zod',
         'workbox-window',
+        'exceljs', // CJS
       ]
-    }
+    },
   },
+
   typescript: {
     strict: false
   },

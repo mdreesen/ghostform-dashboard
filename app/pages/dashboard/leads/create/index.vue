@@ -16,7 +16,7 @@ const input = reactive({
     name: '',
     age: 0,
     email: '',
-    phone: 0,
+    phone: '',
     date: '',
     status: '',
     best_communication_method: '',
@@ -95,7 +95,7 @@ async function log() {
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Phone" />
-                <input id="phone" type="number" v-model="input.phone" placeholder="Phone" required
+                <input id="phone" type="text" v-model="input.phone" placeholder="Phone" required
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 

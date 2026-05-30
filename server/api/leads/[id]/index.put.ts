@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
 import { Model } from 'mongoose';
-import UserModel from '../../../../lib/database/models/User';
-import { User } from '~/types/user';
-const User = UserModel as Model<User>;
+import LeadModel from '../../../../lib/database/models/Lead';
+import loggedInUser from '~/utils/loggedInUser';
+import type { Lead } from '~/types/lead';
+
+const Lead = LeadModel as Model<Lead>;
 
 const bodySchema = z.object({
     _id: z.string(),
@@ -11,7 +13,7 @@ const bodySchema = z.object({
     name: z.string().nullable(),
     age: z.number().nullable(),
     email: z.string().nullable(),
-    phone: z.number().nullable(),
+    phone: z.string().nullable(),
     date: z.string().nullable(),
     status: z.string().nullable(),
     best_communication_method: z.string().nullable(),
@@ -32,9 +34,10 @@ export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
 
   try {
-    await User.findOneAndUpdate(
-      { 'leads._id': body._id },
-      { $set: { 'leads.$': { ...body } } });
+      await Lead.findOneAndUpdate(
+        { _id: body._id },
+        { ...body },
+        { new: true });
 
   } catch (error) {
     console.log(error);

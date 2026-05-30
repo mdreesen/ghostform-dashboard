@@ -1,6 +1,7 @@
 <script setup lang="ts">
 await useFetch('/api/user', { key: 'user', lazy: true });
 await useFetch('/api/leads', { key: 'leads', lazy: true });
+await useFetch('/api/charts/lead', { key: 'charts_lead', lazy: true });
 
 const { data: user } = useNuxtData('user');
 

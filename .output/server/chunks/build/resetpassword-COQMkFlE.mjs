@@ -13,7 +13,6 @@ import 'node:buffer';
 import 'node:fs';
 import 'node:path';
 import 'node:url';
-import 'jose';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';

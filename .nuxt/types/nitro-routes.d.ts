@@ -18,6 +18,9 @@ declare module "nitropack/types" {
     '/api/authentication/signup': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authentication/signup.post').default>>>>
     }
+    '/api/charts/lead': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/charts/lead.get').default>>>>
+    }
     '/api/leads/:id': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.get').default>>>>
@@ -58,9 +61,6 @@ declare module "nitropack/types" {
     '/api/_auth/session': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.get').default>>>>
-    }
-    '/api/auth/google/verify': {
-      'POST': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-google-auth/dist/runtime/server/api/auth/google.verify.post').default>>>>
     }
     '/api/_nuxt_icon/:collection': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/icon/dist/runtime/server/api').default>>>>

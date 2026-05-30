@@ -5,6 +5,7 @@
   --ui-bg: #020203;
   --ui-bg-elevated: #020203;
   --ui-primary: oklch(78.9% 0.154 211.53);
+  --vis-donut-background-color: transparent;
   /* opacity: 1; */
 }
 

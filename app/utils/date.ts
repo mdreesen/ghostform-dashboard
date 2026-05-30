@@ -4,6 +4,14 @@ export function date() {
     return new Date().toISOString();
 };
 
+export function month(date: string) {
+  const dateObj = new Date(date);
+
+  // dateObj.getMonth() + 1;
+
+  return dateObj.toLocaleString('default', { month: 'long' });
+}
+
 export function timeZone() {
   return  Intl.DateTimeFormat().resolvedOptions().timeZone;
 };

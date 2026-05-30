@@ -1,11 +1,12 @@
 export interface Lead {
     _id?: string;
+    userId: string;
     status: string;
     source?: string;
     name: string;
     age?: number;
     email: string;
-    phone?: number;
+    phone?: string;
     address?: string;
     date?: string;
     best_communication_method?: string;
