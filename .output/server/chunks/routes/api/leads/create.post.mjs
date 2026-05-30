@@ -23,7 +23,7 @@ const bodySchema = z.object({
   name: z.string().nullable(),
   age: z.number().nullable(),
   email: z.string().nullable(),
-  phone: z.number().nullable(),
+  phone: z.string().nullable(),
   date: z.string().nullable(),
   status: z.string().nullable(),
   best_communication_method: z.string().nullable(),

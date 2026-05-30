@@ -536,31 +536,31 @@ const _routes = [
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-D7ZOE9Z7.mjs')
+    component: () => import('./index-CTFc4Xoc.mjs')
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-NAtmrH6w.mjs')
+    component: () => import('./details-CLWfHzz_.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./edit-CIVK4QUG.mjs')
+    component: () => import('./edit-CTGKfkJf.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-oslyDU1n.mjs')
+    component: () => import('./index-CrWKnuaG.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CWEC4TsH.mjs')
+    component: () => import('./index-PBEyRiEp.mjs')
   },
   {
     name: "dashboard-profile",

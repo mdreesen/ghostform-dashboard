@@ -1,5 +1,5 @@
 import { d as defineEventHandler, g as getRouterParam, c as createError } from '../../../nitro/nitro.mjs';
-import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
+import { L as LeadModel } from '../../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -11,18 +11,14 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import '../../../_/mongodb.mjs';
 import 'mongoose';
-import '../../../_/User.mjs';
 
+const Lead = LeadModel;
 const index_get = defineEventHandler(async (event) => {
-  var _a;
   try {
     const id = getRouterParam(event, "id");
-    const user = await loggedInUser(event);
-    const data = (_a = user == null ? void 0 : user.leads) != null ? _a : [];
-    const dataArr = data.filter((item) => item.id.includes(id));
-    return dataArr[0];
+    const data = await Lead.findById(id).lean();
+    return data;
   } catch (error) {
     console.log(error);
     throw createError({

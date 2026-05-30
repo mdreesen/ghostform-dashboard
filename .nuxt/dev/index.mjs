@@ -2937,16 +2937,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"27672-G+dsuuuNIkFLUh4jfLldCxoQzuc\"",
-    "mtime": "2026-05-30T02:48:28.991Z",
-    "size": 161394,
+    "etag": "\"275a8-s4c2ZKpR4Sm+NUyFuZhOgwr3iT4\"",
+    "mtime": "2026-05-30T04:18:36.287Z",
+    "size": 161192,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"8eb55-HrSrlyaQYCFvURj971GO9c2WNLc\"",
-    "mtime": "2026-05-30T02:48:28.992Z",
-    "size": 584533,
+    "etag": "\"8e8c2-1+qdH7CH/dq/czc//s3BFT+gMEU\"",
+    "mtime": "2026-05-30T04:18:36.288Z",
+    "size": 583874,
     "path": "index.mjs.map"
   }
 };
@@ -4237,18 +4237,18 @@ function month(date2) {
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$2 = LeadModel;
+const Lead$4 = LeadModel;
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const leads = await Lead$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const leads = await Lead$4.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
   });
-  const leadCountsByMonth = leadByMonth == null ? void 0 : leadByMonth.reduce((accumulator, month2) => {
-    if (month2 === "Invalid Date" || !month2) return accumulator;
-    accumulator[month2] = (accumulator[month2] || 0) + 1;
-    return accumulator;
+  const leadCountsByMonth = leadByMonth == null ? void 0 : leadByMonth.reduce((acc, month2) => {
+    if (month2 === "Invalid Date" || !month2) return acc;
+    acc[month2] = (acc[month2] || 0) + 1;
+    return acc;
   }, {});
   const useMonthlyData = Object.entries(leadCountsByMonth != null ? leadCountsByMonth : {}).map(([month2, count]) => {
     return {
@@ -4289,14 +4289,12 @@ const index_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: index_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const Lead$3 = LeadModel;
 const index_get$6 = defineEventHandler(async (event) => {
-  var _a;
   try {
     const id = getRouterParam(event, "id");
-    const user = await loggedInUser(event);
-    const data = (_a = user == null ? void 0 : user.leads) != null ? _a : [];
-    const dataArr = data.filter((item) => item.id.includes(id));
-    return dataArr[0];
+    const data = await Lead$3.findById(id).lean();
+    return data;
   } catch (error) {
     console.log(error);
     throw createError({
@@ -4311,14 +4309,14 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$3 = UserModel;
+const Lead$2 = LeadModel;
 const bodySchema$3 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
   email: z.string().nullable(),
-  phone: z.number().nullable(),
+  phone: z.string().nullable(),
   date: z.string().nullable(),
   status: z.string().nullable(),
   best_communication_method: z.string().nullable(),
@@ -4337,9 +4335,10 @@ const bodySchema$3 = z.object({
 const index_put$4 = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema$3.parse);
   try {
-    await User$3.findOneAndUpdate(
-      { "leads._id": body._id },
-      { $set: { "leads.$": { ...body } } }
+    await Lead$2.findOneAndUpdate(
+      { _id: body._id },
+      { ...body },
+      { new: true }
     );
   } catch (error) {
     console.log(error);
@@ -4361,7 +4360,7 @@ const bodySchema$2 = z.object({
   name: z.string().nullable(),
   age: z.number().nullable(),
   email: z.string().nullable(),
-  phone: z.number().nullable(),
+  phone: z.string().nullable(),
   date: z.string().nullable(),
   status: z.string().nullable(),
   best_communication_method: z.string().nullable(),

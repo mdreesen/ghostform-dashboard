@@ -19,7 +19,7 @@ const input = reactive({
     name: '',
     age: 0,
     email: '',
-    phone: 0,
+    phone: '',
     date: '',
     status: '',
     best_communication_method: '',
@@ -40,7 +40,7 @@ if (data.value) {
     input.name = data.value.name ?? '',
     input.age = data.value.age ?? 0,
     input.email = data.value.email  ?? '',
-    input.phone = data.value.phone ?? 0,
+    input.phone = data.value.phone ?? '',
     input.date = data.value.date  ?? '',
     input.status = data.value.status  ?? '',
     input.best_communication_method = data.value.best_communication_method  ?? '',
@@ -60,7 +60,7 @@ async function log() {
     isLoading.value = true;
     $fetch(`/api/leads/${route.params.id}`, {
         method: 'PUT',
-        body: { _id: lead.value._id, ...input, ai_analysis: lead.value.ai_analysis ?? '' }
+        body: { userId: lead.value.userId, _id: lead.value._id, ...input, ai_analysis: lead.value.ai_analysis ?? '' }
     })
         .then(async () => {
             await refreshNuxtData('leads');
@@ -136,7 +136,7 @@ async function delete_log() {
 
             <div v-motion="{ ...inputVarient() }">
                 <baseLabel text="Phone" />
-                <input id="phone" type="number" v-model="input.phone" placeholder="Phone" required
+                <input id="phone" type="text" v-model="input.phone" placeholder="Phone" required
                     class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
             </div>
 

@@ -4,7 +4,7 @@ export interface LeadRecord {
   _id?: string
   name?: string
   email?: string
-  phone?: number | string
+  phone?: string | string
   age?: number | string
   address?: string
   status?: string
@@ -61,7 +61,7 @@ export function useSpreadsheet() {
           email: lead.email || '',
           
           // Data Scrubbing: If value is 0 or empty string, keep cell unpopulated
-          phone: lead.phone && lead.phone !== 0 && lead.phone !== '0' ? lead.phone.toString() : '',
+          phone: lead.phone && lead.phone !== '' && lead.phone !== '0' ? lead.phone.toString() : '',
           age: lead.age && lead.age !== 0 && lead.age !== '0' ? Number(lead.age) : '',
           address: lead.address || '',
           status: lead.status ? lead.status.toLowerCase() : 'new',

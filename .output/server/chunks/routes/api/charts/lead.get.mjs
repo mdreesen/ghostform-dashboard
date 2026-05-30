@@ -24,15 +24,15 @@ function month(date2) {
 const Lead = LeadModel;
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
   });
-  const leadCountsByMonth = leadByMonth == null ? void 0 : leadByMonth.reduce((accumulator, month2) => {
-    if (month2 === "Invalid Date" || !month2) return accumulator;
-    accumulator[month2] = (accumulator[month2] || 0) + 1;
-    return accumulator;
+  const leadCountsByMonth = leadByMonth == null ? void 0 : leadByMonth.reduce((acc, month2) => {
+    if (month2 === "Invalid Date" || !month2) return acc;
+    acc[month2] = (acc[month2] || 0) + 1;
+    return acc;
   }, {});
   const useMonthlyData = Object.entries(leadCountsByMonth != null ? leadCountsByMonth : {}).map(([month2, count]) => {
     return {

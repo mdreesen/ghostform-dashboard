@@ -1,17 +1,18 @@
-import loggedInUser from '~/utils/loggedInUser';
+import { Model } from 'mongoose';
+
+import LeadModel from '../../../../lib/database/models/Lead';
+import type { Lead } from '~/types/lead';
+
+const Lead = LeadModel as Model<Lead>;
 import { defineEventHandler, getRouterParam } from 'h3';
 
 export default defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, 'id');
 
-    const user = await loggedInUser(event);
+    const data = await Lead.findById(id).lean();
 
-    const data = user?.leads ?? [];
-
-    const dataArr = data.filter((item: any) => item.id.includes(id));
-
-    return dataArr[0]
+    return data;
 
   } catch (error) {
     console.log(error);
