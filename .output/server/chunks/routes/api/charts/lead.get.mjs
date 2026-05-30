@@ -1,5 +1,6 @@
 import { d as defineEventHandler } from '../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
+import { L as LeadModel } from '../../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,16 +15,17 @@ import 'ipx';
 import '../../../_/mongodb.mjs';
 import 'mongoose';
 import '../../../_/User.mjs';
-import 'zod';
 
 function month(date2) {
   const dateObj = new Date(date2);
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
+const Lead = LeadModel;
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const leadByMonth = user == null ? void 0 : user.leads.map((item) => {
+  const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
   });

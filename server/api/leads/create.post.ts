@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 import { Model } from 'mongoose';
-import UserModel from '../../../lib/database/models/User';
-import { User } from '~/types/user';
+import LeadModel from '../../../lib/database/models/Lead';
 import loggedInUser from '~/utils/loggedInUser';
+import type { Lead } from '~/types/lead';
 
-const User = UserModel as Model<User>;
+const Lead = LeadModel as Model<Lead>;
 
 const bodySchema = z.object({
   source: z.string().nullable(),
@@ -33,14 +33,12 @@ export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
 
   try {
-    await User.findOneAndUpdate({ email: user?.email }, { $addToSet: { leads: body } }, { new: true });
-
-
-  } catch (error) {
-    console.log(error);
+    await Lead.create({ userId: user?._id, ...body });
+  } catch (error: any) {
+    console.error('Something went wrong', error)
     throw createError({
-      statusCode: 401,
-      message: 'Please try again'
-    });
-  };
-});
+      statusCode: 500,
+      message: error.message || 'Database execution fault.'
+    })
+  }
+})

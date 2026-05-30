@@ -1,6 +1,6 @@
 import { d as defineEventHandler, r as readValidatedBody, c as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
-import { U as User$1 } from '../../../_/User.mjs';
+import { L as LeadModel } from '../../../_/Lead.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'node:http';
 import 'node:https';
@@ -15,8 +15,9 @@ import 'consola';
 import 'ipx';
 import 'mongoose';
 import '../../../_/mongodb.mjs';
+import '../../../_/User.mjs';
 
-const User = User$1;
+const Lead = LeadModel;
 const bodySchema = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -41,12 +42,12 @@ const create_post = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
   const user = await loggedInUser(event);
   try {
-    await User.findOneAndUpdate({ email: user == null ? void 0 : user.email }, { $addToSet: { leads: body } }, { new: true });
+    await Lead.create({ userId: user == null ? void 0 : user._id, ...body });
   } catch (error) {
-    console.log(error);
+    console.error("Something went wrong", error);
     throw createError({
-      statusCode: 401,
-      message: "Please try again"
+      statusCode: 500,
+      message: error.message || "Database execution fault."
     });
   }
 });

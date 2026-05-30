@@ -2,7 +2,7 @@ import { d as defineEventHandler, r as readValidatedBody, s as setUserSession, c
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { c as connectDB } from '../../../_/mongodb.mjs';
-import { U as User$1 } from '../../../_/User.mjs';
+import { U as UserModel } from '../../../_/User.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -16,7 +16,7 @@ import 'consola';
 import 'ipx';
 import 'mongoose';
 
-const User = User$1;
+const User = UserModel;
 const bodySchema = z.object({
   email: z.email(),
   password: z.string().min(8)

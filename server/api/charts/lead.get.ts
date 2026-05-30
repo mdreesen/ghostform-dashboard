@@ -1,11 +1,22 @@
+import { Model } from 'mongoose';
+
 import loggedInUser from '~/utils/loggedInUser';
+import LeadModel from '../../../lib/database/models/Lead';
 import type { Lead } from '~/types/lead';
+
+const Lead = LeadModel as Model<Lead>;
+
 import { month } from '~/utils/date';
 
 export default defineEventHandler(async (event) => {
     const user = await loggedInUser(event);
 
-    const leadByMonth = user?.leads.map((item: Lead) => {
+
+    const leads = await Lead.find({ userId: user?._id })
+      .sort({ createdAt: -1 }) // Yields real-time entries newest-first
+      .lean();
+
+    const leadByMonth = leads?.map((item: Lead) => {
         const createdDate = item?.date;
         return month(createdDate as string);
     });

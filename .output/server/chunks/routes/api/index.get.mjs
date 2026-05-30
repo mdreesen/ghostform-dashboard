@@ -1,5 +1,6 @@
 import { d as defineEventHandler } from '../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
+import { L as LeadModel } from '../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,7 +15,6 @@ import 'ipx';
 import '../../_/mongodb.mjs';
 import 'mongoose';
 import '../../_/User.mjs';
-import 'zod';
 
 const selection_status_lead = [
   { label: "lead (new)", value: "new" },
@@ -25,15 +25,20 @@ const selection_status_lead = [
   { label: "archive", value: "archive" }
 ];
 
+const Lead = LeadModel;
 const index_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
+  const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   const findLeadStatus = selection_status_lead.map((item) => {
     const status = item.value;
-    const filterLeads = user == null ? void 0 : user.leads.filter((lead) => lead.status.includes(status));
+    const filterLeads = leads == null ? void 0 : leads.filter((lead) => {
+      var _a;
+      return (_a = lead == null ? void 0 : lead.status) == null ? void 0 : _a.includes(status);
+    });
     return { label: item.value, leads: filterLeads };
   });
   return {
-    all: user == null ? void 0 : user.leads.reverse(),
+    all: leads,
     status: findLeadStatus
   };
 });

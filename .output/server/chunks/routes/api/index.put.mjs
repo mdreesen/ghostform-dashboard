@@ -1,7 +1,7 @@
 import { d as defineEventHandler, r as readValidatedBody, c as createError } from '../../nitro/nitro.mjs';
 import { z } from 'zod';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
-import { U as User$1 } from '../../_/User.mjs';
+import { U as UserModel } from '../../_/User.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -16,7 +16,7 @@ import 'ipx';
 import '../../_/mongodb.mjs';
 import 'mongoose';
 
-const User = User$1;
+const User = UserModel;
 const bodySchema = z.object({
   name: z.string().nullable(),
   company: z.string().nullable(),

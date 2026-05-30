@@ -14,11 +14,11 @@ import 'ipx';
 import '../../../_/mongodb.mjs';
 import 'mongoose';
 import '../../../_/User.mjs';
-import 'zod';
 
 const tiers_get = defineEventHandler(async (event) => {
+  var _a;
   const user = await loggedInUser(event);
-  const findTiers = user == null ? void 0 : user.leads.map((item) => {
+  const findTiers = (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.map((item) => {
     const tierOne = item.ai_analysis.includes("Tier 1") || item.ai_analysis.includes("Tier one");
     const tierTwo = item.ai_analysis.includes("Tier 2") || item.ai_analysis.includes("Tier two");
     const tierThree = item.ai_analysis.includes("Tier 3") || item.ai_analysis.includes("Tier three");
