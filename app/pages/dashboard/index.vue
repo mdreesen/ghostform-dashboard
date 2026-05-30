@@ -34,11 +34,11 @@ const { data: charts_lead } = useNuxtData('charts_lead');
 
         <div class="flex flex-wrap justify-evenly gap-18">
           <ClientOnly>
-            <baseChartsLine :data="charts_lead.monthly" />
+            <baseChartsLine v-if="charts_lead?.monthly" :data="charts_lead?.monthly" />
           </ClientOnly>
 
           <ClientOnly>
-            <baseChartsDonut :data="charts_lead.monthly" />
+            <baseChartsDonut v-if="charts_lead?.monthly" :data="charts_lead?.monthly" />
           </ClientOnly>
         </div>
       </section>

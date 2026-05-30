@@ -2818,7 +2818,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2934,22 +2934,7 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"275a8-s4c2ZKpR4Sm+NUyFuZhOgwr3iT4\"",
-    "mtime": "2026-05-30T04:18:36.287Z",
-    "size": 161192,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"8e8c2-1+qdH7CH/dq/czc//s3BFT+gMEU\"",
-    "mtime": "2026-05-30T04:18:36.288Z",
-    "size": 583874,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3981,13 +3966,13 @@ const userSchema = new Schema({
 }, { timestamps: true });
 const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
 
-const User$a = UserModel;
+const User$9 = UserModel;
 const loggedInUser = defineEventHandler(async (event) => {
   try {
     await connectDB();
     const { user } = await requireUserSession(event);
     const userEmail = user == null ? void 0 : user.email;
-    const findUser = await User$a.find({ email: userEmail });
+    const findUser = await User$9.find({ email: userEmail });
     if (findUser[0]) {
       return findUser[0];
     }
@@ -4001,11 +3986,11 @@ const loggedInUser = defineEventHandler(async (event) => {
   }
 });
 
-const User$9 = UserModel;
+const User$8 = UserModel;
 const delete_delete = defineEventHandler(async (event) => {
   try {
     const user = await loggedInUser(event);
-    await User$9.deleteOne({ email: user == null ? void 0 : user.email });
+    await User$8.deleteOne({ email: user == null ? void 0 : user.email });
   } catch (error) {
     console.log(error);
     throw createError({
@@ -4020,7 +4005,7 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: delete_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$8 = UserModel;
+const User$7 = UserModel;
 const bodySchema$7 = z.object({
   email: z.email(),
   question: z.string()
@@ -4038,7 +4023,7 @@ const forgot_post = defineEventHandler(async (event) => {
     await connectDB();
     if (question !== "7") throw createError({ statusCode: 401, statusMessage: "Try again" });
     else {
-      const userFound = await User$8.findOne({ email });
+      const userFound = await User$7.findOne({ email });
       if (!userFound) throw createError({ statusCode: 401, statusMessage: "Wrong credentials" });
       const resend = new Resend(`${process.env.RESEND_KEY}`);
       await resend.emails.send({
@@ -4048,7 +4033,7 @@ const forgot_post = defineEventHandler(async (event) => {
         // Subject line
         html: htmlBody
       });
-      await User$8.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
+      await User$7.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
     }
   } catch (error) {
     console.log(error);
@@ -4064,7 +4049,7 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: forgot_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$7 = UserModel;
+const User$6 = UserModel;
 const bodySchema$6 = z.object({
   email: z.email(),
   password: z.string().min(8)
@@ -4074,7 +4059,7 @@ const login_post = defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, bodySchema$6.parse);
   try {
     await connectDB();
-    const user = await User$7.findOne({ email });
+    const user = await User$6.findOne({ email });
     const passwordMatches = bcrypt.compare(password, (_a = user == null ? void 0 : user.password) != null ? _a : "");
     if (await passwordMatches) {
       await setUserSession(event, {
@@ -4124,7 +4109,7 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: login_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$6 = UserModel;
+const User$5 = UserModel;
 const bodySchema$5 = z.object({
   password: z.string(),
   confirm_password: z.string(),
@@ -4136,7 +4121,7 @@ const reset = defineEventHandler(async (event) => {
   try {
     await connectDB();
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Try again" });
-    await User$6.findOneAndUpdate({ resetPasswordToken: token }, {
+    await User$5.findOneAndUpdate({ resetPasswordToken: token }, {
       password: hashedPassword
     });
   } catch (error) {
@@ -4153,7 +4138,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: reset
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$5 = UserModel;
+const User$4 = UserModel;
 const bodySchema$4 = z.object({
   company: z.string(),
   category: z.string(),
@@ -4166,7 +4151,7 @@ const signup_post = defineEventHandler(async (event) => {
   const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$4.parse);
   try {
     await connectDB();
-    const user = await User$5.findOne({ email });
+    const user = await User$4.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedEmail = await bcrypt.hash(email, 15);
     const hashedCompany = await bcrypt.hash(company, 15);
@@ -4175,7 +4160,7 @@ const signup_post = defineEventHandler(async (event) => {
     if (!password && !confirm_password) throw createError({ statusCode: 401, statusMessage: "Please insert password.", data: { errorMessage: "The requested item could not be found." } });
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Passwords do not match.", data: { errorMessage: "The requested item could not be found." } });
     if (user) throw createError({ statusCode: 401, statusMessage: "User already registered.", data: { errorMessage: "The requested item could not be found." } });
-    const registerUser = new User$5({
+    const registerUser = new User$4({
       company: company.toLowerCase(),
       company_hashed: hashedCompany.trim(),
       category: category.toLowerCase(),
@@ -4266,11 +4251,11 @@ const lead_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: lead_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$4 = UserModel;
+const User$3 = UserModel;
 const index_delete = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
-    await User$4.findOneAndUpdate(
+    await User$3.findOneAndUpdate(
       { "leads._id": id },
       { $pull: { "leads": { _id: id } } },
       { new: true }
