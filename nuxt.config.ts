@@ -23,10 +23,17 @@ export default defineNuxtConfig({
   // Nitro wakes up and fires off task reminders
   nitro: {
     experimental: { tasks: true },
+    tasks: {
+      // FIXED: Expanded from a raw string to an configuration object containing the handler path
+      'lead:reminders': {
+        handler: './server/tasks/leads/reminders',
+        description: 'Processes custom individual queues and recurring marketing blasts'
+      }
+    },
     scheduledTasks: {
       // Shifting '0 9 * * *' (Once a day) to '0 * * * *' (At minute 0 of every hour)
       '0 * * * *': ['lead:reminders']
-    }
+    },
   },
 
   app: {

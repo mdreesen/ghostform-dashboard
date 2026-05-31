@@ -20,6 +20,7 @@ const navLinks = [
   { name: 'Overview', href: '/dashboard', target: "" },
   { name: 'Leads', href: '/dashboard/leads', target: "" },
   { name: 'Forms', href: '/dashboard/forms', target: "" },
+  { name: 'Marketing', href: '/dashboard/marketing', target: "" },
   { name: 'Profile', href: '/dashboard/profile', target: "" },
 ]
 </script>

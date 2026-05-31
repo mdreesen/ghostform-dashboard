@@ -1,4 +1,5 @@
 import { d as defineEventHandler, c as createError } from '../../nitro/nitro.mjs';
+import { Resend } from 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -11,6 +12,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
+new Resend(process.env.RESEND_KEY);
 const testReminder_get = defineEventHandler(async (event) => {
   {
     throw createError({ statusCode: 403, message: "Forbidden outside dev mode." });

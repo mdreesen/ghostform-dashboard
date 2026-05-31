@@ -1,5 +1,5 @@
 import { d as defineEventHandler, a as readBody, c as createError } from '../../../../nitro/nitro.mjs';
-import { L as LeadModel$1 } from '../../../../_/Lead.mjs';
+import { s as schemaImport } from '../../../../_/Lead.mjs';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
 import 'node:http';
 import 'node:https';
@@ -16,7 +16,7 @@ import 'mongoose';
 import '../../../../_/mongodb.mjs';
 import '../../../../_/User.mjs';
 
-const LeadModel = LeadModel$1;
+const LeadModel = schemaImport;
 const schedule_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;

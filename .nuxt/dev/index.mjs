@@ -1,17 +1,17 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
 import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, getResponseStatus, useSession, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, readValidatedBody, getHeader, readRawBody, getResponseStatusText } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/h3/dist/index.mjs';
+import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import crypto$1 from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
-import { Resend } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import { z } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/zod/index.js';
 import { nanoid } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nanoid/index.js';
+import { Resend } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import bcrypt from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
-import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import Stripe from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
-import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
+import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,22 +2935,7 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"2a5fd-LLBBVULoC+ogEwRucYCenWDws6I\"",
-    "mtime": "2026-05-31T19:04:30.953Z",
-    "size": 173565,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"9a55d-+jdhRUchiSWgtQP8B87sVkcRCig\"",
-    "mtime": "2026-05-31T19:04:30.954Z",
-    "size": 632157,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3461,20 +3446,12 @@ const scheduledTasks = [{"cron":"0 * * * *","tasks":["lead:reminders"]}];
 const tasks = {
   "lead:reminders": {
           meta: {
-            description: "",
+            description: "Processes custom individual queues and recurring marketing blasts",
           },
-          resolve: () => Promise.resolve().then(function () { return reminders$1; }).then(r => r.default || r),
+          resolve: () => import('server/tasks/leads/reminders').then(r => r.default || r),
         }
 };
 
-function defineTask(def) {
-  if (typeof def.run !== "function") {
-    def.run = () => {
-      throw new TypeError("Task must implement a `run` method!");
-    };
-  }
-  return def;
-}
 const __runningTasks__ = {};
 async function runTask(name, {
   payload = {},
@@ -3677,6 +3654,7 @@ const _lazy_P6vtRH = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_48PoLn = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_q9BYK6 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_Zz2IBk = () => Promise.resolve().then(function () { return signup_post$1; });
+const _lazy_VYogsv = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$7; });
@@ -3702,6 +3680,7 @@ const handlers = [
   { route: '/api/authentication/login', handler: _lazy_48PoLn, lazy: true, middleware: false, method: "post" },
   { route: '/api/authentication/reset', handler: _lazy_q9BYK6, lazy: true, middleware: false, method: undefined },
   { route: '/api/authentication/signup', handler: _lazy_Zz2IBk, lazy: true, middleware: false, method: "post" },
+  { route: '/api/campaigns/save', handler: _lazy_VYogsv, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_yNGGpv, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_9lw3wc, lazy: true, middleware: false, method: "get" },
@@ -4005,174 +3984,6 @@ const connectDB = async () => {
   }
 };
 
-const leadSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true
-    // Vital index for instant dashboard lookup grouping
-  },
-  company_name: String,
-  // Attach company name to lead
-  company_email: String,
-  // Attach compnay email to lead
-  source: String,
-  name: String,
-  age: Number,
-  email: String,
-  phone: String,
-  // Kept as string to preserve leading zeros or symbols safely
-  best_communication_method: String,
-  address: String,
-  want_to_move: String,
-  buy_sell_both: String,
-  price: Number,
-  sqft: Number,
-  bedrooms: Number,
-  bathrooms: Number,
-  budget: Number,
-  notes: String,
-  seeing_an_agent: String,
-  ai_analysis: String,
-  status: { type: String, default: "new" },
-  date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
-  reminderSent: { type: Boolean, default: false },
-  reminderStatus: {
-    type: String,
-    enum: ["none", "scheduled", "sent"],
-    default: "none"
-    // 'none' means automation is disabled for this specific lead
-  },
-  reminderScheduledAt: {
-    type: Date,
-    required: false
-  }
-}, { timestamps: true });
-const LeadModel$2 = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
-
-function useCleanString(str) {
-  return str.replace(/[^a-zA-Z0-9]/g, "");
-}
-
-function email_by_status(status, lead_name, company_name) {
-  const greeting = `Hi ${lead_name},
-
-`;
-  const signoff = `
-
-Best,
-
-${company_name}`;
-  switch (status.toLowerCase()) {
-    case "new":
-      return greeting + `Thanks for checking out the property info details through our digital flyer.
-
-I wanted to personally reach out and see if you had any quick questions about the home, the neighborhood, or local market trends that I can track down for you?
-
-Just reply straight to this email whenever you have a second.` + signoff;
-    case "appointment":
-      return greeting + `I'm looking forward to our upcoming strategy session to go over your property goals.
-
-Before we sync up, did any quick questions pop up about the neighborhood, local market data, or specific listings you've been tracking online?
-
-Just reply straight to this email if there's anything specific you want me to pull ahead of time.` + signoff;
-    case "active":
-      return greeting + `We've been keeping a close eye on the market for you, and a few interesting shifts are happening locally.
-
-As we keep sorting through inventory, do you have any quick questions about recent listings, pricing adjustments, or neighborhood trends?
-
-Just reply straight to this email whenever you have a second and we can fine-tune our search.` + signoff;
-    case "under contract":
-      return greeting + `Things are moving along beautifully behind the scenes on your contract file.
-
-I know there are a lot of moving parts right now during escrow. Did you have any quick questions about the inspection timelines, appraisal parameters, or next steps that I can clarify for you?
-
-Just reply straight to this email whenever you have a second\u2014I'm tracking everything closely.` + signoff;
-    case "closed":
-      return greeting + `Congratulations again on your recent closing! I hope you are settling into the new space perfectly.
-
-Now that the dust has settled, I wanted to reach out and see if you had any remaining questions about the home, local utility configurations, or contractors in the area?
-
-Just reply straight to this email if anything comes up. I'm always here to help.` + signoff;
-    case "archive":
-      return greeting + `It's been a little while since we last touched base about your property search parameters.
-
-I wanted to quickly check in and see if you had any new questions about the local market trends, or if your home buying timelines have shifted at all recently?
-
-Just reply straight to this email whenever you have a second if you'd like to dive back in.` + signoff;
-    default:
-      return greeting + `I wanted to personally reach out and check in on your real estate goals.
-
-Did you have any quick questions about current listings, neighborhood developments, or local market trends that I can track down for you?
-
-Just reply straight to this email whenever you have a second.` + signoff;
-  }
-}
-
-const LeadModel$1 = LeadModel$2;
-const resend = new Resend(process.env.RESEND_KEY);
-const reminders = defineTask({
-  meta: {
-    name: "lead:reminders",
-    description: "Polls the dynamic queue hourly for explicit, agent-scheduled reminders"
-  },
-  async run() {
-    await connectDB();
-    console.log("Polling dynamic reminder queue...");
-    const now = /* @__PURE__ */ new Date();
-    try {
-      const activeQueue = await LeadModel$1.find({
-        reminderStatus: "scheduled",
-        reminderScheduledAt: { $lte: now },
-        email: { $ne: "", $exists: true }
-      }).populate("userId");
-      if (activeQueue.length === 0) {
-        return { result: "Queue empty. No custom reminder configurations due in this hour." };
-      }
-      let processedCount = 0;
-      const bulkOps = [];
-      for (const lead of activeQueue) {
-        const company_name = (lead == null ? void 0 : lead.company_name) || "Your Connected Realtor";
-        const replyEmail = lead == null ? void 0 : lead.company_email;
-        const lead_name = lead.name ? lead.name.split(" ")[0] : "there";
-        const status = lead == null ? void 0 : lead.status;
-        const useResponse = email_by_status(status, lead_name, company_name);
-        await resend.emails.send({
-          from: `${useCleanString(company_name)}@ascendpod.com`,
-          to: lead.email,
-          replyTo: replyEmail,
-          subject: "Quick question regarding your property search",
-          text: useResponse
-        });
-        bulkOps.push({
-          updateOne: {
-            filter: { _id: lead._id },
-            update: {
-              $set: { reminderStatus: "sent" },
-              $unset: { reminderScheduledAt: "" }
-              // Clean up date index allocations
-            }
-          }
-        });
-        processedCount++;
-      }
-      if (bulkOps.length > 0) {
-        await LeadModel$1.bulkWrite(bulkOps, { ordered: false });
-      }
-      return { result: `Successfully synchronized queue. Dispatched ${processedCount} custom reminders.` };
-    } catch (error) {
-      console.error("Queue execution failed:", error);
-      return { result: "Critical failure during queue parsing process." };
-    }
-  }
-});
-
-const reminders$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: reminders
-}, Symbol.toStringTag, { value: 'Module' }));
-
 const userSchema = new Schema({
   company: String,
   company_hashed: String,
@@ -4416,12 +4227,125 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const campaignSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+  title: { type: String, required: true },
+  targetStatus: { type: String, required: true },
+  // 'new', 'appointment', 'active', etc.
+  subject: { type: String, required: true },
+  messageBody: { type: String, required: true },
+  dayOfWeek: { type: Number, required: true, min: 0, max: 6 },
+  // 0 = Sun, 1 = Mon, etc.
+  timesPerMonth: { type: Number, required: true, enum: [1, 2, 4], default: 1 },
+  lastFiredAt: { type: Date, default: null }
+}, { timestamps: true });
+const CampaignModelImport = mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);
+
+const CampaignModel$1 = CampaignModelImport;
+const save_post = defineEventHandler(async (event) => {
+  const body = await readBody(event);
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) {
+    throw createError({
+      statusCode: 401,
+      message: "Session trace missing or expired."
+    });
+  }
+  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth } = body;
+  if (!targetStatus || !subject || !messageBody || dayOfWeek === void 0 || !timesPerMonth) {
+    throw createError({
+      statusCode: 400,
+      message: "Missing required automated workflow properties."
+    });
+  }
+  try {
+    const campaign = await CampaignModel$1.create({
+      userId: user._id,
+      title: title || `${targetStatus.toUpperCase()} Automated Loop`,
+      targetStatus,
+      subject,
+      messageBody,
+      dayOfWeek: Number(dayOfWeek),
+      timesPerMonth: Number(timesPerMonth),
+      lastFiredAt: null
+      // Explicitly initialize as empty queue window ready to fire
+    });
+    return {
+      success: true,
+      campaignId: campaign._id,
+      message: "Dynamic workflow successfully written to tracking database."
+    };
+  } catch (error) {
+    console.error("Campaign creation failed:", error);
+    throw createError({
+      statusCode: 500,
+      message: error.message || "Failed to instantiate database configuration profile."
+    });
+  }
+});
+
+const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: save_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const leadSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+    // Vital index for instant dashboard lookup grouping
+  },
+  company_name: String,
+  // Attach company name to lead
+  company_email: String,
+  // Attach compnay email to lead
+  source: String,
+  name: String,
+  age: Number,
+  email: String,
+  phone: String,
+  // Kept as string to preserve leading zeros or symbols safely
+  best_communication_method: String,
+  address: String,
+  want_to_move: String,
+  buy_sell_both: String,
+  price: Number,
+  sqft: Number,
+  bedrooms: Number,
+  bathrooms: Number,
+  budget: Number,
+  notes: String,
+  seeing_an_agent: String,
+  ai_analysis: String,
+  status: { type: String, default: "new" },
+  date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
+  reminderSent: { type: Boolean, default: false },
+  reminderStatus: {
+    type: String,
+    enum: ["none", "scheduled", "sent"],
+    default: "none"
+    // 'none' means automation is disabled for this specific lead
+  },
+  reminderScheduledAt: {
+    type: Date,
+    required: false
+  }
+}, { timestamps: true });
+const schemaImport = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
+
 function month(date2) {
   const dateObj = new Date(date2);
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$5 = LeadModel$2;
+const Lead$5 = schemaImport;
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const leads = await Lead$5.find({ userId: user == null ? void 0 : user._id }).lean();
@@ -4450,7 +4374,7 @@ const lead_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: lead_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$4 = LeadModel$2;
+const Lead$4 = schemaImport;
 const index_delete = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
@@ -4469,7 +4393,7 @@ const index_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: index_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$3 = LeadModel$2;
+const Lead$3 = schemaImport;
 const index_get$6 = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
@@ -4489,7 +4413,7 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$2 = LeadModel$2;
+const Lead$2 = schemaImport;
 const bodySchema$3 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
@@ -4534,7 +4458,7 @@ const index_put$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_put$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel = LeadModel$2;
+const LeadModel$1 = schemaImport;
 const schedule_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -4547,13 +4471,13 @@ const schedule_post = defineEventHandler(async (event) => {
   try {
     const queryFilter = { _id: leadId, userId: user._id };
     if (!scheduledTime) {
-      await LeadModel.updateOne(queryFilter, {
+      await LeadModel$1.updateOne(queryFilter, {
         $set: { reminderStatus: "none" },
         $unset: { reminderScheduledAt: "" }
       });
       return { success: true, message: "Automation sequence disabled for this client." };
     }
-    await LeadModel.updateOne(queryFilter, {
+    await LeadModel$1.updateOne(queryFilter, {
       $set: {
         reminderStatus: "scheduled",
         reminderScheduledAt: new Date(scheduledTime)
@@ -4570,7 +4494,7 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: schedule_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$1 = LeadModel$2;
+const Lead$1 = schemaImport;
 const bodySchema$2 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -4619,7 +4543,7 @@ const selection_status_lead = [
   { label: "archive", value: "archive" }
 ];
 
-const Lead = LeadModel$2;
+const Lead = schemaImport;
 const index_get$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
@@ -4805,20 +4729,54 @@ const webhook_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: webhook_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+function useCleanString(str) {
+  return str.replace(/[^a-zA-Z0-9]/g, "");
+}
+
+const LeadModel = schemaImport;
+const CampaignModel = CampaignModelImport;
+const resend = new Resend(process.env.RESEND_KEY);
 const testReminder_get = defineEventHandler(async (event) => {
+  var _a;
   try {
-    console.log("Forcing trigger signature on lead:reminders task payload...");
-    const taskResult = await runTask("lead:reminders");
+    console.log("Forcing bypass execution of recurring batch marketing loops...");
+    const testCampaign = await CampaignModel.findOne().sort({ createdAt: -1 }).populate("userId");
+    if (!testCampaign) {
+      return { success: false, message: "No campaign templates found to test. Create one on the marketing page first." };
+    }
+    const targets = await LeadModel.find({
+      userId: testCampaign.userId._id,
+      status: testCampaign.targetStatus,
+      email: { $ne: "", $exists: true }
+    }).lean();
+    if (targets.length === 0) {
+      return {
+        success: false,
+        message: `No leads found matching status: "${testCampaign.targetStatus}" for this realtor. Add a test lead with this status first!`
+      };
+    }
+    const batchPayload = targets.map((lead) => {
+      var _a2;
+      const greetingName = lead.name ? lead.name.split(" ")[0] : "there";
+      const company_name = (_a2 = lead == null ? void 0 : lead.company_name) != null ? _a2 : "Your connected realtor";
+      const personalizedText = testCampaign.messageBody.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, company_name);
+      return {
+        from: `${useCleanString(company_name)}@ascendpod.com`,
+        to: lead.email,
+        replyTo: testCampaign.userId.email,
+        subject: testCampaign.subject,
+        text: personalizedText
+      };
+    });
+    const response = await resend.batch.create(batchPayload);
     return {
       success: true,
-      message: "Nitro task invoked successfully.",
-      taskResult
+      message: `Successfully executed batch blast mock run. Sent ${targets.length} emails.`,
+      batchId: (_a = response.data) == null ? void 0 : _a.id,
+      recipients: targets.map((t) => t.email)
     };
   } catch (error) {
-    return {
-      success: false,
-      error: error.message
-    };
+    return { success: false, error: error.message };
   }
 });
 

@@ -1,6 +1,6 @@
 import { d as defineEventHandler, r as readValidatedBody, c as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
-import { L as LeadModel } from '../../../_/Lead.mjs';
+import { s as schemaImport } from '../../../_/Lead.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'node:http';
 import 'node:https';
@@ -17,7 +17,7 @@ import 'mongoose';
 import '../../../_/mongodb.mjs';
 import '../../../_/User.mjs';
 
-const Lead = LeadModel;
+const Lead = schemaImport;
 const bodySchema = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),

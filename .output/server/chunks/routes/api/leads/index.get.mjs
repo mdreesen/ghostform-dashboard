@@ -1,5 +1,5 @@
 import { d as defineEventHandler, g as getRouterParam, c as createError } from '../../../nitro/nitro.mjs';
-import { L as LeadModel } from '../../../_/Lead.mjs';
+import { s as schemaImport } from '../../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -13,7 +13,7 @@ import 'consola';
 import 'ipx';
 import 'mongoose';
 
-const Lead = LeadModel;
+const Lead = schemaImport;
 const index_get = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");

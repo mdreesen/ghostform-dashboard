@@ -44,7 +44,7 @@ const leadSchema = new Schema({
     required: false
   }
 }, { timestamps: true });
-const LeadModel = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
+const schemaImport = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 
-export { LeadModel as L };
+export { schemaImport as s };
 //# sourceMappingURL=Lead.mjs.map

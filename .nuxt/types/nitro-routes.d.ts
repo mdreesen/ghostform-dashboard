@@ -18,6 +18,9 @@ declare module "nitropack/types" {
     '/api/authentication/signup': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authentication/signup.post').default>>>>
     }
+    '/api/campaigns/save': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/save.post').default>>>>
+    }
     '/api/charts/lead': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/charts/lead.get').default>>>>
     }

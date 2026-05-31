@@ -1,5 +1,5 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { shallowRef, watchEffect, readonly, ref, provide, inject, defineComponent, watch, h, markRaw, computed, getCurrentInstance, toRef as toRef$1, camelize as camelize$1, mergeProps, unref, createVNode, resolveDynamicComponent, withCtx, renderSlot, openBlock, createBlock, toDisplayString, toValue, Teleport, createCommentVNode, effectScope, hasInjectionContext, getCurrentScope, useSlots, cloneVNode, createElementBlock, onScopeDispose, nextTick, toHandlerKey, toRefs, customRef, Comment, useModel, createTextVNode, mergeModels, resolveComponent, isRef, reactive, onServerPrefetch, useAttrs, Fragment, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, shallowReadonly, isReadonly, isShallow, isReactive } from 'vue';
-import { w as serialize, x as defu, y as hasProtocol, z as isScriptProtocol, q as joinURL, A as klona, B as isEqual, C as parseQuery, D as appendResponseHeader, E as withQuery, F as sanitizeStatusCode, G as parseURL, H as encodePath, I as decodePath, J as defuFn, K as getContext, L as withTrailingSlash, M as withoutTrailingSlash, N as withLeadingSlash, c as createError$1, $ as $fetch$1, O as baseURL, P as hash, Q as createHooks, R as encodeParam, S as executeAsync } from '../nitro/nitro.mjs';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { getCurrentInstance, toRef as toRef$1, computed, camelize as camelize$1, ref, mergeProps, unref, createVNode, resolveDynamicComponent, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, toValue, inject, provide, defineComponent, h, useModel, createTextVNode, createCommentVNode, mergeModels, Teleport, customRef, shallowRef, watchEffect, readonly, hasInjectionContext, effectScope, getCurrentScope, useSlots, cloneVNode, createElementBlock, onScopeDispose, nextTick, toHandlerKey, toRefs, markRaw, Comment, resolveComponent, isRef, reactive, onServerPrefetch, useAttrs, Fragment, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, shallowReadonly, isReadonly, isShallow, isReactive } from 'vue';
+import { v as serialize, w as defu, x as hasProtocol, y as isScriptProtocol, q as joinURL, z as klona, A as isEqual, B as parseQuery, C as appendResponseHeader, D as withQuery, E as sanitizeStatusCode, F as parseURL, G as encodePath, H as decodePath, I as defuFn, J as getContext, K as withTrailingSlash, L as withoutTrailingSlash, M as withLeadingSlash, c as createError$1, $ as $fetch$1, N as baseURL, O as hash, P as createHooks, Q as encodeParam, R as executeAsync } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { Icon, getIcon, loadIcon as loadIcon$1, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
 import { debounce } from 'perfect-debounce';
@@ -510,6 +510,9 @@ function getRouteRules(arg) {
     return {};
   }
 }
+const __nuxt_page_meta$8 = {
+  layout: "authenticated"
+};
 const __nuxt_page_meta$7 = {
   layout: "authenticated"
 };
@@ -538,56 +541,62 @@ const _routes = [
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
-    meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-GZPA4BW1.mjs')
+    meta: __nuxt_page_meta$8 || {},
+    component: () => import('./index-CuX1jaOk.mjs')
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
-    meta: __nuxt_page_meta$6 || {},
-    component: () => import('./details-BL9uaQjy.mjs')
+    meta: __nuxt_page_meta$7 || {},
+    component: () => import('./details-D5A3GiME.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
-    meta: __nuxt_page_meta$5 || {},
-    component: () => import('./edit-DfCrqDfT.mjs')
+    meta: __nuxt_page_meta$6 || {},
+    component: () => import('./edit-CpQ4eMWI.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
-    meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-BRUzuum3.mjs')
+    meta: __nuxt_page_meta$5 || {},
+    component: () => import('./index-CTHk9t7O.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
+    meta: __nuxt_page_meta$4 || {},
+    component: () => import('./index-CwgYDtPU.mjs')
+  },
+  {
+    name: "dashboard-marketing",
+    path: "/dashboard/marketing",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-BD46vqkc.mjs')
+    component: () => import('./index-1i3H_6tm.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index--X1do2YJ.mjs')
+    component: () => import('./index-BqhbmLNK.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-DczH3-kJ.mjs')
+    component: () => import('./index-CZeZXl95.mjs')
   },
   {
     name: "forgotpassword",
     path: "/forgotpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./forgotpassword-BelqAKgC.mjs')
+    component: () => import('./forgotpassword-CuB23Zxj.mjs')
   },
   {
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import('./login-Cq2LmUL1.mjs')
+    component: () => import('./login-ChrZCLKp.mjs')
   },
   {
     name: "privacy-policy",
@@ -598,25 +607,25 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import('./signup-DIGMQdxT.mjs')
+    component: () => import('./signup-Dioe5pUc.mjs')
   },
   {
     name: "subscribe",
     path: "/subscribe",
     meta: { ...__nuxt_page_meta || {}, ...{ "groups": ["payment"] } },
-    component: () => import('./subscribe-GrGdagoa.mjs')
+    component: () => import('./subscribe-DIjeKx2l.mjs')
   },
   {
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./resetpassword-CrrnU_Ek.mjs')
+    component: () => import('./resetpassword-zFpVekSe.mjs')
   },
   {
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import('./index-CDFqOoAd.mjs')
+    component: () => import('./index-DaxBsxkB.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1460,7 +1469,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // For type portability
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
-const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-J8sFDsfH.mjs').then((r) => r["default"] || r.default || r));
+const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-Cg5t-wiB.mjs').then((r) => r["default"] || r.default || r));
 const AreaChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["AreaChart"] || r.default || r));
 const LineChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["LineChart"] || r.default || r));
 const BarChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["BarChart"] || r.default || r));
@@ -2685,7 +2694,7 @@ function useMounted$1() {
   return isMounted;
 }
 // @__NO_SIDE_EFFECTS__
-function useSupported(callback) {
+function useSupported$1(callback) {
   const isMounted = /* @__PURE__ */ useMounted$1();
   return computed(() => {
     isMounted.value;
@@ -2700,7 +2709,7 @@ function useIntersectionObserver(target, callback, options = {}) {
     window: window2 = defaultWindow$1,
     immediate = true
   } = options;
-  const isSupported = /* @__PURE__ */ useSupported(() => window2 && "IntersectionObserver" in window2);
+  const isSupported = /* @__PURE__ */ useSupported$1(() => window2 && "IntersectionObserver" in window2);
   const targets = computed(() => {
     const _target = toValue(target);
     return toArray$1(_target).map(unrefElement$1).filter(notNullish);
@@ -4820,6 +4829,14 @@ function useMounted() {
   getCurrentInstance();
   return isMounted;
 }
+// @__NO_SIDE_EFFECTS__
+function useSupported(callback) {
+  const isMounted = /* @__PURE__ */ useMounted();
+  return computed(() => {
+    isMounted.value;
+    return Boolean(callback());
+  });
+}
 function createKeyPredicate(keyFilter) {
   if (typeof keyFilter === "function") return keyFilter;
   else if (typeof keyFilter === "string") return (event) => event.key === keyFilter;
@@ -4907,6 +4924,39 @@ function useRafFn(fn, options = {}) {
 }
 function cloneFnJSON(source) {
   return JSON.parse(JSON.stringify(source));
+}
+function useResizeObserver(target, callback, options = {}) {
+  const { window: window$1 = defaultWindow, ...observerOptions } = options;
+  let observer;
+  const isSupported = /* @__PURE__ */ useSupported(() => window$1 && "ResizeObserver" in window$1);
+  const cleanup = () => {
+    if (observer) {
+      observer.disconnect();
+      observer = void 0;
+    }
+  };
+  const stopWatch = watch(computed(() => {
+    const _targets = toValue(target);
+    return Array.isArray(_targets) ? _targets.map((el) => unrefElement(el)) : [unrefElement(_targets)];
+  }), (els) => {
+    cleanup();
+    if (isSupported.value && window$1) {
+      observer = new ResizeObserver(callback);
+      for (const _el of els) if (_el) observer.observe(_el, observerOptions);
+    }
+  }, {
+    immediate: true,
+    flush: "post"
+  });
+  const stop = () => {
+    cleanup();
+    stopWatch();
+  };
+  tryOnScopeDispose(stop);
+  return {
+    isSupported,
+    stop
+  };
 }
 const events = /* @__PURE__ */ new Map();
 // @__NO_SIDE_EFFECTS__
@@ -6569,6 +6619,71 @@ function looseToNumber(val) {
   const n = Number.parseFloat(val);
   return Number.isNaN(n) ? val : n;
 }
+function compare(value, currentValue, comparator) {
+  if (value === void 0 || currentValue === void 0) {
+    return false;
+  }
+  if (typeof value === "string") {
+    return value === currentValue;
+  }
+  if (typeof comparator === "function") {
+    return comparator(value, currentValue);
+  }
+  if (typeof comparator === "string") {
+    return get(value, comparator) === get(currentValue, comparator);
+  }
+  return isEqual(value, currentValue);
+}
+function isEmpty(value) {
+  if (value == null) {
+    return true;
+  }
+  if (typeof value === "boolean" || typeof value === "number") {
+    return false;
+  }
+  if (typeof value === "string") {
+    return value.trim().length === 0;
+  }
+  if (Array.isArray(value)) {
+    return value.length === 0;
+  }
+  if (value instanceof Map || value instanceof Set) {
+    return value.size === 0;
+  }
+  if (value instanceof Date || value instanceof RegExp || typeof value === "function") {
+    return false;
+  }
+  if (typeof value === "object") {
+    for (const _ in value) {
+      if (Object.prototype.hasOwnProperty.call(value, _)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+function getDisplayValue(items, value, options = {}) {
+  const { valueKey, labelKey, by } = options;
+  const foundItem = items.find((item) => {
+    const itemValue = typeof item === "object" && item !== null && valueKey ? get(item, valueKey) : item;
+    return compare(itemValue, value, by);
+  });
+  if (isEmpty(value) && foundItem) {
+    return labelKey ? get(foundItem, labelKey) : void 0;
+  }
+  if (isEmpty(value)) {
+    return void 0;
+  }
+  const source = foundItem ?? value;
+  if (source === null || source === void 0) {
+    return void 0;
+  }
+  if (typeof source === "object") {
+    return labelKey ? get(source, labelKey) : void 0;
+  }
+  return String(source);
+}
 function isArrayOfArray(item) {
   return Array.isArray(item[0]);
 }
@@ -7894,7 +8009,7 @@ function useFormField(props, opts) {
   }
   const emitFormInput = /* @__PURE__ */ useDebounceFn(
     () => {
-      emitFormEvent("input", formField?.value.name, formField?.value.eagerValidation);
+      emitFormEvent("input", formField?.value.name, !opts?.deferInputValidation || formField?.value.eagerValidation);
     },
     formField?.value.validateOnInputDelay ?? formOptions?.value.validateOnInputDelay ?? 0
   );
@@ -10286,9 +10401,9 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-DI3RkGBJ.mjs').then((m) => m.default || m)),
-  default: defineAsyncComponent(() => import('./default-CzCAA_Gf.mjs').then((m) => m.default || m)),
-  form: defineAsyncComponent(() => import('./form-ChLjqg4G.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-DTkPsLSA.mjs').then((m) => m.default || m)),
+  default: defineAsyncComponent(() => import('./default-BTUtYy9B.mjs').then((m) => m.default || m)),
+  form: defineAsyncComponent(() => import('./form-pOyfk5HG.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
@@ -10624,8 +10739,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-B7aRPTeR.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-BQWsDgh2.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-BCVzs1W1.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-6H2TT8M-.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -10706,5 +10821,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { AUTOFOCUS_ON_UNMOUNT as $, computedEager as A, useCollection as B, createSharedComposable as C, reactiveOmit as D, useForwardProps as E, usePrimitiveElement as F, get as G, isArrayOfArray as H, _sfc_main$e as I, _sfc_main$b as J, _sfc_main$9 as K, pickLinkProps as L, _sfc_main$a as M, omit as N, tryOnBeforeUnmount as O, Primitive as P, unrefElement as Q, onKeyStroke as R, isNullish as S, Teleport_default as T, createGlobalState as U, VisuallyHidden_default as V, AUTOFOCUS_ON_MOUNT as W, focusFirst as X, getTabbableCandidates as Y, focus as Z, __nuxt_component_0$2 as _, useRoute as a, EVENT_OPTIONS as a0, getTabbableEdges as a1, useFieldGroup as a2, useComponentIcons as a3, formBusInjectionKey as a4, formStateInjectionKey as a5, formErrorsInjectionKey as a6, formInputsInjectionKey as a7, formLoadingInjectionKey as a8, formOptionsInjectionKey as a9, useEventBus as aa, inputIdInjectionKey as ab, formFieldInjectionKey as ac, useUserSession as ad, useFormField as ae, looseToNumber as af, useMotion as ag, __nuxt_component_0$1 as ah, __nuxt_component_1$1 as ai, useFetch as b, clearNuxtData as c, _sfc_main$8 as d, entry_default as default, __nuxt_component_3$1 as e, reactivePick as f, useRuntimeConfig as g, useNuxtData as h, useVModel as i, createContext as j, useForwardExpose as k, useEmitAsProps as l, Presence_default as m, navigateTo as n, useLocale as o, useAppConfig as p, useComponentUI as q, refreshNuxtData as r, useForwardPropsEmits as s, usePortal as t, useHead as u, createReusableTemplate as v, tv as w, injectConfigProviderContext as x, refAutoReset as y, getActiveElement as z };
+export { tryOnBeforeUnmount as $, reactiveOmit as A, useForwardProps as B, usePrimitiveElement as C, get as D, isArrayOfArray as E, _sfc_main$e as F, _sfc_main$b as G, _sfc_main$9 as H, pickLinkProps as I, _sfc_main$a as J, omit as K, unrefElement as L, isNullish as M, useResizeObserver as N, useFormField as O, Primitive as P, useFieldGroup as Q, useComponentIcons as R, _sfc_main$c as S, Teleport_default as T, looseToNumber as U, VisuallyHidden_default as V, getDisplayValue as W, injectConfigProviderContext as X, refAutoReset as Y, computedEager as Z, __nuxt_component_0$2 as _, useRoute as a, onKeyStroke as a0, createGlobalState as a1, AUTOFOCUS_ON_MOUNT as a2, focusFirst as a3, getTabbableCandidates as a4, focus as a5, AUTOFOCUS_ON_UNMOUNT as a6, EVENT_OPTIONS as a7, getTabbableEdges as a8, formBusInjectionKey as a9, formStateInjectionKey as aa, formErrorsInjectionKey as ab, formInputsInjectionKey as ac, formLoadingInjectionKey as ad, formOptionsInjectionKey as ae, useEventBus as af, useUserSession as ag, inputIdInjectionKey as ah, formFieldInjectionKey as ai, useMotion as aj, __nuxt_component_0$1 as ak, __nuxt_component_1$1 as al, useFetch as b, clearNuxtData as c, _sfc_main$8 as d, entry_default as default, __nuxt_component_3$1 as e, reactivePick as f, useRuntimeConfig as g, useNuxtData as h, useVModel as i, createContext as j, useForwardExpose as k, useEmitAsProps as l, Presence_default as m, navigateTo as n, useLocale as o, useAppConfig as p, useComponentUI as q, refreshNuxtData as r, useForwardPropsEmits as s, usePortal as t, useHead as u, createReusableTemplate as v, tv as w, getActiveElement as x, useCollection as y, createSharedComposable as z };
 //# sourceMappingURL=server.mjs.map

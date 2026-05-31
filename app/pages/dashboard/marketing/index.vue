@@ -1,0 +1,125 @@
+<script setup lang="ts">
+const isSaving = ref(false)
+const toast = useToast();
+
+definePageMeta({
+  layout: 'authenticated',
+});
+
+const form = ref({
+  title: '',
+  targetStatus: 'new',
+  subject: '',
+  messageBody: '',
+  dayOfWeek: '1', // Default to Mondays
+  timesPerMonth: '4' // Default to Weekly
+})
+
+const segments = [
+  { label: 'Lead (New)', value: 'new' },
+  { label: 'Appointment Scheduled', value: 'appointment' },
+  { label: 'Active Pipeline Contacts', value: 'active' },
+  { label: 'Under Contract', value: 'under contract' },
+  { label: 'Closed Deals', value: 'closed' },
+  { label: 'Archived Records', value: 'archive' }
+]
+
+const days = [
+  { label: 'Sundays', value: '0' },
+  { label: 'Mondays', value: '1' },
+  { label: 'Tuesdays', value: '2' },
+  { label: 'Wednesdays', value: '3' },
+  { label: 'Thursdays', value: '4' },
+  { label: 'Fridays', value: '5' },
+  { label: 'Saturdays', value: '6' }
+]
+
+const frequencies = [
+  { label: 'Once a Month (Every 4 weeks)', value: '1' },
+  { label: 'Twice a Month (Every other week)', value: '2' },
+  { label: 'Four Times a Month (Every week)', value: '4' }
+]
+
+// Update text helper when status modifies to suggest a good template baseline
+watch(() => form.value.targetStatus, (newStatus) => {
+  if (form.value.messageBody !== '') return // Don't overwrite active user text
+  
+  if (newStatus === 'new') {
+    form.value.subject = 'Quick question regarding your property search'
+    form.value.messageBody = "Hi {{name}},\n\nI wanted to personally reach out and see if you had any quick questions about the home, the neighborhood, or local market trends that I can track down for you?\n\nJust reply straight to this email whenever you have a second.\n\nBest,\n\n{{agent}}"
+  } else if (newStatus === 'active') {
+    form.value.subject = 'Quick market update for you'
+    form.value.messageBody = "Hi {{name}},\n\nWe've been keeping a close eye on the market for you. As we keep sorting through local inventory, do you have any quick questions about recent listings or pricing adjustments?\n\nJust reply straight to this email whenever you have a second.\n\nBest,\n\n{{agent}}"
+  }
+}, { immediate: true })
+
+const saveCampaignTemplate = async () => {
+  if (!form.value.subject || !form.value.messageBody) return
+  isSaving.value = true
+
+  try {
+    await $fetch('/api/campaigns/save', {
+      method: 'POST',
+      body: form.value
+    })
+
+    toast.success(
+        'Automation Workflow Live',
+        'Your recurring campaign criteria parameters have been saved.'
+)
+
+    // form.value.title = ''
+    // form.value.subject = ''
+    // form.value.messageBody = ''
+  } catch (error) {
+    toast.error('Failed to mount criteria templates.');
+  } finally {
+    isSaving.value = false
+  }
+}
+</script>
+
+<template>
+  <div>
+    <appHeader label="Campaign Orchestrator" subLabel="Manage your emails" />
+
+
+    <form @submit.prevent="saveCampaignTemplate" class="grid md:grid-cols-3 gap-6">
+      <!-- Scheduling Adjustments Dashboard Column -->
+      <div class="space-y-4 bg-zinc-900/30 border border-white/5 p-6 rounded-2xl h-fit">
+        <h3 class="text-xs font-black uppercase tracking-wider text-[#30cf43]">Recurrence Intervals</h3>
+        
+        <UFormField label="Campaign Title Name">
+          <UInput v-model="form.title" placeholder="Monday Morning Followup" class="w-full" />
+        </UFormField>
+
+        <UFormField label="Target Audience Tier">
+          <USelect v-model="form.targetStatus" :items="segments" class="w-full" />
+        </UFormField>
+
+        <UFormField label="Preferred Dispatch Day">
+          <USelect v-model="form.dayOfWeek" :items="days" class="w-full" />
+        </UFormField>
+
+        <UFormField label="Monthly Frequency Density">
+          <USelect v-model="form.timesPerMonth" :items="frequencies" class="w-full" />
+        </UFormField>
+      </div>
+
+      <!-- Copywriting Panel Column -->
+      <div class="md:col-span-2 space-y-5 bg-zinc-900/10 border border-white/5 p-6 rounded-3xl">
+        <UFormField label="Drip Campaign Subject Line">
+          <UInput v-model="form.subject" placeholder="Checking in on your property parameters..." class="w-full" />
+        </UFormField>
+
+        <UFormField label="Communication Script Body Text (Plain)">
+          <UTextarea v-model="form.messageBody" :rows="10" class="w-full text-sm leading-relaxed" />
+        </UFormField>
+
+        <div class="flex justify-between items-center pt-2">
+          <baseButton :loading="isSaving" text="save & start campaign" />
+        </div>
+      </div>
+    </form>
+  </div>
+</template>

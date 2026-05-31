@@ -1,6 +1,6 @@
 import { d as defineEventHandler } from '../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
-import { L as LeadModel } from '../../_/Lead.mjs';
+import { s as schemaImport } from '../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -25,7 +25,7 @@ const selection_status_lead = [
   { label: "archive", value: "archive" }
 ];
 
-const Lead = LeadModel;
+const Lead = schemaImport;
 const index_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
