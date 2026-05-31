@@ -1,7 +1,3 @@
-/**
- * REALTOR CUSTOM REMINDER SCHEDULER
- * NITRO SERVER ROUTE // POST REQUEST
- */
 import type { Model } from 'mongoose'
 import schemaImport from '../../../../lib/database/models/Lead'
 import loggedInUser from '~/utils/loggedInUser'

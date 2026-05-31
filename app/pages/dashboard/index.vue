@@ -15,7 +15,7 @@ const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
 const { data: charts_lead } = useNuxtData('charts_lead');
 
-const chart_data = computed(() => charts_lead?.value.monthly);
+const chart_data = computed(() => charts_lead?.value?.monthly);
 </script>
 
 <template>

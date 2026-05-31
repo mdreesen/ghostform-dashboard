@@ -3,7 +3,7 @@ import type { Model } from 'mongoose';
 import { Resend } from 'resend'
 import schemaImport from '../../../lib/database/models/Lead';
 import { useCleanString } from '~/utils/formatters/useCleanString'
-
+import { email_by_status } from '~/utils/email/useEmailByStatus';
 const LeadModel = schemaImport as Model<any>
 const resend = new Resend(process.env.RESEND_KEY)
 
@@ -35,18 +35,20 @@ export default defineTask({
       const bulkOps: any[] = []
 
       for (const lead of activeQueue) {
-        const realtor = lead.userId
-        const senderName = lead?.company_name || 'Your Connected Realtor'
-        const replyEmail = lead?.company_email
-        const greetingName = lead.name ? lead.name.split(' ')[0] : 'there'
+        const company_name = lead?.company_name || 'Your Connected Realtor';
+        const replyEmail = lead?.company_email;
+        const lead_name = lead.name ? lead.name.split(' ')[0] : 'there';
+        const status = lead?.status;
+
+        const useResponse = email_by_status(status, lead_name, company_name);
 
         // 2. Dispatch the email via Resend
         await resend.emails.send({
-          from: `${useCleanString(senderName)}@ascendpod.com`,
+          from: `${useCleanString(company_name)}@ascendpod.com`,
           to: lead.email,
           replyTo: replyEmail,
           subject: 'Quick question regarding your property search',
-          text: `Hi ${greetingName},\n\nI wanted to personally reach out and see if you had any quick questions about the home, the neighborhood, or local market trends that I can track down for you?\n\nJust reply straight to this email whenever you have a second.\n\nBest,\n\n${senderName}`
+          text: useResponse
         })
 
         // 3. Mark the queue item as cleanly delivered
