@@ -1,10 +1,13 @@
 <script setup lang="ts">
 const isSaving = ref(false)
 const toast = useToast();
+import { selection_status_lead, selection_days, selection_frequencies } from '~/utils/dropdowns/selections';
 
 definePageMeta({
   layout: 'authenticated',
 });
+
+const { data: campaigns } = useNuxtData('campaigns');
 
 const form = ref({
   title: '',
@@ -13,37 +16,14 @@ const form = ref({
   messageBody: '',
   dayOfWeek: '1', // Default to Mondays
   timesPerMonth: '4' // Default to Weekly
-})
+});
 
-const segments = [
-  { label: 'Lead (New)', value: 'new' },
-  { label: 'Appointment Scheduled', value: 'appointment' },
-  { label: 'Active Pipeline Contacts', value: 'active' },
-  { label: 'Under Contract', value: 'under contract' },
-  { label: 'Closed Deals', value: 'closed' },
-  { label: 'Archived Records', value: 'archive' }
-]
-
-const days = [
-  { label: 'Sundays', value: '0' },
-  { label: 'Mondays', value: '1' },
-  { label: 'Tuesdays', value: '2' },
-  { label: 'Wednesdays', value: '3' },
-  { label: 'Thursdays', value: '4' },
-  { label: 'Fridays', value: '5' },
-  { label: 'Saturdays', value: '6' }
-]
-
-const frequencies = [
-  { label: 'Once a Month (Every 4 weeks)', value: '1' },
-  { label: 'Twice a Month (Every other week)', value: '2' },
-  { label: 'Four Times a Month (Every week)', value: '4' }
-]
+console.log(campaigns.value);
 
 // Update text helper when status modifies to suggest a good template baseline
 watch(() => form.value.targetStatus, (newStatus) => {
   if (form.value.messageBody !== '') return // Don't overwrite active user text
-  
+
   if (newStatus === 'new') {
     form.value.subject = 'Quick question regarding your property search'
     form.value.messageBody = "Hi {{name}},\n\nI wanted to personally reach out and see if you had any quick questions about the home, the neighborhood, or local market trends that I can track down for you?\n\nJust reply straight to this email whenever you have a second.\n\nBest,\n\n{{agent}}"
@@ -64,13 +44,10 @@ const saveCampaignTemplate = async () => {
     })
 
     toast.success(
-        'Automation Workflow Live',
-        'Your recurring campaign criteria parameters have been saved.'
-)
+      'Automation Workflow Live',
+      'Your recurring campaign criteria parameters have been saved.'
+    )
 
-    // form.value.title = ''
-    // form.value.subject = ''
-    // form.value.messageBody = ''
   } catch (error) {
     toast.error('Failed to mount criteria templates.');
   } finally {
@@ -83,43 +60,57 @@ const saveCampaignTemplate = async () => {
   <div>
     <appHeader label="Campaign Orchestrator" subLabel="Manage your emails" />
 
-
-    <form @submit.prevent="saveCampaignTemplate" class="grid md:grid-cols-3 gap-6">
-      <!-- Scheduling Adjustments Dashboard Column -->
-      <div class="space-y-4 bg-zinc-900/30 border border-white/5 p-6 rounded-2xl h-fit">
-        <h3 class="text-xs font-black uppercase tracking-wider text-[#30cf43]">Recurrence Intervals</h3>
-        
-        <UFormField label="Campaign Title Name">
-          <UInput v-model="form.title" placeholder="Monday Morning Followup" class="w-full" />
-        </UFormField>
-
-        <UFormField label="Target Audience Tier">
-          <USelect v-model="form.targetStatus" :items="segments" class="w-full" />
-        </UFormField>
-
-        <UFormField label="Preferred Dispatch Day">
-          <USelect v-model="form.dayOfWeek" :items="days" class="w-full" />
-        </UFormField>
-
-        <UFormField label="Monthly Frequency Density">
-          <USelect v-model="form.timesPerMonth" :items="frequencies" class="w-full" />
-        </UFormField>
-      </div>
-
-      <!-- Copywriting Panel Column -->
-      <div class="md:col-span-2 space-y-5 bg-zinc-900/10 border border-white/5 p-6 rounded-3xl">
-        <UFormField label="Drip Campaign Subject Line">
-          <UInput v-model="form.subject" placeholder="Checking in on your property parameters..." class="w-full" />
-        </UFormField>
-
-        <UFormField label="Communication Script Body Text (Plain)">
-          <UTextarea v-model="form.messageBody" :rows="10" class="w-full text-sm leading-relaxed" />
-        </UFormField>
-
-        <div class="flex justify-between items-center pt-2">
-          <baseButton :loading="isSaving" text="save & start campaign" />
+    <div class="flex flex-col gap-12">
+      <section>
+        <baseHeaderSection text="Current Campaigns" />
+        <div class="flex flex-wrap gap-6">
+          <template v-for="item in campaigns">
+            <baseCardMarketing :data="item" />
+          </template>
         </div>
-      </div>
-    </form>
+      </section>
+
+      <section>
+        <baseHeaderSection text="Create new campaigns" />
+
+        <form @submit.prevent="saveCampaignTemplate" class="grid md:grid-cols-3 gap-6">
+          <!-- Scheduling Adjustments Dashboard Column -->
+          <div class="space-y-4 bg-zinc-900/30 border border-white/5 p-6 rounded-2xl h-fit">
+            <baseHeaderSection text="Recurrence Intervals" />
+
+            <UFormField label="Campaign Title Name">
+              <UInput v-model="form.title" placeholder="Monday Morning Followup" class="w-full" />
+            </UFormField>
+
+            <UFormField label="Target Audience Tier">
+              <USelect v-model="form.targetStatus" :items="selection_status_lead" class="w-full" />
+            </UFormField>
+
+            <UFormField label="Preferred Dispatch Day">
+              <USelect v-model="form.dayOfWeek" :items="selection_days" class="w-full" />
+            </UFormField>
+
+            <UFormField label="Monthly Frequency Density">
+              <USelect v-model="form.timesPerMonth" :items="selection_frequencies" class="w-full" />
+            </UFormField>
+          </div>
+
+          <!-- Copywriting Panel Column -->
+          <div class="md:col-span-2 space-y-5 bg-zinc-900/10 border border-white/5 p-6 rounded-3xl">
+            <UFormField label="Drip Campaign Subject Line">
+              <UInput v-model="form.subject" placeholder="Checking in on your property parameters..." class="w-full" />
+            </UFormField>
+
+            <UFormField label="Communication Script Body Text (Plain)">
+              <UTextarea v-model="form.messageBody" :rows="10" class="w-full text-sm leading-relaxed" />
+            </UFormField>
+
+            <div class="flex justify-between items-center pt-2">
+              <baseButton :loading="isSaving" text="save & start campaign" />
+            </div>
+          </div>
+        </form>
+      </section>
+    </div>
   </div>
 </template>

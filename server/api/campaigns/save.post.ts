@@ -1,13 +1,8 @@
-/**
- * GHOSTFORM RECURRING CAMPAIGN CREATION GATEWAY
- * NITRO SERVER ROUTE // POST REQUEST
- */
 import type { Model } from 'mongoose'
-import CampaignModelImport from '../../../lib/database/models/Campaign';
+import CampaignModel from '../../../lib/database/models/Campaign';
 import loggedInUser from '~/utils/loggedInUser'
 
-// Use the compilation-guarded schema via absolute alias pathing
-const CampaignModel = CampaignModelImport as Model<any>
+const Campaign = CampaignModel as Model<any>
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
@@ -33,7 +28,7 @@ export default defineEventHandler(async (event) => {
 
   try {
     // 3. Write structural parameters directly to the Campaign collection document row
-    const campaign = await CampaignModel.create({
+    const campaign = await Campaign.create({
       userId: user._id,
       title: title || `${targetStatus.toUpperCase()} Automated Loop`,
       targetStatus,

@@ -1,1 +1,0 @@
-const e=[{label:"lead (new)",value:"new"},{label:"appointment",value:"appointment"},{label:"active",value:"active"},{label:"under contract",value:"under contract"},{label:"closed",value:"closed"},{label:"archive",value:"archive"}];export{e as s};

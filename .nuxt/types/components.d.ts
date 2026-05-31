@@ -19,11 +19,13 @@ interface _GlobalComponents {
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppPricing: typeof import("../../app/components/app/Pricing.vue")['default']
   AppReminderEmail: typeof import("../../app/components/app/appReminderEmail.vue")['default']
-  BaseButtonExport: typeof import("../../app/components/base/ButtonExport.vue")['default']
-  BaseButtonNavigate: typeof import("../../app/components/base/ButtonNavigate.vue")['default']
-  BaseButtonSubmit: typeof import("../../app/components/base/ButtonSubmit.vue")['default']
+  BaseButtonDelete: typeof import("../../app/components/base/Button/Delete.vue")['default']
+  BaseButtonExport: typeof import("../../app/components/base/Button/Export.vue")['default']
+  BaseButtonNavigate: typeof import("../../app/components/base/Button/Navigate.vue")['default']
+  BaseButtonSubmit: typeof import("../../app/components/base/Button/Submit.vue")['default']
   BaseCardDetail: typeof import("../../app/components/base/Card/Detail.vue")['default']
   BaseCardForm: typeof import("../../app/components/base/Card/Form.vue")['default']
+  BaseCardMarketing: typeof import("../../app/components/base/Card/Marketing.vue")['default']
   BaseChartsDonut: typeof import("../../app/components/base/Charts/Donut.vue")['default']
   BaseChartsLine: typeof import("../../app/components/base/Charts/Line.vue")['default']
   BaseDeleteProfile: typeof import("../../app/components/base/DeleteProfile.vue")['default']
@@ -227,11 +229,13 @@ interface _GlobalComponents {
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/Pricing.vue")['default']>
   LazyAppReminderEmail: LazyComponent<typeof import("../../app/components/app/appReminderEmail.vue")['default']>
-  LazyBaseButtonExport: LazyComponent<typeof import("../../app/components/base/ButtonExport.vue")['default']>
-  LazyBaseButtonNavigate: LazyComponent<typeof import("../../app/components/base/ButtonNavigate.vue")['default']>
-  LazyBaseButtonSubmit: LazyComponent<typeof import("../../app/components/base/ButtonSubmit.vue")['default']>
+  LazyBaseButtonDelete: LazyComponent<typeof import("../../app/components/base/Button/Delete.vue")['default']>
+  LazyBaseButtonExport: LazyComponent<typeof import("../../app/components/base/Button/Export.vue")['default']>
+  LazyBaseButtonNavigate: LazyComponent<typeof import("../../app/components/base/Button/Navigate.vue")['default']>
+  LazyBaseButtonSubmit: LazyComponent<typeof import("../../app/components/base/Button/Submit.vue")['default']>
   LazyBaseCardDetail: LazyComponent<typeof import("../../app/components/base/Card/Detail.vue")['default']>
   LazyBaseCardForm: LazyComponent<typeof import("../../app/components/base/Card/Form.vue")['default']>
+  LazyBaseCardMarketing: LazyComponent<typeof import("../../app/components/base/Card/Marketing.vue")['default']>
   LazyBaseChartsDonut: LazyComponent<typeof import("../../app/components/base/Charts/Donut.vue")['default']>
   LazyBaseChartsLine: LazyComponent<typeof import("../../app/components/base/Charts/Line.vue")['default']>
   LazyBaseDeleteProfile: LazyComponent<typeof import("../../app/components/base/DeleteProfile.vue")['default']>

@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"2a273-51qt9OgDoshEitNsJ/mugMQsSOE\"",
+    "mtime": "2026-05-31T23:12:35.733Z",
+    "size": 172659,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"98ae5-HHuyZc4DmcYHDwVmaoKcNqfU2Ts\"",
+    "mtime": "2026-05-31T23:12:35.733Z",
+    "size": 625381,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3654,6 +3669,8 @@ const _lazy_P6vtRH = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_48PoLn = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_q9BYK6 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_Zz2IBk = () => Promise.resolve().then(function () { return signup_post$1; });
+const _lazy_uxhbmH = () => Promise.resolve().then(function () { return index_delete$3; });
+const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$9; });
 const _lazy_VYogsv = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
@@ -3680,6 +3697,8 @@ const handlers = [
   { route: '/api/authentication/login', handler: _lazy_48PoLn, lazy: true, middleware: false, method: "post" },
   { route: '/api/authentication/reset', handler: _lazy_q9BYK6, lazy: true, middleware: false, method: undefined },
   { route: '/api/authentication/signup', handler: _lazy_Zz2IBk, lazy: true, middleware: false, method: "post" },
+  { route: '/api/campaigns', handler: _lazy_uxhbmH, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/campaigns', handler: _lazy_2cEP1i, lazy: true, middleware: false, method: "get" },
   { route: '/api/campaigns/save', handler: _lazy_VYogsv, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_yNGGpv, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
@@ -4246,7 +4265,38 @@ const campaignSchema = new Schema({
 }, { timestamps: true });
 const CampaignModelImport = mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);
 
-const CampaignModel$1 = CampaignModelImport;
+const Campaign$2 = CampaignModelImport;
+const index_delete$2 = defineEventHandler(async (event) => {
+  try {
+    const id = getRouterParam(event, "id");
+    await Campaign$2.deleteOne({ _id: id });
+  } catch (error) {
+    console.log(error);
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Something went wrong."
+    });
+  }
+});
+
+const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_delete$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Campaign$1 = CampaignModelImport;
+const index_get$8 = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  const data = await Campaign$1.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  return data;
+});
+
+const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$8
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Campaign = CampaignModelImport;
 const save_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const user = await loggedInUser(event);
@@ -4264,7 +4314,7 @@ const save_post = defineEventHandler(async (event) => {
     });
   }
   try {
-    const campaign = await CampaignModel$1.create({
+    const campaign = await Campaign.create({
       userId: user._id,
       title: title || `${targetStatus.toUpperCase()} Automated Loop`,
       targetStatus,
