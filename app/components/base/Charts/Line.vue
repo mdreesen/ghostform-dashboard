@@ -6,7 +6,7 @@ const props = defineProps({
     },
 })
 
-const data = props.data;
+const data = computed(() => props.data);
 
 const categories = {
   count: {

@@ -8,6 +8,10 @@ const leadSchema = new Schema({
     index: true
     // Vital index for instant dashboard lookup grouping
   },
+  company_name: String,
+  // Attach company name to lead
+  company_email: String,
+  // Attach compnay email to lead
   source: String,
   name: String,
   age: Number,
@@ -28,7 +32,17 @@ const leadSchema = new Schema({
   ai_analysis: String,
   status: { type: String, default: "new" },
   date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
-  reminderSent: { type: Boolean, default: false }
+  reminderSent: { type: Boolean, default: false },
+  reminderStatus: {
+    type: String,
+    enum: ["none", "scheduled", "sent"],
+    default: "none"
+    // 'none' means automation is disabled for this specific lead
+  },
+  reminderScheduledAt: {
+    type: Date,
+    required: false
+  }
 }, { timestamps: true });
 const LeadModel = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 

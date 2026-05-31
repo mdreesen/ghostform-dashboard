@@ -26,6 +26,9 @@ declare module "nitropack/types" {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.get').default>>>>
       'put': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.put').default>>>>
     }
+    '/api/leads/:id/schedule': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/schedule.post').default>>>>
+    }
     '/api/leads/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/create.post').default>>>>
     }
@@ -47,6 +50,9 @@ declare module "nitropack/types" {
     }
     '/api/stripe/webhook': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/stripe/webhook.post').default>>>>
+    }
+    '/api/test-reminder': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/test-reminder.get').default>>>>
     }
     '/api/user': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/index.get').default>>>>

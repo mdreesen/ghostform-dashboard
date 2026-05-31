@@ -18,6 +18,7 @@ interface _GlobalComponents {
   AppCardsOverview: typeof import("../../app/components/app/CardsOverview.vue")['default']
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppPricing: typeof import("../../app/components/app/Pricing.vue")['default']
+  AppBatchEmail: typeof import("../../app/components/app/appBatchEmail.vue")['default']
   BaseButtonExport: typeof import("../../app/components/base/ButtonExport.vue")['default']
   BaseButtonNavigate: typeof import("../../app/components/base/ButtonNavigate.vue")['default']
   BaseButtonSubmit: typeof import("../../app/components/base/ButtonSubmit.vue")['default']
@@ -225,6 +226,7 @@ interface _GlobalComponents {
   LazyAppCardsOverview: LazyComponent<typeof import("../../app/components/app/CardsOverview.vue")['default']>
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/Pricing.vue")['default']>
+  LazyAppBatchEmail: LazyComponent<typeof import("../../app/components/app/appBatchEmail.vue")['default']>
   LazyBaseButtonExport: LazyComponent<typeof import("../../app/components/base/ButtonExport.vue")['default']>
   LazyBaseButtonNavigate: LazyComponent<typeof import("../../app/components/base/ButtonNavigate.vue")['default']>
   LazyBaseButtonSubmit: LazyComponent<typeof import("../../app/components/base/ButtonSubmit.vue")['default']>

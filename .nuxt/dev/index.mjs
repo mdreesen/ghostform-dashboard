@@ -5,12 +5,13 @@ import { resolve, dirname, join } from 'node:path';
 import crypto$1 from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
+import { Resend } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import { z } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/zod/index.js';
 import { nanoid } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nanoid/index.js';
-import { Resend } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import bcrypt from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import Stripe from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
+import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -2818,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2934,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"29ace-2obWa9W9P29OUg8Op4XRN0RV7TM\"",
+    "mtime": "2026-05-31T04:43:38.327Z",
+    "size": 170702,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"96f1c-NnGoa0A4deUfC5lfP9GqV2eDfKU\"",
+    "mtime": "2026-05-31T04:43:38.329Z",
+    "size": 618268,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3438,12 +3454,27 @@ function defineRenderHandler(render) {
   });
 }
 
-const scheduledTasks = false;
+const e=globalThis.process?.env||Object.create(null),t=globalThis.process||{env:e},n=t!==void 0&&t.env&&t.env.NODE_ENV||void 0,r=[[`claude`,[`CLAUDECODE`,`CLAUDE_CODE`]],[`replit`,[`REPL_ID`]],[`gemini`,[`GEMINI_CLI`]],[`codex`,[`CODEX_SANDBOX`,`CODEX_THREAD_ID`]],[`opencode`,[`OPENCODE`]],[`pi`,[i(`PATH`,/\.pi[\\/]agent/)]],[`auggie`,[`AUGMENT_AGENT`]],[`goose`,[`GOOSE_PROVIDER`]],[`devin`,[i(`EDITOR`,/devin/)]],[`cursor`,[`CURSOR_AGENT`]],[`kiro`,[i(`TERM_PROGRAM`,/kiro/)]]];function i(t,n){return ()=>{let r=e[t];return r?n.test(r):false}}function a(){let t=e.AI_AGENT;if(t)return {name:t.toLowerCase()};for(let[t,n]of r)for(let r of n)if(typeof r==`string`?e[r]:r())return {name:t};return {}}const o=a();o.name;!!o.name;const l=[[`APPVEYOR`],[`AWS_AMPLIFY`,`AWS_APP_ID`,{ci:true}],[`AZURE_PIPELINES`,`SYSTEM_TEAMFOUNDATIONCOLLECTIONURI`],[`AZURE_STATIC`,`INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN`],[`APPCIRCLE`,`AC_APPCIRCLE`],[`BAMBOO`,`bamboo_planKey`],[`BITBUCKET`,`BITBUCKET_COMMIT`],[`BITRISE`,`BITRISE_IO`],[`BUDDY`,`BUDDY_WORKSPACE_ID`],[`BUILDKITE`],[`CIRCLE`,`CIRCLECI`],[`CIRRUS`,`CIRRUS_CI`],[`CLOUDFLARE_PAGES`,`CF_PAGES`,{ci:true}],[`CLOUDFLARE_WORKERS`,`WORKERS_CI`,{ci:true}],[`GOOGLE_CLOUDRUN`,`K_SERVICE`],[`GOOGLE_CLOUDRUN_JOB`,`CLOUD_RUN_JOB`],[`CODEBUILD`,`CODEBUILD_BUILD_ARN`],[`CODEFRESH`,`CF_BUILD_ID`],[`DRONE`],[`DRONE`,`DRONE_BUILD_EVENT`],[`DSARI`],[`GITHUB_ACTIONS`],[`GITLAB`,`GITLAB_CI`],[`GITLAB`,`CI_MERGE_REQUEST_ID`],[`GOCD`,`GO_PIPELINE_LABEL`],[`LAYERCI`],[`JENKINS`,`JENKINS_URL`],[`HUDSON`,`HUDSON_URL`],[`MAGNUM`],[`NETLIFY`],[`NETLIFY`,`NETLIFY_LOCAL`,{ci:false}],[`NEVERCODE`],[`RENDER`],[`SAIL`,`SAILCI`],[`SEMAPHORE`],[`SCREWDRIVER`],[`SHIPPABLE`],[`SOLANO`,`TDDIUM`],[`STRIDER`],[`TEAMCITY`,`TEAMCITY_VERSION`],[`TRAVIS`],[`VERCEL`,`NOW_BUILDER`],[`VERCEL`,`VERCEL`,{ci:false}],[`VERCEL`,`VERCEL_ENV`,{ci:false}],[`APPCENTER`,`APPCENTER_BUILD_ID`],[`CODESANDBOX`,`CODESANDBOX_SSE`,{ci:false}],[`CODESANDBOX`,`CODESANDBOX_HOST`,{ci:false}],[`STACKBLITZ`],[`STORMKIT`],[`CLEAVR`],[`ZEABUR`],[`CODESPHERE`,`CODESPHERE_APP_ID`,{ci:true}],[`RAILWAY`,`RAILWAY_PROJECT_ID`],[`RAILWAY`,`RAILWAY_SERVICE_ID`],[`DENO-DEPLOY`,`DENO_DEPLOY`],[`DENO-DEPLOY`,`DENO_DEPLOYMENT_ID`],[`FIREBASE_APP_HOSTING`,`FIREBASE_APP_HOSTING`,{ci:true}]];function u(){for(let t of l)if(e[t[1]||t[0]])return {name:t[0].toLowerCase(),...t[2]};return e.SHELL===`/bin/jsh`&&t.versions?.webcontainer?{name:`stackblitz`,ci:false}:{name:``,ci:false}}const d=u();d.name;const p=t.platform||``,m=!!e.CI||d.ci!==false,h=!!t.stdout?.isTTY;!!e.DEBUG;const v=n===`test`||!!e.TEST;n===`production`||e.MODE===`production`;n===`dev`||n===`development`||e.MODE===`development`;!!e.MINIMAL||m||v||!h;const S=/^win/i.test(p);!e.NO_COLOR&&(!!e.FORCE_COLOR||(h||S)&&e.TERM!==`dumb`||m);const E=(t.versions?.node||``).replace(/^v/,``)||null;Number(E?.split(`.`)[0])||null;const O=!!t?.versions?.node,k=`Bun`in globalThis,A=`Deno`in globalThis,j=`fastly`in globalThis,M=`Netlify`in globalThis,N=`EdgeRuntime`in globalThis,P=globalThis.navigator?.userAgent===`Cloudflare-Workers`,F=[[M,`netlify`],[N,`edge-light`],[P,`workerd`],[j,`fastly`],[A,`deno`],[k,`bun`],[O,`node`]];function I(){let e=F.find(e=>e[0]);if(e)return {name:e[1]}}const L=I();L?.name||``;
+
+const scheduledTasks = [{"cron":"0 * * * *","tasks":["lead:reminders"]}];
 
 const tasks = {
-  
+  "lead:reminders": {
+          meta: {
+            description: "",
+          },
+          resolve: () => Promise.resolve().then(function () { return reminders$1; }).then(r => r.default || r),
+        }
 };
 
+function defineTask(def) {
+  if (typeof def.run !== "function") {
+    def.run = () => {
+      throw new TypeError("Task must implement a `run` method!");
+    };
+  }
+  return def;
+}
 const __runningTasks__ = {};
 async function runTask(name, {
   payload = {},
@@ -3472,6 +3503,31 @@ async function runTask(name, {
     return res;
   } finally {
     delete __runningTasks__[name];
+  }
+}
+function startScheduleRunner() {
+  if (!scheduledTasks || scheduledTasks.length === 0 || v) {
+    return;
+  }
+  const payload = {
+    scheduledTime: Date.now()
+  };
+  for (const schedule of scheduledTasks) {
+    new Cron(schedule.cron, async () => {
+      await Promise.all(
+        schedule.tasks.map(
+          (name) => runTask(name, {
+            payload,
+            context: {}
+          }).catch((error) => {
+            console.error(
+              `Error while running scheduled task "${name}"`,
+              error
+            );
+          })
+        )
+      );
+    });
   }
 }
 
@@ -3625,6 +3681,7 @@ const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$5; });
+const _lazy_g_RGnW = () => Promise.resolve().then(function () { return schedule_post$1; });
 const _lazy_ldfxyA = () => Promise.resolve().then(function () { return create_post$1; });
 const _lazy_jWzJwk = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_BL5EOs = () => Promise.resolve().then(function () { return index_get$3; });
@@ -3633,6 +3690,7 @@ const _lazy_yzdIqS = () => Promise.resolve().then(function () { return tiers_get
 const _lazy_53awnl = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_gr61aa = () => Promise.resolve().then(function () { return subscribe_post$1; });
 const _lazy_fPqYWA = () => Promise.resolve().then(function () { return webhook_post$1; });
+const _lazy_W298ft = () => Promise.resolve().then(function () { return testReminder_get$1; });
 const _lazy_fwdmRW = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_GT8Gbh = () => Promise.resolve().then(function () { return index_put$1; });
 const _lazy_DNxl9_ = () => Promise.resolve().then(function () { return renderer; });
@@ -3648,6 +3706,7 @@ const handlers = [
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_9lw3wc, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_dDJNJ5, lazy: true, middleware: false, method: "put" },
+  { route: '/api/leads/:id/schedule', handler: _lazy_g_RGnW, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/create', handler: _lazy_ldfxyA, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads', handler: _lazy_jWzJwk, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/status', handler: _lazy_BL5EOs, lazy: true, middleware: false, method: "get" },
@@ -3656,6 +3715,7 @@ const handlers = [
   { route: '/api/qr_code/:id', handler: _lazy_53awnl, lazy: true, middleware: false, method: "get" },
   { route: '/api/stripe/subscribe', handler: _lazy_gr61aa, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/webhook', handler: _lazy_fPqYWA, lazy: true, middleware: false, method: "post" },
+  { route: '/api/test-reminder', handler: _lazy_W298ft, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_fwdmRW, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_GT8Gbh, lazy: true, middleware: false, method: "put" },
   { route: '/__nuxt_error', handler: _lazy_DNxl9_, lazy: true, middleware: false, method: undefined },
@@ -3855,6 +3915,9 @@ nitroApp.router.use(
     return await runTask(name, { payload });
   })
 );
+{
+  startScheduleRunner();
+}
 function listen(useRandomPort = Boolean(
   NITRO_NO_UNIX_SOCKET || process.versions.webcontainer || "Bun" in globalThis && process.platform === "win32"
 )) {
@@ -3942,6 +4005,126 @@ const connectDB = async () => {
   }
 };
 
+const leadSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+    // Vital index for instant dashboard lookup grouping
+  },
+  company_name: String,
+  // Attach company name to lead
+  company_email: String,
+  // Attach compnay email to lead
+  source: String,
+  name: String,
+  age: Number,
+  email: String,
+  phone: String,
+  // Kept as string to preserve leading zeros or symbols safely
+  best_communication_method: String,
+  address: String,
+  want_to_move: String,
+  buy_sell_both: String,
+  price: Number,
+  sqft: Number,
+  bedrooms: Number,
+  bathrooms: Number,
+  budget: Number,
+  notes: String,
+  seeing_an_agent: String,
+  ai_analysis: String,
+  status: { type: String, default: "new" },
+  date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
+  reminderSent: { type: Boolean, default: false },
+  reminderStatus: {
+    type: String,
+    enum: ["none", "scheduled", "sent"],
+    default: "none"
+    // 'none' means automation is disabled for this specific lead
+  },
+  reminderScheduledAt: {
+    type: Date,
+    required: false
+  }
+}, { timestamps: true });
+const LeadModel$2 = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
+
+function useCleanString(str) {
+  return str.replace(/[^a-zA-Z0-9]/g, "");
+}
+
+const LeadModel$1 = LeadModel$2;
+const resend = new Resend(process.env.RESEND_KEY);
+const reminders = defineTask({
+  meta: {
+    name: "lead:reminders",
+    description: "Polls the dynamic queue hourly for explicit, agent-scheduled reminders"
+  },
+  async run() {
+    await connectDB();
+    console.log("Polling dynamic reminder queue...");
+    const now = /* @__PURE__ */ new Date();
+    try {
+      const activeQueue = await LeadModel$1.find({
+        reminderStatus: "scheduled",
+        reminderScheduledAt: { $lte: now },
+        email: { $ne: "", $exists: true }
+      }).populate("userId");
+      if (activeQueue.length === 0) {
+        return { result: "Queue empty. No custom reminder configurations due in this hour." };
+      }
+      let processedCount = 0;
+      const bulkOps = [];
+      for (const lead of activeQueue) {
+        const realtor = lead.userId;
+        const senderName = (lead == null ? void 0 : lead.company_name) || "Your Connected Realtor";
+        const replyEmail = lead == null ? void 0 : lead.company_email;
+        const greetingName = lead.name ? lead.name.split(" ")[0] : "there";
+        await resend.emails.send({
+          from: `${useCleanString(senderName)}@ascendpod.com`,
+          to: lead.email,
+          replyTo: replyEmail,
+          subject: "Quick question regarding your property search",
+          text: `Hi ${greetingName},
+
+I wanted to personally reach out and see if you had any quick questions about the home, the neighborhood, or local market trends that I can track down for you?
+
+Just reply straight to this email whenever you have a second.
+
+Best,
+
+${senderName}`
+        });
+        bulkOps.push({
+          updateOne: {
+            filter: { _id: lead._id },
+            update: {
+              $set: { reminderStatus: "sent" },
+              $unset: { reminderScheduledAt: "" }
+              // Clean up date index allocations
+            }
+          }
+        });
+        processedCount++;
+      }
+      if (bulkOps.length > 0) {
+        await LeadModel$1.bulkWrite(bulkOps, { ordered: false });
+      }
+      return { result: `Successfully synchronized queue. Dispatched ${processedCount} custom reminders.` };
+    } catch (error) {
+      console.error("Queue execution failed:", error);
+      return { result: "Critical failure during queue parsing process." };
+    }
+  }
+});
+
+const reminders$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: reminders
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const userSchema = new Schema({
   company: String,
   company_hashed: String,
@@ -3966,13 +4149,13 @@ const userSchema = new Schema({
 }, { timestamps: true });
 const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
 
-const User$9 = UserModel;
+const User$8 = UserModel;
 const loggedInUser = defineEventHandler(async (event) => {
   try {
     await connectDB();
     const { user } = await requireUserSession(event);
     const userEmail = user == null ? void 0 : user.email;
-    const findUser = await User$9.find({ email: userEmail });
+    const findUser = await User$8.find({ email: userEmail });
     if (findUser[0]) {
       return findUser[0];
     }
@@ -3986,11 +4169,11 @@ const loggedInUser = defineEventHandler(async (event) => {
   }
 });
 
-const User$8 = UserModel;
+const User$7 = UserModel;
 const delete_delete = defineEventHandler(async (event) => {
   try {
     const user = await loggedInUser(event);
-    await User$8.deleteOne({ email: user == null ? void 0 : user.email });
+    await User$7.deleteOne({ email: user == null ? void 0 : user.email });
   } catch (error) {
     console.log(error);
     throw createError({
@@ -4005,7 +4188,7 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: delete_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$7 = UserModel;
+const User$6 = UserModel;
 const bodySchema$7 = z.object({
   email: z.email(),
   question: z.string()
@@ -4023,7 +4206,7 @@ const forgot_post = defineEventHandler(async (event) => {
     await connectDB();
     if (question !== "7") throw createError({ statusCode: 401, statusMessage: "Try again" });
     else {
-      const userFound = await User$7.findOne({ email });
+      const userFound = await User$6.findOne({ email });
       if (!userFound) throw createError({ statusCode: 401, statusMessage: "Wrong credentials" });
       const resend = new Resend(`${process.env.RESEND_KEY}`);
       await resend.emails.send({
@@ -4033,7 +4216,7 @@ const forgot_post = defineEventHandler(async (event) => {
         // Subject line
         html: htmlBody
       });
-      await User$7.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
+      await User$6.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
     }
   } catch (error) {
     console.log(error);
@@ -4049,7 +4232,7 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: forgot_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$6 = UserModel;
+const User$5 = UserModel;
 const bodySchema$6 = z.object({
   email: z.email(),
   password: z.string().min(8)
@@ -4059,7 +4242,7 @@ const login_post = defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, bodySchema$6.parse);
   try {
     await connectDB();
-    const user = await User$6.findOne({ email });
+    const user = await User$5.findOne({ email });
     const passwordMatches = bcrypt.compare(password, (_a = user == null ? void 0 : user.password) != null ? _a : "");
     if (await passwordMatches) {
       await setUserSession(event, {
@@ -4109,7 +4292,7 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: login_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$5 = UserModel;
+const User$4 = UserModel;
 const bodySchema$5 = z.object({
   password: z.string(),
   confirm_password: z.string(),
@@ -4121,7 +4304,7 @@ const reset = defineEventHandler(async (event) => {
   try {
     await connectDB();
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Try again" });
-    await User$5.findOneAndUpdate({ resetPasswordToken: token }, {
+    await User$4.findOneAndUpdate({ resetPasswordToken: token }, {
       password: hashedPassword
     });
   } catch (error) {
@@ -4138,7 +4321,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: reset
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$4 = UserModel;
+const User$3 = UserModel;
 const bodySchema$4 = z.object({
   company: z.string(),
   category: z.string(),
@@ -4151,7 +4334,7 @@ const signup_post = defineEventHandler(async (event) => {
   const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$4.parse);
   try {
     await connectDB();
-    const user = await User$4.findOne({ email });
+    const user = await User$3.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedEmail = await bcrypt.hash(email, 15);
     const hashedCompany = await bcrypt.hash(company, 15);
@@ -4160,7 +4343,7 @@ const signup_post = defineEventHandler(async (event) => {
     if (!password && !confirm_password) throw createError({ statusCode: 401, statusMessage: "Please insert password.", data: { errorMessage: "The requested item could not be found." } });
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Passwords do not match.", data: { errorMessage: "The requested item could not be found." } });
     if (user) throw createError({ statusCode: 401, statusMessage: "User already registered.", data: { errorMessage: "The requested item could not be found." } });
-    const registerUser = new User$4({
+    const registerUser = new User$3({
       company: company.toLowerCase(),
       company_hashed: hashedCompany.trim(),
       category: category.toLowerCase(),
@@ -4185,47 +4368,15 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const leadSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true
-    // Vital index for instant dashboard lookup grouping
-  },
-  source: String,
-  name: String,
-  age: Number,
-  email: String,
-  phone: String,
-  // Kept as string to preserve leading zeros or symbols safely
-  best_communication_method: String,
-  address: String,
-  want_to_move: String,
-  buy_sell_both: String,
-  price: Number,
-  sqft: Number,
-  bedrooms: Number,
-  bathrooms: Number,
-  budget: Number,
-  notes: String,
-  seeing_an_agent: String,
-  ai_analysis: String,
-  status: { type: String, default: "new" },
-  date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
-  reminderSent: { type: Boolean, default: false }
-}, { timestamps: true });
-const LeadModel = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
-
 function month(date2) {
   const dateObj = new Date(date2);
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$4 = LeadModel;
+const Lead$5 = LeadModel$2;
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const leads = await Lead$4.find({ userId: user == null ? void 0 : user._id }).lean();
+  const leads = await Lead$5.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
@@ -4251,15 +4402,11 @@ const lead_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: lead_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$3 = UserModel;
+const Lead$4 = LeadModel$2;
 const index_delete = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
-    await User$3.findOneAndUpdate(
-      { "leads._id": id },
-      { $pull: { "leads": { _id: id } } },
-      { new: true }
-    );
+    await Lead$4.deleteOne({ _id: id });
   } catch (error) {
     console.log(error);
     throw createError({
@@ -4274,7 +4421,7 @@ const index_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: index_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$3 = LeadModel;
+const Lead$3 = LeadModel$2;
 const index_get$6 = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
@@ -4294,7 +4441,7 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$2 = LeadModel;
+const Lead$2 = LeadModel$2;
 const bodySchema$3 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
@@ -4339,7 +4486,43 @@ const index_put$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_put$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$1 = LeadModel;
+const LeadModel = LeadModel$2;
+const schedule_post = defineEventHandler(async (event) => {
+  var _a;
+  const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
+  const body = await readBody(event);
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) {
+    throw createError({ statusCode: 401, message: "Session trace expired." });
+  }
+  const { scheduledTime } = body;
+  try {
+    const queryFilter = { _id: leadId, userId: user._id };
+    if (!scheduledTime) {
+      await LeadModel.updateOne(queryFilter, {
+        $set: { reminderStatus: "none" },
+        $unset: { reminderScheduledAt: "" }
+      });
+      return { success: true, message: "Automation sequence disabled for this client." };
+    }
+    await LeadModel.updateOne(queryFilter, {
+      $set: {
+        reminderStatus: "scheduled",
+        reminderScheduledAt: new Date(scheduledTime)
+      }
+    });
+    return { success: true, message: "Custom reminder window logged to pipeline queue." };
+  } catch (error) {
+    throw createError({ statusCode: 500, message: "Queue allocation transaction aborted." });
+  }
+});
+
+const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: schedule_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Lead$1 = LeadModel$2;
 const bodySchema$2 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -4388,7 +4571,7 @@ const selection_status_lead = [
   { label: "archive", value: "archive" }
 ];
 
-const Lead = LeadModel;
+const Lead = LeadModel$2;
 const index_get$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
@@ -4572,6 +4755,28 @@ const webhook_post = defineEventHandler(async (event) => {
 const webhook_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: webhook_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const testReminder_get = defineEventHandler(async (event) => {
+  try {
+    console.log("Forcing trigger signature on lead:reminders task payload...");
+    const taskResult = await runTask("lead:reminders");
+    return {
+      success: true,
+      message: "Nitro task invoked successfully.",
+      taskResult
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+});
+
+const testReminder_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: testReminder_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const index_get = defineEventHandler(async (event) => {

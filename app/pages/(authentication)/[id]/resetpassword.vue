@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useMotion } from '@vueuse/motion';
-import { formVarient, containerVarient, inputVarient } from '~/utils/varients';
+import { formVarient, inputVarient } from '~/utils/varients';
 
 useHead({
     title: 'GhostForm | Resetting Password',

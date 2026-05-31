@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { capitalizeFirstLetter } from '~/composables/useCapitalizeFirstLetter';
+import { capitalizeFirstLetter } from '~/utils/formatters/useCapitalizeFirstLetter';
 
 definePageMeta({
   layout: 'authenticated',

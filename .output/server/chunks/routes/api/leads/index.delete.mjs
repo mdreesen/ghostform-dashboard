@@ -1,5 +1,5 @@
 import { d as defineEventHandler, g as getRouterParam, c as createError } from '../../../nitro/nitro.mjs';
-import { U as UserModel } from '../../../_/User.mjs';
+import { L as LeadModel } from '../../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -13,15 +13,11 @@ import 'consola';
 import 'ipx';
 import 'mongoose';
 
-const User = UserModel;
+const Lead = LeadModel;
 const index_delete = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
-    await User.findOneAndUpdate(
-      { "leads._id": id },
-      { $pull: { "leads": { _id: id } } },
-      { new: true }
-    );
+    await Lead.deleteOne({ _id: id });
   } catch (error) {
     console.log(error);
     throw createError({

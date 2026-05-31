@@ -20,6 +20,15 @@ export default defineNuxtConfig({
     'nuxt-charts',
   ],
 
+  // Nitro wakes up and fires off task reminders
+  nitro: {
+    experimental: { tasks: true },
+    scheduledTasks: {
+      // Shifting '0 9 * * *' (Once a day) to '0 * * * *' (At minute 0 of every hour)
+      '0 * * * *': ['lead:reminders']
+    }
+  },
+
   app: {
     head: {
       title: 'GhostForm', // default fallback title

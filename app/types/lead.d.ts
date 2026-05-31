@@ -1,5 +1,7 @@
-export interface Lead {
+  export interface Lead {
     _id?: string;
+    company_name?: string;
+    company_email?: string;
     userId: string;
     status: string;
     source?: string;
@@ -19,5 +21,5 @@ export interface Lead {
     budget?: number;
     seeing_an_agent?: string;
     notes?: string;
-    ai_analysis: string;
+    ai_analysis?: string;
 }

@@ -14,6 +14,8 @@ useHead({
 const { data: user } = useNuxtData('user');
 const { data: leads } = useNuxtData('leads');
 const { data: charts_lead } = useNuxtData('charts_lead');
+
+const chart_data = computed(() => charts_lead?.value.monthly);
 </script>
 
 <template>
@@ -34,11 +36,11 @@ const { data: charts_lead } = useNuxtData('charts_lead');
 
         <div class="flex flex-wrap justify-evenly gap-18">
           <ClientOnly>
-            <baseChartsLine v-if="charts_lead?.monthly" :data="charts_lead?.monthly" />
+            <baseChartsLine v-if="chart_data" :data="chart_data" />
           </ClientOnly>
 
           <ClientOnly>
-            <baseChartsDonut v-if="charts_lead?.monthly" :data="charts_lead?.monthly" />
+            <baseChartsDonut v-if="chart_data" :data="chart_data" />
           </ClientOnly>
         </div>
       </section>

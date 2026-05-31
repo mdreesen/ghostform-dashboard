@@ -1,18 +1,17 @@
-import { defineEventHandler, getRouterParam } from 'h3';
+import { z } from 'zod';
 
 import { Model } from 'mongoose';
-import UserModel from '../../../../lib/database/models/User';
-import { User } from '~/types/user';
-const User = UserModel as Model<User>;
+import LeadModel from '../../../../lib/database/models/Lead';
+import type { Lead } from '~/types/lead';
+
+const Lead = LeadModel as Model<Lead>;
 
 export default defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, 'id');
 
-    await User.findOneAndUpdate(
-      { 'leads._id': id },
-      { $pull: { 'leads': { _id: id } } },
-      { new: true });
+    await Lead.deleteOne({ _id: id });
+
 
   } catch (error) {
     console.log(error);

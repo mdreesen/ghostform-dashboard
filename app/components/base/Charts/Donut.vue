@@ -84,9 +84,6 @@ props.data.map((item) => {
       <div class="font-semibold">
         Leads per month
       </div>
-      <!-- <div class="text-muted">
-        2 seconds ago
-      </div> -->
     </div>
   </DonutChart>
 </template>
