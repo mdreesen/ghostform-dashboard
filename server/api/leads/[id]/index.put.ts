@@ -2,7 +2,6 @@ import { z } from 'zod';
 
 import { Model } from 'mongoose';
 import LeadModel from '../../../../lib/database/models/Lead';
-import loggedInUser from '~/utils/loggedInUser';
 import type { Lead } from '~/types/lead';
 
 const Lead = LeadModel as Model<Lead>;

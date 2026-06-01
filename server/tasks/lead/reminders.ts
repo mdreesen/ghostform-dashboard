@@ -1,9 +1,10 @@
-import type { Model } from 'mongoose'
-import mongoose from 'mongoose'
-import { Resend } from 'resend'
-import LeadModelImport from '../../../lib/database/models/Lead'
-import CampaignModelImport from '../../../lib/database/models/Campaign'
-import { useCleanString } from '~/utils/formatters/useCleanString'
+import { connectDB } from "../../../lib/database/mongodb";
+import type { Model } from 'mongoose';
+import mongoose from 'mongoose';
+import { Resend } from 'resend';
+import LeadModelImport from '../../../lib/database/models/Lead';
+import CampaignModelImport from '../../../lib/database/models/Campaign';
+import { useCleanString } from '~/utils/formatters/useCleanString';
 import { email_by_status } from '~/utils/email/useEmailByStatus';
 
 const LeadModel = LeadModelImport as Model<any>
@@ -20,16 +21,12 @@ export default defineTask({
     description: 'Processes custom individual queues and recurring marketing blasts'
   },
   async run() {
-    console.log('Orchestrating automated pipelines...')
+    console.log('Orchestrating automated pipelines...');
+    await connectDB();
+
     const now = new Date()
     const currentDay = now.getDay()
     const currentHour = now.getHours()
-
-    // CONNECTION GUARD: If connection isn't hot, skip this window safely
-    if (mongoose.connection.readyState !== 1) {
-      console.warn('Database channel offline. Deferring task execution loop.')
-      return { result: 'Skipped: Mongoose connection unready.' }
-    }
 
     try {
       // ==========================================
@@ -51,13 +48,13 @@ export default defineTask({
 
           const useResponse = email_by_status(status, lead_name, company_name);
 
-        await resend.emails.send({
-          from: `${useCleanString(company_name)}@ascendpod.com`,
-          to: lead.email,
-          replyTo: replyEmail,
-          subject: 'Quick question regarding your property search',
-          text: useResponse
-        })
+          await resend.emails.send({
+            from: `${useCleanString(company_name)}@ascendpod.com`,
+            to: lead.email,
+            replyTo: replyEmail,
+            subject: 'Quick question regarding your property search',
+            text: useResponse
+          })
 
           individualOps.push({
             updateOne: {
@@ -80,7 +77,7 @@ export default defineTask({
           dayOfWeek: currentDay,
           $or: [
             { lastFiredAt: null },
-            { lastFiredAt: { $llt: new Date(new Date().setHours(0, 0, 0, 0)) } }
+            { lastFiredAt: { $lt: new Date(new Date().setHours(0, 0, 0, 0)) } }
           ]
         }).populate('userId')
 
@@ -116,7 +113,7 @@ export default defineTask({
               }
             })
 
-            await resend.batch.create(batchPayload)
+            await resend.batch.send(batchPayload)
           }
 
           campaign.lastFiredAt = new Date()

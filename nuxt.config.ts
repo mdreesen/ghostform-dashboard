@@ -24,9 +24,8 @@ export default defineNuxtConfig({
   nitro: {
     experimental: { tasks: true },
     tasks: {
-      // FIXED: Expanded from a raw string to an configuration object containing the handler path
       'lead:reminders': {
-        handler: './server/tasks/leads/reminders',
+        handler: './server/tasks/lead/reminders', 
         description: 'Processes custom individual queues and recurring marketing blasts'
       }
     },

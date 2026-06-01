@@ -18,6 +18,10 @@ declare module "nitropack/types" {
     '/api/authentication/signup': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authentication/signup.post').default>>>>
     }
+    '/api/campaigns': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/index.delete').default>>>>
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/index.get').default>>>>
+    }
     '/api/campaigns/save': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/save.post').default>>>>
     }
@@ -37,10 +41,6 @@ declare module "nitropack/types" {
     }
     '/api/leads': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/index.get').default>>>>
-    }
-    '/api/leads/status': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/status/index.get').default>>>>
-      'put': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/status/index.put').default>>>>
     }
     '/api/leads/tiers': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/tiers.get').default>>>>

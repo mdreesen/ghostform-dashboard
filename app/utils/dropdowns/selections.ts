@@ -7,6 +7,27 @@ export const selection_status_lead = [
     { label: 'archive', value: 'archive' }
 ];
 
+export const selection_campaign_status_lead = [
+  { label: 'lead (new)', value: 'new' },
+  { label: 'closed', value: 'closed' },
+];
+
+export const selection_days = [
+    { label: 'Sundays', value: '0' },
+    { label: 'Mondays', value: '1' },
+    { label: 'Tuesdays', value: '2' },
+    { label: 'Wednesdays', value: '3' },
+    { label: 'Thursdays', value: '4' },
+    { label: 'Fridays', value: '5' },
+    { label: 'Saturdays', value: '6' }
+  ];
+
+  export const selection_frequencies = [
+    { label: 'Once a Month (Every 4 weeks)', value: '1' },
+    { label: 'Twice a Month (Every other week)', value: '2' },
+    { label: 'Four Times a Month (Every week)', value: '4' }
+  ]
+
 export const selection_save = [
     { label: 'No', value: false },
     { label: 'Save', value: true },

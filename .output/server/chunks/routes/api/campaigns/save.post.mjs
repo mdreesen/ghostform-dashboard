@@ -1,5 +1,5 @@
 import { d as defineEventHandler, a as readBody, c as createError } from '../../../nitro/nitro.mjs';
-import mongoose, { Schema } from 'mongoose';
+import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'node:http';
 import 'node:https';
@@ -12,29 +12,11 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
+import 'mongoose';
 import '../../../_/mongodb.mjs';
 import '../../../_/User.mjs';
 
-const campaignSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true
-  },
-  title: { type: String, required: true },
-  targetStatus: { type: String, required: true },
-  // 'new', 'appointment', 'active', etc.
-  subject: { type: String, required: true },
-  messageBody: { type: String, required: true },
-  dayOfWeek: { type: Number, required: true, min: 0, max: 6 },
-  // 0 = Sun, 1 = Mon, etc.
-  timesPerMonth: { type: Number, required: true, enum: [1, 2, 4], default: 1 },
-  lastFiredAt: { type: Date, default: null }
-}, { timestamps: true });
-const CampaignModelImport = mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);
-
-const CampaignModel = CampaignModelImport;
+const Campaign = CampaignModelImport;
 const save_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const user = await loggedInUser(event);
@@ -52,7 +34,7 @@ const save_post = defineEventHandler(async (event) => {
     });
   }
   try {
-    const campaign = await CampaignModel.create({
+    const campaign = await Campaign.create({
       userId: user._id,
       title: title || `${targetStatus.toUpperCase()} Automated Loop`,
       targetStatus,
