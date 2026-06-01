@@ -47,7 +47,13 @@ const items = computed<NavigationMenuItem[]>(() => [{
     <UNavigationMenu color="neutral" :items="items" />
 
     <template #body>
-      <UNavigationMenu color="neutral" :items="items" orientation="vertical" class="-mx-2.5" />
+      <div class="flex flex-col gap-2">
+        <template v-for="link in items">
+          <NuxtLink :to="link.to" class="group relative w-full flex items-center justify-end gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2 focus-visible:before:ring-inverted px-2.5 py-1.5 before:inset-x-px before:inset-y-0 text-highlighted before:bg-elevated">
+            {{ link.label }}
+          </NuxtLink>
+        </template>
+      </div>
     </template>
   </UHeader>
 </template>
