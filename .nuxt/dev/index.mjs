@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2938,16 +2938,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"2c0e9-Sv3lPNCC76LRgI2kNRnoC7EjoSQ\"",
-    "mtime": "2026-06-01T02:12:24.415Z",
-    "size": 180457,
+    "etag": "\"2b9d4-l2x2E9+vbnqoTTYIybsEL8eh2ok\"",
+    "mtime": "2026-06-01T02:38:51.506Z",
+    "size": 178644,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"a0ac3-9qB9C2lMVAJIbtHBzRtre6F82UE\"",
-    "mtime": "2026-06-01T02:12:24.415Z",
-    "size": 658115,
+    "etag": "\"9fa37-amIO1tmeBHaIZOg/vlh5sPgOc4g\"",
+    "mtime": "2026-06-01T02:38:51.507Z",
+    "size": 653879,
     "path": "index.mjs.map"
   }
 };
@@ -3678,17 +3678,15 @@ const _lazy_48PoLn = () => Promise.resolve().then(function () { return login_pos
 const _lazy_q9BYK6 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_Zz2IBk = () => Promise.resolve().then(function () { return signup_post$1; });
 const _lazy_uxhbmH = () => Promise.resolve().then(function () { return index_delete$3; });
-const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$9; });
+const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_VYogsv = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
-const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$7; });
-const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$5; });
+const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$5; });
+const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$3; });
 const _lazy_g_RGnW = () => Promise.resolve().then(function () { return schedule_post$1; });
 const _lazy_ldfxyA = () => Promise.resolve().then(function () { return create_post$1; });
-const _lazy_jWzJwk = () => Promise.resolve().then(function () { return index_get$5; });
-const _lazy_BL5EOs = () => Promise.resolve().then(function () { return index_get$3; });
-const _lazy_547Qt7 = () => Promise.resolve().then(function () { return index_put$3; });
+const _lazy_jWzJwk = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_yzdIqS = () => Promise.resolve().then(function () { return tiers_get$1; });
 const _lazy_53awnl = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_gr61aa = () => Promise.resolve().then(function () { return subscribe_post$1; });
@@ -3715,8 +3713,6 @@ const handlers = [
   { route: '/api/leads/:id/schedule', handler: _lazy_g_RGnW, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/create', handler: _lazy_ldfxyA, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads', handler: _lazy_jWzJwk, lazy: true, middleware: false, method: "get" },
-  { route: '/api/leads/status', handler: _lazy_BL5EOs, lazy: true, middleware: false, method: "get" },
-  { route: '/api/leads/status', handler: _lazy_547Qt7, lazy: true, middleware: false, method: "put" },
   { route: '/api/leads/tiers', handler: _lazy_yzdIqS, lazy: true, middleware: false, method: "get" },
   { route: '/api/qr_code/:id', handler: _lazy_53awnl, lazy: true, middleware: false, method: "get" },
   { route: '/api/stripe/subscribe', handler: _lazy_gr61aa, lazy: true, middleware: false, method: "post" },
@@ -4258,13 +4254,13 @@ const userSchema = new Schema({
 }, { timestamps: true });
 const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
 
-const User$8 = UserModel;
+const User$7 = UserModel;
 const loggedInUser = defineEventHandler(async (event) => {
   try {
     await connectDB();
     const { user } = await requireUserSession(event);
     const userEmail = user == null ? void 0 : user.email;
-    const findUser = await User$8.find({ email: userEmail });
+    const findUser = await User$7.find({ email: userEmail });
     if (findUser[0]) {
       return findUser[0];
     }
@@ -4278,11 +4274,11 @@ const loggedInUser = defineEventHandler(async (event) => {
   }
 });
 
-const User$7 = UserModel;
+const User$6 = UserModel;
 const delete_delete = defineEventHandler(async (event) => {
   try {
     const user = await loggedInUser(event);
-    await User$7.deleteOne({ email: user == null ? void 0 : user.email });
+    await User$6.deleteOne({ email: user == null ? void 0 : user.email });
   } catch (error) {
     console.log(error);
     throw createError({
@@ -4297,13 +4293,13 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: delete_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$6 = UserModel;
-const bodySchema$8 = z.object({
+const User$5 = UserModel;
+const bodySchema$7 = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$8.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$7.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -4315,7 +4311,7 @@ const forgot_post = defineEventHandler(async (event) => {
     await connectDB();
     if (question !== "7") throw createError({ statusCode: 401, statusMessage: "Try again" });
     else {
-      const userFound = await User$6.findOne({ email });
+      const userFound = await User$5.findOne({ email });
       if (!userFound) throw createError({ statusCode: 401, statusMessage: "Wrong credentials" });
       const resend = new Resend(`${process.env.RESEND_KEY}`);
       await resend.emails.send({
@@ -4325,7 +4321,7 @@ const forgot_post = defineEventHandler(async (event) => {
         // Subject line
         html: htmlBody
       });
-      await User$6.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
+      await User$5.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
     }
   } catch (error) {
     console.log(error);
@@ -4341,17 +4337,17 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: forgot_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$5 = UserModel;
-const bodySchema$7 = z.object({
+const User$4 = UserModel;
+const bodySchema$6 = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$7.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$6.parse);
   try {
     await connectDB();
-    const user = await User$5.findOne({ email });
+    const user = await User$4.findOne({ email });
     const passwordMatches = bcrypt.compare(password, (_a = user == null ? void 0 : user.password) != null ? _a : "");
     if (await passwordMatches) {
       await setUserSession(event, {
@@ -4401,19 +4397,19 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: login_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$4 = UserModel;
-const bodySchema$6 = z.object({
+const User$3 = UserModel;
+const bodySchema$5 = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$6.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$5.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Try again" });
-    await User$4.findOneAndUpdate({ resetPasswordToken: token }, {
+    await User$3.findOneAndUpdate({ resetPasswordToken: token }, {
       password: hashedPassword
     });
   } catch (error) {
@@ -4430,8 +4426,8 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: reset
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$3 = UserModel;
-const bodySchema$5 = z.object({
+const User$2 = UserModel;
+const bodySchema$4 = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -4440,10 +4436,10 @@ const bodySchema$5 = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$5.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$4.parse);
   try {
     await connectDB();
-    const user = await User$3.findOne({ email });
+    const user = await User$2.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedEmail = await bcrypt.hash(email, 15);
     const hashedCompany = await bcrypt.hash(company, 15);
@@ -4452,7 +4448,7 @@ const signup_post = defineEventHandler(async (event) => {
     if (!password && !confirm_password) throw createError({ statusCode: 401, statusMessage: "Please insert password.", data: { errorMessage: "The requested item could not be found." } });
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Passwords do not match.", data: { errorMessage: "The requested item could not be found." } });
     if (user) throw createError({ statusCode: 401, statusMessage: "User already registered.", data: { errorMessage: "The requested item could not be found." } });
-    const registerUser = new User$3({
+    const registerUser = new User$2({
       company: company.toLowerCase(),
       company_hashed: hashedCompany.trim(),
       category: category.toLowerCase(),
@@ -4478,12 +4474,12 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$2 = CampaignModelImport;
-const bodySchema$4 = z.object({
+const bodySchema$3 = z.object({
   _id: z.string()
 });
 const index_delete$2 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$4.parse);
+    const body = await readValidatedBody(event, bodySchema$3.parse);
     await Campaign$2.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -4500,15 +4496,15 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const index_get$8 = defineEventHandler(async (event) => {
+const index_get$6 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const data = await Campaign$1.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$8
+  default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
@@ -4613,7 +4609,7 @@ const index_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$3 = schemaImport;
-const index_get$6 = defineEventHandler(async (event) => {
+const index_get$4 = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
     const data = await Lead$3.findById(id).lean();
@@ -4627,13 +4623,13 @@ const index_get$6 = defineEventHandler(async (event) => {
   }
 });
 
-const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$6
+  default: index_get$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$3 = z.object({
+const bodySchema$2 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -4655,8 +4651,8 @@ const bodySchema$3 = z.object({
   seeing_an_agent: z.string().nullable(),
   ai_analysis: z.string().nullable()
 });
-const index_put$4 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$3.parse);
+const index_put$2 = defineEventHandler(async (event) => {
+  const body = await readValidatedBody(event, bodySchema$2.parse);
   try {
     await Lead$2.findOneAndUpdate(
       { _id: body._id },
@@ -4672,9 +4668,9 @@ const index_put$4 = defineEventHandler(async (event) => {
   }
 });
 
-const index_put$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_put$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_put$4
+  default: index_put$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$1 = schemaImport;
@@ -4714,7 +4710,7 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$1 = schemaImport;
-const bodySchema$2 = z.object({
+const bodySchema$1 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -4735,7 +4731,7 @@ const bodySchema$2 = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$2.parse);
+  const body = await readValidatedBody(event, bodySchema$1.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$1.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -4763,7 +4759,7 @@ const selection_status_lead = [
 ];
 
 const Lead = schemaImport;
-const index_get$4 = defineEventHandler(async (event) => {
+const index_get$2 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   const findLeadStatus = selection_status_lead.map((item) => {
@@ -4780,61 +4776,9 @@ const index_get$4 = defineEventHandler(async (event) => {
   };
 });
 
-const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: index_get$4
-}, Symbol.toStringTag, { value: 'Module' }));
-
-const index_get$2 = defineEventHandler(async (event) => {
-  const user = await loggedInUser(event);
-  const findNew = user == null ? void 0 : user.leads.filter((item) => item.status.includes("new"));
-  const findActive = user == null ? void 0 : user.leads.filter((item) => item.status.includes("active"));
-  return {
-    allStatus: {
-      new: findNew,
-      active: findActive
-    }
-  };
-});
-
 const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: index_get$2
-}, Symbol.toStringTag, { value: 'Module' }));
-
-const User$2 = UserModel;
-const bodySchema$1 = z.object({
-  _id: z.string().nullable(),
-  title: z.string().nullable(),
-  setting: z.string().nullable(),
-  value: z.boolean()
-});
-const index_put$2 = defineEventHandler(async (event) => {
-  const { _id, title, setting, value } = await readValidatedBody(event, bodySchema$1.parse);
-  try {
-    const obj = {
-      _id,
-      title,
-      setting,
-      value
-    };
-    await User$2.findOneAndUpdate(
-      { "settings._id": _id },
-      { $set: { "settings.$": obj } },
-      { new: true }
-    );
-  } catch (error) {
-    console.log(error);
-    throw createError({
-      statusCode: 401,
-      message: "Please try again"
-    });
-  }
-});
-
-const index_put$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: index_put$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const tiers_get = defineEventHandler(async (event) => {

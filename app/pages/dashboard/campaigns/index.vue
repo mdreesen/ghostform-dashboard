@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const isSaving = ref(false)
 const toast = useToast();
-import { selection_status_lead, selection_days, selection_frequencies } from '~/utils/dropdowns/selections';
+import { selection_campaign_status_lead, selection_days, selection_frequencies } from '~/utils/dropdowns/selections';
 
 definePageMeta({
   layout: 'authenticated',
@@ -83,7 +83,7 @@ const saveCampaignTemplate = async () => {
             </UFormField>
 
             <UFormField label="Target Audience Tier">
-              <USelect v-model="form.targetStatus" :items="selection_status_lead" class="w-full" />
+              <USelect v-model="form.targetStatus" :items="selection_campaign_status_lead" class="w-full" />
             </UFormField>
 
             <UFormField label="Preferred Dispatch Day">

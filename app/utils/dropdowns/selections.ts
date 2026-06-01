@@ -7,6 +7,11 @@ export const selection_status_lead = [
     { label: 'archive', value: 'archive' }
 ];
 
+export const selection_campaign_status_lead = [
+  { label: 'lead (new)', value: 'new' },
+  { label: 'closed', value: 'closed' },
+];
+
 export const selection_days = [
     { label: 'Sundays', value: '0' },
     { label: 'Mondays', value: '1' },
