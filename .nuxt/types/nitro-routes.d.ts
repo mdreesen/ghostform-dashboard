@@ -28,8 +28,8 @@ declare module "nitropack/types" {
     '/api/charts/lead': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/charts/lead.get').default>>>>
     }
-    '/api/cron/process-reminders': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/cron/process-reminders.get').default>>>>
+    '/api/cron': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/cron').default>>>>
     }
     '/api/leads/:id': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.delete').default>>>>

@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       executedAt: new Date().toISOString(),
       ...taskResult 
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Vercel Cron automation step crashed:', error)
     throw createError({ 
       statusCode: 500, 
