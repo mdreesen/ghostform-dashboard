@@ -542,7 +542,7 @@ const _routes = [
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import('./index-CAQ6OWRD.mjs')
+    component: () => import('./index-D2uAzpuW.mjs')
   },
   {
     name: "dashboard-leads-id-details",
@@ -554,13 +554,13 @@ const _routes = [
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./edit-BLYzskfM.mjs')
+    component: () => import('./edit-D9Due2Gx.mjs')
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./index-M_npSfHY.mjs')
+    component: () => import('./index-DFn0LbDu.mjs')
   },
   {
     name: "dashboard-forms",
@@ -10401,7 +10401,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-DuwnccnF.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-bB9aMJpw.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-BTUtYy9B.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-pOyfk5HG.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))

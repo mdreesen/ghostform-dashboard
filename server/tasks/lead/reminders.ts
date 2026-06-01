@@ -1,9 +1,10 @@
-import type { Model } from 'mongoose'
-import mongoose from 'mongoose'
-import { Resend } from 'resend'
-import LeadModelImport from '../../../lib/database/models/Lead'
-import CampaignModelImport from '../../../lib/database/models/Campaign'
-import { useCleanString } from '~/utils/formatters/useCleanString'
+import { connectDB } from "../../../lib/database/mongodb";
+import type { Model } from 'mongoose';
+import mongoose from 'mongoose';
+import { Resend } from 'resend';
+import LeadModelImport from '../../../lib/database/models/Lead';
+import CampaignModelImport from '../../../lib/database/models/Campaign';
+import { useCleanString } from '~/utils/formatters/useCleanString';
 import { email_by_status } from '~/utils/email/useEmailByStatus';
 
 const LeadModel = LeadModelImport as Model<any>
@@ -20,16 +21,12 @@ export default defineTask({
     description: 'Processes custom individual queues and recurring marketing blasts'
   },
   async run() {
-    console.log('Orchestrating automated pipelines...')
+    console.log('Orchestrating automated pipelines...');
+    await connectDB();
+
     const now = new Date()
     const currentDay = now.getDay()
     const currentHour = now.getHours()
-
-    // CONNECTION GUARD: If connection isn't hot, skip this window safely
-    if (mongoose.connection.readyState !== 1) {
-      console.warn('Database channel offline. Deferring task execution loop.')
-      return { result: 'Skipped: Mongoose connection unready.' }
-    }
 
     try {
       // ==========================================

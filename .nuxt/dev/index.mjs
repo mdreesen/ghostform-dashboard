@@ -6,12 +6,12 @@ import crypto$1 from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
 import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
-import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import { Resend } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import { z } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/zod/index.js';
 import { nanoid } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nanoid/index.js';
 import bcrypt from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import Stripe from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
+import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2938,16 +2938,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"2b9d4-l2x2E9+vbnqoTTYIybsEL8eh2ok\"",
-    "mtime": "2026-06-01T02:38:51.506Z",
-    "size": 178644,
+    "etag": "\"2bbcd-4mspO/bLdTH4nBXx8Gzl7FrotRI\"",
+    "mtime": "2026-06-01T03:03:47.699Z",
+    "size": 179149,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"9fa37-amIO1tmeBHaIZOg/vlh5sPgOc4g\"",
-    "mtime": "2026-06-01T02:38:51.507Z",
-    "size": 653879,
+    "etag": "\"9fa8c-zXukmOHx6x4o8ux4+TNynd8Z5G0\"",
+    "mtime": "2026-06-01T03:03:47.701Z",
+    "size": 653964,
     "path": "index.mjs.map"
   }
 };
@@ -3994,6 +3994,19 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const { MONGO_URI } = process.env;
+const connectDB = async () => {
+  try {
+    const { connection } = await mongoose.connect(MONGO_URI);
+    if (connection.readyState === 1) {
+      return Promise.resolve(true);
+    }
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
+
 const leadSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
@@ -4128,13 +4141,10 @@ const reminders = defineTask({
   },
   async run() {
     console.log("Orchestrating automated pipelines...");
+    await connectDB();
     const now = /* @__PURE__ */ new Date();
     const currentDay = now.getDay();
     const currentHour = now.getHours();
-    if (mongoose.connection.readyState !== 1) {
-      console.warn("Database channel offline. Deferring task execution loop.");
-      return { result: "Skipped: Mongoose connection unready." };
-    }
     try {
       const activeQueue = await LeadModel$2.find({
         reminderStatus: "scheduled",
@@ -4216,19 +4226,6 @@ const reminders$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   __proto__: null,
   default: reminders
 }, Symbol.toStringTag, { value: 'Module' }));
-
-const { MONGO_URI } = process.env;
-const connectDB = async () => {
-  try {
-    const { connection } = await mongoose.connect(MONGO_URI);
-    if (connection.readyState === 1) {
-      return Promise.resolve(true);
-    }
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
-};
 
 const userSchema = new Schema({
   company: String,

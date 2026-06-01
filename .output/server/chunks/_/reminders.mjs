@@ -1,5 +1,5 @@
 import { v as defineTask } from '../nitro/nitro.mjs';
-import mongoose from 'mongoose';
+import { c as connectDB } from './mongodb.mjs';
 import { Resend } from 'resend';
 import { s as schemaImport } from './Lead.mjs';
 import { C as CampaignModelImport } from './Campaign.mjs';
@@ -14,6 +14,7 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
+import 'mongoose';
 
 function useCleanString(str) {
   return str.replace(/[^a-zA-Z0-9]/g, "");
@@ -84,13 +85,10 @@ const reminders = defineTask({
   },
   async run() {
     console.log("Orchestrating automated pipelines...");
+    await connectDB();
     const now = /* @__PURE__ */ new Date();
     const currentDay = now.getDay();
     const currentHour = now.getHours();
-    if (mongoose.connection.readyState !== 1) {
-      console.warn("Database channel offline. Deferring task execution loop.");
-      return { result: "Skipped: Mongoose connection unready." };
-    }
     try {
       const activeQueue = await LeadModel.find({
         reminderStatus: "scheduled",
