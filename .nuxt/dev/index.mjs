@@ -5,11 +5,11 @@ import { resolve, dirname, join } from 'node:path';
 import crypto$1 from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
-import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
 import { Resend } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import { z } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/zod/index.js';
 import { nanoid } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nanoid/index.js';
 import bcrypt from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
+import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
 import Stripe from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
@@ -3666,6 +3666,7 @@ const _lazy_uxhbmH = () => Promise.resolve().then(function () { return index_del
 const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_VYogsv = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
+const _lazy_wu98NV = () => Promise.resolve().then(function () { return processReminders_get$1; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$3; });
@@ -3692,6 +3693,7 @@ const handlers = [
   { route: '/api/campaigns', handler: _lazy_2cEP1i, lazy: true, middleware: false, method: "get" },
   { route: '/api/campaigns/save', handler: _lazy_VYogsv, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_yNGGpv, lazy: true, middleware: false, method: "get" },
+  { route: '/api/cron/process-reminders', handler: _lazy_wu98NV, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_9lw3wc, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_dDJNJ5, lazy: true, middleware: false, method: "put" },
@@ -4569,6 +4571,36 @@ const lead_get = defineEventHandler(async (event) => {
 const lead_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: lead_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const processReminders_get = defineEventHandler(async (event) => {
+  const authHeader = getHeader(event, "Authorization");
+  if (!authHeader || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    throw createError({
+      statusCode: 401,
+      message: "Unauthorized system execution footprint."
+    });
+  }
+  try {
+    console.log("Vercel Cron triggered: Executing background task engine...");
+    const taskResult = await runTask("lead:reminders");
+    return {
+      success: true,
+      executedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      ...taskResult
+    };
+  } catch (error) {
+    console.error("Vercel Cron automation step crashed:", error);
+    throw createError({
+      statusCode: 500,
+      message: error.message || "Internal task handler fault."
+    });
+  }
+});
+
+const processReminders_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: processReminders_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$4 = schemaImport;
