@@ -8,6 +8,7 @@ definePageMeta({
 });
 
 const { data: campaigns } = useNuxtData('campaigns');
+const useCampaigns = computed(() => campaigns.value);
 
 const form = ref({
   title: '',
@@ -17,8 +18,6 @@ const form = ref({
   dayOfWeek: '1', // Default to Mondays
   timesPerMonth: '4' // Default to Weekly
 });
-
-console.log(campaigns.value);
 
 // Update text helper when status modifies to suggest a good template baseline
 watch(() => form.value.targetStatus, (newStatus) => {
@@ -42,6 +41,7 @@ const saveCampaignTemplate = async () => {
       method: 'POST',
       body: form.value
     })
+    await refreshNuxtData('campaigns');
 
     toast.success(
       'Automation Workflow Live',
@@ -64,8 +64,8 @@ const saveCampaignTemplate = async () => {
       <section>
         <baseHeaderSection text="Current Campaigns" />
         <div class="flex flex-wrap gap-6">
-          <template v-for="item in campaigns">
-            <baseCardMarketing :data="item" />
+          <template v-for="item in useCampaigns">
+            <baseCardCampaign :data="item" />
           </template>
         </div>
       </section>

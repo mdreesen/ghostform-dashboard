@@ -1,0 +1,1 @@
+function t(){return new Date().toISOString()}function e(){return Intl.DateTimeFormat().resolvedOptions().timeZone}function n(){return new Date().toLocaleString("en-US",{timeZone:e(),year:"numeric",month:"long",day:"numeric",hour12:!0})}export{t as d,n as f,e as t};

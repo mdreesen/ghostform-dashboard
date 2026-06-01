@@ -9,26 +9,26 @@ const props = defineProps({
 const toast = useToast();
 
 const loading = ref(false);
+const emit = defineEmits<{ close: [boolean] }>();
+const open = ref(false);
 
 const useDelete = async () => {
     loading.value = true
 
-  try {
-    await $fetch('/api/campaigns', {
-      method: 'DELETE',
-      body: props.data?._id
-    })
+    try {
+        await $fetch('/api/campaigns', {
+            method: 'DELETE',
+            body: props.data
+        })
+        await refreshNuxtData('campaigns');
+        toast.success('Automation Deleted');
+        open.value = false;
 
-    toast.success(
-      'Automation Workflow Live',
-      'Your recurring campaign criteria parameters have been saved.'
-    )
-
-  } catch (error) {
-    toast.error('Failed to mount criteria templates.');
-  } finally {
-    loading.value = false
-  }
+    } catch (error) {
+        toast.error('Failed to mount criteria templates.');
+    } finally {
+        loading.value = false
+    }
 }
 </script>
 
@@ -43,7 +43,13 @@ const useDelete = async () => {
             <p class="text-md font-bold tabular-nums">{{ data?.subject }}</p>
 
             <div>
-                <baseButtonDelete label="Delete Campaign" />
+                <UModal :title="`Delete ${data?.title} Campaign?`" v-model:open="open">
+                    <UButton label="Delete Campaign" color="error" variant="subtle" />
+
+                    <template #body>
+                        <baseButtonDelete label="Delete" @click="useDelete" />
+                    </template>
+                </UModal>
             </div>
         </div>
     </div>

@@ -51,13 +51,13 @@ export default defineTask({
 
           const useResponse = email_by_status(status, lead_name, company_name);
 
-        await resend.emails.send({
-          from: `${useCleanString(company_name)}@ascendpod.com`,
-          to: lead.email,
-          replyTo: replyEmail,
-          subject: 'Quick question regarding your property search',
-          text: useResponse
-        })
+          await resend.emails.send({
+            from: `${useCleanString(company_name)}@ascendpod.com`,
+            to: lead.email,
+            replyTo: replyEmail,
+            subject: 'Quick question regarding your property search',
+            text: useResponse
+          })
 
           individualOps.push({
             updateOne: {
@@ -80,7 +80,7 @@ export default defineTask({
           dayOfWeek: currentDay,
           $or: [
             { lastFiredAt: null },
-            { lastFiredAt: { $llt: new Date(new Date().setHours(0, 0, 0, 0)) } }
+            { lastFiredAt: { $lt: new Date(new Date().setHours(0, 0, 0, 0)) } }
           ]
         }).populate('userId')
 
@@ -116,7 +116,7 @@ export default defineTask({
               }
             })
 
-            await resend.batch.create(batchPayload)
+            await resend.batch.send(batchPayload)
           }
 
           campaign.lastFiredAt = new Date()

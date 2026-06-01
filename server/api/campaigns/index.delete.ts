@@ -1,15 +1,18 @@
-import type { Model } from 'mongoose'
+import { z } from 'zod';
+import type { Model } from 'mongoose';
 import CampaignModel from '../../../lib/database/models/Campaign';
-import loggedInUser from '~/utils/loggedInUser'
 
 const Campaign = CampaignModel as Model<any>
 
+const bodySchema = z.object({
+  _id: z.string(),
+})
+
 export default defineEventHandler(async (event) => {
   try {
-    const id = getRouterParam(event, 'id');
+    const body = await readValidatedBody(event, bodySchema.parse);
 
-    await Campaign.deleteOne({ _id: id });
-
+    await Campaign.deleteOne({ _id: body._id });
 
   } catch (error) {
     console.log(error);
