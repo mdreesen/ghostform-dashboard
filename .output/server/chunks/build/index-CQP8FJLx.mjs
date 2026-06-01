@@ -4,7 +4,7 @@ import { _ as _sfc_main$4 } from './Modal-GJ8LQslu.mjs';
 import { I as useNuxtData, d as _sfc_main$8, _ as __nuxt_component_0$2, v as reactivePick, J as useRuntimeConfig } from './server.mjs';
 import { defineComponent, unref, mergeProps, withCtx, createVNode, createTextVNode, useAttrs, computed, toRef, h, resolveDynamicComponent, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderComponent, ssrInterpolate, ssrRenderVNode } from 'vue/server-renderer';
-import { x as defu } from '../nitro/nitro.mjs';
+import { y as defu } from '../nitro/nitro.mjs';
 import { encode } from 'uqr';
 import './Auth-YSaql3Au.mjs';
 import './utils-D2JSUqzx.mjs';

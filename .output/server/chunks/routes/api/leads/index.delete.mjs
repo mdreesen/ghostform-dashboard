@@ -1,4 +1,4 @@
-import { d as defineEventHandler, g as getRouterParam, c as createError } from '../../../nitro/nitro.mjs';
+import { d as defineEventHandler, e as getRouterParam, c as createError } from '../../../nitro/nitro.mjs';
 import { s as schemaImport } from '../../../_/Lead.mjs';
 import 'node:http';
 import 'node:https';

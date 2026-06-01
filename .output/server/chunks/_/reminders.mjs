@@ -1,4 +1,4 @@
-import { v as defineTask } from '../nitro/nitro.mjs';
+import { w as defineTask } from '../nitro/nitro.mjs';
 import { c as connectDB } from './mongodb.mjs';
 import { Resend } from 'resend';
 import { s as schemaImport } from './Lead.mjs';

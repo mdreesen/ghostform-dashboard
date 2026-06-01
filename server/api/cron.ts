@@ -1,7 +1,3 @@
-/**
- * GHOSTFORM VERCEL CRON GATEWAY
- * NITRO SERVER ROUTE // GET REQUEST
- */
 import { runTask } from 'nitropack/runtime/task'
 
 export default defineEventHandler(async (event) => {

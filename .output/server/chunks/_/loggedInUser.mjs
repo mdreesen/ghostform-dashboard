@@ -1,4 +1,4 @@
-import { d as defineEventHandler, h as requireUserSession, c as createError } from '../nitro/nitro.mjs';
+import { d as defineEventHandler, i as requireUserSession, c as createError } from '../nitro/nitro.mjs';
 import { c as connectDB } from './mongodb.mjs';
 import { U as UserModel } from './User.mjs';
 
