@@ -6,7 +6,7 @@ import { selection_campaign_status_lead, selection_days, selection_frequencies }
 definePageMeta({
   layout: 'authenticated',
 });
-
+const { fetch: refreshSession } = useUserSession();
 const { data: campaigns } = useNuxtData('campaigns');
 const useCampaigns = computed(() => campaigns.value);
 
@@ -40,7 +40,10 @@ const saveCampaignTemplate = async () => {
     await $fetch('/api/campaigns/save', {
       method: 'POST',
       body: form.value
-    })
+    });
+
+    // Refresh Data
+    await refreshSession();
     await refreshNuxtData('campaigns');
 
     toast.success(

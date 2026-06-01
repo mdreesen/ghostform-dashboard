@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,22 +2935,7 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"2bdce-8/VuUrSPkPIfsCG5vZ9nSmJh/Xs\"",
-    "mtime": "2026-06-01T15:13:46.289Z",
-    "size": 179662,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"a03c5-552aA3ONVxl5/rJH6+M5jZSiYt4\"",
-    "mtime": "2026-06-01T15:13:46.289Z",
-    "size": 656325,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3681,7 +3666,7 @@ const _lazy_uxhbmH = () => Promise.resolve().then(function () { return index_del
 const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_VYogsv = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
-const _lazy_EMHttv = () => Promise.resolve().then(function () { return cron$1; });
+const _lazy_1y4zdH = () => Promise.resolve().then(function () { return cron$1; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$3; });
@@ -3708,7 +3693,7 @@ const handlers = [
   { route: '/api/campaigns', handler: _lazy_2cEP1i, lazy: true, middleware: false, method: "get" },
   { route: '/api/campaigns/save', handler: _lazy_VYogsv, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_yNGGpv, lazy: true, middleware: false, method: "get" },
-  { route: '/api/cron', handler: _lazy_EMHttv, lazy: true, middleware: false, method: undefined },
+  { route: '/api/cron', handler: _lazy_1y4zdH, lazy: true, middleware: false, method: undefined },
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_9lw3wc, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_dDJNJ5, lazy: true, middleware: false, method: "put" },

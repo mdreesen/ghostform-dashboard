@@ -6,6 +6,7 @@ const props = defineProps({
     }
 });
 
+const { fetch: refreshSession } = useUserSession();
 const toast = useToast();
 
 const loading = ref(false);
@@ -20,6 +21,7 @@ const useDelete = async () => {
             method: 'DELETE',
             body: props.data
         })
+        await refreshSession();
         await refreshNuxtData('campaigns');
         toast.success('Automation Deleted');
         open.value = false;

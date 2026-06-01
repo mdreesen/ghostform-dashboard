@@ -34,7 +34,7 @@ const chart_data = computed(() => charts_lead?.value?.monthly);
       <section class="flex flex-col ">
         <baseHeaderSection text="Lead Charts" />
 
-        <div class="flex flex-wrap justify-evenly gap-18">
+        <div class="flex flex-wrap items-center justify-evenly gap-18">
           <ClientOnly>
             <baseChartsLine v-if="chart_data" :data="chart_data" />
           </ClientOnly>

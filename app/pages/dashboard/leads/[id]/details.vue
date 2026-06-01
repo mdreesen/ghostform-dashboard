@@ -9,7 +9,6 @@ const route = useRoute();
 const { data: data, pending: pending_data } = await useFetch<Lead>(`/api/leads/${route.params.id}`);
 
 const lead = ref(data.value);
-
 </script>
 
 <template>
@@ -59,22 +58,23 @@ const lead = ref(data.value);
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
         <div class="lg:col-span-4 space-y-8">
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
+          <div v-if="lead?.buy_sell_both" class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
             <baseHeaderSection text="Lead Submission" />
             <div class="space-y-6">
               <div v-for="(val, label) in {
-                'Est. Value': lead?.price ? `$${lead?.price?.toLocaleString()}` : '',
-                'Budget': `$${lead?.budget?.toLocaleString() ?? ''}`,
-                'Sq Footage': lead?.sqft ? `${lead?.sqft} ft²` : '',
-                'Intent (Buy, Sell, or Both)': lead?.buy_sell_both
+                'Est. Value': lead?.price ? `$${lead?.price?.toLocaleString()}` : 'Not Provided',
+                'Budget': `${lead?.budget?.toLocaleString() ? `$${lead?.budget?.toLocaleString()}` : 'Not Provided'}`,
+                'Sq Footage': lead?.sqft ? `${lead?.sqft} ft²` : 'Not Provided',
+                'Intent (Buy, Sell,<br>or Both)': lead?.buy_sell_both ? lead?.buy_sell_both : 'Not Provided'
               }" :key="label" class="flex justify-between items-end border-b border-white/5 pb-2">
-                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{{ label }}</span>
-                <span class="text-sm font-bold">{{ val }}</span>
+
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest" v-html="label" />
+                <span class="text-sm font-bold" v-html="val" />
               </div>
             </div>
           </div>
 
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
+          <div v-if="lead?.notes" class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
             <baseHeaderSection text="Other Notes" />
             <p class="text-sm text-zinc-300 leading-relaxed italic-none">"{{ lead?.notes ? lead?.notes : 'No other notes' }}"
             </p>
@@ -82,7 +82,7 @@ const lead = ref(data.value);
         </div>
 
         <ClientOnly>
-          <div class="lg:col-span-8 space-y-8">
+          <div v-if="lead?.ai_analysis" class="lg:col-span-8 space-y-8">
             <div
               class="backdrop-blur-xl bg-white/4 border border-cyan-400/20 rounded-3xl p-10 relative overflow-hidden">
               <div class="absolute top-0 right-0 p-4">
