@@ -15,7 +15,7 @@ const categories = {
   },
 }
 
-const xFormatter = (i: number) => data[i]?.month
+const xFormatter = (i: number) => data.value[i]?.month;
 </script>
 
 <template>
