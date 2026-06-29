@@ -17,6 +17,10 @@ const items = computed<NavigationMenuItem[]>(() => [{
   // icon: 'i-simple-icons-figma',
   to: '/dashboard/forms',
 }, {
+  label: 'Homes',
+  // icon: 'i-simple-icons-figma',
+  to: '/dashboard/home',
+}, {
   label: 'Leads',
   // icon: 'i-lucide-rocket',
   to: '/dashboard/leads',
