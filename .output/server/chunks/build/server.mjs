@@ -510,6 +510,9 @@ function getRouteRules(arg) {
     return {};
   }
 }
+const __nuxt_page_meta$9 = {
+  layout: "authenticated"
+};
 const __nuxt_page_meta$8 = {
   layout: "authenticated"
 };
@@ -539,6 +542,12 @@ const __nuxt_page_meta = {
 };
 const _routes = [
   {
+    name: "dashboard-home-create",
+    path: "/dashboard/home/create",
+    meta: __nuxt_page_meta$9 || {},
+    component: () => import('./create-o7ZpNgd4.mjs')
+  },
+  {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
     meta: __nuxt_page_meta$8 || {},
@@ -566,7 +575,12 @@ const _routes = [
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-BQ1KZDi_.mjs')
+    component: () => import('./index-BSB9zTA5.mjs')
+  },
+  {
+    name: "dashboard-home",
+    path: "/dashboard/home",
+    component: () => import('./index-BIn0Hd9l.mjs')
   },
   {
     name: "dashboard-leads",
@@ -613,7 +627,7 @@ const _routes = [
     name: "subscribe",
     path: "/subscribe",
     meta: { ...__nuxt_page_meta || {}, ...{ "groups": ["payment"] } },
-    component: () => import('./subscribe-MZ2T8BlF.mjs')
+    component: () => import('./subscribe-B2_6aDp_.mjs')
   },
   {
     name: "id-resetpassword",
@@ -10501,7 +10515,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-CclTHC8o.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-D-BdRB3G.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-BTUtYy9B.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-pOyfk5HG.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))

@@ -31,6 +31,12 @@ declare module "nitropack/types" {
     '/api/cron': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/cron').default>>>>
     }
+    '/api/homes/create': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/create.post').default>>>>
+    }
+    '/api/homes': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/index.get').default>>>>
+    }
     '/api/leads/:id': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.get').default>>>>

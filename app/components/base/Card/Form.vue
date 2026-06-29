@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Home } from '~/types/home';
+const address = ref('');
 
 const props = defineProps({
     label: {
@@ -15,8 +17,11 @@ const props = defineProps({
     value: {
         type: String
     },
+    data: {
+        type: Array<Home>,
+        default: () => []
+    },
 });
-
 </script>
 
 <template>
@@ -30,7 +35,22 @@ const props = defineProps({
                     class="bg-cyan-400 text-black px-6 py-3 rounded-xl text-xs font-bold hover:shadow-[0_0_20px_rgba(48,207,67,0.4)] transition-all" />
 
                 <template #body>
-                    <baseQrCode class="p-5 sm:p-10 md:p-40 lg:p-60 xl:p-130" :value="qr_code_url" />
+
+                    <div v-if="data.length > 0">
+                        <select id="status-select" v-model="address"
+                            class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option disabled value="">Choose home</option>
+                            <option v-for="(item, index) in data" :value="item.address" :key="index">
+                                {{ item.name ?? item?.address }}
+                            </option>
+                        </select>
+
+                        <div v-if="address" class="pt-10">
+                            <baseHeaderSection :text="`Chosen Address<br>${address}`" />
+                        </div>
+                    </div>
+
+                    <baseQrCode class="p-5 sm:p-10 md:p-40 lg:p-60 xl:p-130" :value="`${qr_code_url}${address ? `&${address}` : ''}`" />
                 </template>
             </UModal>
         </div>

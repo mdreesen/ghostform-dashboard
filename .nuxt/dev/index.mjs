@@ -10,8 +10,8 @@ import { z } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostfo
 import { nanoid } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nanoid/index.js';
 import bcrypt from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import { Cron } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
-import Stripe from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/mongoose/index.js';
+import Stripe from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -2819,7 +2819,7 @@ const __aY97_Z0V8sXTc6bXyOVcn7rIKxctt5tSWzdqAJeKFg = defineNitroPlugin((nitroApp
 
 const rootDir = "/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -2935,7 +2935,22 @@ _M5kXIkUvzaGYUtIMp6Tp430lXy0VeEgM1n2FoZ_3U,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"2c77f-JX9cUIwfsizc/xQzoMIz0EZqV2k\"",
+    "mtime": "2026-06-29T15:31:14.070Z",
+    "size": 182143,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"a192f-dQxFXQz20llLAV+YTGhaI3hWfXE\"",
+    "mtime": "2026-06-29T15:31:14.070Z",
+    "size": 661807,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3663,10 +3678,12 @@ const _lazy_48PoLn = () => Promise.resolve().then(function () { return login_pos
 const _lazy_q9BYK6 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_Zz2IBk = () => Promise.resolve().then(function () { return signup_post$1; });
 const _lazy_uxhbmH = () => Promise.resolve().then(function () { return index_delete$3; });
-const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$7; });
+const _lazy_2cEP1i = () => Promise.resolve().then(function () { return index_get$9; });
 const _lazy_VYogsv = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_yNGGpv = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_1y4zdH = () => Promise.resolve().then(function () { return cron$1; });
+const _lazy_GXmKEA = () => Promise.resolve().then(function () { return create_post$3; });
+const _lazy_e1Hz4F = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_iNhrhp = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_9lw3wc = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_dDJNJ5 = () => Promise.resolve().then(function () { return index_put$3; });
@@ -3694,6 +3711,8 @@ const handlers = [
   { route: '/api/campaigns/save', handler: _lazy_VYogsv, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_yNGGpv, lazy: true, middleware: false, method: "get" },
   { route: '/api/cron', handler: _lazy_1y4zdH, lazy: true, middleware: false, method: undefined },
+  { route: '/api/homes/create', handler: _lazy_GXmKEA, lazy: true, middleware: false, method: "post" },
+  { route: '/api/homes', handler: _lazy_e1Hz4F, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_iNhrhp, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_9lw3wc, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_dDJNJ5, lazy: true, middleware: false, method: "put" },
@@ -4278,12 +4297,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$5 = UserModel;
-const bodySchema$7 = z.object({
+const bodySchema$8 = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$7.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$8.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -4322,13 +4341,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$4 = UserModel;
-const bodySchema$6 = z.object({
+const bodySchema$7 = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$6.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$7.parse);
   try {
     await connectDB();
     const user = await User$4.findOne({ email });
@@ -4382,13 +4401,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$3 = UserModel;
-const bodySchema$5 = z.object({
+const bodySchema$6 = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$5.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$6.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -4411,7 +4430,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$2 = UserModel;
-const bodySchema$4 = z.object({
+const bodySchema$5 = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -4420,7 +4439,7 @@ const bodySchema$4 = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$4.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$5.parse);
   try {
     await connectDB();
     const user = await User$2.findOne({ email });
@@ -4458,12 +4477,12 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$2 = CampaignModelImport;
-const bodySchema$3 = z.object({
+const bodySchema$4 = z.object({
   _id: z.string()
 });
 const index_delete$2 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$3.parse);
+    const body = await readValidatedBody(event, bodySchema$4.parse);
     await Campaign$2.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -4480,15 +4499,15 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const index_get$6 = defineEventHandler(async (event) => {
+const index_get$8 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const data = await Campaign$1.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$6
+  default: index_get$8
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
@@ -4544,10 +4563,10 @@ function month(date2) {
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$5 = schemaImport;
+const Lead$7 = schemaImport;
 const lead_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const leads = await Lead$5.find({ userId: user == null ? void 0 : user._id }).lean();
+  const leads = await Lead$7.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
@@ -4601,6 +4620,58 @@ const cron = defineEventHandler(async (event) => {
 const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: cron
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const homeSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+  name: { type: String, required: false },
+  address: { type: String, required: true },
+  owner: { type: String, required: false },
+  notes: { type: String, required: false }
+}, { timestamps: true });
+const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
+
+const Lead$6 = HomeModel;
+const bodySchema$3 = z.object({
+  name: z.string().nullable(),
+  address: z.string().nullable(),
+  owner: z.string().nullable(),
+  notes: z.string().nullable()
+});
+const create_post$2 = defineEventHandler(async (event) => {
+  const body = await readValidatedBody(event, bodySchema$3.parse);
+  const user = await loggedInUser(event);
+  try {
+    await Lead$6.create({ userId: user == null ? void 0 : user._id, ...body });
+  } catch (error) {
+    console.error("Something went wrong", error);
+    throw createError({
+      statusCode: 500,
+      message: error.message || "Database execution fault."
+    });
+  }
+});
+
+const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: create_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Home = HomeModel;
+const index_get$6 = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  const data = await Home.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  return data;
+});
+
+const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$4 = schemaImport;
