@@ -34,6 +34,10 @@ export default defineNuxtConfig({
       '0 * * * *': ['lead:reminders']
     },
   },
+  routeRules: {
+    // Disable caching so Vercel executes the function fresh
+    '/api/cron': { swr: false, cache: false }
+  },
 
   app: {
     head: {
