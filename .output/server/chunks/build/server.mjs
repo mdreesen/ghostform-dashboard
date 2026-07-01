@@ -496,10 +496,18 @@ const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = /* @__PURE__ */ defin
 function toArray$3(value) {
   return Array.isArray(value) ? value : [value];
 }
-const matcher = (m, p) => {
-  return [];
-};
-const _routeRulesMatcher = (path) => defu({}, ...matcher().map((r) => r.data).reverse());
+const matcher = /* @__PURE__ */ (() => {
+  const $0 = { payload: false, payload: false };
+  return (m, p) => {
+    let r = [];
+    if (p.charCodeAt(p.length - 1) === 47) p = p.slice(0, -1) || "/";
+    if (p === "/api/cron") {
+      r.unshift({ data: $0 });
+    }
+    return r;
+  };
+})();
+const _routeRulesMatcher = (path) => defu({}, ...matcher("", path).map((r) => r.data).reverse());
 const routeRulesMatcher$1 = _routeRulesMatcher;
 function getRouteRules(arg) {
   const path = typeof arg === "string" ? arg : arg.path;
@@ -510,6 +518,9 @@ function getRouteRules(arg) {
     return {};
   }
 }
+const __nuxt_page_meta$a = {
+  layout: "authenticated"
+};
 const __nuxt_page_meta$9 = {
   layout: "authenticated"
 };
@@ -544,55 +555,56 @@ const _routes = [
   {
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
-    meta: __nuxt_page_meta$9 || {},
-    component: () => import('./create-o7ZpNgd4.mjs')
+    meta: __nuxt_page_meta$a || {},
+    component: () => import('./create-DUNJwMj3.mjs')
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
-    meta: __nuxt_page_meta$8 || {},
-    component: () => import('./index-DLbaR1SC.mjs')
+    meta: __nuxt_page_meta$9 || {},
+    component: () => import('./index-zLIgnoXG.mjs')
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
-    meta: __nuxt_page_meta$7 || {},
-    component: () => import('./details-nSyKQZnv.mjs')
+    meta: __nuxt_page_meta$8 || {},
+    component: () => import('./details-Z3dpx5kl.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
-    meta: __nuxt_page_meta$6 || {},
-    component: () => import('./edit-B7EOoVB4.mjs')
+    meta: __nuxt_page_meta$7 || {},
+    component: () => import('./edit--8yqSg6p.mjs')
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
-    meta: __nuxt_page_meta$5 || {},
+    meta: __nuxt_page_meta$6 || {},
     component: () => import('./index-CLgi8gL-.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
-    meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-BSB9zTA5.mjs')
+    meta: __nuxt_page_meta$5 || {},
+    component: () => import('./index-M-p0H4cd.mjs')
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
-    component: () => import('./index-BIn0Hd9l.mjs')
+    meta: __nuxt_page_meta$4 || {},
+    component: () => import('./index-DUmodblk.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-0pYCKbjs.mjs')
+    component: () => import('./index-D3VpKn9U.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-Bq-PJ5Dg.mjs')
+    component: () => import('./index-DtgZTUdO.mjs')
   },
   {
     name: "dashboard",
@@ -10515,7 +10527,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-D-BdRB3G.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-BftZZ3Fo.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-BTUtYy9B.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-pOyfk5HG.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))

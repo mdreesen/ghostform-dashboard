@@ -108,7 +108,7 @@ function formatCurrency(value) {
         </div>
         <div class="space-y-1">
           <h3 class="text-xs font-black text-gray-700 uppercase tracking-wide">No Properties Found</h3>
-          <p class="text-[11px] text-gray-400 max-w-[280px] mx-auto leading-normal">Adjust your lookup values or populate your array map with a brand-new inventory entry card.</p>
+          <p class="text-[11px] text-gray-400 max-w-70 mx-auto leading-normal">Adjust your lookup values or populate your array map with a brand-new inventory entry card.</p>
         </div>
       </div>
 

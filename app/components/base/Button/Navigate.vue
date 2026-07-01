@@ -19,7 +19,7 @@ const props = defineProps({
 <template>
     <nuxt-link :to="path">
         <button
-        class="bg-cyan-500 hover:bg-cyan-700 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-900'} w-full rounded-xl py-3 px-2 text-lg font-semibold text-white shadow-lg transition-all duration-300 ease-in-out">
+        class="flex-1 md:flex-initial inline-flex items-center justify-center px-4 py-2 border border-slate-800 hover:border-slate-600 hover:bg-slate-800/40 text-slate-300 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-wider transition-all">
         {{ text }}
         </button>
     </nuxt-link>
