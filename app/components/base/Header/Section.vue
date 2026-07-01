@@ -8,10 +8,14 @@ const props = defineProps({
     subText: {
         type: String,
     },
+    css: {
+        type: String,
+        default: 'mb-6'
+    }
 })
 </script>
 
 <template>
-    <h2 class="text-lg font-bold tracking-tighter mb-6" v-html="text"></h2>
+    <h2 :class="`text-lg font-bold tracking-tighter ${css}`" v-html="text"></h2>
     <span v-if="subText" class="font-bold tracking-tighter" v-html="subText" />
 </template>

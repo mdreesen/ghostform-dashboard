@@ -78,7 +78,7 @@ const props = defineProps({
         class="flex sm:items-center gap-3 shrink-0 relative z-10 flex-row md:flex-col lg:flex-row w-full md:w-auto border-t border-slate-800/50 md:border-none pt-4 md:pt-0">
         <UModal fullscreen :title="`${label} QR Code`">
             <UButton label="QR Code" color="neutral" variant="subtle"
-                class="bg-cyan-400 text-black px-6 py-3 rounded-xl text-xs font-bold hover:shadow-[0_0_20px_rgba(48,207,67,0.4)] transition-all" />
+                class="bg-cyan-400 text-black px-6 py-3 rounded-xl text-xs font-bold w-37.75 justify-center hover:shadow-[0_0_20px_rgba(48,207,67,0.4)] transition-all" />
 
             <template #body>
 
@@ -102,12 +102,9 @@ const props = defineProps({
         </UModal>
 
         <!-- STANDALONE DEEP LINK ANCHOR BUTTON -->
-        <NuxtLink 
-    :to="qr_code_url"
-    target="_blank"
-    class="flex-1 md:flex-initial inline-flex items-center justify-center px-4 py-2 border border-slate-800 hover:border-slate-600 hover:bg-slate-800/40 text-slate-300 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-wider transition-all"
-  >
-    Launch Portal
-  </NuxtLink>
+        <NuxtLink :to="qr_code_url" target="_blank"
+            class="flex-1 md:flex-initial inline-flex items-center justify-center px-4 py-2 w-full border border-slate-800 hover:border-slate-600 hover:bg-slate-800/40 text-slate-300 hover:text-white rounded-xl text-[11px] font-black uppercase tracking-wider transition-all">
+            Launch Portal
+        </NuxtLink>
     </div>
 </template>

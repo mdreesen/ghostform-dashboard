@@ -16,30 +16,34 @@ const lead = ref(data.value);
 
     <main class="max-w-5xl mx-auto relative z-10">
 
-      <section class="flex flex-wrap gap-8 mb-12">
+      <section class="flex gap-8 mb-12 flex-wrap">
         <div>
           <div class="flex items-center gap-6">
             <baseHeaderAuth :text="lead?.name" />
 
             <baseButtonNavigate class="w-25" text="Edit" :path="`/dashboard/leads/${route.params.id}/edit`" />
           </div>
-          <div class="flex flex-wrap gap-6 mt-5 text-zinc-400">
+          <div class="flex flex-col md:flex-row gap-6 mt-5 text-slate-200">
             <div class="flex flex-col">
-              <baseHeaderSection text="Email" />
+              <baseHeaderSection text="Email" css="mb-0" />
               <baseMessage :label="lead?.email" message_type="mailto" communication_type="email" />
             </div>
             <div class="flex flex-col">
-              <baseHeaderSection text="Phone" />
+              <baseHeaderSection text="Phone" css="mb-0" />
               <baseMessage :label="lead?.phone" message_type="sms" communication_type="phone" />
             </div>
             <div class="flex flex-col">
-              <baseHeaderSection text="Address" />
+              <baseHeaderSection text="Address" css="mb-0" />
               <baseMaps :address="lead?.address" />
             </div>
             <div class="flex flex-col">
-              <baseHeaderSection text="Status" :subText="lead?.status" />
+              <baseHeaderSection text="Status" :subText="lead?.status" css="mb-0" />
             </div>
             <div>
+              <baseHeaderSection text="Best Communication Method" :subText="lead?.best_communication_method" css="mb-0" />
+
+            </div>
+            <!-- <div>
               <baseHeaderSection text="Send Emails" />
 
               <UModal :title="`Send out email`">
@@ -50,7 +54,7 @@ const lead = ref(data.value);
                   <appReminderEmail :leadId="lead?._id" :currentStatus="lead?.status"  />
                 </template>
               </UModal>
-            </div>
+            </div> -->
           </div>
         </div>
       </section>
@@ -58,7 +62,7 @@ const lead = ref(data.value);
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
         <div class="lg:col-span-4 space-y-8">
-          <div v-if="lead?.buy_sell_both" class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
+          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
             <baseHeaderSection text="Lead Submission" />
             <div class="space-y-6">
               <div v-for="(val, label) in {
@@ -74,8 +78,8 @@ const lead = ref(data.value);
             </div>
           </div>
 
-          <div v-if="lead?.notes" class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
-            <baseHeaderSection text="Other Notes" />
+          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
+            <baseHeaderSection text="Notes" />
             <p class="text-sm text-zinc-300 leading-relaxed italic-none">"{{ lead?.notes ? lead?.notes : 'No other notes' }}"
             </p>
           </div>

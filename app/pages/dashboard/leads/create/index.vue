@@ -170,7 +170,7 @@ async function log() {
             <div class="flex flex-col gap-8 pb-4">
                 <baseButtonSubmit text="Save" :isLoading="isLoading" />
                 <baseButtonNavigate text="Cancel" :path="`/dashboard/leads`"
-                    :isLoading="isLoading" />
+                    :isLoading="isLoading" css="w-full" />
             </div>
         </form>
     </div>
