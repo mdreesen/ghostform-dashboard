@@ -6,7 +6,7 @@ export function ghostFormUrl(useCategory: string, useSource: string, useId: stri
 
     const category = useCategory ? `category=${useCategory}` : '';
     const source = useSource ? `&source=${useSource}` : '';
-    const id = useCategory ? `id=${useId}` : '';
+    const id = useCategory ? `&id=${useId}` : '';
     const email = useEmail ? `&company_email=${useEmail}` : '';
     const name = useName ? `&company_name=${useName}` : '';
     const calendar = useCalendar ? `&calendar=${useCalendar}` : '';

@@ -16,11 +16,13 @@ const items = computed<NavigationMenuItem[]>(() => [{
   label: 'Forms',
   // icon: 'i-simple-icons-figma',
   to: '/dashboard/forms',
-}, {
-  label: 'Homes',
-  // icon: 'i-simple-icons-figma',
-  to: '/dashboard/home',
-}, {
+}, 
+// {
+//   label: 'Homes',
+//   // icon: 'i-simple-icons-figma',
+//   to: '/dashboard/home',
+// },
+ {
   label: 'Leads',
   // icon: 'i-lucide-rocket',
   to: '/dashboard/leads',
@@ -43,7 +45,7 @@ const items = computed<NavigationMenuItem[]>(() => [{
             <NuxtImg class="relative z-10 h-20 w-full object-contain drop-shadow-md" :src="'/images/logo-icon.webp'"
               format="webp" preload loading="eager" fetch-priority="high" />
           </div>
-          <span class="text-xl font-black tracking-tighter text-white">GhostForm</span>
+          <span class="text-xl font-black tracking-tighter">GhostForm</span>
         </NuxtLink>
       </ClientOnly>
     </template>

@@ -105,33 +105,66 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <UFormField label="Name" name="name">
-                                            <UInput v-model="state.name" :disabled="!isEditing" variant="none" />
+                                            <UInput v-if="isEditing" v-model="state.name" :disabled="!isEditing"
+                                                variant="none" class="truncate" />
+                                            <span v-else
+                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                :title="state.name">
+                                                {{ state.name || '—' }}
+                                            </span>
                                         </UFormField>
 
                                         <UFormField label="Email" name="email">
-                                            <UInput v-model="state.email" :disabled="!isEditing" type="email"
-                                                variant="none" />
+                                            <UInput v-if="isEditing" v-model="state.email" :disabled="!isEditing"
+                                                type="email" variant="none" class="truncate" />
+                                            <span v-else
+                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                :title="state.email">
+                                                {{ state.email || '—' }}
+                                            </span>
                                         </UFormField>
                                     </div>
 
                                     <UFormField label="Mobile (SMS)" name="phone">
-                                        <UInput v-model="state.phone" :disabled="!isEditing" type="tel"
-                                            variant="none" />
+                                        <UInput v-if="isEditing" v-model="state.phone" :disabled="!isEditing" type="tel"
+                                            variant="none" class="truncate" />
+                                        <span v-else
+                                            class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                            :title="state.phone">
+                                            {{ state.phone || '—' }}
+                                        </span>
                                     </UFormField>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                                         <UFormField label="Company" name="brokerage">
-                                            <UInput v-model="state.company" :disabled="!isEditing" variant="none" />
+                                            <UInput v-if="isEditing" v-model="state.company" :disabled="!isEditing"
+                                                variant="none" class="truncate" />
+                                            <span v-else
+                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                :title="state.company">
+                                                {{ state.company || '—' }}
+                                            </span>
                                         </UFormField>
 
                                         <UFormField label="Primary Location" name="region">
-                                            <UInput v-model="state.region" :disabled="!isEditing" variant="none" />
+                                            <UInput v-if="isEditing" v-model="state.region" :disabled="!isEditing"
+                                                variant="none" class="truncate" />
+                                            <span v-else
+                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                :title="state.region">
+                                                {{ state.region || '—' }}
+                                            </span>
                                         </UFormField>
 
 
                                         <UFormField label="Calendar Link" name="calendar_link">
-                                            <UInput v-model="state.calendar_link" :disabled="!isEditing"
-                                                variant="none" />
+                                            <UInput v-if="isEditing" v-model="state.calendar_link"
+                                                :disabled="!isEditing" variant="none" class="truncate" />
+                                            <span v-else
+                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                :title="state.calendar_link">
+                                                {{ state.calendar_link || '—' }}
+                                            </span>
                                         </UFormField>
                                     </div>
 

@@ -125,7 +125,7 @@ const pagination = ref({
         <template #name-cell="{ row }">
           <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
             class="text-cyan-400 hover:text-cyan-700 underline font-medium">
-            {{ row.original?.name ? row.original?.name : 'N/A' }}
+            {{ row.original?.name ? row.original?.name : 'Not Applied' }}
           </NuxtLink>
         </template>
 
