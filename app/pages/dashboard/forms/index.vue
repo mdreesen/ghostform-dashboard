@@ -99,7 +99,7 @@ const formFunnels = ref([
                 <div v-for="item in formFunnels" :key="item.id"
                     class="relative overflow-hidden bg-slate-900/40 border border-slate-800/80 hover:border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300 group hover:shadow-2xl">
                     <baseCardForm :label="item.title" :description="item.description" :icon="item.icon"
-                        :badge="item.badge" :badgeClass="item.badgeClass" :qr_code_url="item.form_url" />
+                        :badge="item.badge" :badgeClass="item.badgeClass" :qr_code_url="item.form_url" :data="item.id === 'open-house' && home" />
                 </div>
 
             </div>
