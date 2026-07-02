@@ -40,21 +40,9 @@ const lead = ref(data.value);
               <baseHeaderSection text="Status" :subText="lead?.status" css="mb-0" />
             </div>
             <div>
-              <baseHeaderSection text="Best Communication Method" :subText="lead?.best_communication_method" css="mb-0" />
+              <baseHeaderSection text="Best Communication Method" :subText="lead?.best_communication_method ?? 'Not Specified'" css="mb-0" />
 
             </div>
-            <!-- <div>
-              <baseHeaderSection text="Send Emails" />
-
-              <UModal :title="`Send out email`">
-                <UButton label="Send emails" color="neutral" variant="subtle"
-                  class="bg-cyan-400 text-black px-6 py-3 rounded-xl text-xs font-bold hover:shadow-[0_0_20px_rgba(48,207,67,0.4)] transition-all" />
-
-                <template #body>
-                  <appReminderEmail :leadId="lead?._id" :currentStatus="lead?.status"  />
-                </template>
-              </UModal>
-            </div> -->
           </div>
         </div>
       </section>

@@ -1,45 +1,3 @@
-<!-- <script setup lang="ts">
-import { ghostFormUrl } from '~/utils/ghostFormUrl';
-
-definePageMeta({
-    layout: 'authenticated',
-});
-
-const { data: user } = useNuxtData('user');
-const { data: home } = useNuxtData('homes');
-
-</script>
-
-<template>
-    <div>
-        <section class="flex flex-wrap justify-between">
-            <appHeader label="Forms" subLabel="Form Selection" />
-            <baseButtonNavigate text="+ Home" path="/dashboard/home/create" />
-        </section>
-
-        <div>
-            <baseHeaderSection text="Select available forms" />
-
-            <section class="flex flex-wrap justify-between gap-6">
-                <baseCardForm label="Data Entry"
-                    :qr_code_url="ghostFormUrl(user?.category, 'default', user?._id, user?.company_hashed, user?.email_hashed, user?.calendar_link)" />
-
-                <baseCardForm label="Open House"
-                    :qr_code_url="ghostFormUrl(user?.category, 'open_house', user?._id, user?.company_hashed, user?.email_hashed, user?.calendar_link)"
-                    :data="home" />
-
-                <baseCardForm label="House On Market"
-                    :qr_code_url="ghostFormUrl(user?.category, 'on_market', user?._id, user?.company_hashed, user?.email_hashed, user?.calendar_link)"
-                    :data="home" />
-            </section>
-        </div>
-    </div>
-</template> -->
-
-<!--
-  GHOSTFORM DASHBOARD - FORMS & LEAD CAPTURE MANAGEMENT
-  PAGES/REALTOR/FORMS/INDEX.VUE
--->
 <script setup>
 import { ref } from 'vue';
 import { ghostFormUrl } from '~/utils/ghostFormUrl';
@@ -69,7 +27,8 @@ const formFunnels = ref([
         badge: 'QR Optimized',
         badgeClass: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
         icon: 'M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-        form_url: ghostFormUrl(user.value?.category, 'on_market', user.value?._id, user.value?.company_hashed, user.value?.email_hashed, user.value?.calendar_link)
+        form_url: ghostFormUrl(user.value?.category, 'on_market', user.value?._id, user.value?.company_hashed, user.value?.email_hashed, user.value?.calendar_link),
+        data_home: home
     },
     {
         id: 'house-on-market',
@@ -78,7 +37,8 @@ const formFunnels = ref([
         badge: 'Public Funnel',
         badgeClass: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
         icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
-        form_url: ghostFormUrl(user.value?.category, 'on_market', user.value?._id, user.value?.company_hashed, user.value?.email_hashed, user.value?.calendar_link)
+        form_url: ghostFormUrl(user.value?.category, 'on_market', user.value?._id, user.value?.company_hashed, user.value?.email_hashed, user.value?.calendar_link),
+        data_home: home
     }
 ]);
 </script>
@@ -87,19 +47,17 @@ const formFunnels = ref([
     <div>
         <div class="max-w-4xl mx-auto space-y-8">
 
-            <!-- PAGE HEADER ARCHITECTURE -->
             <header
                 class="border-b border-slate-800/60 pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <appHeader label="Forms" subLabel="Form Selection" />
                 <baseButtonNavigate text="+ Create Lead" path="/dashboard/leads/create" />
             </header>
 
-            <!-- CARDS LAYOUT MATRIX STACK -->
             <div class="space-y-5">
                 <div v-for="item in formFunnels" :key="item.id"
                     class="relative overflow-hidden bg-slate-900/40 border border-slate-800/80 hover:border-slate-700/80 rounded-2xl p-6 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 transition-all duration-300 group hover:shadow-2xl">
-                    <baseCardForm :label="item.title" :description="item.description" :icon="item.icon"
-                        :badge="item.badge" :badgeClass="item.badgeClass" :qr_code_url="item.form_url" :data="item.id === 'open-house' && home" />
+                    <baseCardForm :label="item.label" :description="item.description" :icon="item.icon"
+                        :badge="item.badge" :badgeClass="item.badgeClass" :qr_code_url="item.form_url" :data="item.data_home" />
                 </div>
 
             </div>
