@@ -10,6 +10,7 @@ export interface User {
     leads_captured: number;
     first_name: string;
     last_name: string;
+    name: string;
     email: string;
     email_hashed: string;
     phone: string;
