@@ -1,9 +1,8 @@
-import loggedInUser from '~/utils/loggedInUser';
 // import { latestData } from '~/utils/formatters/latestData';
 import type { Lead } from '~/types/lead';
 
 export default defineEventHandler(async (event) => {
-    const user = await loggedInUser(event);
+    const user = await requirePaidUser(event); // gated: active subscription required
 
     const findTiers = user?.leads?.map((item: Lead) => {
         const tierOne = item.ai_analysis.includes('Tier 1') || item.ai_analysis.includes('Tier one');

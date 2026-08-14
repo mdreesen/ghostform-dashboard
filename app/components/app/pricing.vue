@@ -17,7 +17,7 @@ const tiers = [
     features: ['Unlimited leads', 'Advanced 90% Compression', 'Custom Branding', 'Conditional Logic', 'Priority Email Support'],
     cta: 'Get Started',
     color: "cyan-500",
-    stripe: `https://buy.stripe.com/9B6fZj0fNazkerT6dZ3wQ00?client_reference_id=${user.value?.id}`,
+    stripe: `https://buy.stripe.com/9B6fZj0fNazkerT6dZ3wQ00?client_reference_id=${user.value?._id}`,
     highlighted: true
   },
 
@@ -28,7 +28,7 @@ const tiers = [
     features: ['Unlimited leads', 'Advanced 90% Compression', 'Custom Branding', 'Conditional Logic', 'Priority Email Support'],
     cta: 'Get Started',
     color: "blue-500",
-    stripe: `https://buy.stripe.com/7sY5kFe6Dazk5Vn7i33wQ01?client_reference_id=${user.value?.id}`,
+    stripe: `https://buy.stripe.com/7sY5kFe6Dazk5Vn7i33wQ01?client_reference_id=${user.value?._id}`,
     highlighted: false
   },
 ];

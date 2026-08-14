@@ -20,6 +20,17 @@ const userSchema = new Schema({
   privacy_policy: Boolean,
   paid: { type: Boolean, default: false },
   paid_tier: String,
+  // Which plan they subscribed to ('shadow' | 'phantom'), set by the Stripe webhook.
+  plan: { type: String, default: null },
+  // Stripe subscription lifecycle - required so we can cancel on account deletion.
+  stripeCustomerId: { type: String, default: null },
+  stripeSubscriptionId: { type: String, default: null },
+  subscriptionStatus: {
+    type: String,
+    // mirrors Stripe subscription statuses; 'none' = never subscribed
+    enum: ['none', 'active', 'trialing', 'past_due', 'canceled', 'incomplete', 'incomplete_expired', 'unpaid'],
+    default: 'none'
+  },
   calendar_link: String,
   // IANA timezone (e.g. 'America/Denver'). Used so scheduled sends fire
   // at the realtor's local morning, not the server's UTC hour.

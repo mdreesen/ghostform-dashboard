@@ -1,7 +1,10 @@
 <script setup lang="ts">
 definePageMeta({
-  layout: 'authenticated',
+  layout: 'payment',
 });
+
+// Load just the user (needed for the client_reference_id on the payment links).
+await useFetch('/api/user', { key: 'user', lazy: true });
 
 useHead({
   title: 'GhostForm | Subscribe',

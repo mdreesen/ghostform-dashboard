@@ -25,7 +25,8 @@ interface Briefing {
   headline: string
 }
 
-const { data: briefing, pending } = useNuxtData<Briefing>('briefing')
+const { data: briefing } = useNuxtData<Briefing | null>('briefing')
+const pending = computed(() => !briefing.value)
 
 // Cap the visible list so the dashboard stays scannable; the rest live on the
 // leads page. Realtors act on the top of the list first anyway.

@@ -37,7 +37,9 @@ export default defineNuxtConfig({
   },
   routeRules: {
     // Disable caching so Vercel executes the function fresh
-    '/api/cron': { swr: false, cache: false }
+    '/api/cron': { swr: false, cache: false },
+    // Stripe webhook must run fresh and read the raw body for signature checks.
+    '/api/stripe/webhook': { swr: false, cache: false }
   },
 
   app: {
