@@ -21,6 +21,12 @@ const size = [
   "xl"
 ] as const
 
+const position = [
+  "start",
+  "center",
+  "end"
+] as const
+
 const type = [
   "solid",
   "dashed",
@@ -65,12 +71,12 @@ export default {
       "horizontal": {
         "root": "w-full flex-row",
         "border": "w-full",
-        "container": "mx-3 whitespace-nowrap"
+        "container": "whitespace-nowrap"
       },
       "vertical": {
         "root": "h-full flex-col",
         "border": "h-full",
-        "container": "my-2"
+        "container": ""
       }
     },
     "size": {
@@ -79,6 +85,11 @@ export default {
       "md": "",
       "lg": "",
       "xl": ""
+    },
+    "position": {
+      "start": "",
+      "center": "",
+      "end": ""
     },
     "type": {
       "solid": {
@@ -93,6 +104,48 @@ export default {
     }
   },
   "compoundVariants": [
+    {
+      "orientation": "horizontal" as typeof orientation[number],
+      "position": "start" as typeof position[number],
+      "class": {
+        "container": "me-3"
+      }
+    },
+    {
+      "orientation": "horizontal" as typeof orientation[number],
+      "position": "center" as typeof position[number],
+      "class": {
+        "container": "mx-3"
+      }
+    },
+    {
+      "orientation": "horizontal" as typeof orientation[number],
+      "position": "end" as typeof position[number],
+      "class": {
+        "container": "ms-3"
+      }
+    },
+    {
+      "orientation": "vertical" as typeof orientation[number],
+      "position": "start" as typeof position[number],
+      "class": {
+        "container": "mb-2"
+      }
+    },
+    {
+      "orientation": "vertical" as typeof orientation[number],
+      "position": "center" as typeof position[number],
+      "class": {
+        "container": "my-2"
+      }
+    },
+    {
+      "orientation": "vertical" as typeof orientation[number],
+      "position": "end" as typeof position[number],
+      "class": {
+        "container": "mt-2"
+      }
+    },
     {
       "orientation": "horizontal" as typeof orientation[number],
       "size": "xs" as typeof size[number],

@@ -17,8 +17,8 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 export const AppAccess: typeof import("../app/components/app/Access.vue")['default']
 export const AppCardsOverview: typeof import("../app/components/app/CardsOverview.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
-export const AppPricing: typeof import("../app/components/app/Pricing.vue")['default']
 export const AppReminderEmail: typeof import("../app/components/app/appReminderEmail.vue")['default']
+export const AppPricing: typeof import("../app/components/app/pricing.vue")['default']
 export const BaseButtonDelete: typeof import("../app/components/base/Button/Delete.vue")['default']
 export const BaseButtonExport: typeof import("../app/components/base/Button/Export.vue")['default']
 export const BaseButtonNavigate: typeof import("../app/components/base/Button/Navigate.vue")['default']
@@ -116,11 +116,13 @@ export const UInput: typeof import("../node_modules/@nuxt/ui/dist/runtime/compon
 export const UInputDate: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputDate.vue")['default']
 export const UInputMenu: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputMenu.vue")['default']
 export const UInputNumber: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputNumber.vue")['default']
+export const UInputRating: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputRating.vue")['default']
 export const UInputTags: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputTags.vue")['default']
 export const UInputTime: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputTime.vue")['default']
 export const UKbd: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Kbd.vue")['default']
 export const ULink: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Link.vue")['default']
 export const ULinkBase: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/LinkBase.vue")['default']
+export const UListbox: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Listbox.vue")['default']
 export const UMain: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Main.vue")['default']
 export const UMarquee: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Marquee.vue")['default']
 export const UModal: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Modal.vue")['default']
@@ -227,8 +229,8 @@ export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components
 export const LazyAppAccess: LazyComponent<typeof import("../app/components/app/Access.vue")['default']>
 export const LazyAppCardsOverview: LazyComponent<typeof import("../app/components/app/CardsOverview.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
-export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/Pricing.vue")['default']>
 export const LazyAppReminderEmail: LazyComponent<typeof import("../app/components/app/appReminderEmail.vue")['default']>
+export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/pricing.vue")['default']>
 export const LazyBaseButtonDelete: LazyComponent<typeof import("../app/components/base/Button/Delete.vue")['default']>
 export const LazyBaseButtonExport: LazyComponent<typeof import("../app/components/base/Button/Export.vue")['default']>
 export const LazyBaseButtonNavigate: LazyComponent<typeof import("../app/components/base/Button/Navigate.vue")['default']>
@@ -326,11 +328,13 @@ export const LazyUInput: LazyComponent<typeof import("../node_modules/@nuxt/ui/d
 export const LazyUInputDate: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputDate.vue")['default']>
 export const LazyUInputMenu: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputMenu.vue")['default']>
 export const LazyUInputNumber: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputNumber.vue")['default']>
+export const LazyUInputRating: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputRating.vue")['default']>
 export const LazyUInputTags: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputTags.vue")['default']>
 export const LazyUInputTime: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/InputTime.vue")['default']>
 export const LazyUKbd: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Kbd.vue")['default']>
 export const LazyULink: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Link.vue")['default']>
 export const LazyULinkBase: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/LinkBase.vue")['default']>
+export const LazyUListbox: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Listbox.vue")['default']>
 export const LazyUMain: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Main.vue")['default']>
 export const LazyUMarquee: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Marquee.vue")['default']>
 export const LazyUModal: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Modal.vue")['default']>

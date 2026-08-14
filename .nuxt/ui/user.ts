@@ -29,6 +29,10 @@ export default {
     },
     "to": {
       "true": {
+        "root": [
+          "rounded-md outline-primary/25 has-focus-visible:outline-3",
+          "transition"
+        ],
         "name": [
           "text-default peer-hover:text-highlighted peer-focus-visible:text-highlighted",
           "transition-colors"

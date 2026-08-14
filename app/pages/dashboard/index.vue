@@ -25,6 +25,13 @@ const chart_data = computed(() => charts_lead?.value?.monthly);
     <main class="flex flex-col gap-18 max-w-350 mx-auto relative z-10">
 
       <section class="flex flex-col">
+        <baseHeaderSection text="Who to contact today" />
+        <ClientOnly>
+          <appDailyBriefing />
+        </ClientOnly>
+      </section>
+
+      <section class="flex flex-col">
         <baseHeaderSection text="Overview" />
         <div class="flex flex-wrap justify-between gap-6">
           <appCardsOverview v-if="leads?.all" :leads="leads" />

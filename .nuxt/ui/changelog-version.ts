@@ -30,7 +30,7 @@ export default {
     "to": {
       "true": {
         "title": [
-          "has-focus-visible:ring-2 has-focus-visible:ring-primary rounded-xs",
+          "outline-primary/25 has-focus-visible:outline-3 rounded-xs",
           "transition"
         ],
         "image": "transform transition-transform duration-200 group-hover/changelog-version-image:scale-105 group-has-focus-visible/changelog-version-image:scale-105"

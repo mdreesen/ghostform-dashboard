@@ -4,6 +4,7 @@ await useFetch('/api/leads', { key: 'leads', lazy: true });
 await useFetch('/api/charts/lead', { key: 'charts_lead', lazy: true });
 await useFetch('/api/campaigns', { key: 'campaigns', lazy: true });
 await useFetch('/api/homes', { key: 'homes', lazy: true });
+await useFetch('/api/briefing', { key: 'briefing', lazy: true });
 
 const { data: user } = useNuxtData('user');
 

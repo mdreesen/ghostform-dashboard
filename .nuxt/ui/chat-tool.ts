@@ -1,13 +1,8 @@
-const variant = [
-  "inline",
-  "card"
-] as const
-
 export default {
   "slots": {
     "root": "",
     "trigger": [
-      "group flex w-full items-center gap-1.5 text-muted text-sm disabled:cursor-default disabled:hover:text-muted hover:text-default focus-visible:outline-offset-2 focus-visible:outline-primary min-w-0",
+      "group flex w-full items-center gap-1.5 text-muted text-sm disabled:cursor-default disabled:hover:text-muted hover:text-default min-w-0",
       "transition-colors"
     ],
     "leading": "relative size-4 shrink-0",
@@ -16,25 +11,27 @@ export default {
     "label": "truncate",
     "suffix": "text-dimmed ms-1",
     "trailingIcon": "size-4 shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200",
-    "content": "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden",
-    "body": "text-sm text-dimmed whitespace-pre-wrap"
+    "content": "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] data-[state=closed]:overflow-hidden",
+    "body": "text-sm text-dimmed whitespace-pre-wrap",
+    "actions": "flex items-center justify-end gap-1.5"
   },
   "variants": {
     "variant": {
       "inline": {
-        "body": "pt-2"
+        "trigger": "rounded-sm outline-primary/25 focus-visible:outline-3",
+        "body": "pt-2",
+        "actions": "pt-2"
       },
       "card": {
-        "root": "rounded-md ring ring-default overflow-hidden",
-        "trigger": "px-2 py-1",
+        "root": "rounded-md ring ring-default overflow-hidden outline-primary/25 has-focus-visible:outline-3 has-focus-visible:ring-primary",
+        "trigger": "px-2 py-1 focus:outline-none",
         "trailingIcon": "ms-auto",
-        "body": "border-t border-default p-2 max-h-[200px] overflow-y-auto"
+        "body": "border-t border-default p-2 max-h-[200px] overflow-y-auto focus:outline-none",
+        "actions": "border-t border-default p-2"
       }
     },
     "chevron": {
-      "leading": {
-        "leadingIcon": "group-hover:opacity-0"
-      },
+      "leading": "",
       "trailing": ""
     },
     "loading": {
@@ -45,7 +42,7 @@ export default {
     "alone": {
       "false": {
         "leadingIcon": [
-          "absolute inset-0 group-data-[state=open]:opacity-0",
+          "absolute inset-0 group-hover:opacity-0 group-data-[state=open]:opacity-0",
           "transition-opacity duration-200"
         ],
         "chevronIcon": [
@@ -54,8 +51,5 @@ export default {
         ]
       }
     }
-  },
-  "defaultVariants": {
-    "variant": "inline" as typeof variant[number]
   }
 }
