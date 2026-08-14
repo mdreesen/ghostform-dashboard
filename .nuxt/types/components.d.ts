@@ -16,6 +16,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 interface _GlobalComponents {
   AppAccess: typeof import("../../app/components/app/Access.vue")['default']
   AppCardsOverview: typeof import("../../app/components/app/CardsOverview.vue")['default']
+  AppDailyBriefing: typeof import("../../app/components/app/DailyBriefing.vue")['default']
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppReminderEmail: typeof import("../../app/components/app/appReminderEmail.vue")['default']
   AppPricing: typeof import("../../app/components/app/pricing.vue")['default']
@@ -228,6 +229,7 @@ interface _GlobalComponents {
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
   LazyAppAccess: LazyComponent<typeof import("../../app/components/app/Access.vue")['default']>
   LazyAppCardsOverview: LazyComponent<typeof import("../../app/components/app/CardsOverview.vue")['default']>
+  LazyAppDailyBriefing: LazyComponent<typeof import("../../app/components/app/DailyBriefing.vue")['default']>
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppReminderEmail: LazyComponent<typeof import("../../app/components/app/appReminderEmail.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/pricing.vue")['default']>

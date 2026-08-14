@@ -1,6 +1,7 @@
 declare global {
   const H3Error: typeof import('../../node_modules/h3').H3Error
   const H3Event: typeof import('../../node_modules/h3').H3Event
+  const HUMAN_DAY: typeof import('../../server/utils/dailyBriefing').HUMAN_DAY
   const __buildAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').buildAssetsURL
   const __publicAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').publicAssetsURL
   const appendCorsHeaders: typeof import('../../node_modules/h3').appendCorsHeaders
@@ -10,6 +11,8 @@ declare global {
   const appendResponseHeader: typeof import('../../node_modules/h3').appendResponseHeader
   const appendResponseHeaders: typeof import('../../node_modules/h3').appendResponseHeaders
   const assertMethod: typeof import('../../node_modules/h3').assertMethod
+  const buildDailyBriefing: typeof import('../../server/utils/dailyBriefing').buildDailyBriefing
+  const buildHeadline: typeof import('../../server/utils/dailyBriefing').buildHeadline
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedEventHandler
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedFunction
   const callNodeListener: typeof import('../../node_modules/h3').callNodeListener
@@ -133,6 +136,7 @@ declare global {
   const isStream: typeof import('../../node_modules/h3').isStream
   const isWebResponse: typeof import('../../node_modules/h3').isWebResponse
   const lazyEventHandler: typeof import('../../node_modules/h3').lazyEventHandler
+  const narrateBriefing: typeof import('../../server/utils/briefingNarration').narrateBriefing
   const nitroPlugin: typeof import('../../node_modules/nitropack/dist/runtime/internal/plugin').nitroPlugin
   const parseCookies: typeof import('../../node_modules/h3').parseCookies
   const passwordNeedsReHash: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').passwordNeedsReHash
@@ -339,6 +343,9 @@ declare global {
   // @ts-ignore
   export type { SessionHooks } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session.d'
   import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session.d')
+  // @ts-ignore
+  export type { BriefingLead, DailyBriefing } from '../../server/utils/dailyBriefing'
+  import('../../server/utils/dailyBriefing')
 }
 export { H3Event, H3Error, appendCorsHeaders, appendCorsPreflightHeaders, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callNodeListener, clearResponseHeaders, clearSession, createApp, createAppEventHandler, createError, createEvent, createEventStream, createRouter, defaultContentType, defineEventHandler, defineLazyEventHandler, defineNodeListener, defineNodeMiddleware, defineRequestMiddleware, defineResponseMiddleware, defineWebSocket, defineWebSocketHandler, deleteCookie, dynamicEventHandler, eventHandler, fetchWithEvent, fromNodeMiddleware, fromPlainHandler, fromWebHandler, getCookie, getHeader, getHeaders, getMethod, getProxyRequestHeaders, getQuery, getRequestFingerprint, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestPath, getRequestProtocol, getRequestURL, getRequestWebStream, getResponseHeader, getResponseHeaders, getResponseStatus, getResponseStatusText, getRouterParam, getRouterParams, getSession, getValidatedQuery, getValidatedRouterParams, handleCacheHeaders, handleCors, isCorsOriginAllowed, isError, isEvent, isEventHandler, isMethod, isPreflightRequest, isStream, isWebResponse, lazyEventHandler, parseCookies, promisifyNodeListener, proxyRequest, readBody, readFormData, readMultipartFormData, readRawBody, readValidatedBody, removeResponseHeader, sanitizeStatusCode, sanitizeStatusMessage, sealSession, send, sendError, sendIterable, sendNoContent, sendProxy, sendRedirect, sendStream, sendWebResponse, serveStatic, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, setResponseStatus, splitCookiesString, toEventHandler, toNodeListener, toPlainHandler, toWebHandler, toWebRequest, unsealSession, updateSession, useBase, useSession, writeEarlyHints } from 'h3';
 export { useNitroApp } from 'nitropack/runtime/internal/app';
@@ -407,3 +414,5 @@ export { getAtprotoClientMetadata } from '/Users/mdreesen/projects/ghostform-das
 export { hashPassword, verifyPassword, passwordNeedsReHash } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
+export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
+export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
