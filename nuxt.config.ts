@@ -30,8 +30,9 @@ export default defineNuxtConfig({
       }
     },
     scheduledTasks: {
-      // Shifting '0 9 * * *' (Once a day) to '0 * * * *' (At minute 0 of every hour)
-      '0 * * * *': ['lead:reminders']
+      // Local-dev only (Vercel uses vercel.json). Once per day to mirror
+      // the Hobby-plan cron: '0 15 * * *' = 15:00 UTC (US morning).
+      '0 15 * * *': ['lead:reminders']
     },
   },
   routeRules: {

@@ -15,38 +15,30 @@ const resend = new Resend(process.env.RESEND_KEY);
 // http://localhost:3000/api/test-reminder
 
 /**
- * Returns the wall-clock hour (0-23) and weekday (0-6) in a given IANA
- * timezone. Lets us fire a realtor's campaign at *their* 9am, not UTC 9am.
+ * Returns the weekday (0-6, Sun-Sat) in a given IANA timezone.
+ *
+ * NOTE: On Vercel's Hobby plan the cron can only run ONCE PER DAY, so we no
+ * longer try to match a specific local hour (that only worked with an hourly
+ * cron). We only need the realtor's local *day* so that a campaign set for
+ * "Mondays" fires on their Monday, not the server's UTC Monday.
  * Falls back to server time if the timezone string is invalid.
  */
-function localHourAndDay(tz: string, now: Date): { hour: number; day: number } {
+function localWeekday(tz: string, now: Date): number {
   try {
     const parts = new Intl.DateTimeFormat('en-US', {
       timeZone: tz,
-      hour: 'numeric',
-      hour12: false,
       weekday: 'short'
     }).formatToParts(now)
-
-    const hourStr = parts.find((p) => p.type === 'hour')?.value ?? '0'
-    // Intl can return '24' for midnight in some environments - normalize.
-    let hour = parseInt(hourStr, 10) % 24
-    if (Number.isNaN(hour)) hour = now.getUTCHours()
 
     const weekdayStr = parts.find((p) => p.type === 'weekday')?.value ?? ''
     const dayMap: Record<string, number> = {
       Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6
     }
-    const day = dayMap[weekdayStr] ?? now.getUTCDay()
-
-    return { hour, day }
+    return dayMap[weekdayStr] ?? now.getUTCDay()
   } catch {
-    return { hour: now.getUTCHours(), day: now.getUTCDay() }
+    return now.getUTCDay()
   }
 }
-
-// The local hour at which recurring batch campaigns should go out.
-const CAMPAIGN_SEND_HOUR = 9
 
 /**
  * Minimum days that must elapse before a campaign of a given cadence may fire
@@ -128,9 +120,9 @@ export default defineTask({
       // ==========================================
       // PART B: RECURRING STATUS BATCH CAMPAIGNS
       // ==========================================
-      // We can't pre-filter by hour in the query because "9am" is per-user
-      // (timezone-dependent). So we pull candidate campaigns for the day and
-      // check each realtor's local clock individually.
+      // The cron runs once per day (Hobby plan limit). Any campaign whose
+      // chosen weekday matches today (in the realtor's timezone) and whose
+      // cadence spacing has elapsed will send on this run.
       const candidateCampaigns = await CampaignModel.find({
         active: { $ne: false }, // treat missing 'active' as active (legacy rows)
         $or: [
@@ -141,10 +133,9 @@ export default defineTask({
 
       for (const campaign of candidateCampaigns) {
         const tz = campaign.userId?.timezone || 'America/Denver'
-        const { hour: localHour, day: localDay } = localHourAndDay(tz, now)
+        const localDay = localWeekday(tz, now)
 
-        // Only fire in the realtor's local 9am window, on the campaign's day.
-        if (localHour !== CAMPAIGN_SEND_HOUR) continue
+        // Only fire on the campaign's chosen weekday (realtor's local day).
         if (campaign.dayOfWeek !== localDay) continue
 
         // Cadence guard - enforce spacing between sends.
