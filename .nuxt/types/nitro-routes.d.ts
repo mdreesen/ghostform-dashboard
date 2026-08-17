@@ -46,6 +46,9 @@ declare module "nitropack/types" {
     '/api/leads/:id/contacted': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/contacted.post').default>>>>
     }
+    '/api/leads/:id/draft': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/draft.post').default>>>>
+    }
     '/api/leads/:id': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.get').default>>>>
@@ -53,6 +56,9 @@ declare module "nitropack/types" {
     }
     '/api/leads/:id/schedule': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/schedule.post').default>>>>
+    }
+    '/api/leads/:id/send-message': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/send-message.post').default>>>>
     }
     '/api/leads/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/create.post').default>>>>

@@ -18,6 +18,7 @@ export const AppAccess: typeof import("../app/components/app/Access.vue")['defau
 export const AppCardsOverview: typeof import("../app/components/app/CardsOverview.vue")['default']
 export const AppDailyBriefing: typeof import("../app/components/app/DailyBriefing.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
+export const AppLeadMessageComposer: typeof import("../app/components/app/LeadMessageComposer.vue")['default']
 export const AppReminderEmail: typeof import("../app/components/app/appReminderEmail.vue")['default']
 export const AppPricing: typeof import("../app/components/app/pricing.vue")['default']
 export const BaseButtonDelete: typeof import("../app/components/base/Button/Delete.vue")['default']
@@ -231,6 +232,7 @@ export const LazyAppAccess: LazyComponent<typeof import("../app/components/app/A
 export const LazyAppCardsOverview: LazyComponent<typeof import("../app/components/app/CardsOverview.vue")['default']>
 export const LazyAppDailyBriefing: LazyComponent<typeof import("../app/components/app/DailyBriefing.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
+export const LazyAppLeadMessageComposer: LazyComponent<typeof import("../app/components/app/LeadMessageComposer.vue")['default']>
 export const LazyAppReminderEmail: LazyComponent<typeof import("../app/components/app/appReminderEmail.vue")['default']>
 export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/pricing.vue")['default']>
 export const LazyBaseButtonDelete: LazyComponent<typeof import("../app/components/base/Button/Delete.vue")['default']>

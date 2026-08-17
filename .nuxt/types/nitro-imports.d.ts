@@ -97,6 +97,7 @@ declare global {
   const fromNodeMiddleware: typeof import('../../node_modules/h3').fromNodeMiddleware
   const fromPlainHandler: typeof import('../../node_modules/h3').fromPlainHandler
   const fromWebHandler: typeof import('../../node_modules/h3').fromWebHandler
+  const generateLeadDraft: typeof import('../../server/utils/leadMessageDraft').generateLeadDraft
   const getAtprotoClientMetadata: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto').getAtprotoClientMetadata
   const getCookie: typeof import('../../node_modules/h3').getCookie
   const getHeader: typeof import('../../node_modules/h3').getHeader
@@ -173,6 +174,7 @@ declare global {
   const setResponseStatus: typeof import('../../node_modules/h3').setResponseStatus
   const setUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').setUserSession
   const splitCookiesString: typeof import('../../node_modules/h3').splitCookiesString
+  const templateDraft: typeof import('../../server/utils/leadMessageDraft').templateDraft
   const toEventHandler: typeof import('../../node_modules/h3').toEventHandler
   const toNodeListener: typeof import('../../node_modules/h3').toNodeListener
   const toPlainHandler: typeof import('../../node_modules/h3').toPlainHandler
@@ -347,6 +349,9 @@ declare global {
   // @ts-ignore
   export type { BriefingLead, DailyBriefing } from '../../server/utils/dailyBriefing'
   import('../../server/utils/dailyBriefing')
+  // @ts-ignore
+  export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
+  import('../../server/utils/leadMessageDraft')
 }
 export { H3Event, H3Error, appendCorsHeaders, appendCorsPreflightHeaders, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callNodeListener, clearResponseHeaders, clearSession, createApp, createAppEventHandler, createError, createEvent, createEventStream, createRouter, defaultContentType, defineEventHandler, defineLazyEventHandler, defineNodeListener, defineNodeMiddleware, defineRequestMiddleware, defineResponseMiddleware, defineWebSocket, defineWebSocketHandler, deleteCookie, dynamicEventHandler, eventHandler, fetchWithEvent, fromNodeMiddleware, fromPlainHandler, fromWebHandler, getCookie, getHeader, getHeaders, getMethod, getProxyRequestHeaders, getQuery, getRequestFingerprint, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestPath, getRequestProtocol, getRequestURL, getRequestWebStream, getResponseHeader, getResponseHeaders, getResponseStatus, getResponseStatusText, getRouterParam, getRouterParams, getSession, getValidatedQuery, getValidatedRouterParams, handleCacheHeaders, handleCors, isCorsOriginAllowed, isError, isEvent, isEventHandler, isMethod, isPreflightRequest, isStream, isWebResponse, lazyEventHandler, parseCookies, promisifyNodeListener, proxyRequest, readBody, readFormData, readMultipartFormData, readRawBody, readValidatedBody, removeResponseHeader, sanitizeStatusCode, sanitizeStatusMessage, sealSession, send, sendError, sendIterable, sendNoContent, sendProxy, sendRedirect, sendStream, sendWebResponse, serveStatic, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, setResponseStatus, splitCookiesString, toEventHandler, toNodeListener, toPlainHandler, toWebHandler, toWebRequest, unsealSession, updateSession, useBase, useSession, writeEarlyHints } from 'h3';
 export { useNitroApp } from 'nitropack/runtime/internal/app';
@@ -417,4 +422,5 @@ export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clear
 export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
+export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';

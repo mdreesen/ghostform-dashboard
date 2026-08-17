@@ -53,10 +53,18 @@ const bucketMeta: Record<
 }
 
 /**
- * Mark a lead as contacted. Optimistically removes it from the list and
- * updates the totals so the UI feels instant, then persists. On failure we
- * restore it and tell the user.
+ * Called when the message composer successfully sends. Sending stamps contact
+ * server-side, so remove the lead from today's list to match.
  */
+function onLeadSent(leadId: string) {
+  if (!briefing.value) return
+  const lead = briefing.value.leads.find((l) => l._id === leadId)
+  if (!lead) return
+  briefing.value.leads = briefing.value.leads.filter((l) => l._id !== leadId)
+  briefing.value.totals.total = Math.max(0, briefing.value.totals.total - 1)
+  briefing.value.totals[lead.bucket] = Math.max(0, briefing.value.totals[lead.bucket] - 1)
+}
+
 async function markContacted(lead: BriefingLead) {
   if (!briefing.value || marking.value.has(lead._id)) return
 
@@ -76,8 +84,7 @@ async function markContacted(lead: BriefingLead) {
     await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' })
     toast.success(`Marked ${lead.name} as contacted`)
     // Keep the leads list in sync too, if it's cached.
-    await refreshNuxtData('leads');
-    await refreshNuxtData('briefing');
+    await refreshNuxtData('leads')
   } catch {
     // Roll back on failure.
     briefing.value.leads = prevLeads
@@ -185,6 +192,13 @@ async function markContacted(lead: BriefingLead) {
           >
             {{ bucketMeta[lead.bucket].label }}
           </span>
+
+          <!-- AI message composer (draft + one-tap send) -->
+          <appLeadMessageComposer
+            :lead-id="lead._id"
+            :lead-name="lead.name"
+            @sent="onLeadSent"
+          />
 
           <!-- One-tap: mark as contacted -->
           <button

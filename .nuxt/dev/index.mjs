@@ -2886,7 +2886,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3005,22 +3005,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"3146d-ldutoEAaCXE7FkkQkc/R8pEnDTc\"",
-    "mtime": "2026-08-17T15:28:36.673Z",
-    "size": 201837,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"b3381-VLnT+R2XiLQRDna8/MRzzkpbyEo\"",
-    "mtime": "2026-08-17T15:28:36.673Z",
-    "size": 734081,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3243,7 +3228,7 @@ function publicAssetsURL(...path) {
 	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
-function buildPrompt(briefing) {
+function buildPrompt$1(briefing) {
   const { totals, leads } = briefing;
   const sample = leads.slice(0, 5).map((l) => {
     const first = (l.name || "A lead").split(" ")[0];
@@ -3273,7 +3258,7 @@ async function narrateWithAnthropic(briefing, apiKey) {
       body: {
         model: "claude-3-5-haiku-latest",
         max_tokens: 150,
-        messages: [{ role: "user", content: buildPrompt(briefing) }]
+        messages: [{ role: "user", content: buildPrompt$1(briefing) }]
       }
     });
     const text = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
@@ -3295,7 +3280,7 @@ async function narrateWithOpenAI(briefing, apiKey) {
       body: {
         model: "gpt-4o-mini",
         max_tokens: 150,
-        messages: [{ role: "user", content: buildPrompt(briefing) }]
+        messages: [{ role: "user", content: buildPrompt$1(briefing) }]
       }
     });
     const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
@@ -3378,7 +3363,7 @@ const leadSchema = new Schema({
 }, { timestamps: true });
 const schemaImport = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 
-const LeadModel$4 = schemaImport;
+const LeadModel$6 = schemaImport;
 function resolveLastContact(lead) {
   if (lead.lastContactedAt) return new Date(lead.lastContactedAt);
   if (lead.contactCount && lead.contactCount > 0) {
@@ -3396,7 +3381,7 @@ async function buildDailyBriefing(userId, opts = {}) {
   var _a, _b;
   const now = (_a = opts.now) != null ? _a : /* @__PURE__ */ new Date();
   const coldAfter = (_b = opts.coldLeadAfterDays) != null ? _b : 14;
-  const leads = await LeadModel$4.find({
+  const leads = await LeadModel$6.find({
     userId,
     status: { $nin: ["closed", "archive"] }
   }).select(
@@ -3472,6 +3457,115 @@ function buildHeadline(totals) {
   else if (parts.length === 2) list = `${parts[0]} and ${parts[1]}`;
   else list = `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
   return `You have ${list} today.`;
+}
+
+function firstName(name) {
+  if (!name) return "there";
+  return name.split(" ")[0] || "there";
+}
+function money(n) {
+  if (!n || n <= 0) return null;
+  return "$" + n.toLocaleString("en-US");
+}
+function templateDraft(lead, channel) {
+  const fn = firstName(lead.name);
+  const agent = lead.agentName || "your agent";
+  const budget = money(lead.budget) || money(lead.price);
+  const intent = (lead.buy_sell_both || "").toLowerCase();
+  const bits = [];
+  if (budget) bits.push(`around ${budget}`);
+  if (lead.bedrooms) bits.push(`${lead.bedrooms}-bed`);
+  if (lead.want_to_move) bits.push(`a ${lead.want_to_move.toLowerCase()} timeline`);
+  const detail = bits.length ? ` (${bits.join(", ")})` : "";
+  if (channel === "sms") {
+    if (intent.includes("sell")) {
+      return `Hi ${fn}, it's ${agent}. Wanted to check in on your plans to sell${detail}. A couple of things are moving in the market right now \u2014 want me to pull a quick value estimate for you?`;
+    }
+    return `Hi ${fn}, it's ${agent}. Thinking about your home search${detail} \u2014 a few new options just came up that might be a fit. Want me to send them over?`;
+  }
+  const opener = intent.includes("sell") ? `I wanted to follow up on your plans to sell${detail}.` : `I wanted to follow up on your home search${detail}.`;
+  return `Hi ${fn},
+
+${opener} A few things have shifted in the local market recently and I think it's worth a quick catch-up.
+
+Do you have a few minutes this week? Just reply here and we'll find a time.
+
+Best,
+${lead.agentName || ""}`;
+}
+function buildPrompt(lead, channel) {
+  const facts = [];
+  facts.push(`Lead first name: ${firstName(lead.name)}`);
+  if (money(lead.budget)) facts.push(`Budget: ${money(lead.budget)}`);
+  else if (money(lead.price)) facts.push(`Approx price point: ${money(lead.price)}`);
+  if (lead.want_to_move) facts.push(`Timeline to move: ${lead.want_to_move}`);
+  if (lead.buy_sell_both) facts.push(`Buying/selling: ${lead.buy_sell_both}`);
+  if (lead.bedrooms) facts.push(`Bedrooms wanted: ${lead.bedrooms}`);
+  facts.push(`Realtor's name: ${lead.agentName || "the agent"}`);
+  const channelRule = channel === "sms" ? `Write it as a SHORT text message (under 40 words). No greeting line, no signature, no subject. Warm, direct, one clear question or call to action.` : `Write it as a brief email (under 90 words). Include a "Hi <name>," greeting and a short sign-off with the realtor's name. One clear call to action.`;
+  return [
+    `You are helping a real estate agent write a personal outreach message to a lead.`,
+    `Use ONLY these facts. Do not invent listings, prices, or promises. Do not make guarantees about the market.`,
+    ``,
+    facts.join("\n"),
+    ``,
+    channelRule,
+    `Sound like a real person, not a marketing blast. No markdown, no emojis. Return only the message text.`
+  ].join("\n");
+}
+async function draftWithAnthropic(lead, channel, apiKey) {
+  var _a, _b;
+  try {
+    const res = await $fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+      },
+      body: {
+        model: "claude-3-5-haiku-latest",
+        max_tokens: 250,
+        messages: [{ role: "user", content: buildPrompt(lead, channel) }]
+      }
+    });
+    const text = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
+    return typeof text === "string" && text.trim() ? text.trim() : null;
+  } catch (err) {
+    console.error("Anthropic draft failed, using template:", err);
+    return null;
+  }
+}
+async function draftWithOpenAI(lead, channel, apiKey) {
+  var _a, _b, _c;
+  try {
+    const res = await $fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "content-type": "application/json"
+      },
+      body: {
+        model: "gpt-4o-mini",
+        max_tokens: 250,
+        messages: [{ role: "user", content: buildPrompt(lead, channel) }]
+      }
+    });
+    const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
+    return typeof text === "string" && text.trim() ? text.trim() : null;
+  } catch (err) {
+    console.error("OpenAI draft failed, using template:", err);
+    return null;
+  }
+}
+async function generateLeadDraft(lead, channel = "sms") {
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+  let aiText = null;
+  if (anthropicKey) aiText = await draftWithAnthropic(lead, channel, anthropicKey);
+  else if (openaiKey) aiText = await draftWithOpenAI(lead, channel, openaiKey);
+  if (aiText) return { message: aiText, source: "ai" };
+  return { message: templateDraft(lead, channel), source: "template" };
 }
 
 const { MONGO_URI } = process.env;
@@ -4139,10 +4233,12 @@ const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; }
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
 const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_0rvesM = () => Promise.resolve().then(function () { return contacted_post$1; });
+const _lazy_yBxanF = () => Promise.resolve().then(function () { return draft_post$1; });
 const _lazy_qc34eq = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_f4xwzm = () => Promise.resolve().then(function () { return index_put$3; });
 const _lazy_ygINZT = () => Promise.resolve().then(function () { return schedule_post$1; });
+const _lazy_lZmAO2 = () => Promise.resolve().then(function () { return sendMessage_post$1; });
 const _lazy_YUWevn = () => Promise.resolve().then(function () { return create_post$1; });
 const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_0Doaks = () => Promise.resolve().then(function () { return tiers_get$1; });
@@ -4171,10 +4267,12 @@ const handlers = [
   { route: '/api/homes/create', handler: _lazy_6aFyol, lazy: true, middleware: false, method: "post" },
   { route: '/api/homes', handler: _lazy_TuGNAE, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id/contacted', handler: _lazy_0rvesM, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/draft', handler: _lazy_yBxanF, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id', handler: _lazy_qc34eq, lazy: true, middleware: false, method: "delete" },
   { route: '/api/leads/:id', handler: _lazy_i2f0Wa, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/:id', handler: _lazy_f4xwzm, lazy: true, middleware: false, method: "put" },
   { route: '/api/leads/:id/schedule', handler: _lazy_ygINZT, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/send-message', handler: _lazy_lZmAO2, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/create', handler: _lazy_YUWevn, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads', handler: _lazy_t9F3bu, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/tiers', handler: _lazy_0Doaks, lazy: true, middleware: false, method: "get" },
@@ -4528,9 +4626,9 @@ Just reply straight to this email whenever you have a second.` + signoff;
   }
 }
 
-const LeadModel$3 = schemaImport;
+const LeadModel$5 = schemaImport;
 const CampaignModel$1 = CampaignModelImport;
-const resend$1 = new Resend(process.env.RESEND_KEY);
+const resend$2 = new Resend(process.env.RESEND_KEY);
 function localWeekday(tz, now) {
   var _a, _b, _c;
   try {
@@ -4583,7 +4681,7 @@ const reminders = defineTask({
     let campaignsFired = 0;
     let campaignEmails = 0;
     try {
-      const activeQueue = await LeadModel$3.find({
+      const activeQueue = await LeadModel$5.find({
         reminderStatus: "scheduled",
         reminderScheduledAt: { $lte: now },
         email: { $ne: "", $exists: true }
@@ -4596,7 +4694,7 @@ const reminders = defineTask({
           const lead_name = lead.name ? lead.name.split(" ")[0] : "there";
           const status = lead == null ? void 0 : lead.status;
           const useResponse = email_by_status(status, lead_name, company_name);
-          await resend$1.emails.send({
+          await resend$2.emails.send({
             from: `${useCleanString(company_name)}@ascendpod.com`,
             to: lead.email,
             replyTo: replyEmail,
@@ -4615,7 +4713,7 @@ const reminders = defineTask({
             }
           });
         }
-        await LeadModel$3.bulkWrite(individualOps, { ordered: false });
+        await LeadModel$5.bulkWrite(individualOps, { ordered: false });
       }
       const candidateCampaigns = await CampaignModel$1.find({
         active: { $ne: false },
@@ -4635,7 +4733,7 @@ const reminders = defineTask({
             continue;
           }
         }
-        const targets = await LeadModel$3.find({
+        const targets = await LeadModel$5.find({
           userId: campaign.userId._id,
           status: campaign.targetStatus,
           email: { $ne: "", $exists: true }
@@ -4653,9 +4751,9 @@ const reminders = defineTask({
               text: personalizedText
             };
           });
-          await resend$1.batch.send(batchPayload);
+          await resend$2.batch.send(batchPayload);
           campaignEmails += batchPayload.length;
-          await LeadModel$3.updateMany(
+          await LeadModel$5.updateMany(
             { _id: { $in: targets.map((t) => t._id) } },
             { $set: { lastContactedAt: now }, $inc: { contactCount: 1 } }
           );
@@ -4784,12 +4882,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$4 = UserModel;
-const bodySchema$9 = z.object({
+const bodySchema$a = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$9.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$a.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -4828,13 +4926,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$3 = UserModel;
-const bodySchema$8 = z.object({
+const bodySchema$9 = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$8.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$9.parse);
   try {
     await connectDB();
     const user = await User$3.findOne({ email });
@@ -4888,13 +4986,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$2 = UserModel;
-const bodySchema$7 = z.object({
+const bodySchema$8 = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$7.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$8.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -4917,7 +5015,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$1 = UserModel;
-const bodySchema$6 = z.object({
+const bodySchema$7 = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -4926,7 +5024,7 @@ const bodySchema$6 = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$6.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$7.parse);
   try {
     await connectDB();
     const user = await User$1.findOne({ email });
@@ -4983,12 +5081,12 @@ const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$3 = CampaignModelImport;
-const bodySchema$5 = z.object({
+const bodySchema$6 = z.object({
   _id: z.string()
 });
 const index_delete$2 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$5.parse);
+    const body = await readValidatedBody(event, bodySchema$6.parse);
     await Campaign$3.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5065,7 +5163,7 @@ const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$4 = z.object({
+const bodySchema$5 = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5074,7 +5172,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$4.parse);
+  const body = await readValidatedBody(event, bodySchema$5.parse);
   try {
     await Campaign.updateOne(
       { _id: body._id, userId: user._id },
@@ -5156,14 +5254,14 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$5 = HomeModel;
-const bodySchema$3 = z.object({
+const bodySchema$4 = z.object({
   name: z.string().nullable(),
   address: z.string().nullable(),
   owner: z.string().nullable(),
   notes: z.string().nullable()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$3.parse);
+  const body = await readValidatedBody(event, bodySchema$4.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -5193,7 +5291,7 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$2 = schemaImport;
+const LeadModel$4 = schemaImport;
 const contacted_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -5203,7 +5301,7 @@ const contacted_post = defineEventHandler(async (event) => {
   }
   try {
     const now = /* @__PURE__ */ new Date();
-    const result = await LeadModel$2.updateOne(
+    const result = await LeadModel$4.updateOne(
       { _id: leadId, userId: user._id },
       // scoped so a realtor can only touch their own leads
       {
@@ -5225,6 +5323,43 @@ const contacted_post = defineEventHandler(async (event) => {
 const contacted_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: contacted_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const LeadModel$3 = schemaImport;
+const draft_post = defineEventHandler(async (event) => {
+  var _a;
+  const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) {
+    throw createError({ statusCode: 401, message: "Session expired." });
+  }
+  const body = await readBody(event).catch(() => ({}));
+  const channel = (body == null ? void 0 : body.channel) === "email" ? "email" : "sms";
+  const lead = await LeadModel$3.findOne({ _id: leadId, userId: user._id }).lean();
+  if (!lead) {
+    throw createError({ statusCode: 404, message: "Lead not found." });
+  }
+  const draft = await generateLeadDraft(
+    {
+      name: lead.name,
+      budget: lead.budget,
+      price: lead.price,
+      want_to_move: lead.want_to_move,
+      buy_sell_both: lead.buy_sell_both,
+      bedrooms: lead.bedrooms,
+      address: lead.address,
+      status: lead.status,
+      lastContactedAt: lead.lastContactedAt,
+      agentName: user.name || user.company || "Your agent"
+    },
+    channel
+  );
+  return { channel, ...draft };
+});
+
+const draft_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: draft_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$4 = schemaImport;
@@ -5267,7 +5402,7 @@ const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$2 = z.object({
+const bodySchema$3 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -5290,7 +5425,7 @@ const bodySchema$2 = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$2.parse);
+  const body = await readValidatedBody(event, bodySchema$3.parse);
   try {
     const existing = await Lead$2.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
@@ -5321,7 +5456,7 @@ const index_put$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_put$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$1 = schemaImport;
+const LeadModel$2 = schemaImport;
 const schedule_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -5334,13 +5469,13 @@ const schedule_post = defineEventHandler(async (event) => {
   try {
     const queryFilter = { _id: leadId, userId: user._id };
     if (!scheduledTime) {
-      await LeadModel$1.updateOne(queryFilter, {
+      await LeadModel$2.updateOne(queryFilter, {
         $set: { reminderStatus: "none" },
         $unset: { reminderScheduledAt: "" }
       });
       return { success: true, message: "Automation sequence disabled for this client." };
     }
-    await LeadModel$1.updateOne(queryFilter, {
+    await LeadModel$2.updateOne(queryFilter, {
       $set: {
         reminderStatus: "scheduled",
         reminderScheduledAt: new Date(scheduledTime)
@@ -5355,6 +5490,60 @@ const schedule_post = defineEventHandler(async (event) => {
 const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: schedule_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const LeadModel$1 = schemaImport;
+const resend$1 = new Resend(process.env.RESEND_KEY);
+const bodySchema$2 = z.object({
+  // The (possibly realtor-edited) message body to send.
+  message: z.string().min(1),
+  // Optional custom subject; defaults to a friendly follow-up line.
+  subject: z.string().optional()
+});
+const sendMessage_post = defineEventHandler(async (event) => {
+  var _a, _b;
+  const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) {
+    throw createError({ statusCode: 401, message: "Session expired." });
+  }
+  const { message, subject } = await readValidatedBody(event, bodySchema$2.parse);
+  const lead = await LeadModel$1.findOne({ _id: leadId, userId: user._id }).lean();
+  if (!lead) {
+    throw createError({ statusCode: 404, message: "Lead not found." });
+  }
+  if (!lead.email) {
+    throw createError({ statusCode: 400, message: "This lead has no email address on file." });
+  }
+  const agentName = user.name || user.company || "Your Realtor";
+  const replyTo = user.email || void 0;
+  try {
+    const response = await resend$1.emails.send({
+      from: `${useCleanString(agentName)}@ascendpod.com`,
+      to: lead.email,
+      replyTo,
+      subject: subject || "Following up on your property search",
+      text: message
+    });
+    const now = /* @__PURE__ */ new Date();
+    await LeadModel$1.updateOne(
+      { _id: lead._id, userId: user._id },
+      {
+        $set: { lastContactedAt: now, reminderStatus: "none" },
+        $inc: { contactCount: 1 },
+        $unset: { reminderScheduledAt: "" }
+      }
+    );
+    return { success: true, id: (_b = response.data) == null ? void 0 : _b.id, lastContactedAt: now.toISOString() };
+  } catch (error) {
+    console.error("Failed to send lead message:", error == null ? void 0 : error.message);
+    throw createError({ statusCode: 502, message: "Message could not be sent. Please try again." });
+  }
+});
+
+const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: sendMessage_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$1 = schemaImport;
