@@ -1,16 +1,18 @@
 export default defineNuxtRouteMiddleware(async (to) => {
-  const { loggedIn, user } = useUserSession();
+  const { loggedIn } = useUserSession();
 
-  // Redirect to login if not authenticated and hitting the root.
+  // Not authenticated at all and hitting the root -> straight to login.
   if (!loggedIn.value && to.path === '/') {
     return navigateTo('/login');
   }
 
-  // ---- Subscription gate for the dashboard ----
-  // A logged-in user without an active subscription is sent to the plan page.
-  // The session user object can be stale (it's only refreshed on login), so we
-  // read the authoritative status from /api/user. This is a UX guard; the
-  // server also enforces access on the data endpoints (see requirePaidUser).
+  // ---- Auth + subscription gate for the dashboard ----
+  // A logged-out user is sent to login/signup. A logged-in user without an
+  // active subscription is sent to the plan page. The session's `loggedIn`
+  // flag can be stale, so we confirm against /api/user - the authoritative
+  // source. This is a UX guard; the server also enforces access on the data
+  // endpoints themselves (see requirePaidUser), so this can't be bypassed by
+  // skipping the client redirect.
   if (to.path.startsWith('/dashboard')) {
     if (!loggedIn.value) {
       return navigateTo('/login');
@@ -24,8 +26,16 @@ export default defineNuxtRouteMiddleware(async (to) => {
       if (!isActive) {
         return navigateTo('/subscribe');
       }
-    } catch {
-      // If we can't confirm, fail safe to the plan page rather than the dashboard.
+    } catch (error: any) {
+      // A 401 means the session is missing/invalid - send to login, not the
+      // plan page (this used to fail-safe to /subscribe for EVERY error,
+      // which was the wrong destination for "you're not logged in").
+      if (error?.statusCode === 401 || error?.response?.status === 401) {
+        return navigateTo('/login');
+      }
+      // Any other failure (network blip, real server error): fail safe to
+      // the plan page rather than letting an unconfirmed user into the
+      // dashboard.
       return navigateTo('/subscribe');
     }
   }

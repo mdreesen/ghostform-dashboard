@@ -2886,7 +2886,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3005,7 +3005,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"335a4-0/IWprZ719KqTFCxgfPOoint7y4\"",
+    "mtime": "2026-08-17T17:00:53.345Z",
+    "size": 210340,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"badff-eOAd4J9M5/oz6c9WKH90YLMRm9U\"",
+    "mtime": "2026-08-17T17:00:53.346Z",
+    "size": 765439,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4810,17 +4825,18 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 
 const User$5 = UserModel;
 const loggedInUser = defineEventHandler(async (event) => {
+  await connectDB();
+  const { user } = await requireUserSession(event);
+  const userEmail = user == null ? void 0 : user.email;
   try {
-    await connectDB();
-    const { user } = await requireUserSession(event);
-    const userEmail = user == null ? void 0 : user.email;
-    const findUser = await User$5.find({ email: userEmail });
-    if (findUser[0]) {
-      return findUser[0];
+    const findUser = await User$5.findOne({ email: userEmail });
+    if (!findUser) {
+      throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
     }
-    ;
+    return findUser;
   } catch (error) {
-    console.log(error);
+    if (error == null ? void 0 : error.statusCode) throw error;
+    console.error("loggedInUser lookup failed:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Something went wrong."
