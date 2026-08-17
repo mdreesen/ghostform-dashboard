@@ -149,6 +149,7 @@ declare global {
   const readValidatedBody: typeof import('../../node_modules/h3').readValidatedBody
   const removeResponseHeader: typeof import('../../node_modules/h3').removeResponseHeader
   const replaceUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').replaceUserSession
+  const requirePaidUser: typeof import('../../server/utils/requirePaidUser').default
   const requireUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').requireUserSession
   const runTask: typeof import('../../node_modules/nitropack/dist/runtime/internal/task').runTask
   const sanitizeStatusCode: typeof import('../../node_modules/h3').sanitizeStatusCode
@@ -416,3 +417,4 @@ export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clear
 export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
+export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';

@@ -5,6 +5,7 @@ import { getPaginationRowModel } from '@tanstack/vue-table'
 import type { Lead } from '~/types/lead';
 
 const UBadge = resolveComponent('UBadge');
+const UButton = resolveComponent('UButton');
 
 const props = defineProps({
   data: {
@@ -14,7 +15,41 @@ const props = defineProps({
   },
 });
 
-// const useData = computed(() => props.data.all);
+const toast = useToast();
+// Track leads mid-request so their button can show a saving state.
+const marking = ref<Set<string>>(new Set());
+
+/**
+ * Turn a lead's last-contact timestamp into a short human label, matching the
+ * Daily Briefing wording. Falls back through lastContactedAt -> updatedAt so
+ * older leads still read sensibly.
+ */
+function lastContactLabel(lead: any): string {
+  const raw = lead?.lastContactedAt;
+  if (!raw) return 'Never';
+  const days = Math.floor((Date.now() - new Date(raw).getTime()) / 86400000);
+  if (days <= 0) return 'Today';
+  if (days === 1) return '1 day ago';
+  return `${days} days ago`;
+}
+
+/**
+ * Mark a lead as contacted from the table. Same endpoint the briefing uses;
+ * refreshes the shared caches so both the table and the briefing update.
+ */
+async function markContacted(lead: any) {
+  if (!lead?._id || marking.value.has(lead._id)) return;
+  marking.value.add(lead._id);
+  try {
+    await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' });
+    toast.success(`Marked ${lead.name || 'lead'} as contacted`);
+    await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')]);
+  } catch {
+    toast.error('Could not update. Please try again.');
+  } finally {
+    marking.value.delete(lead._id);
+  }
+}
 
 const columns: TableColumn<Lead>[] = [
   {
@@ -92,6 +127,38 @@ const columns: TableColumn<Lead>[] = [
   {
     accessorKey: 'budget',
     header: 'Budget',
+  },
+  {
+    id: 'last_contact',
+    header: 'Last contact',
+    cell: ({ row }) => {
+      const label = lastContactLabel(row.original)
+      return h(
+        'span',
+        { class: label === 'Never' ? 'text-zinc-500' : 'text-zinc-300' },
+        label
+      )
+    }
+  },
+  {
+    id: 'actions',
+    header: '',
+    cell: ({ row }) => {
+      const lead = row.original as any
+      const busy = marking.value.has(lead?._id)
+      return h(
+        UButton,
+        {
+          size: 'xs',
+          color: 'primary',
+          variant: 'subtle',
+          loading: busy,
+          disabled: busy,
+          onClick: () => markContacted(lead)
+        },
+        () => (busy ? 'Saving…' : '✓ Contacted')
+      )
+    }
   },
 ]
 

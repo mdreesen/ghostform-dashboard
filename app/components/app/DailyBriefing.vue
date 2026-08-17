@@ -3,7 +3,9 @@
  * Daily "Who to Contact" briefing card.
  * Reads from /api/briefing (cached under the 'briefing' key, prefetched in the
  * authenticated layout). Shows the ranked list of leads needing attention today,
- * bucketed into Overdue / New / Cold, with a one-tap action to open each lead.
+ * bucketed into Overdue / New / Cold. Each row shows how long since last contact
+ * (transparency) and a one-tap "Mark as contacted" action that drops the lead
+ * off today's list until it goes cold again.
  */
 interface BriefingLead {
   _id: string
@@ -14,6 +16,7 @@ interface BriefingLead {
   bucket: 'new' | 'overdue' | 'cold'
   reason: string
   daysSinceContact: number | null
+  lastContactLabel: string
   priorityScore: number
   best_communication_method?: string
 }
@@ -25,8 +28,11 @@ interface Briefing {
   headline: string
 }
 
-const { data: briefing } = useNuxtData<Briefing | null>('briefing')
-const pending = computed(() => !briefing.value)
+const { data: briefing, pending } = useNuxtData<Briefing>('briefing')
+const toast = useToast()
+
+// Track which leads are mid-request so we can disable their button.
+const marking = ref<Set<string>>(new Set())
 
 // Cap the visible list so the dashboard stays scannable; the rest live on the
 // leads page. Realtors act on the top of the list first anyway.
@@ -44,6 +50,43 @@ const bucketMeta: Record<
   overdue: { label: 'Overdue', dot: 'bg-rose-400', text: 'text-rose-300' },
   new: { label: 'New', dot: 'bg-cyan-400', text: 'text-cyan-300' },
   cold: { label: 'Cold', dot: 'bg-amber-400', text: 'text-amber-300' }
+}
+
+/**
+ * Mark a lead as contacted. Optimistically removes it from the list and
+ * updates the totals so the UI feels instant, then persists. On failure we
+ * restore it and tell the user.
+ */
+async function markContacted(lead: BriefingLead) {
+  if (!briefing.value || marking.value.has(lead._id)) return
+
+  // Snapshot for rollback.
+  const prevLeads = briefing.value.leads
+  const idx = prevLeads.findIndex((l) => l._id === lead._id)
+  if (idx === -1) return
+
+  marking.value.add(lead._id)
+
+  // Optimistic removal + totals adjustment.
+  briefing.value.leads = prevLeads.filter((l) => l._id !== lead._id)
+  briefing.value.totals.total = Math.max(0, briefing.value.totals.total - 1)
+  briefing.value.totals[lead.bucket] = Math.max(0, briefing.value.totals[lead.bucket] - 1)
+
+  try {
+    await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' })
+    toast.success(`Marked ${lead.name} as contacted`)
+    // Keep the leads list in sync too, if it's cached.
+    await refreshNuxtData('leads');
+    await refreshNuxtData('briefing');
+  } catch {
+    // Roll back on failure.
+    briefing.value.leads = prevLeads
+    briefing.value.totals.total += 1
+    briefing.value.totals[lead.bucket] += 1
+    toast.error('Could not update. Please try again.')
+  } finally {
+    marking.value.delete(lead._id)
+  }
 }
 </script>
 
@@ -110,13 +153,16 @@ const bucketMeta: Record<
       v-if="briefing?.leads?.length"
       class="flex flex-col gap-2"
     >
-      <NuxtLink
+      <div
         v-for="lead in visibleLeads"
         :key="lead._id"
-        :to="`/dashboard/leads/${lead._id}/details`"
-        class="group flex items-center justify-between gap-4 p-4 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-600 transition-colors"
+        class="group flex items-center justify-between gap-3 p-4 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-600 transition-colors"
       >
-        <div class="flex items-center gap-3 min-w-0">
+        <!-- Lead identity + why it's here (links to details) -->
+        <NuxtLink
+          :to="`/dashboard/leads/${lead._id}/details`"
+          class="flex items-center gap-3 min-w-0 flex-1"
+        >
           <span
             class="w-2 h-2 rounded-full shrink-0"
             :class="bucketMeta[lead.bucket].dot"
@@ -126,21 +172,30 @@ const bucketMeta: Record<
               {{ lead.name }}
             </p>
             <p class="text-xs text-zinc-500 truncate">{{ lead.reason }}</p>
+            <p class="text-[11px] text-zinc-600 truncate mt-0.5">
+              {{ lead.lastContactLabel }}
+            </p>
           </div>
-        </div>
+        </NuxtLink>
 
-        <div class="flex items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2 shrink-0">
           <span
-            class="text-[10px] font-bold uppercase tracking-widest"
+            class="hidden sm:inline text-[10px] font-bold uppercase tracking-widest"
             :class="bucketMeta[lead.bucket].text"
           >
             {{ bucketMeta[lead.bucket].label }}
           </span>
-          <span class="text-zinc-600 group-hover:text-zinc-300 transition-colors">
-            &rarr;
-          </span>
+
+          <!-- One-tap: mark as contacted -->
+          <button
+            :disabled="marking.has(lead._id)"
+            class="text-[11px] font-bold px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            @click="markContacted(lead)"
+          >
+            {{ marking.has(lead._id) ? 'Saving…' : '✓ Contacted' }}
+          </button>
         </div>
-      </NuxtLink>
+      </div>
 
       <button
         v-if="briefing.leads.length > VISIBLE_LIMIT"

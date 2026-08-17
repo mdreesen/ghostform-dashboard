@@ -35,6 +35,7 @@ export interface BriefingLead {
   bucket: 'new' | 'overdue' | 'cold'
   reason: string
   daysSinceContact: number | null
+  lastContactLabel: string
   priorityScore: number
   best_communication_method?: string
 }
@@ -167,6 +168,10 @@ export async function buildDailyBriefing(
       bucket,
       reason,
       daysSinceContact,
+      lastContactLabel:
+        daysSinceContact === null
+          ? 'Never contacted'
+          : `Last contacted ${HUMAN_DAY(daysSinceContact)}`,
       priorityScore,
       best_communication_method: lead.best_communication_method
     })

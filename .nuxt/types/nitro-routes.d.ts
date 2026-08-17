@@ -43,6 +43,9 @@ declare module "nitropack/types" {
     '/api/homes': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/index.get').default>>>>
     }
+    '/api/leads/:id/contacted': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/contacted.post').default>>>>
+    }
     '/api/leads/:id': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.get').default>>>>
