@@ -2,22 +2,107 @@
 @import "@nuxt/ui";
 @import "nuxt-notify/styles";
 
-* {
-  --ui-bg: #020203;
-  --ui-bg-elevated: #020203;
-  --ui-primary: oklch(78.9% 0.154 211.53);
-  --vis-donut-background-color: transparent;
-  /* opacity: 1; */
+/* ============================================================
+   GHOSTFORM DESIGN SYSTEM
+   Warm, quiet, Danish/Scandinavian — matched to mdreesen.com.
+   Cream paper, warm near-black ink, a single terracotta accent,
+   olive for small-caps labels. Fraunces (display) + Inter (body).
+   ============================================================ */
+
+@theme {
+  --color-paper:      #F7F4EF;  /* page background */
+  --color-paper-warm: #EFEAE0;  /* card / surface fill */
+  --color-paper-lift: #FBF9F5;  /* hover surface */
+  --color-ink:        #1F1B16;  /* primary text */
+  --color-gray-body:  #8A847C;  /* body / secondary */
+  --color-gray-soft:  #A9A39A;  /* tertiary */
+  --color-rust:       #B5563A;  /* the accent */
+  --color-rust-soft:  #C9866F;
+  --color-olive:      #5A6349;  /* small-caps labels */
+  --color-hair:       #DDD6C9;  /* hairlines */
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
+/* Nuxt UI token overrides so its components inherit the palette */
+* {
+  --ui-bg: #F7F4EF;
+  --ui-bg-elevated: #EFEAE0;
+  --ui-text: #1F1B16;
+  --ui-text-muted: #8A847C;
+  --ui-border: #DDD6C9;
+  --ui-primary: #B5563A;
+  --vis-donut-background-color: transparent;
+}
+
+html { scroll-behavior: smooth; }
+
 body {
-    min-height: 100vh;
-};
+  min-height: 100vh;
+  background-color: #F7F4EF;
+  color: #1F1B16;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-textarea {
-  field-sizing: content;
-};
+textarea { field-sizing: content; }
 
-.background {
-  background-color: #020203;
+/* Legacy hook kept so any remaining `.background` usages don't go black */
+.background { background-color: #F7F4EF; }
+
+/* ---------- Type helpers ---------- */
+.font-display { font-family: 'Fraunces', Georgia, serif; }
+
+.gf-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5A6349;
+  font-weight: 500;
+}
+
+.gf-display {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Scroll-reveal in 3D ----------
+   Add .gf-depth to any block; an IntersectionObserver adds .in
+   (see plugins/scroll-reveal.client.ts) and it rotates up from
+   depth into place. --d sets a stagger delay.                */
+.gf-stage { perspective: 1400px; perspective-origin: 50% 40%; }
+
+.gf-depth {
+  opacity: 0;
+  transform: translateY(46px) translateZ(-180px) rotateX(9deg);
+  transition: opacity .9s cubic-bezier(.16, 1, .3, 1),
+              transform 1.05s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--d, 0s);
+  transform-style: preserve-3d;
+}
+.gf-depth.in {
+  opacity: 1;
+  transform: translateY(0) translateZ(0) rotateX(0);
+}
+
+/* Entrance without scroll (above-the-fold content) */
+.gf-rise {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: gfRise .8s cubic-bezier(.16, 1, .3, 1) forwards;
+  animation-delay: var(--d, 0s);
+}
+@keyframes gfRise { to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    transition-duration: .001ms !important;
+  }
+  .gf-depth { opacity: 1 !important; transform: none !important; }
+  .gf-rise  { opacity: 1 !important; transform: none !important; }
 }

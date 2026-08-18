@@ -135,7 +135,7 @@ const columns: TableColumn<Lead>[] = [
       const label = lastContactLabel(row.original)
       return h(
         'span',
-        { class: label === 'Never' ? 'text-zinc-500' : 'text-zinc-300' },
+        { class: label === 'Never' ? 'text-[#8A847C]' : 'text-[#1F1B16]' },
         label
       )
     }
@@ -178,9 +178,9 @@ const pagination = ref({
 </script>
 
 <template>
-  <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
+  <div class="border border-[#DDD6C9] bg-[#F7F4EF] overflow-hidden w-full">
     <div class="flex flex-col flex-1 w-full p-5">
-      <div class="flex px-4 py-3.5 border-b border-accented">
+      <div class="flex px-4 py-3.5 border-b border-[#DDD6C9]">
         <UInput :model-value="table?.tableApi?.getColumn('email')?.getFilterValue() as string" class="max-w-sm"
           placeholder="Filter emails..."
           @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)" />
@@ -191,7 +191,7 @@ const pagination = ref({
         }" class="flex-1">
         <template #name-cell="{ row }">
           <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
-            class="text-cyan-400 hover:text-cyan-700 underline font-medium">
+            class="text-[#B5563A] hover:text-[#8f4229] underline underline-offset-2 font-medium">
             {{ row.original?.name ? row.original?.name : 'Not Specified' }}
           </NuxtLink>
         </template>
@@ -209,7 +209,7 @@ const pagination = ref({
         </template>
       </UTable>
 
-      <div class="flex justify-end border-t border-default pt-4 px-4 color-cyan-400">
+      <div class="flex justify-end border-t border-[#DDD6C9] pt-4 px-4">
         <UPagination :page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
           :items-per-page="table?.tableApi?.getState().pagination.pageSize"
           :total="table?.tableApi?.getFilteredRowModel().rows.length"

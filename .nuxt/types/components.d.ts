@@ -41,6 +41,7 @@ interface _GlobalComponents {
   BaseNavBar: typeof import("../../app/components/base/NavBar.vue")['default']
   BaseQrCode: typeof import("../../app/components/base/QrCode.vue")['default']
   BaseTable: typeof import("../../app/components/base/Table.vue")['default']
+  BaseTerrain: typeof import("../../app/components/base/Terrain.vue")['default']
   BaseButton: typeof import("../../app/components/base/button.vue")['default']
   BaseFooter: typeof import("../../app/components/base/footer.vue")['default']
   BaseIcon: typeof import("../../app/components/base/icon.vue")['default']
@@ -255,6 +256,7 @@ interface _GlobalComponents {
   LazyBaseNavBar: LazyComponent<typeof import("../../app/components/base/NavBar.vue")['default']>
   LazyBaseQrCode: LazyComponent<typeof import("../../app/components/base/QrCode.vue")['default']>
   LazyBaseTable: LazyComponent<typeof import("../../app/components/base/Table.vue")['default']>
+  LazyBaseTerrain: LazyComponent<typeof import("../../app/components/base/Terrain.vue")['default']>
   LazyBaseButton: LazyComponent<typeof import("../../app/components/base/button.vue")['default']>
   LazyBaseFooter: LazyComponent<typeof import("../../app/components/base/footer.vue")['default']>
   LazyBaseIcon: LazyComponent<typeof import("../../app/components/base/icon.vue")['default']>

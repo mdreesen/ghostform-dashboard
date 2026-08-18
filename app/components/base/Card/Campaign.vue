@@ -70,12 +70,12 @@ const useDelete = async () => {
 </script>
 
 <template>
-    <div class="backdrop-blur-xl bg-white/2 border border-white/8 p-8 rounded-3xl w-full sm:w-full md:w-full lg:w-75">
+    <div class="bg-[#F7F4EF] border border-[#DDD6C9] p-8 w-full sm:w-full md:w-full lg:w-75">
         <div class="flex items-center justify-between mb-2">
             <baseHeaderSection :text="data?.title" css="mb-0" />
             <span
                 class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full"
-                :class="isActive ? 'bg-emerald-500/10 text-emerald-300' : 'bg-zinc-500/10 text-zinc-400'"
+                :class="isActive ? 'bg-[#5A6349]/10 text-[#5A6349]' : 'bg-zinc-500/10 text-[#8A847C]'"
             >
                 {{ isActive ? 'Active' : 'Paused' }}
             </span>
@@ -83,10 +83,10 @@ const useDelete = async () => {
 
         <div class="flex flex-col gap-6">
             <div class="text-md font-bold tabular-nums">
-                Campaign for <span class="text-cyan-400">{{ data?.targetStatus }}</span> leads
+                Campaign for <span class="text-[#B5563A]">{{ data?.targetStatus }}</span> leads
             </div>
 
-            <div class="text-xs text-zinc-500 -mt-4">
+            <div class="text-xs text-[#8A847C] -mt-4">
                 {{ cadenceLabel }} &middot; {{ dayLabel }}
             </div>
 

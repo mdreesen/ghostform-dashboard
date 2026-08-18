@@ -76,26 +76,26 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                         <section class="lg:col-span-4 space-y-6">
                             <div class="backdrop-blur-xl bg-white/1 border border-white/6 rounded-4xl p-6 space-y-4">
                                 <div
-                                    class="flex justify-between items-center text-xs font-mono border-b border-white/5 pb-3">
-                                    <span class="text-zinc-500 uppercase tracking-wider">Account Node</span>
+                                    class="flex justify-between items-center text-xs font-mono border-b border-[#DDD6C9] pb-3">
+                                    <span class="text-[#8A847C] uppercase tracking-wider">Account Node</span>
                                     <UBadge color="neutral" variant="subtle"
-                                        class="font-black text-[9px] uppercase tracking-widest px-2.5">Phantom Tier
+                                        class="font-semibold text-[9px] uppercase tracking-widest px-2.5">Phantom Tier
                                     </UBadge>
                                 </div>
                                 <div class="flex justify-between items-center text-xs font-mono">
-                                    <span class="text-zinc-500 uppercase tracking-wider">Stripe Sync</span>
-                                    <span class="text-zinc-400 font-bold">Active</span>
+                                    <span class="text-[#8A847C] uppercase tracking-wider">Stripe Sync</span>
+                                    <span class="text-[#8A847C] font-bold">Active</span>
                                 </div>
                             </div>
                         </section>
 
                         <section class="lg:col-span-8">
-                            <div class="backdrop-blur-2xl bg-white/2 border border-white/8 rounded-[2.5rem] shadow-2xl">
+                            <div class="backdrop-blur-2xl bg-[#F7F4EF] border border-[#DDD6C9] shadow-2xl">
 
                                 <div class="px-8 py-4">
                                     <UButton v-if="!isEditing" variant="subtle" color="neutral"
                                         icon="i-heroicons-pencil-square"
-                                        class="rounded-xl px-5 py-2.5 text-xs font-black tracking-wider uppercase"
+                                        class="px-5 py-2.5 text-xs font-semibold tracking-wider uppercase"
                                         @click="isEditing = true">
                                         Modify Profile
                                     </UButton>
@@ -108,7 +108,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                             <UInput v-if="isEditing" v-model="state.name" :disabled="!isEditing"
                                                 variant="none" class="truncate" />
                                             <span v-else
-                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                                                 :title="state.name">
                                                 {{ state.name || '—' }}
                                             </span>
@@ -118,7 +118,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                             <UInput v-if="isEditing" v-model="state.email" :disabled="!isEditing"
                                                 type="email" variant="none" class="truncate" />
                                             <span v-else
-                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                                                 :title="state.email">
                                                 {{ state.email || '—' }}
                                             </span>
@@ -129,7 +129,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                         <UInput v-if="isEditing" v-model="state.phone" :disabled="!isEditing" type="tel"
                                             variant="none" class="truncate" />
                                         <span v-else
-                                            class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                            class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                                             :title="state.phone">
                                             {{ state.phone || '—' }}
                                         </span>
@@ -140,7 +140,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                             <UInput v-if="isEditing" v-model="state.company" :disabled="!isEditing"
                                                 variant="none" class="truncate" />
                                             <span v-else
-                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                                                 :title="state.company">
                                                 {{ state.company || '—' }}
                                             </span>
@@ -150,7 +150,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                             <UInput v-if="isEditing" v-model="state.region" :disabled="!isEditing"
                                                 variant="none" class="truncate" />
                                             <span v-else
-                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                                                 :title="state.region">
                                                 {{ state.region || '—' }}
                                             </span>
@@ -161,7 +161,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                             <UInput v-if="isEditing" v-model="state.calendar_link"
                                                 :disabled="!isEditing" variant="none" class="truncate" />
                                             <span v-else
-                                                class="block truncate text-sm font-medium text-slate-400 max-w-50"
+                                                class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                                                 :title="state.calendar_link">
                                                 {{ state.calendar_link || '—' }}
                                             </span>
@@ -169,14 +169,14 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                                     </div>
 
                                     <div v-if="isEditing"
-                                        class="flex justify-end gap-3 pt-6 border-t border-white/5 mt-8">
+                                        class="flex justify-end gap-3 pt-6 border-t border-[#DDD6C9] mt-8">
                                         <UButton variant="ghost" color="neutral"
-                                            class="rounded-xl px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
+                                            class="px-5 py-2.5 text-xs font-bold uppercase tracking-wider"
                                             @click="isEditing = false">
                                             Cancel Changes
                                         </UButton>
                                         <UButton type="submit" color="neutral"
-                                            class="rounded-xl px-6 py-2.5 text-xs font-black uppercase tracking-wider shadow-[0_0_20px_rgba(48,207,67,0.2)]">
+                                            class="px-6 py-2.5 text-xs font-semibold uppercase tracking-wider shadow-[0_0_20px_rgba(48,207,67,0.2)]">
                                             Update Profile
                                         </UButton>
                                     </div>

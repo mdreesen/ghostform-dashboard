@@ -28,17 +28,12 @@ const useCalendar = props.calendar ? `&calendar=${props.calendar}` : '';
     <div class="relative group max-w-md mx-auto">
   
       <div
-        class="absolute -inset-0.5 bg-linear-to-r from-cyan-500 to-blue-600 rounded-[2.5rem] blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt">
+        class="absolute -inset-0.5 bg-linear-to-r from-[#B5563A] to-[#C9866F] blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt">
       </div>
   
-      <div class="relative bg-[#0d0d0d] rounded-[2.5rem] overflow-hidden border border-white/10">
+      <div class="relative bg-[#0d0d0d] overflow-hidden border border-[#DDD6C9]">
   
         <div class="absolute inset-0 pointer-events-none opacity-20">
-          <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-500 rounded-full blur-[80px] animate-pulse">
-          </div>
-          <div
-            class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full blur-[80px] animate-pulse"
-            style="animation-delay: 1s;"></div>
         </div>
 
         <div v-if="!category && !company && !email">

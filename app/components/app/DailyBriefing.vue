@@ -1,11 +1,12 @@
 <script setup lang="ts">
 /**
- * Daily "Who to Contact" briefing card.
- * Reads from /api/briefing (cached under the 'briefing' key, prefetched in the
- * authenticated layout). Shows the ranked list of leads needing attention today,
- * bucketed into Overdue / New / Cold. Each row shows how long since last contact
- * (transparency) and a one-tap "Mark as contacted" action that drops the lead
- * off today's list until it goes cold again.
+ * Daily "Who to Contact" briefing.
+ * Reads from /api/briefing (cached under 'briefing', prefetched in the
+ * authenticated layout). Ranked list bucketed into Overdue / New / Cold, each
+ * row showing time since last contact plus one-tap actions.
+ *
+ * Marking contacted (or sending a message) removes the lead optimistically with
+ * a 3D file-away animation, then persists.
  */
 interface BriefingLead {
   _id: string
@@ -31,11 +32,11 @@ interface Briefing {
 const { data: briefing, pending } = useNuxtData<Briefing>('briefing')
 const toast = useToast()
 
-// Track which leads are mid-request so we can disable their button.
 const marking = ref<Set<string>>(new Set())
+// Leads currently playing the file-away animation, so we can hold them in the
+// DOM for the duration instead of yanking them out instantly.
+const filing = ref<Set<string>>(new Set())
 
-// Cap the visible list so the dashboard stays scannable; the rest live on the
-// leads page. Realtors act on the top of the list first anyway.
 const VISIBLE_LIMIT = 8
 const showAll = ref(false)
 const visibleLeads = computed(() => {
@@ -43,20 +44,15 @@ const visibleLeads = computed(() => {
   return showAll.value ? all : all.slice(0, VISIBLE_LIMIT)
 })
 
-const bucketMeta: Record<
-  BriefingLead['bucket'],
-  { label: string; dot: string; text: string }
-> = {
-  overdue: { label: 'Overdue', dot: 'bg-rose-400', text: 'text-rose-300' },
-  new: { label: 'New', dot: 'bg-cyan-400', text: 'text-cyan-300' },
-  cold: { label: 'Cold', dot: 'bg-amber-400', text: 'text-amber-300' }
+// Terracotta square variants carry the status — filled / hollow / faint.
+const bucketMeta: Record<BriefingLead['bucket'], { label: string; sq: string }> = {
+  overdue: { label: 'Overdue', sq: 'bg-[#B5563A]' },
+  new:     { label: 'New',     sq: 'bg-transparent border-[1.5px] border-[#C9866F]' },
+  cold:    { label: 'Cold',    sq: 'bg-[#A9A39A]' }
 }
 
-/**
- * Called when the message composer successfully sends. Sending stamps contact
- * server-side, so remove the lead from today's list to match.
- */
-function onLeadSent(leadId: string) {
+/** Remove a lead from the list + totals (used by both actions). */
+function dropLead(leadId: string) {
   if (!briefing.value) return
   const lead = briefing.value.leads.find((l) => l._id === leadId)
   if (!lead) return
@@ -65,31 +61,39 @@ function onLeadSent(leadId: string) {
   briefing.value.totals[lead.bucket] = Math.max(0, briefing.value.totals[lead.bucket] - 1)
 }
 
+/** Play the file-away animation, then actually remove. */
+function fileAway(leadId: string) {
+  filing.value.add(leadId)
+  setTimeout(() => {
+    dropLead(leadId)
+    filing.value.delete(leadId)
+  }, 620)
+}
+
+/** The composer sent a message — server already stamped contact. */
+function onLeadSent(leadId: string) {
+  fileAway(leadId)
+}
+
 async function markContacted(lead: BriefingLead) {
   if (!briefing.value || marking.value.has(lead._id)) return
 
-  // Snapshot for rollback.
   const prevLeads = briefing.value.leads
-  const idx = prevLeads.findIndex((l) => l._id === lead._id)
-  if (idx === -1) return
+  const prevTotals = { ...briefing.value.totals }
 
   marking.value.add(lead._id)
-
-  // Optimistic removal + totals adjustment.
-  briefing.value.leads = prevLeads.filter((l) => l._id !== lead._id)
-  briefing.value.totals.total = Math.max(0, briefing.value.totals.total - 1)
-  briefing.value.totals[lead.bucket] = Math.max(0, briefing.value.totals[lead.bucket] - 1)
+  fileAway(lead._id)
 
   try {
     await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' })
     toast.success(`Marked ${lead.name} as contacted`)
-    // Keep the leads list in sync too, if it's cached.
     await refreshNuxtData('leads')
   } catch {
     // Roll back on failure.
-    briefing.value.leads = prevLeads
-    briefing.value.totals.total += 1
-    briefing.value.totals[lead.bucket] += 1
+    if (briefing.value) {
+      briefing.value.leads = prevLeads
+      briefing.value.totals = prevTotals
+    }
     toast.error('Could not update. Please try again.')
   } finally {
     marking.value.delete(lead._id)
@@ -99,136 +103,132 @@ async function markContacted(lead: BriefingLead) {
 
 <template>
   <div class="w-full">
-    <!-- Headline / summary line -->
-    <div
-      class="backdrop-blur-xl bg-white/2 border border-white/8 p-6 rounded-3xl mb-6"
-    >
-      <div class="flex items-start justify-between gap-4">
-        <div>
-          <p
-            class="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2"
-          >
-            Today's Briefing
-          </p>
-          <p v-if="pending && !briefing" class="text-lg font-bold tracking-tight">
-            Building your list…
-          </p>
-          <p v-else class="text-lg font-bold tracking-tight leading-snug">
-            {{ briefing?.headline }}
-          </p>
-        </div>
-
-        <!-- Count chips -->
-        <div v-if="briefing?.totals?.total" class="flex gap-2 shrink-0">
-          <div
-            v-if="briefing.totals.overdue"
-            class="px-3 py-2 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center"
-          >
-            <p class="text-xl font-bold tabular-nums text-rose-300">
-              {{ briefing.totals.overdue }}
-            </p>
-            <p class="text-[9px] uppercase tracking-widest text-rose-400/70">
-              Overdue
-            </p>
-          </div>
-          <div
-            v-if="briefing.totals.new"
-            class="px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-center"
-          >
-            <p class="text-xl font-bold tabular-nums text-cyan-300">
-              {{ briefing.totals.new }}
-            </p>
-            <p class="text-[9px] uppercase tracking-widest text-cyan-400/70">New</p>
-          </div>
-          <div
-            v-if="briefing.totals.cold"
-            class="px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-center"
-          >
-            <p class="text-xl font-bold tabular-nums text-amber-300">
-              {{ briefing.totals.cold }}
-            </p>
-            <p class="text-[9px] uppercase tracking-widest text-amber-400/70">
-              Cold
-            </p>
-          </div>
-        </div>
-      </div>
+    <!-- Section header -->
+    <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+      <span class="gf-eyebrow">01 — Today</span>
+      <span class="font-display text-[25px] font-semibold tracking-tight">Who to reach</span>
     </div>
 
-    <!-- The ranked action list -->
-    <div
-      v-if="briefing?.leads?.length"
-      class="flex flex-col gap-2"
+    <!-- Headline -->
+    <p
+      v-if="pending && !briefing"
+      class="font-display text-[30px] leading-[1.32] max-w-[24ch] mb-11 text-[#8A847C]"
     >
+      Building your list…
+    </p>
+    <p
+      v-else
+      class="font-display text-[26px] sm:text-[30px] leading-[1.32] max-w-[26ch] mb-11"
+    >
+      {{ briefing?.headline }}
+    </p>
+
+    <!-- Ranked list -->
+    <div v-if="briefing?.leads?.length">
       <div
         v-for="lead in visibleLeads"
         :key="lead._id"
-        class="group flex items-center justify-between gap-3 p-4 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-600 transition-colors"
+        class="gf-lead group grid items-center gap-4 sm:gap-6 border-t border-[#DDD6C9] last:border-b py-6 pl-1.5 pr-3 relative transition-colors duration-300 hover:bg-[#DDD6C9]/30"
+        :class="filing.has(lead._id) ? 'gf-filing' : ''"
       >
-        <!-- Lead identity + why it's here (links to details) -->
-        <NuxtLink
-          :to="`/dashboard/leads/${lead._id}/details`"
-          class="flex items-center gap-3 min-w-0 flex-1"
-        >
-          <span
-            class="w-2 h-2 rounded-full shrink-0"
-            :class="bucketMeta[lead.bucket].dot"
-          />
-          <div class="min-w-0">
-            <p class="font-bold truncate group-hover:text-cyan-400 transition-colors">
-              {{ lead.name }}
-            </p>
-            <p class="text-xs text-zinc-500 truncate">{{ lead.reason }}</p>
-            <p class="text-[11px] text-zinc-600 truncate mt-0.5">
-              {{ lead.lastContactLabel }}
-            </p>
-          </div>
-        </NuxtLink>
+        <!-- rust bar grows on hover -->
+        <span
+          class="absolute left-0 top-0 bottom-0 w-0.5 bg-[#B5563A] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center"
+        />
 
-        <div class="flex items-center gap-2 shrink-0">
-          <span
-            class="hidden sm:inline text-[10px] font-bold uppercase tracking-widest"
-            :class="bucketMeta[lead.bucket].text"
-          >
+        <span class="gf-ref hidden sm:block text-[11px] tracking-[0.1em] text-[#A9A39A] tabular-nums">
+          № {{ lead._id.slice(-4).toUpperCase() }}
+        </span>
+
+        <span class="gf-marker flex items-center gap-2.5">
+          <span class="w-[7px] h-[7px] shrink-0 transition-transform" :class="bucketMeta[lead.bucket].sq" />
+          <span class="text-[10.5px] uppercase tracking-[0.14em] text-[#8A847C]">
             {{ bucketMeta[lead.bucket].label }}
           </span>
+        </span>
 
-          <!-- AI message composer (draft + one-tap send) -->
+        <NuxtLink :to="`/dashboard/leads/${lead._id}/details`" class="gf-main min-w-0">
+          <p class="font-display text-[19px] font-semibold tracking-tight mb-0.5 truncate group-hover:text-[#B5563A] transition-colors">
+            {{ lead.name }}
+          </p>
+          <p class="text-[13.5px] text-[#8A847C] truncate">
+            {{ lead.reason }} · {{ lead.lastContactLabel }}
+          </p>
+        </NuxtLink>
+
+        <div class="gf-actions flex gap-2.5 opacity-60 group-hover:opacity-100 transition-opacity">
           <appLeadMessageComposer
             :lead-id="lead._id"
             :lead-name="lead.name"
             @sent="onLeadSent"
           />
-
-          <!-- One-tap: mark as contacted -->
           <button
             :disabled="marking.has(lead._id)"
-            class="text-[11px] font-bold px-3 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 hover:bg-cyan-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+            class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
             @click="markContacted(lead)"
           >
-            {{ marking.has(lead._id) ? 'Saving…' : '✓ Contacted' }}
+            {{ marking.has(lead._id) ? 'Saving…' : 'Contacted' }}
           </button>
         </div>
       </div>
 
       <button
         v-if="briefing.leads.length > VISIBLE_LIMIT"
-        class="mt-2 text-xs font-bold uppercase tracking-widest text-zinc-500 hover:text-cyan-400 transition-colors self-center py-2"
+        class="mt-8 gf-eyebrow hover:text-[#B5563A] transition-colors"
         @click="showAll = !showAll"
       >
-        {{ showAll ? 'Show less' : `Show all ${briefing.leads.length}` }}
+        {{ showAll ? '— Show less' : `— Show all ${briefing.leads.length}` }}
       </button>
     </div>
 
-    <!-- Empty / caught-up state -->
-    <div
-      v-else-if="!pending"
-      class="p-8 rounded-2xl bg-slate-900/40 border border-slate-800 text-center"
-    >
-      <p class="text-sm text-zinc-400">
-        Nothing needs a follow-up right now. New and cold leads will appear here
-        automatically.
+    <!-- Caught up -->
+    <div v-else-if="!pending" class="border-t border-b border-[#DDD6C9] py-14 text-center">
+      <p class="text-[14px] text-[#8A847C]">
+        Nothing needs a follow-up right now. New and cold leads appear here automatically.
       </p>
     </div>
   </div>
 </template>
+
+<style scoped>
+.gf-lead {
+  grid-template-columns: 1fr auto;
+  transform-style: preserve-3d;
+  transition: background-color .3s ease, transform .4s cubic-bezier(.16, 1, .3, 1);
+}
+.gf-lead:hover { transform: translateZ(18px); }
+
+@media (min-width: 640px) {
+  .gf-lead { grid-template-columns: 58px 96px 1fr auto; }
+}
+@media (max-width: 639px) {
+  .gf-marker { grid-column: 1; }
+  .gf-main { grid-column: 1 / -1; }
+  .gf-actions { grid-column: 1 / -1; }
+}
+
+/* the lead rotates away into depth as it's filed */
+.gf-filing {
+  animation: gfFileAway .62s cubic-bezier(.4, 0, .6, 1) forwards;
+  pointer-events: none;
+}
+@keyframes gfFileAway {
+  0%   { opacity: 1; transform: translateX(0) rotateY(0) translateZ(0); max-height: 140px; }
+  45%  { opacity: 0; transform: translateX(40px) rotateY(22deg) translateZ(-90px); }
+  100% { opacity: 0; transform: translateX(40px) rotateY(22deg) translateZ(-90px);
+         max-height: 0; padding-top: 0; padding-bottom: 0; border-width: 0; }
+}
+.gf-filing .gf-marker span:first-child {
+  animation: gfSpinSq .55s cubic-bezier(.34, 1.56, .64, 1);
+}
+@keyframes gfSpinSq {
+  0%   { transform: rotate(0) scale(1); }
+  50%  { transform: rotate(180deg) scale(2.4); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-lead:hover { transform: none; }
+  .gf-filing { animation-duration: .001ms; }
+}
+</style>

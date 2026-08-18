@@ -23,7 +23,7 @@ const lead = ref(data.value);
 
             <baseButtonNavigate class="w-25" text="Edit" :path="`/dashboard/leads/${route.params.id}/edit`" />
           </div>
-          <div class="flex flex-col md:flex-row gap-6 mt-5 text-slate-200">
+          <div class="flex flex-col md:flex-row gap-6 mt-5 text-[#1F1B16]">
             <div class="flex flex-col">
               <baseHeaderSection text="Email" css="mb-0" />
               <baseMessage :label="lead?.email" message_type="mailto" communication_type="email" />
@@ -50,7 +50,7 @@ const lead = ref(data.value);
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
         <div class="lg:col-span-4 space-y-8">
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
+          <div class="bg-[#F7F4EF] border border-[#DDD6C9] p-8">
             <baseHeaderSection text="Lead Submission" />
             <div class="space-y-6">
               <div v-for="(val, label) in {
@@ -58,17 +58,17 @@ const lead = ref(data.value);
                 'Budget': `${lead?.budget?.toLocaleString() ? `$${lead?.budget?.toLocaleString()}` : 'Not Provided'}`,
                 'Sq Footage': lead?.sqft ? `${lead?.sqft} ft²` : 'Not Provided',
                 'Intent (Buy, Sell,<br>or Both)': lead?.buy_sell_both ? lead?.buy_sell_both : 'Not Provided'
-              }" :key="label" class="flex justify-between items-end border-b border-white/5 pb-2">
+              }" :key="label" class="flex justify-between items-end border-b border-[#DDD6C9] pb-2">
 
-                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest" v-html="label" />
+                <span class="text-[10px] font-bold text-[#8A847C] uppercase tracking-widest" v-html="label" />
                 <span class="text-sm font-bold" v-html="val" />
               </div>
             </div>
           </div>
 
-          <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-3xl p-8">
+          <div class="bg-[#F7F4EF] border border-[#DDD6C9] p-8">
             <baseHeaderSection text="Notes" />
-            <p class="text-sm text-zinc-300 leading-relaxed italic-none">"{{ lead?.notes ? lead?.notes : 'No other notes' }}"
+            <p class="text-sm text-[#1F1B16] leading-relaxed italic-none">"{{ lead?.notes ? lead?.notes : 'No other notes' }}"
             </p>
           </div>
         </div>
@@ -76,9 +76,9 @@ const lead = ref(data.value);
         <ClientOnly>
           <div v-if="lead?.ai_analysis" class="lg:col-span-8 space-y-8">
             <div
-              class="backdrop-blur-xl bg-white/4 border border-cyan-400/20 rounded-3xl p-10 relative overflow-hidden">
+              class="bg-[#EFEAE0] border border-[#DDD6C9] p-10 relative overflow-hidden">
               <div class="absolute top-0 right-0 p-4">
-                <span class="text-[8px] font-black bg-cyan-400/20 text-cyan-400 px-2 py-1 rounded tracking-widest">AI
+                <span class="text-[8px] font-semibold bg-[#B5563A]/20 text-[#B5563A] px-2 py-1 rounded tracking-widest">AI
                   GEN</span>
               </div>
               <baseHeaderSection text="AI Analysis" />

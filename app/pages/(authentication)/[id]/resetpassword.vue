@@ -56,11 +56,11 @@ useMotion(formRef, { ...formVarient() });
     <div class="flex items-center justify-center py-20 relative overflow-hidden">
 
         <main class="w-full max-w-110 z-10">
-            <div class="backdrop-blur-xl bg-white/3 border border-white/8 rounded-3xl p-10 shadow-2xl">
+            <div class="backdrop-blur-xl bg-white/60 border border-[#DDD6C9] p-10 shadow-2xl">
 
                 <header class="text-center mb-12">
-                    <h1 class="text-3xl font-bold tracking-tight text-white mb-2">GhostForm</h1>
-                    <p class="text-zinc-400 text-sm">Reset your password</p>
+                    <h1 class="text-3xl font-bold tracking-tight text-[#1F1B16] mb-2">GhostForm</h1>
+                    <p class="text-[#8A847C] text-sm">Reset your password</p>
                 </header>
 
                 <div class="space-y-6">
@@ -70,14 +70,14 @@ useMotion(formRef, { ...formVarient() });
                             <baseLabel text="Password" />
                             <input id="password" type="password" v-model="input.password" placeholder="Password"
                                 required
-                                class="w-full bg-white/3 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-zinc-700 text-ellipsis" />
+                                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div v-motion="{ ...inputVarient() }">
                             <baseLabel text="Confirm Password" />
                             <input id="password" type="password" v-model="input.confirm_password"
                                 placeholder="Confirm Password" required
-                                class="w-full bg-white/3 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-zinc-700 text-ellipsis" />
+                                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div v-motion="{ ...inputVarient() }">
@@ -92,8 +92,8 @@ useMotion(formRef, { ...formVarient() });
 
                     <!-- Signup Link -->
                     <div class="text-center" v-motion="{ ...inputVarient() }">
-                        <p class="text-center text-xs text-zinc-500">
-                            Already have an account? <NuxtLink to="/login" class="text-cyan-400 hover:underline">Access
+                        <p class="text-center text-xs text-[#8A847C]">
+                            Already have an account? <NuxtLink to="/login" class="text-[#B5563A] hover:underline">Access
                                 Login
                             </NuxtLink>
                         </p>

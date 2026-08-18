@@ -1,63 +1,181 @@
 <script setup lang="ts">
-
 definePageMeta({
   layout: 'authenticated',
 });
 
 useHead({
-  title: 'GhostForm | Main',
+  title: 'GhostForm | Today',
   meta: [
     { name: 'description', content: 'GhostForm Main Dashboard.' },
   ],
 });
 
-const { data: user } = useNuxtData('user');
-const { data: leads } = useNuxtData('leads');
-const { data: charts_lead } = useNuxtData('charts_lead');
+const { data: user } = useNuxtData<any>('user');
+const { data: leads } = useNuxtData<any>('leads');
+const { data: charts_lead } = useNuxtData<any>('charts_lead');
+const { data: briefing } = useNuxtData<any>('briefing');
 
 const chart_data = computed(() => charts_lead?.value?.monthly);
+
+// Warm, human greeting line for the hero.
+const firstName = computed(() => (user.value?.name || '').split(' ')[0] || '');
+const today = computed(() =>
+  new Date().toLocaleDateString('en-US', {
+    weekday: 'long', day: 'numeric', month: 'long'
+  })
+);
+
+// The hero headline states the day's actual workload.
+const heroLine = computed(() => {
+  const t = briefing.value?.totals;
+  if (!t || t.total === 0) return 'You’re all caught up today.';
+  const n = t.total;
+  return n === 1
+    ? 'One person is waiting to hear from you.'
+    : `${n} people are waiting to hear from you.`;
+});
+
+// Pipeline counts by status for the section 02 strip.
+const pipeline = computed(() => {
+  const all = leads.value?.all ?? [];
+  const count = (s: string) => all.filter((l: any) => l.status === s).length;
+  const stages = [
+    { label: 'New', value: count('new') },
+    { label: 'Appointment', value: count('appointment') },
+    { label: 'Under contract', value: count('under contract') },
+    { label: 'Closed', value: count('closed') },
+  ];
+  const max = Math.max(1, ...stages.map((s) => s.value));
+  return stages.map((s) => ({ ...s, ratio: s.value / max }));
+});
+
+const activeLeads = computed(() =>
+  (leads.value?.all ?? []).filter((l: any) => !['closed', 'archive'].includes(l.status)).length
+);
 </script>
 
 <template>
-  <div>
-    <appHeader :label="user?.company" :subLabel="user?.category" />
+  <div class="max-w-[1240px] mx-auto">
 
-    <main class="flex flex-col gap-18 max-w-350 mx-auto relative z-10">
+    <!-- ── Hero with the 3D terrain ─────────────────────────── -->
+    <section class="gf-hero relative -mx-6 sm:-mx-10 lg:-mx-12 px-6 sm:px-10 lg:px-12 mb-24">
+      <ClientOnly>
+        <baseTerrain />
+      </ClientOnly>
 
-      <section class="flex flex-col">
-        <baseHeaderSection text="Who to contact today" />
-        <ClientOnly>
-          <appDailyBriefing />
-        </ClientOnly>
-      </section>
+      <div class="relative z-[2] py-16 sm:py-24">
+        <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">
+          {{ today }}<template v-if="firstName"> — Hello, {{ firstName }}</template>
+        </p>
+        <h1
+          class="gf-display text-[clamp(36px,5.2vw,68px)] max-w-[15ch] mb-5 gf-rise"
+          style="--d:.14s"
+        >
+          {{ heroLine }}
+        </h1>
+        <p class="text-[16px] text-[#8A847C] leading-relaxed max-w-[42ch] gf-rise" style="--d:.24s">
+          Lets get started!
+        </p>
+      </div>
+    </section>
 
-      <section class="flex flex-col">
-        <baseHeaderSection text="Overview" />
-        <div class="flex flex-wrap justify-between gap-6">
-          <appCardsOverview v-if="leads?.all" :leads="leads" />
+    <!-- ── 01 Who to reach ──────────────────────────────────── -->
+    <section class="gf-depth mb-28" style="--d:.05s">
+      <ClientOnly>
+        <appDailyBriefing />
+      </ClientOnly>
+    </section>
+
+    <!-- ── Stats ────────────────────────────────────────────── -->
+    <section class="gf-depth mb-28 grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9]">
+      <div class="bg-[#F7F4EF] p-8 transition-transform duration-500 hover:translate-z-6">
+        <p class="gf-eyebrow mb-4">Active leads</p>
+        <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
+          <span :data-count="activeLeads">0</span>
+        </p>
+        <p class="text-[12.5px] text-[#8A847C] mt-2.5">Not closed or archived</p>
+      </div>
+      <div class="bg-[#F7F4EF] p-8">
+        <p class="gf-eyebrow mb-4">Needing attention</p>
+        <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
+          <span :data-count="briefing?.totals?.total ?? 0">0</span>
+        </p>
+        <p class="text-[12.5px] text-[#8A847C] mt-2.5">Surfaced in today’s briefing</p>
+      </div>
+      <div class="bg-[#F7F4EF] p-8">
+        <p class="gf-eyebrow mb-4">Going cold</p>
+        <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
+          <span :data-count="briefing?.totals?.cold ?? 0">0</span>
+        </p>
+        <p class="text-[12.5px] text-[#8A847C] mt-2.5">Quiet past your threshold</p>
+      </div>
+    </section>
+
+    <!-- ── 02 Pipeline ──────────────────────────────────────── -->
+    <section class="gf-depth mb-28">
+      <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+        <span class="gf-eyebrow">02 — Pipeline</span>
+        <span class="font-display text-[25px] font-semibold tracking-tight">Where everyone stands</span>
+      </div>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-px bg-[#DDD6C9] border border-[#DDD6C9]">
+        <div
+          v-for="(stage, i) in pipeline"
+          :key="stage.label"
+          class="bg-[#F7F4EF] p-7"
+        >
+          <p class="font-display text-[34px] font-semibold tabular-nums mb-2">
+            <span :data-count="stage.value">0</span>
+          </p>
+          <p class="text-[10.5px] uppercase tracking-[0.14em] text-[#8A847C]">{{ stage.label }}</p>
+          <div class="h-0.5 bg-[#DDD6C9] mt-4 overflow-hidden">
+            <i
+              class="gf-bar block h-full bg-[#B5563A] origin-left"
+              :style="{ '--w': stage.ratio, '--bd': `${0.1 * i}s` }"
+            />
+          </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="flex flex-col ">
-        <baseHeaderSection text="Lead Charts" />
+    <!-- ── 03 Charts ────────────────────────────────────────── -->
+    <section v-if="chart_data" class="gf-depth mb-28">
+      <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+        <span class="gf-eyebrow">03 — Trend</span>
+        <span class="font-display text-[25px] font-semibold tracking-tight">Leads over time</span>
+      </div>
+      <div class="flex flex-wrap items-center justify-evenly gap-12">
+        <ClientOnly><baseChartsLine :data="chart_data" /></ClientOnly>
+        <ClientOnly><baseChartsDonut :data="chart_data" /></ClientOnly>
+      </div>
+    </section>
 
-        <div class="flex flex-wrap items-center justify-evenly gap-18">
-          <ClientOnly>
-            <baseChartsLine v-if="chart_data" :data="chart_data" />
-          </ClientOnly>
+    <!-- ── 04 All leads ─────────────────────────────────────── -->
+    <section class="gf-depth">
+      <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+        <span class="gf-eyebrow">04 — Everyone</span>
+        <span class="font-display text-[25px] font-semibold tracking-tight">All leads</span>
+      </div>
+      <ClientOnly>
+        <baseTable v-if="leads" :data="leads?.all" />
+      </ClientOnly>
+    </section>
 
-          <ClientOnly>
-            <baseChartsDonut v-if="chart_data" :data="chart_data" />
-          </ClientOnly>
-        </div>
-      </section>
-
-      <section class="space-y-6 w-full">
-        <baseHeaderSection text="Lead Tracking" />
-        <ClientOnly>
-          <baseTable v-if="leads" :data="leads?.all" />
-        </ClientOnly>
-      </section>
-    </main>
   </div>
 </template>
+
+<style scoped>
+.gf-hero { min-height: 62vh; }
+
+/* pipeline bars sweep out when the section reveals */
+.gf-bar {
+  transform: scaleX(0);
+  transition: transform 1.1s cubic-bezier(.16, 1, .3, 1);
+  transition-delay: var(--bd, 0s);
+}
+.gf-depth.in .gf-bar { transform: scaleX(var(--w, .5)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-bar { transform: scaleX(var(--w, .5)); }
+}
+</style>

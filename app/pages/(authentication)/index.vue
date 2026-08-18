@@ -68,11 +68,11 @@ useMotion(formRef, { ...formVarient() });
     class="flex items-center justify-center py-20 relative overflow-hidden">
 
     <main class="w-full max-w-110 z-10">
-      <div class="backdrop-blur-xl bg-white/3 border border-white/8 rounded-3xl p-10 shadow-2xl">
+      <div class="backdrop-blur-xl bg-white/60 border border-[#DDD6C9] p-10 shadow-2xl">
 
         <header class="text-center mb-12">
-          <h1 class="text-3xl font-bold tracking-tight text-white mb-2">GhostForm</h1>
-          <p class="text-zinc-400 text-sm">Intelligence for the Unseen.</p>
+          <h1 class="text-3xl font-bold tracking-tight text-[#1F1B16] mb-2">GhostForm</h1>
+          <p class="text-[#8A847C] text-sm">Intelligence for the Unseen.</p>
         </header>
 
         <div class="space-y-6">
@@ -81,13 +81,13 @@ useMotion(formRef, { ...formVarient() });
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Email" />
               <input id="email" type="email" v-model="credentials.email" placeholder="Email" required
-              class="w-full bg-white/3 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-zinc-700 text-ellipsis" />
+              class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Password" />
               <input id="password" type="password" v-model="credentials.password" placeholder="Password" required
-              class="w-full bg-white/3 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-zinc-700 text-ellipsis" />
+              class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }"
@@ -106,13 +106,13 @@ useMotion(formRef, { ...formVarient() });
                         <div v-motion="{ ...inputVarient() }">
                           <baseLabel text="Email" />
                           <input id="email" type="email" v-model="input.email" placeholder="Email" required
-                          class="w-full bg-white/3 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-zinc-700 text-ellipsis" />
+                          class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div v-motion="{ ...inputVarient() }">
                           <baseLabel text="Question" />
                           <input id="question" type="text" v-model="input.question" placeholder="What is 4 + 3" required
-                          class="w-full bg-white/3 border border-white/10 rounded-xl px-5 py-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors placeholder:text-zinc-700 text-ellipsis" />
+                          class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div class="flex flex-col gap-8 pb-4">
@@ -149,13 +149,13 @@ useMotion(formRef, { ...formVarient() });
           </ClientOnly> -->
 
           <div class="relative flex items-center py-2">
-            <div class="grow border-t border-white/10"></div>
-            <span class="shrink mx-4 text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Encrypted
+            <div class="grow border-t border-[#DDD6C9]"></div>
+            <span class="shrink mx-4 text-[#8A847C] text-[10px] uppercase tracking-widest font-bold">Encrypted
               Session</span>
-            <div class="grow border-t border-white/10"></div>
+            <div class="grow border-t border-[#DDD6C9]"></div>
           </div>
 
-          <p class="text-center text-xs text-zinc-500 leading-relaxed">
+          <p class="text-center text-xs text-[#8A847C] leading-relaxed">
             Authorized personnel only. Sessions are logged and analyzed for regional compliance.
           </p>
         </div>
@@ -165,9 +165,9 @@ useMotion(formRef, { ...formVarient() });
       <footer class="mt-8 flex justify-between items-center px-4">
         <div class="flex items-center gap-2">
           <div class="w-1.5 h-1.5 rounded-full bg-[#30cf43] shadow-[0_0_8px_#30cf43]"></div>
-          <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Ghost-Node Active</span>
+          <span class="text-[10px] font-bold text-[#8A847C] uppercase tracking-widest">Ghost-Node Active</span>
         </div>
-        <span class="text-[10px] font-mono text-zinc-600 italic-none">v3.0.4-LITE</span>
+        <span class="text-[10px] font-mono text-[#A9A39A] italic-none">v3.0.4-LITE</span>
       </footer>
     </main>
   </div>

@@ -77,30 +77,30 @@ async function send() {
 <template>
   <div class="inline-block">
     <button
-      class="text-[11px] font-bold px-3 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-300 hover:bg-purple-500/20 transition-colors whitespace-nowrap"
+      class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#DDD6C9] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors whitespace-nowrap"
       @click="openComposer"
     >
-      ✍️ Draft
+      Draft
     </button>
 
     <Teleport to="body">
       <Transition name="fade">
         <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div class="absolute inset-0 bg-zinc-950/90 backdrop-blur-md" @click="open = false" />
+          <div class="absolute inset-0 bg-[#1F1B16]/40 backdrop-blur-sm" @click="open = false" />
 
           <div
-            class="relative w-full max-w-lg bg-zinc-900 border border-white/10 rounded-3xl p-6 shadow-2xl"
+            class="relative w-full max-w-lg bg-[#F7F4EF] border border-[#DDD6C9] p-7 shadow-xl"
           >
             <div class="flex items-center justify-between mb-4">
               <div>
-                <p class="text-[10px] font-bold uppercase tracking-widest text-purple-400">
+                <p class="gf-eyebrow">
                   AI Message
                 </p>
-                <h2 class="text-lg font-bold tracking-tight">
+                <h2 class="font-display text-[22px] font-semibold tracking-tight">
                   Message {{ leadName || 'lead' }}
                 </h2>
               </div>
-              <button class="text-zinc-500 hover:text-white text-xl" @click="open = false">
+              <button class="text-[#A9A39A] hover:text-[#1F1B16] text-xl leading-none" @click="open = false">
                 &times;
               </button>
             </div>
@@ -110,17 +110,15 @@ async function send() {
               <button
                 v-for="opt in (['sms', 'email'] as const)"
                 :key="opt"
-                class="text-[11px] font-bold px-3 py-1.5 rounded-lg border transition-colors"
-                :class="channel === opt
-                  ? 'bg-purple-500/20 border-purple-500/40 text-purple-200'
-                  : 'bg-white/2 border-white/10 text-zinc-400 hover:text-white'"
+                class="text-[11px] uppercase tracking-[0.1em] px-3.5 py-2 border transition-colors"
+                :class="channel === opt ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'bg-transparent border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
                 @click="channel = opt"
               >
                 {{ opt === 'sms' ? 'Text style' : 'Email style' }}
               </button>
 
               <button
-                class="ml-auto text-[11px] font-bold px-3 py-1.5 rounded-lg bg-white/2 border border-white/10 text-zinc-400 hover:text-white transition-colors disabled:opacity-50"
+                class="ml-auto text-[11px] uppercase tracking-[0.1em] px-3.5 py-2 border border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16] hover:border-[#1F1B16] transition-colors disabled:opacity-40"
                 :disabled="generating"
                 @click="generate"
               >
@@ -133,7 +131,7 @@ async function send() {
               v-if="channel === 'email'"
               v-model="subject"
               placeholder="Subject"
-              class="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-purple-400"
+              class="w-full bg-white/60 border border-[#DDD6C9] px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-[#B5563A]"
             />
 
             <!-- Editable draft -->
@@ -141,22 +139,22 @@ async function send() {
               v-model="message"
               :rows="channel === 'sms' ? 4 : 8"
               :placeholder="generating ? 'Writing a draft…' : 'Your message'"
-              class="w-full bg-white/3 border border-white/10 rounded-xl px-4 py-3 text-sm resize-none focus:outline-none focus:border-purple-400 leading-relaxed"
+              class="w-full bg-white/60 border border-[#DDD6C9] px-4 py-3.5 text-sm resize-none focus:outline-none focus:border-[#B5563A] leading-relaxed"
             />
 
-            <p v-if="source" class="text-[10px] text-zinc-600 mt-2">
+            <p v-if="source" class="text-[11px] text-[#A9A39A] mt-2.5">
               {{ source === 'ai' ? 'AI-drafted from this lead’s details — edit before sending.' : 'Template draft — edit before sending.' }}
             </p>
 
             <div class="flex gap-3 mt-5">
               <button
-                class="flex-1 py-3 rounded-xl bg-white/5 border border-white/10 text-sm font-bold hover:bg-white/10 transition-colors"
+                class="flex-1 py-3.5 border border-[#DDD6C9] text-[11px] uppercase tracking-[0.1em] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors"
                 @click="open = false"
               >
                 Cancel
               </button>
               <button
-                class="flex-1 py-3 rounded-xl bg-purple-500 text-white text-sm font-bold hover:bg-purple-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 :disabled="sending || generating || !message.trim()"
                 @click="send"
               >

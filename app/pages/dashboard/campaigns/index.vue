@@ -78,7 +78,7 @@ const saveCampaignTemplate = async () => {
 
         <form @submit.prevent="saveCampaignTemplate" class="grid md:grid-cols-3 gap-6">
           <!-- Scheduling Adjustments Dashboard Column -->
-          <div class="space-y-4 bg-zinc-900/30 border border-white/5 p-6 rounded-2xl h-fit">
+          <div class="space-y-4 bg-[#F7F4EF]/30 border border-[#DDD6C9] p-6 h-fit">
             <baseHeaderSection text="Recurrence Intervals" />
 
             <UFormField label="Campaign Title Name">
@@ -99,7 +99,7 @@ const saveCampaignTemplate = async () => {
           </div>
 
           <!-- Copywriting Panel Column -->
-          <div class="md:col-span-2 space-y-5 bg-zinc-900/10 border border-white/5 p-6 rounded-3xl">
+          <div class="md:col-span-2 space-y-5 bg-[#F7F4EF]/10 border border-[#DDD6C9] p-6">
             <UFormField label="Drip Campaign Subject Line">
               <UInput v-model="form.subject" placeholder="Checking in on your property parameters..." class="w-full" />
             </UFormField>

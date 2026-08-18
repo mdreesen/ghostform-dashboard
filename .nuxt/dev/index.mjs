@@ -1106,7 +1106,7 @@ const _inlineRuntimeConfig = {
       "position": "top-right",
       "duration": 5000,
       "maxToasts": 5,
-      "theme": "dark",
+      "theme": "light",
       "showIcon": true
     },
     "qrcode": {
@@ -2886,7 +2886,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3005,22 +3005,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"335a4-0/IWprZ719KqTFCxgfPOoint7y4\"",
-    "mtime": "2026-08-17T17:00:53.345Z",
-    "size": 210340,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"badff-eOAd4J9M5/oz6c9WKH90YLMRm9U\"",
-    "mtime": "2026-08-17T17:00:53.346Z",
-    "size": 765439,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));

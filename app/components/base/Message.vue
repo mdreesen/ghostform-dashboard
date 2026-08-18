@@ -21,7 +21,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <a :href="`${message_type}:${communication_type}`" class="text-cyan-400 hover:text-cyan-700 underline font-medium">
+    <a :href="`${message_type}:${communication_type}`" class="text-[#B5563A] hover:text-[#8f4229] underline font-medium">
     <span v-html="label"></span>
 </a>
 
