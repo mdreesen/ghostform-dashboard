@@ -18,12 +18,18 @@ declare module "nitropack/types" {
     '/api/authentication/signup': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authentication/signup.post').default>>>>
     }
+    '/api/briefing': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/briefing/index.get').default>>>>
+    }
     '/api/campaigns': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/index.get').default>>>>
     }
     '/api/campaigns/save': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/save.post').default>>>>
+    }
+    '/api/campaigns/toggle': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/toggle.post').default>>>>
     }
     '/api/charts/lead': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/charts/lead.get').default>>>>
@@ -37,6 +43,12 @@ declare module "nitropack/types" {
     '/api/homes': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/index.get').default>>>>
     }
+    '/api/leads/:id/contacted': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/contacted.post').default>>>>
+    }
+    '/api/leads/:id/draft': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/draft.post').default>>>>
+    }
     '/api/leads/:id': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/index.get').default>>>>
@@ -44,6 +56,9 @@ declare module "nitropack/types" {
     }
     '/api/leads/:id/schedule': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/schedule.post').default>>>>
+    }
+    '/api/leads/:id/send-message': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/send-message.post').default>>>>
     }
     '/api/leads/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/create.post').default>>>>
@@ -73,15 +88,15 @@ declare module "nitropack/types" {
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>
     }
-    '/__nuxt_island/**': {
-      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/#internal/nuxt/island-renderer').default>>>>
-    }
     '/api/_auth/session': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.get').default>>>>
     }
     '/api/_nuxt_icon/:collection': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/icon/dist/runtime/server/api').default>>>>
+    }
+    '/__nuxt_island/**': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/#internal/nuxt/island-renderer').default>>>>
     }
     '/_ipx/**': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/image/dist/runtime/ipx').default>>>>

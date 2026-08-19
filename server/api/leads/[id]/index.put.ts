@@ -33,9 +33,28 @@ export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
 
   try {
+      // Detect a status change: it counts as making contact, so we stamp
+      // lastContactedAt (which drops the lead off the daily briefing until it
+      // goes cold again). Only status changes trigger this - editing notes or
+      // other fields does not.
+      const existing = await Lead.findById(body._id).select('status').lean() as { status?: string } | null;
+      const statusChanged =
+        !!body.status && existing?.status !== body.status;
+
+      const update: Record<string, any> = { ...body };
+      if (statusChanged) {
+        update.lastContactedAt = new Date();
+        update.$inc = { contactCount: 1 };
+      }
+
+      // Split $set fields from $inc so both apply cleanly in one call.
+      const { $inc, ...setFields } = update;
+      const mongoUpdate: Record<string, any> = { $set: setFields };
+      if ($inc) mongoUpdate.$inc = $inc;
+
       await Lead.findOneAndUpdate(
         { _id: body._id },
-        { ...body },
+        mongoUpdate,
         { new: true });
 
   } catch (error) {

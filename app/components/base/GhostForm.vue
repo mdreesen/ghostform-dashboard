@@ -1,85 +1,58 @@
 <script setup lang="ts">
 import { ghostFormUrl } from '~/utils/ghostFormUrl';
+
+/**
+ * Live preview of a capture form, embedded in an iframe.
+ *
+ * NOTE: this component previously pre-formatted each value into a query
+ * fragment (`category=realtor`, `&company_email=...`) and then passed those
+ * into ghostFormUrl(), which formats them again — producing a doubly-encoded,
+ * broken URL. It also passed only four arguments, in the wrong positions, and
+ * had no `id` prop, so the form could never identify the account.
+ * It now passes raw values in the correct order.
+ */
 const props = defineProps({
-    category: {
-        type: String,
-        required: true,
-    },
-    company: {
-        type: String,
-        required: true,
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    calendar: {
-        type: String,
-    }
+    category: { type: String, required: true },
+    /** the user's _id — required or the capture form can't attribute the lead */
+    id: { type: String, required: true },
+    company: { type: String, required: true },
+    email: { type: String, required: true },
+    calendar: { type: String },
+    /** which question set to preview: 'open_house' | 'on_market' | 'data_entry' */
+    source: { type: String, default: 'data_entry' }
 });
 
-const useCategory = props.category ? `category=${props.category}` : '';
-const useEmail = props.email ? `&company_email=${props.email}` : '';
-const useName = props.company ? `&company_name=${props.company}` : '';
-const useCalendar = props.calendar ? `&calendar=${props.calendar}` : '';
+const ready = computed(() =>
+    Boolean(props.category && props.id && props.company && props.email)
+);
+
+const src = computed(() =>
+    ghostFormUrl(
+        props.category,
+        props.source,
+        props.id,
+        props.company,
+        props.email,
+        props.calendar || ''
+    )
+);
 </script>
 
 <template>
-    <div class="relative group max-w-md mx-auto">
-  
-      <div
-        class="absolute -inset-0.5 bg-linear-to-r from-cyan-500 to-blue-600 rounded-[2.5rem] blur opacity-30 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt">
-      </div>
-  
-      <div class="relative bg-[#0d0d0d] rounded-[2.5rem] overflow-hidden border border-white/10">
-  
-        <div class="absolute inset-0 pointer-events-none opacity-20">
-          <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-cyan-500 rounded-full blur-[80px] animate-pulse">
-          </div>
-          <div
-            class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600 rounded-full blur-[80px] animate-pulse"
-            style="animation-delay: 1s;"></div>
-        </div>
+    <div class="max-w-md mx-auto w-full">
+        <div class="bg-[#EFEAE0] border border-[#DDD6C9] overflow-hidden">
+            <div v-if="!ready" class="py-10 px-6 text-center">
+                <p class="text-[14px] text-[#8A847C]">
+                    A category, account id, company name, and email are needed to preview this form.
+                </p>
+            </div>
 
-        <div v-if="!category && !company && !email">
-            <baseHeaderBase class="py-8 flex content-center justify-center" text="The category, company name, and email are needed." />
+            <iframe
+                v-else
+                :src="src"
+                style="width: 100%; height: 500px; border: none; background: transparent;"
+                scrolling="no"
+            />
         </div>
-  
-        <iframe
-            v-else
-            :src="ghostFormUrl(useCategory, useName, useEmail, useCalendar)"
-            style="width: 100%; height: 500px; border: none; background: transparent; border-radius: 20px;"
-            allowtransparency="true" scrolling="no" />
-  
-      </div>
     </div>
-  </template>
-  
-  <style scoped>
-  /* Custom Tilt Animation for the Glow */
-  @keyframes tilt {
-  
-    0%,
-    50%,
-    100% {
-      transform: rotate(0deg);
-    }
-  
-    25% {
-      transform: rotate(0.5deg);
-    }
-  
-    75% {
-      transform: rotate(-0.5deg);
-    }
-  }
-  
-  .animate-tilt {
-    animation: tilt 10s infinite linear;
-  }
-  
-  /* Ensure the iframe background doesn't override our mesh */
-  iframe {
-    background: transparent !important;
-  }
-  </style>
+</template>

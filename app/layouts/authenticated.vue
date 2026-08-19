@@ -4,6 +4,7 @@ await useFetch('/api/leads', { key: 'leads', lazy: true });
 await useFetch('/api/charts/lead', { key: 'charts_lead', lazy: true });
 await useFetch('/api/campaigns', { key: 'campaigns', lazy: true });
 await useFetch('/api/homes', { key: 'homes', lazy: true });
+await useFetch('/api/briefing', { key: 'briefing', lazy: true });
 
 const { data: user } = useNuxtData('user');
 
@@ -16,23 +17,18 @@ const authenticated = computed(() => {
 </script>
 
 <template>
-    <main class="bg-[#080B11] text-slate-100 selection:bg-cyan-500/30 font-sans min-h-screen relative overflow-hidden">
-        <div class="fixed inset-0 pointer-events-none">
-            <div class="absolute top-0 right-0 w-150 h-150 bg-cyan-400 rounded-full blur-[200px] opacity-[0.03]"></div>
-            <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/10 blur-[120px] rounded-full"></div>
-            <div class="absolute bottom-[10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/10 blur-[120px] rounded-full"></div>
-        </div>
-
+    <main class="bg-[#F7F4EF] text-[#1F1B16] selection:bg-[#B5563A]/15 min-h-screen">
         <template v-if="authenticated">
             <baseNavBar />
-            <main class="py-20 p-6 lg:py-18">
+            <!-- gf-stage establishes the perspective context that .gf-depth
+                 blocks animate within as they scroll into view -->
+            <div class="gf-stage pt-24 pb-28 px-6 sm:px-10 lg:px-12">
                 <slot />
-            </main>
+            </div>
         </template>
 
         <template v-else>
             <appAccess />
         </template>
-
     </main>
 </template>

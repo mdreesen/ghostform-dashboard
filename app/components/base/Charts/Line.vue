@@ -11,7 +11,7 @@ const data = computed(() => props.data);
 const categories = {
   count: {
     name: 'Count',
-    color: '#00d3f3',
+    color: '#B5563A',
   },
 }
 

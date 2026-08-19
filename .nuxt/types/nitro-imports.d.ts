@@ -1,6 +1,7 @@
 declare global {
   const H3Error: typeof import('../../node_modules/h3').H3Error
   const H3Event: typeof import('../../node_modules/h3').H3Event
+  const HUMAN_DAY: typeof import('../../server/utils/dailyBriefing').HUMAN_DAY
   const __buildAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').buildAssetsURL
   const __publicAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').publicAssetsURL
   const appendCorsHeaders: typeof import('../../node_modules/h3').appendCorsHeaders
@@ -10,6 +11,8 @@ declare global {
   const appendResponseHeader: typeof import('../../node_modules/h3').appendResponseHeader
   const appendResponseHeaders: typeof import('../../node_modules/h3').appendResponseHeaders
   const assertMethod: typeof import('../../node_modules/h3').assertMethod
+  const buildDailyBriefing: typeof import('../../server/utils/dailyBriefing').buildDailyBriefing
+  const buildHeadline: typeof import('../../server/utils/dailyBriefing').buildHeadline
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedEventHandler
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedFunction
   const callNodeListener: typeof import('../../node_modules/h3').callNodeListener
@@ -94,6 +97,7 @@ declare global {
   const fromNodeMiddleware: typeof import('../../node_modules/h3').fromNodeMiddleware
   const fromPlainHandler: typeof import('../../node_modules/h3').fromPlainHandler
   const fromWebHandler: typeof import('../../node_modules/h3').fromWebHandler
+  const generateLeadDraft: typeof import('../../server/utils/leadMessageDraft').generateLeadDraft
   const getAtprotoClientMetadata: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto').getAtprotoClientMetadata
   const getCookie: typeof import('../../node_modules/h3').getCookie
   const getHeader: typeof import('../../node_modules/h3').getHeader
@@ -133,6 +137,7 @@ declare global {
   const isStream: typeof import('../../node_modules/h3').isStream
   const isWebResponse: typeof import('../../node_modules/h3').isWebResponse
   const lazyEventHandler: typeof import('../../node_modules/h3').lazyEventHandler
+  const narrateBriefing: typeof import('../../server/utils/briefingNarration').narrateBriefing
   const nitroPlugin: typeof import('../../node_modules/nitropack/dist/runtime/internal/plugin').nitroPlugin
   const parseCookies: typeof import('../../node_modules/h3').parseCookies
   const passwordNeedsReHash: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').passwordNeedsReHash
@@ -145,6 +150,7 @@ declare global {
   const readValidatedBody: typeof import('../../node_modules/h3').readValidatedBody
   const removeResponseHeader: typeof import('../../node_modules/h3').removeResponseHeader
   const replaceUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').replaceUserSession
+  const requirePaidUser: typeof import('../../server/utils/requirePaidUser').default
   const requireUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').requireUserSession
   const runTask: typeof import('../../node_modules/nitropack/dist/runtime/internal/task').runTask
   const sanitizeStatusCode: typeof import('../../node_modules/h3').sanitizeStatusCode
@@ -168,6 +174,7 @@ declare global {
   const setResponseStatus: typeof import('../../node_modules/h3').setResponseStatus
   const setUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').setUserSession
   const splitCookiesString: typeof import('../../node_modules/h3').splitCookiesString
+  const templateDraft: typeof import('../../server/utils/leadMessageDraft').templateDraft
   const toEventHandler: typeof import('../../node_modules/h3').toEventHandler
   const toNodeListener: typeof import('../../node_modules/h3').toNodeListener
   const toPlainHandler: typeof import('../../node_modules/h3').toPlainHandler
@@ -339,6 +346,12 @@ declare global {
   // @ts-ignore
   export type { SessionHooks } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session.d'
   import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session.d')
+  // @ts-ignore
+  export type { BriefingLead, DailyBriefing } from '../../server/utils/dailyBriefing'
+  import('../../server/utils/dailyBriefing')
+  // @ts-ignore
+  export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
+  import('../../server/utils/leadMessageDraft')
 }
 export { H3Event, H3Error, appendCorsHeaders, appendCorsPreflightHeaders, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callNodeListener, clearResponseHeaders, clearSession, createApp, createAppEventHandler, createError, createEvent, createEventStream, createRouter, defaultContentType, defineEventHandler, defineLazyEventHandler, defineNodeListener, defineNodeMiddleware, defineRequestMiddleware, defineResponseMiddleware, defineWebSocket, defineWebSocketHandler, deleteCookie, dynamicEventHandler, eventHandler, fetchWithEvent, fromNodeMiddleware, fromPlainHandler, fromWebHandler, getCookie, getHeader, getHeaders, getMethod, getProxyRequestHeaders, getQuery, getRequestFingerprint, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestPath, getRequestProtocol, getRequestURL, getRequestWebStream, getResponseHeader, getResponseHeaders, getResponseStatus, getResponseStatusText, getRouterParam, getRouterParams, getSession, getValidatedQuery, getValidatedRouterParams, handleCacheHeaders, handleCors, isCorsOriginAllowed, isError, isEvent, isEventHandler, isMethod, isPreflightRequest, isStream, isWebResponse, lazyEventHandler, parseCookies, promisifyNodeListener, proxyRequest, readBody, readFormData, readMultipartFormData, readRawBody, readValidatedBody, removeResponseHeader, sanitizeStatusCode, sanitizeStatusMessage, sealSession, send, sendError, sendIterable, sendNoContent, sendProxy, sendRedirect, sendStream, sendWebResponse, serveStatic, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, setResponseStatus, splitCookiesString, toEventHandler, toNodeListener, toPlainHandler, toWebHandler, toWebRequest, unsealSession, updateSession, useBase, useSession, writeEarlyHints } from 'h3';
 export { useNitroApp } from 'nitropack/runtime/internal/app';
@@ -352,58 +365,62 @@ export { getRouteRules } from 'nitropack/runtime/internal/route-rules';
 export { useEvent } from 'nitropack/runtime/internal/context';
 export { defineTask, runTask } from 'nitropack/runtime/internal/task';
 export { defineNitroErrorHandler } from 'nitropack/runtime/internal/error/utils';
-export { buildAssetsURL as __buildAssetsURL, publicAssetsURL as __publicAssetsURL } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/dist/runtime/utils/paths';
-export { defineAppConfig } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/dist/runtime/utils/config';
-export { useImage } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/@nuxt/image/dist/runtime/server/utils/image';
-export { defineOAuthAppleEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/apple';
-export { defineOAuthAtlassianEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/atlassian';
-export { defineOAuthAuth0EventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/auth0';
-export { defineOAuthAuthentikEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/authentik';
-export { defineOAuthAzureB2CEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/azureb2c';
-export { defineOAuthBattledotnetEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/battledotnet';
-export { defineOAuthBoxEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/box';
-export { defineOAuthCognitoEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/cognito';
-export { defineOAuthDiscordEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/discord';
-export { defineOAuthDropboxEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/dropbox';
-export { defineOAuthFacebookEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/facebook';
-export { defineOAuthGiteaEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/gitea';
-export { defineOAuthGitHubEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/github';
-export { defineOAuthGitLabEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/gitlab';
-export { defineOAuthGoogleEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/google';
-export { defineOAuthHerokuEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/heroku';
-export { defineOAuthHubspotEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/hubspot';
-export { defineOAuthInstagramEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/instagram';
-export { defineOAuthKeycloakEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/keycloak';
-export { defineOAuthKickEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/kick';
-export { defineOAuthLineEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/line';
-export { defineOAuthLinearEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/linear';
-export { defineOAuthLinkedInEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/linkedin';
-export { defineOAuthLiveChatEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/livechat';
-export { defineOAuthMicrosoftEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/microsoft';
-export { defineOAuthOidcEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/oidc';
-export { defineOAuthOktaEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/okta';
-export { defineOAuthOryEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/ory';
-export { defineOAuthOsuEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/osu';
-export { defineOAuthPaypalEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/paypal';
-export { defineOAuthPolarEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/polar';
-export { defineOAuthRiotGamesEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/riotgames';
-export { defineOAuthRobloxEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/roblox';
-export { defineOAuthSalesforceEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/salesforce';
-export { defineOAuthSeznamEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/seznam';
-export { defineOAuthShopifyCustomerEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/shopifyCustomer';
-export { defineOAuthSlackEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/slack';
-export { defineOAuthSpotifyEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/spotify';
-export { defineOAuthSteamEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/steam';
-export { defineOAuthStravaEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/strava';
-export { defineOAuthTikTokEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/tiktok';
-export { defineOAuthTwitchEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/twitch';
-export { defineOAuthVKEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/vk';
-export { defineOAuthWorkOSEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/workos';
-export { defineOAuthXEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/x';
-export { defineOAuthXSUAAEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/xsuaa';
-export { defineOAuthYandexEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/yandex';
-export { defineOAuthZitadelEventHandler } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/zitadel';
-export { getAtprotoClientMetadata } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto';
-export { hashPassword, verifyPassword, passwordNeedsReHash } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
-export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
-export { useQrcode } from '/Users/mdreesen/Documents/Programming/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
+export { buildAssetsURL as __buildAssetsURL, publicAssetsURL as __publicAssetsURL } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/dist/runtime/utils/paths';
+export { defineAppConfig } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/dist/runtime/utils/config';
+export { useImage } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/image/dist/runtime/server/utils/image';
+export { defineOAuthAppleEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/apple';
+export { defineOAuthAtlassianEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/atlassian';
+export { defineOAuthAuth0EventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/auth0';
+export { defineOAuthAuthentikEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/authentik';
+export { defineOAuthAzureB2CEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/azureb2c';
+export { defineOAuthBattledotnetEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/battledotnet';
+export { defineOAuthBoxEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/box';
+export { defineOAuthCognitoEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/cognito';
+export { defineOAuthDiscordEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/discord';
+export { defineOAuthDropboxEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/dropbox';
+export { defineOAuthFacebookEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/facebook';
+export { defineOAuthGiteaEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/gitea';
+export { defineOAuthGitHubEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/github';
+export { defineOAuthGitLabEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/gitlab';
+export { defineOAuthGoogleEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/google';
+export { defineOAuthHerokuEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/heroku';
+export { defineOAuthHubspotEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/hubspot';
+export { defineOAuthInstagramEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/instagram';
+export { defineOAuthKeycloakEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/keycloak';
+export { defineOAuthKickEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/kick';
+export { defineOAuthLineEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/line';
+export { defineOAuthLinearEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/linear';
+export { defineOAuthLinkedInEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/linkedin';
+export { defineOAuthLiveChatEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/livechat';
+export { defineOAuthMicrosoftEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/microsoft';
+export { defineOAuthOidcEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/oidc';
+export { defineOAuthOktaEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/okta';
+export { defineOAuthOryEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/ory';
+export { defineOAuthOsuEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/osu';
+export { defineOAuthPaypalEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/paypal';
+export { defineOAuthPolarEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/polar';
+export { defineOAuthRiotGamesEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/riotgames';
+export { defineOAuthRobloxEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/roblox';
+export { defineOAuthSalesforceEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/salesforce';
+export { defineOAuthSeznamEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/seznam';
+export { defineOAuthShopifyCustomerEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/shopifyCustomer';
+export { defineOAuthSlackEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/slack';
+export { defineOAuthSpotifyEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/spotify';
+export { defineOAuthSteamEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/steam';
+export { defineOAuthStravaEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/strava';
+export { defineOAuthTikTokEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/tiktok';
+export { defineOAuthTwitchEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/twitch';
+export { defineOAuthVKEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/vk';
+export { defineOAuthWorkOSEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/workos';
+export { defineOAuthXEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/x';
+export { defineOAuthXSUAAEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/xsuaa';
+export { defineOAuthYandexEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/yandex';
+export { defineOAuthZitadelEventHandler } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/lib/oauth/zitadel';
+export { getAtprotoClientMetadata } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto';
+export { hashPassword, verifyPassword, passwordNeedsReHash } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
+export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
+export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
+export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
+export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
+export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
+export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';

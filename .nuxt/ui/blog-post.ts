@@ -68,11 +68,11 @@ export default {
     "to": {
       "true": {
         "root": [
-          "has-focus-visible:ring-2 has-focus-visible:ring-primary",
+          "outline-primary/25 has-[>a:focus-visible]:outline-3",
           "transition"
         ],
         "image": "transform transition-transform duration-200 group-hover/blog-post:scale-110",
-        "avatar": "transform transition-transform duration-200 hover:scale-115 focus-visible:outline-primary"
+        "avatar": "inline-flex transform transition-transform duration-200 hover:scale-115 rounded-full outline-primary/25 focus-visible:outline-3"
       }
     },
     "image": {
@@ -102,6 +102,16 @@ export default {
       }
     },
     {
+      "variant": [
+        "outline" as typeof variant[number],
+        "subtle" as typeof variant[number]
+      ],
+      "to": true,
+      "class": {
+        "root": "has-[>a:focus-visible]:ring-primary"
+      }
+    },
+    {
       "variant": "ghost" as typeof variant[number],
       "to": true,
       "class": {
@@ -125,7 +135,7 @@ export default {
       "to": true,
       "orientation": "horizontal" as typeof orientation[number],
       "class": {
-        "header": "group-hover/blog-post:rounded-r-none"
+        "header": "group-hover/blog-post:rounded-e-none"
       }
     },
     {

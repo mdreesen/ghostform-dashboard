@@ -1,65 +1,99 @@
 <script setup lang="ts">
-import type { NavigationMenuItem } from '@nuxt/ui';
-// import { useColorMode } from '#imports'; // This import works in Nuxt 3/4 setup scripts
+const items = [
+  { label: 'Today', to: '/dashboard' },
+  { label: 'Leads', to: '/dashboard/leads' },
+  { label: 'Campaigns', to: '/dashboard/campaigns' },
+  { label: 'Forms', to: '/dashboard/forms' },
+  { label: 'Profile', to: '/dashboard/profile' },
+];
 
-// const colorMode = useColorMode();
+const route = useRoute();
+const stuck = ref(false);
+const open = ref(false);
 
-const items = computed<NavigationMenuItem[]>(() => [{
-  label: 'Overview',
-  to: '/dashboard',
-  // icon: 'i-lucide-book-open',
-}, {
-  label: 'Campaigns',
-  to: '/dashboard/campaigns',
-  // icon: 'mdi-light:account',
-}, {
-  label: 'Forms',
-  // icon: 'i-simple-icons-figma',
-  to: '/dashboard/forms',
-}, 
-// {
-//   label: 'Homes',
-//   // icon: 'i-simple-icons-figma',
-//   to: '/dashboard/home',
-// },
- {
-  label: 'Leads',
-  // icon: 'i-lucide-rocket',
-  to: '/dashboard/leads',
-}, {
-  label: 'Profile',
-  // icon: 'i-lucide-rocket',
-  to: '/dashboard/profile',
-}])
+// Exact match for the dashboard root, prefix match for the rest, so
+// /dashboard/leads doesn't also light up "Today".
+const isActive = (to: string) =>
+  to === '/dashboard' ? route.path === to : route.path.startsWith(to);
+
+const onScroll = () => { stuck.value = window.scrollY > 40; };
+
+onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }));
+onBeforeUnmount(() => window.removeEventListener('scroll', onScroll));
+
+// Close the mobile menu whenever we navigate.
+watch(() => route.path, () => { open.value = false; });
 </script>
 
 <template>
-  <UHeader mode="slideover" class="border-none fixed w-full bg-transparent">
-    <template #title>
-      <!-- Logo/Brand Name -->
-      <ClientOnly>
-        <NuxtLink to="/dashboard" class="flex items-center gap-3 group">
-          <div class="relative w-10 h-10 flex items-center justify-center">
-            <div class="absolute inset-0 bg-cyan-500/20 blur-lg rounded-full group-hover:bg-cyan-500/40 transition-all">
-            </div>
-            <NuxtImg class="relative z-10 h-20 w-full object-contain drop-shadow-md" :src="'/images/logo-icon.webp'"
-              format="webp" preload loading="eager" fetch-priority="high" />
-          </div>
-          <span class="text-xl font-black tracking-tighter">GhostForm</span>
+  <header
+    class="fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500 backdrop-blur-md"
+    :class="stuck ? 'border-[#DDD6C9] bg-[#F7F4EF]/85' : 'border-transparent bg-[#F7F4EF]/70'"
+  >
+    <div class="flex items-center justify-between px-6 sm:px-10 lg:px-12 py-5">
+      <NuxtLink to="/dashboard" class="font-display font-bold text-[17px] tracking-tight">
+        GhostForm
+      </NuxtLink>
+
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-9">
+        <NuxtLink
+          v-for="link in items"
+          :key="link.to"
+          :to="link.to"
+          class="relative pb-1 text-[11.5px] uppercase tracking-[0.14em] transition-colors duration-200"
+          :class="isActive(link.to) ? 'text-[#1F1B16]' : 'text-[#A9A39A] hover:text-[#1F1B16]'"
+        >
+          {{ link.label }}
+          <span
+            v-if="isActive(link.to)"
+            class="absolute left-0 right-0 -bottom-0.5 h-px bg-[#B5563A]"
+          />
         </NuxtLink>
-      </ClientOnly>
-    </template>
 
-    <UNavigationMenu color="neutral" :items="items" />
+      </nav>
 
-    <template #body>
-      <div class="flex flex-col gap-2">
-        <template v-for="link in items">
-          <NuxtLink :to="link.to" class="group relative w-full flex items-center justify-end gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2 focus-visible:before:ring-inverted px-2.5 py-1.5 before:inset-x-px before:inset-y-0 text-highlighted before:bg-elevated">
-            {{ link.label }}
-          </NuxtLink>
-        </template>
+      <!-- Mobile -->
+      <div class="flex md:hidden items-center gap-2">
+        <button
+          class="w-10 h-10 flex flex-col items-center justify-center gap-[5px]"
+          :aria-expanded="open"
+          aria-label="Menu"
+          @click="open = !open"
+        >
+          <span
+            class="block w-5 h-px bg-[#1F1B16] transition-transform duration-300"
+            :class="open ? 'translate-y-[3px] rotate-45' : ''"
+          />
+          <span
+            class="block w-5 h-px bg-[#1F1B16] transition-transform duration-300"
+            :class="open ? '-translate-y-[3px] -rotate-45' : ''"
+          />
+        </button>
       </div>
-    </template>
-  </UHeader>
+    </div>
+
+    <!-- Mobile drawer -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="opacity-0 -translate-y-2"
+      leave-active-class="transition duration-200 ease-in"
+      leave-to-class="opacity-0 -translate-y-2"
+    >
+      <nav
+        v-if="open"
+        class="md:hidden border-t border-[#DDD6C9] bg-[#F7F4EF] px-6 py-4 flex flex-col"
+      >
+        <NuxtLink
+          v-for="link in items"
+          :key="link.to"
+          :to="link.to"
+          class="py-3 text-[12px] uppercase tracking-[0.14em] border-b border-[#DDD6C9] last:border-0"
+          :class="isActive(link.to) ? 'text-[#B5563A]' : 'text-[#8A847C]'"
+        >
+          {{ link.label }}
+        </NuxtLink>
+      </nav>
+    </Transition>
+  </header>
 </template>

@@ -6,11 +6,6 @@ const size = [
   "xl"
 ] as const
 
-const orientation = [
-  "vertical",
-  "horizontal"
-] as const
-
 export default {
   "slots": {
     "root": "",
@@ -56,7 +51,6 @@ export default {
     }
   },
   "defaultVariants": {
-    "size": "md" as typeof size[number],
-    "orientation": "vertical" as typeof orientation[number]
+    "size": "md" as typeof size[number]
   }
 }

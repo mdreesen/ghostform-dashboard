@@ -1,8 +1,8 @@
-import { w as defineTask } from '../nitro/nitro.mjs';
-import { c as connectDB } from './mongodb.mjs';
+import { d as defineTask, c as connectDB, s as schemaImport } from '../nitro/nitro.mjs';
 import { Resend } from 'resend';
-import { s as schemaImport } from './Lead.mjs';
 import { C as CampaignModelImport } from './Campaign.mjs';
+import { u as useCleanString } from './useCleanString.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,11 +14,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'mongoose';
-
-function useCleanString(str) {
-  return str.replace(/[^a-zA-Z0-9]/g, "");
-}
 
 function email_by_status(status, lead_name, company_name) {
   const greeting = `Hi ${lead_name},
@@ -78,17 +73,57 @@ Just reply straight to this email whenever you have a second.` + signoff;
 const LeadModel = schemaImport;
 const CampaignModel = CampaignModelImport;
 const resend = new Resend(process.env.RESEND_KEY);
+function localWeekday(tz, now) {
+  var _a, _b, _c;
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz,
+      weekday: "short"
+    }).formatToParts(now);
+    const weekdayStr = (_b = (_a = parts.find((p) => p.type === "weekday")) == null ? void 0 : _a.value) != null ? _b : "";
+    const dayMap = {
+      Sun: 0,
+      Mon: 1,
+      Tue: 2,
+      Wed: 3,
+      Thu: 4,
+      Fri: 5,
+      Sat: 6
+    };
+    return (_c = dayMap[weekdayStr]) != null ? _c : now.getUTCDay();
+  } catch {
+    return now.getUTCDay();
+  }
+}
+function minDaysBetweenFires(timesPerMonth) {
+  switch (timesPerMonth) {
+    case 4:
+      return 6;
+    // weekly
+    case 2:
+      return 13;
+    // biweekly
+    case 1:
+      return 27;
+    // monthly
+    default:
+      return 27;
+  }
+}
 const reminders = defineTask({
   meta: {
     name: "lead:reminders",
     description: "Processes custom individual queues and recurring marketing blasts"
   },
   async run() {
+    var _a;
     console.log("Orchestrating automated pipelines...");
     await connectDB();
     const now = /* @__PURE__ */ new Date();
-    const currentDay = now.getDay();
-    const currentHour = now.getHours();
+    const startOfToday = new Date((/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0));
+    let individualSent = 0;
+    let campaignsFired = 0;
+    let campaignEmails = 0;
     try {
       const activeQueue = await LeadModel.find({
         reminderStatus: "scheduled",
@@ -110,55 +145,75 @@ const reminders = defineTask({
             subject: "Quick question regarding your property search",
             text: useResponse
           });
+          individualSent++;
           individualOps.push({
             updateOne: {
               filter: { _id: lead._id },
-              update: { $set: { reminderStatus: "sent" }, $unset: { reminderScheduledAt: "" } }
+              update: {
+                $set: { reminderStatus: "sent", lastContactedAt: now },
+                $inc: { contactCount: 1 },
+                $unset: { reminderScheduledAt: "" }
+              }
             }
           });
         }
         await LeadModel.bulkWrite(individualOps, { ordered: false });
       }
-      if (currentHour === 9) {
-        console.log("Processing scheduled recurring batch campaigns...");
-        const todaysCampaigns = await CampaignModel.find({
-          dayOfWeek: currentDay,
-          $or: [
-            { lastFiredAt: null },
-            { lastFiredAt: { $lt: new Date((/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0)) } }
-          ]
-        }).populate("userId");
-        for (const campaign of todaysCampaigns) {
-          if (campaign.lastFiredAt) {
-            const daysSinceLastFire = (Date.now() - new Date(campaign.lastFiredAt).getTime()) / (1e3 * 60 * 60 * 24);
-            if (campaign.timesPerMonth === 2 && daysSinceLastFire < 13) continue;
-            if (campaign.timesPerMonth === 1 && daysSinceLastFire < 27) continue;
+      const candidateCampaigns = await CampaignModel.find({
+        active: { $ne: false },
+        // treat missing 'active' as active (legacy rows)
+        $or: [
+          { lastFiredAt: null },
+          { lastFiredAt: { $lt: startOfToday } }
+        ]
+      }).populate("userId");
+      for (const campaign of candidateCampaigns) {
+        const tz = ((_a = campaign.userId) == null ? void 0 : _a.timezone) || "America/Denver";
+        const localDay = localWeekday(tz, now);
+        if (campaign.dayOfWeek !== localDay) continue;
+        if (campaign.lastFiredAt) {
+          const daysSinceLastFire = (now.getTime() - new Date(campaign.lastFiredAt).getTime()) / (1e3 * 60 * 60 * 24);
+          if (daysSinceLastFire < minDaysBetweenFires(campaign.timesPerMonth)) {
+            continue;
           }
-          const targets = await LeadModel.find({
-            userId: campaign.userId._id,
-            status: campaign.targetStatus,
-            email: { $ne: "", $exists: true }
-          }).lean();
-          if (targets.length > 0) {
-            const batchPayload = targets.map((lead) => {
-              const greetingName = lead.name ? lead.name.split(" ")[0] : "there";
-              const agentName = campaign.userId.name;
-              const personalizedText = campaign.messageBody.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, agentName);
-              return {
-                from: `${useCleanString(agentName)}@ascendpod.com`,
-                to: lead.email,
-                replyTo: campaign.userId.email || "michaeldreesen90@gmail.com",
-                subject: campaign.subject,
-                text: personalizedText
-              };
-            });
-            await resend.batch.send(batchPayload);
-          }
-          campaign.lastFiredAt = /* @__PURE__ */ new Date();
-          await campaign.save();
         }
+        const targets = await LeadModel.find({
+          userId: campaign.userId._id,
+          status: campaign.targetStatus,
+          email: { $ne: "", $exists: true }
+        }).lean();
+        if (targets.length > 0) {
+          const agentName = campaign.userId.name || "Your Realtor";
+          const batchPayload = targets.map((lead) => {
+            const greetingName = lead.name ? lead.name.split(" ")[0] : "there";
+            const personalizedText = campaign.messageBody.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, agentName);
+            return {
+              from: `${useCleanString(agentName)}@ascendpod.com`,
+              to: lead.email,
+              replyTo: campaign.userId.email || "michaeldreesen90@gmail.com",
+              subject: campaign.subject,
+              text: personalizedText
+            };
+          });
+          await resend.batch.send(batchPayload);
+          campaignEmails += batchPayload.length;
+          await LeadModel.updateMany(
+            { _id: { $in: targets.map((t) => t._id) } },
+            { $set: { lastContactedAt: now }, $inc: { contactCount: 1 } }
+          );
+        }
+        campaign.lastFiredAt = now;
+        await campaign.save();
+        campaignsFired++;
       }
-      return { result: "All background delivery pipelines processed successfully." };
+      const summary = {
+        result: "All background delivery pipelines processed successfully.",
+        individualSent,
+        campaignsFired,
+        campaignEmails
+      };
+      console.log("Pipeline summary:", summary);
+      return summary;
     } catch (error) {
       console.error("Automation engine loop failed:", error);
       return { result: `Fault: ${error.message}` };

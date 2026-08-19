@@ -1,7 +1,7 @@
-import { d as defineEventHandler, r as readValidatedBody, c as createError } from '../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, U as UserModel, b as createError } from '../../nitro/nitro.mjs';
 import { z } from 'zod';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
-import { U as UserModel } from '../../_/User.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -13,8 +13,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import '../../_/mongodb.mjs';
-import 'mongoose';
 
 const User = UserModel;
 const bodySchema = z.object({

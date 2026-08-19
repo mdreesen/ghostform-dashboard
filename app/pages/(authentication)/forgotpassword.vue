@@ -57,7 +57,7 @@ useMotion(formRef, { ...formVarient() });
     <section class="flex flex-col items-center gap-8">
       <div class="text-center" v-motion="{ ...containerVarient() }">
 
-        <h1 class="flex flex-col text-4xl sm:text-6xl font-extrabold text-white leading-tight">
+        <h1 class="flex flex-col text-4xl sm:text-6xl font-extrabold text-[#1F1B16] leading-tight">
           <span>Welcome to</span>
           <span class="bg-clip-text text-transparent bg-linear-to-r from-blue-400 to-purple-400">
             ASCΞND
@@ -68,7 +68,7 @@ useMotion(formRef, { ...formVarient() });
 
       <!-- Login Form Container -->
       <div ref="formRef"
-        class="relative z-20 w-full   rounded-3xl border border-gray-700 bg-gray-800/50 p-8 shadow-2xl backdrop-blur-md space-y-6 transform transition-all duration-300">
+        class="relative z-20 w-full border border-gray-700 bg-gray-800/50 p-8 shadow-2xl backdrop-blur-md space-y-6 transform transition-all duration-300">
 
         <!-- Message Area -->
         <div v-if="errorMessage" class="text-center py-2 px-4 rounded-lg" :class="'bg-red-600/30 text-red-400'"
@@ -81,18 +81,18 @@ useMotion(formRef, { ...formVarient() });
           <div v-motion="{ ...inputVarient() }">
             <baseLabel text="Email" />
             <input id="email" type="email" v-model="credentials.email" placeholder="Email" required
-              class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="w-full border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-[#F7F4EF] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B5563A]" />
           </div>
 
           <div v-motion="{ ...inputVarient() }">
             <baseLabel text="Password" />
             <input id="password" type="password" v-model="credentials.password" placeholder="Password" required
-              class="w-full rounded-xl border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-white shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              class="w-full border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-[#F7F4EF] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B5563A]" />
           </div>
 
           <div v-motion="{ ...inputVarient() }">
             <button type="submit" :disabled="isLoading"
-              :class="`${isLoading ? 'bg-linear-to-r from-gray-500 to-gray-600' : 'bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900'} w-full rounded-xl py-3 text-lg font-semibold text-white shadow-lg transition-all duration-300 ease-in-out`">
+              :class="`${isLoading ? 'bg-linear-to-r from-gray-500 to-gray-600' : 'bg-[#B5563A] hover:bg-[#8f4229] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#B5563A] focus:ring-offset-2 focus:ring-offset-[#F7F4EF]'} w-full py-3 text-lg font-semibold text-[#F7F4EF] transition-all duration-300 ease-in-out`">
               {{ isLoading ? 'Logging In...' : 'Log In' }}
             </button>
           </div>

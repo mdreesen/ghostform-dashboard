@@ -1,5 +1,5 @@
-import { d as defineEventHandler } from '../../../nitro/nitro.mjs';
-import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
+import { a as defineEventHandler, g as requirePaidUser } from '../../../nitro/nitro.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -11,13 +11,10 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import '../../../_/mongodb.mjs';
-import 'mongoose';
-import '../../../_/User.mjs';
 
 const tiers_get = defineEventHandler(async (event) => {
   var _a;
-  const user = await loggedInUser(event);
+  const user = await requirePaidUser(event);
   const findTiers = (_a = user == null ? void 0 : user.leads) == null ? void 0 : _a.map((item) => {
     const tierOne = item.ai_analysis.includes("Tier 1") || item.ai_analysis.includes("Tier one");
     const tierTwo = item.ai_analysis.includes("Tier 2") || item.ai_analysis.includes("Tier two");

@@ -16,51 +16,51 @@ let monthData = ref({})
 const marketShareLabels = {
   'January': {
     name: 'January',
-    color: '#F0F8FF'
+    color: '#B5563A'
   },
   'February': {
     name: 'February',
-    color: '#B0E0E6'
+    color: '#C4694A'
   },
   'March': {
     name: 'March',
-    color: '#4682B4'
+    color: '#C9866F'
   },
   'April': {
     name: 'April',
-    color: '#98FB98'
+    color: '#D2A08A'
   },
   'May': {
     name: 'May',
-    color: '#3CB371'
+    color: '#A9906F'
   },
   'June': {
     name: 'June',
-    color: '#FFF8DC'
+    color: '#8C8A62'
   },
   'July': {
     name: 'July',
-    color: '#FFD700'
+    color: '#6F7B54'
   },
   'August': {
     name: 'August',
-    color: '#FFA500'
+    color: '#5A6349'
   },
   'September': {
     name: 'September',
-    color: '#FFA500'
+    color: '#7A7268'
   },
   'October': {
     name: 'October',
-    color: '#D2691E'
+    color: '#A9A39A'
   },
   'November': {
     name: 'November',
-    color: '#8B4513'
+    color: '#C6BFB2'
   },
   'December': {
     name: 'December',
-    color: '#5C4033'
+    color: '#DDD6C9'
   }
 };
 

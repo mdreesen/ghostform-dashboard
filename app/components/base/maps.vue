@@ -10,7 +10,7 @@ const props = defineProps({
 <template>
     <div class="flex flex-col">
         <a :href="`https://maps.google.com/?q=${encodeURIComponent(address)}`" target="_blank" rel="noopener noreferrer"
-            class="text-cyan-400 hover:text-cyan-700 underline font-medium">
+            class="text-[#B5563A] hover:text-[#8f4229] underline font-medium">
             <span>{{ address }}</span>
         </a>
     </div>

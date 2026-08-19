@@ -38,11 +38,11 @@ const updateSchedule = async (hoursOffset: number | null) => {
 </script>
 
 <template>
-    <div class="p-4 bg-zinc-900/50 border border-white/5 rounded-2xl space-y-3">
+    <div class="p-4 bg-[#F7F4EF]/50 border border-[#DDD6C9] space-y-3">
         <div class="flex justify-between items-center">
-            <span class="text-xs text-zinc-400 font-bold tracking-tight uppercase">Automation Flow Controls</span>
-            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded font-black"
-                :class="props.currentStatus === 'scheduled' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-zinc-800 text-zinc-500'">
+            <span class="text-xs text-[#8A847C] font-bold tracking-tight uppercase">Automation Flow Controls</span>
+            <span class="text-[10px] font-mono uppercase px-2 py-0.5 rounded font-semibold"
+                :class="props.currentStatus === 'scheduled' ? 'bg-yellow-500/10 text-yellow-500' : 'bg-zinc-800 text-[#8A847C]'">
                 Queue State: {{ props.currentStatus }}
             </span>
         </div>

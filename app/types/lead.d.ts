@@ -22,4 +22,9 @@
     seeing_an_agent?: string;
     notes?: string;
     ai_analysis?: string;
+    // Contact tracking — powers the daily briefing and "last contact" display.
+    lastContactedAt?: string | Date | null;
+    contactCount?: number;
+    reminderStatus?: string;
+    reminderScheduledAt?: string | Date | null;
 }

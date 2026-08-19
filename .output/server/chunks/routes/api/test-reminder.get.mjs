@@ -1,5 +1,6 @@
-import { d as defineEventHandler, c as createError } from '../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError } from '../../nitro/nitro.mjs';
 import { Resend } from 'resend';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

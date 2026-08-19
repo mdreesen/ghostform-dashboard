@@ -1,6 +1,5 @@
-import { d as defineEventHandler } from '../../../nitro/nitro.mjs';
-import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
-import { s as schemaImport } from '../../../_/Lead.mjs';
+import { a as defineEventHandler, g as requirePaidUser, s as schemaImport } from '../../../nitro/nitro.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -12,9 +11,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import '../../../_/mongodb.mjs';
-import 'mongoose';
-import '../../../_/User.mjs';
 
 function month(date2) {
   const dateObj = new Date(date2);
@@ -23,7 +19,7 @@ function month(date2) {
 
 const Lead = schemaImport;
 const lead_get = defineEventHandler(async (event) => {
-  const user = await loggedInUser(event);
+  const user = await requirePaidUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;

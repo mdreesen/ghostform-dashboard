@@ -1,15 +1,15 @@
 import { Model } from 'mongoose';
 
-import loggedInUser from '~/utils/loggedInUser';
 import LeadModel from '../../../lib/database/models/Lead';
 import type { Lead } from '~/types/lead';
 
 const Lead = LeadModel as Model<Lead>;
 
 import { month } from '~/utils/date';
+import requirePaidUser from '~~/server/utils/requirePaidUser';
 
 export default defineEventHandler(async (event) => {
-    const user = await loggedInUser(event);
+    const user = await requirePaidUser(event); // gated: active subscription required
 
 
     const leads = await Lead.find({ userId: user?._id })

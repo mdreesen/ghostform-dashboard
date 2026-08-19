@@ -1,7 +1,7 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { getCurrentScope, mergeProps, unref, createVNode, resolveDynamicComponent, computed, ref, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, useModel, createTextVNode, createCommentVNode, mergeModels, onScopeDispose, toRef as toRef$1, inject, shallowRef, defineComponent, h, Teleport, hasInjectionContext, toValue, customRef, shallowReadonly, getCurrentInstance, toHandlerKey, camelize as camelize$1, watchEffect, readonly, effectScope, provide, cloneVNode, createElementBlock, nextTick, markRaw, toRefs, useSlots, Comment, isRef, resolveComponent, reactive, onServerPrefetch, useAttrs, Fragment, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, isReadonly, isShallow, isReactive } from 'vue';
-import { x as serialize, y as defu, z as hasProtocol, A as isScriptProtocol, t as joinURL, B as klona, C as defuFn, D as isEqual, E as parseQuery, F as withQuery, G as sanitizeStatusCode, H as parseURL, I as encodePath, J as decodePath, K as appendResponseHeader, L as getContext, M as withTrailingSlash, N as withoutTrailingSlash, O as withLeadingSlash, c as createError$1, $ as $fetch$1, P as baseURL, Q as hash, R as createHooks, S as encodeParam, T as executeAsync } from '../nitro/nitro.mjs';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { computed, toValue, unref, mergeProps, createVNode, resolveDynamicComponent, ref, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, defineComponent, provide, useModel, createTextVNode, createCommentVNode, mergeModels, getCurrentScope, onScopeDispose, getCurrentInstance, toHandlerKey, camelize as camelize$1, toRef as toRef$1, inject, shallowRef, h, Teleport, customRef, hasInjectionContext, effectScope, cloneVNode, createElementBlock, nextTick, toRefs, useSlots, isRef, Comment, resolveComponent, reactive, onServerPrefetch, watchEffect, markRaw, Fragment, useAttrs, shallowReadonly, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, isReadonly, isShallow, isReactive } from 'vue';
+import { D as serialize, E as defu, F as hasProtocol, G as isScriptProtocol, H as joinURL, I as klona, J as isEqual, K as parseQuery, L as hash, M as withQuery, N as sanitizeStatusCode, O as parseURL, v as encodePath, P as decodePath, Q as appendResponseHeader, R as defuFn, S as withTrailingSlash, T as withoutTrailingSlash, V as withLeadingSlash, b as createError$1, $ as $fetch, W as baseURL, X as createHooks, Y as encodeParam } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
-import { Icon, getIcon, loadIcon as loadIcon$1, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
+import { Icon, getIcon, loadIcon as loadIcon$1, addIcon, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
 import { debounce } from 'perfect-debounce';
 import { isPlainObject } from '@vue/shared';
 import colors from 'tailwindcss/colors';
@@ -9,9 +9,10 @@ import sync, { getFrameData } from 'framesync';
 import { inertia, animate, velocityPerSecond, cubicBezier, bounceOut, bounceInOut, bounceIn, anticipate, backOut, backInOut, backIn, circOut, circInOut, circIn, easeOut, easeInOut, easeIn, linear } from 'popmotion';
 import { complex, number, alpha, filter, px, progressPercentage, degrees, scale, color } from 'style-value-types';
 import { ssrRenderComponent, ssrRenderVNode, ssrRenderSlot, ssrRenderClass, ssrInterpolate, ssrRenderAttrs, ssrRenderList, ssrRenderSuspense, ssrRenderStyle } from 'vue/server-renderer';
-import { createTV } from 'tailwind-variants';
+import { createTV, cnMerge } from 'tailwind-variants';
 import { getIconCSS } from '@iconify/utils/lib/css/icon';
 import { u as useHead$1, h as headSymbol, a as useSeoMeta$1 } from '../routes/renderer.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -29,96 +30,334 @@ import 'devalue';
 import 'unhead/plugins';
 import 'unhead/utils';
 
-function diff(obj1, obj2) {
-  const h1 = _toHashedObject(obj1);
-  const h2 = _toHashedObject(obj2);
-  return _diff(h1, h2);
-}
-function _diff(h1, h2) {
-  const diffs = [];
-  const allProps = /* @__PURE__ */ new Set([
-    ...Object.keys(h1.props || {}),
-    ...Object.keys(h2.props || {})
-  ]);
-  if (h1.props && h2.props) {
-    for (const prop of allProps) {
-      const p1 = h1.props[prop];
-      const p2 = h2.props[prop];
-      if (p1 && p2) {
-        diffs.push(..._diff(h1.props?.[prop], h2.props?.[prop]));
-      } else if (p1 || p2) {
-        diffs.push(
-          new DiffEntry((p2 || p1).key, p1 ? "removed" : "added", p2, p1)
-        );
-      }
+function createContext$2(opts = {}) {
+  let currentInstance;
+  let isSingleton = false;
+  const checkConflict = (instance) => {
+    if (currentInstance && currentInstance !== instance) {
+      throw new Error("Context conflict");
     }
-  }
-  if (allProps.size === 0 && h1.hash !== h2.hash) {
-    diffs.push(new DiffEntry((h2 || h1).key, "changed", h2, h1));
-  }
-  return diffs;
-}
-function _toHashedObject(obj, key = "") {
-  if (obj && typeof obj !== "object") {
-    return new DiffHashedObject(key, obj, serialize(obj));
-  }
-  const props = {};
-  const hashes = [];
-  for (const _key in obj) {
-    props[_key] = _toHashedObject(obj[_key], key ? `${key}.${_key}` : _key);
-    hashes.push(props[_key].hash);
-  }
-  return new DiffHashedObject(key, obj, `{${hashes.join(":")}}`, props);
-}
-class DiffEntry {
-  constructor(key, type, newValue, oldValue) {
-    this.key = key;
-    this.type = type;
-    this.newValue = newValue;
-    this.oldValue = oldValue;
-  }
-  toString() {
-    return this.toJSON();
-  }
-  toJSON() {
-    switch (this.type) {
-      case "added": {
-        return `Added   \`${this.key}\``;
-      }
-      case "removed": {
-        return `Removed \`${this.key}\``;
-      }
-      case "changed": {
-        return `Changed \`${this.key}\` from \`${this.oldValue?.toString() || "-"}\` to \`${this.newValue.toString()}\``;
-      }
-    }
-  }
-}
-class DiffHashedObject {
-  constructor(key, value, hash, props) {
-    this.key = key;
-    this.value = value;
-    this.hash = hash;
-    this.props = props;
-  }
-  toString() {
-    if (this.props) {
-      return `{${Object.keys(this.props).join(",")}}`;
+  };
+  let als;
+  if (opts.asyncContext) {
+    const _AsyncLocalStorage = opts.AsyncLocalStorage || globalThis.AsyncLocalStorage;
+    if (_AsyncLocalStorage) {
+      als = new _AsyncLocalStorage();
     } else {
-      return JSON.stringify(this.value);
+      console.warn("[unctx] `AsyncLocalStorage` is not provided.");
     }
   }
-  toJSON() {
-    const k = this.key || ".";
-    if (this.props) {
-      return `${k}({${Object.keys(this.props).join(",")}})`;
+  const _getCurrentInstance = () => {
+    if (als) {
+      const instance = als.getStore();
+      if (instance !== void 0) {
+        return instance;
+      }
     }
-    return `${k}(${this.value})`;
+    return currentInstance;
+  };
+  return {
+    use: () => {
+      const _instance = _getCurrentInstance();
+      if (_instance === void 0) {
+        throw new Error("Context is not available");
+      }
+      return _instance;
+    },
+    tryUse: () => {
+      return _getCurrentInstance();
+    },
+    set: (instance, replace) => {
+      if (!replace) {
+        checkConflict(instance);
+      }
+      currentInstance = instance;
+      isSingleton = true;
+    },
+    unset: () => {
+      currentInstance = void 0;
+      isSingleton = false;
+    },
+    call: (instance, callback) => {
+      checkConflict(instance);
+      currentInstance = instance;
+      try {
+        return als ? als.run(instance, callback) : callback();
+      } finally {
+        if (!isSingleton) {
+          currentInstance = void 0;
+        }
+      }
+    },
+    async callAsync(instance, callback) {
+      currentInstance = instance;
+      const onRestore = () => {
+        currentInstance = instance;
+      };
+      const onLeave = () => currentInstance === instance ? onRestore : void 0;
+      asyncHandlers$1.add(onLeave);
+      try {
+        const r = als ? als.run(instance, callback) : callback();
+        if (!isSingleton) {
+          currentInstance = void 0;
+        }
+        return await r;
+      } finally {
+        asyncHandlers$1.delete(onLeave);
+      }
+    }
+  };
+}
+function createNamespace$1(defaultOpts = {}) {
+  const contexts = {};
+  return {
+    get(key, opts = {}) {
+      if (!contexts[key]) {
+        contexts[key] = createContext$2({ ...defaultOpts, ...opts });
+      }
+      return contexts[key];
+    }
+  };
+}
+const _globalThis$1 = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
+const globalKey$1 = "__unctx__";
+const defaultNamespace = _globalThis$1[globalKey$1] || (_globalThis$1[globalKey$1] = createNamespace$1());
+const getContext = (key, opts = {}) => defaultNamespace.get(key, opts);
+const asyncHandlersKey$1 = "__unctx_async_handlers__";
+const asyncHandlers$1 = _globalThis$1[asyncHandlersKey$1] || (_globalThis$1[asyncHandlersKey$1] = /* @__PURE__ */ new Set());
+function executeAsync$1(function_) {
+  const restores = [];
+  for (const leaveHandler of asyncHandlers$1) {
+    const restore2 = leaveHandler();
+    if (restore2) {
+      restores.push(restore2);
+    }
   }
+  const restore = () => {
+    for (const restore2 of restores) {
+      restore2();
+    }
+  };
+  let awaitable = function_();
+  if (awaitable && typeof awaitable === "object" && "catch" in awaitable) {
+    awaitable = awaitable.catch((error) => {
+      restore();
+      throw error;
+    });
+  }
+  return [awaitable, restore];
 }
 
+function _getAsyncLocalStorage() {
+	return globalThis.AsyncLocalStorage || globalThis.process?.getBuiltinModule?.("node:async_hooks")?.AsyncLocalStorage;
+}
+function createContext$1(opts = {}) {
+	let currentInstance;
+	let isSingleton = false;
+	const checkConflict = (instance) => {
+		if (currentInstance && currentInstance !== instance) throw new Error("Context conflict");
+	};
+	let als;
+	if (opts.asyncContext) {
+		const _AsyncLocalStorage = opts.AsyncLocalStorage || _getAsyncLocalStorage();
+		if (_AsyncLocalStorage) als = new _AsyncLocalStorage();
+		else console.warn("[unctx] `AsyncLocalStorage` is not provided.");
+	}
+	const _wrapInstance = (instance) => als && instance !== null && typeof instance === "object" ? { __unctx_weak: new WeakRef(instance) } : instance;
+	const _unwrapInstance = (store) => store && store.__unctx_weak ? store.__unctx_weak.deref() : store;
+	const _getCurrentInstance = () => {
+		if (als) {
+			const store = als.getStore();
+			if (store !== void 0) return _unwrapInstance(store);
+		}
+		return currentInstance;
+	};
+	return {
+		use: () => {
+			const _instance = _getCurrentInstance();
+			if (_instance === void 0) throw new Error("Context is not available");
+			return _instance;
+		},
+		tryUse: () => {
+			return _getCurrentInstance();
+		},
+		set: (instance, replace) => {
+			if (!replace) checkConflict(instance);
+			currentInstance = instance;
+			isSingleton = true;
+		},
+		unset: () => {
+			currentInstance = void 0;
+			isSingleton = false;
+		},
+		call: (instance, callback) => {
+			checkConflict(instance);
+			currentInstance = instance;
+			try {
+				return als ? als.run(_wrapInstance(instance), callback) : callback();
+			} finally {
+				if (!isSingleton) currentInstance = void 0;
+			}
+		},
+		async callAsync(instance, callback) {
+			currentInstance = instance;
+			const onRestore = () => {
+				currentInstance = instance;
+			};
+			const onLeave = () => currentInstance === instance ? onRestore : void 0;
+			asyncHandlers.add(onLeave);
+			try {
+				const r = als ? als.run(_wrapInstance(instance), callback) : callback();
+				if (!isSingleton) currentInstance = void 0;
+				return await r;
+			} finally {
+				asyncHandlers.delete(onLeave);
+			}
+		}
+	};
+}
+function createNamespace(defaultOpts = {}) {
+	const contexts = {};
+	return { get(key, opts = {}) {
+		if (!contexts[key]) contexts[key] = createContext$1({
+			...defaultOpts,
+			...opts
+		});
+		return contexts[key];
+	} };
+}
+const _globalThis = typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : typeof global !== "undefined" ? global : {};
+const globalKey = "__unctx__";
+_globalThis[globalKey] || (_globalThis[globalKey] = createNamespace());
+const asyncHandlersKey = "__unctx_async_handlers__";
+const asyncHandlers = _globalThis[asyncHandlersKey] || (_globalThis[asyncHandlersKey] = /* @__PURE__ */ new Set());
+function executeAsync(function_) {
+	const restores = [];
+	for (const leaveHandler of asyncHandlers) {
+		const restore = leaveHandler();
+		if (restore) restores.push(restore);
+	}
+	const restore = () => {
+		for (const restore of restores) restore();
+	};
+	let awaitable = function_();
+	if (awaitable && typeof awaitable === "object" && "catch" in awaitable) awaitable = awaitable.catch((error) => {
+		restore();
+		throw error;
+	});
+	return [awaitable, restore];
+}
+
+const PROTO_KEY = "__proto__";
+function diff(obj1, obj2) {
+	const diffs = [];
+	_diff(obj1, obj2, "", diffs);
+	return diffs;
+}
+function _diff(v1, v2, key, out) {
+	if (v1 === v2) return;
+	const leaf1 = v1 === null || typeof v1 !== "object";
+	const leaf2 = v2 === null || typeof v2 !== "object";
+	if (!leaf1 && !leaf2) {
+		const entries1 = _entries(v1);
+		const entries2 = _entries(v2);
+		for (const [k, child1] of entries1) {
+			const childKey = key ? `${key}.${k}` : k;
+			if (entries2.has(k)) _diff(child1, entries2.get(k), childKey, out);
+			else out.push(new DiffEntry(childKey, "removed", void 0, _toHashedObject(child1, childKey)));
+		}
+		for (const [k, child2] of entries2) {
+			if (entries1.has(k)) continue;
+			const childKey = key ? `${key}.${k}` : k;
+			out.push(new DiffEntry(childKey, "added", _toHashedObject(child2, childKey)));
+		}
+		return;
+	}
+	if (_hasKeys(v1, leaf1) || _hasKeys(v2, leaf2)) return;
+	const node1 = _emptyOrLeafNode(v1, key, leaf1);
+	const node2 = _emptyOrLeafNode(v2, key, leaf2);
+	if (node1.hash !== node2.hash) out.push(new DiffEntry(key, "changed", node2, node1));
+}
+function _entries(value) {
+	const entries = /* @__PURE__ */ new Map();
+	for (const key in value) if (key !== PROTO_KEY) entries.set(key, value[key]);
+	return entries;
+}
+function _hasKeys(value, isLeaf) {
+	if (isLeaf) return false;
+	for (const key in value) if (key !== PROTO_KEY) return true;
+	return false;
+}
+function _emptyOrLeafNode(value, key, isLeaf) {
+	return isLeaf ? new DiffHashedObject(key, value, _leafHash(value)) : new DiffHashedObject(key, value, "{}", Object.create(null));
+}
+function _toHashedObject(obj, key = "") {
+	if (obj === null || typeof obj !== "object") return new DiffHashedObject(key, obj, _leafHash(obj));
+	const props = Object.create(null);
+	const hashes = [];
+	for (const _key in obj) {
+		if (_key === PROTO_KEY) continue;
+		const child = _toHashedObject(obj[_key], key ? `${key}.${_key}` : _key);
+		props[_key] = child;
+		hashes.push(child.hash);
+	}
+	return new DiffHashedObject(key, obj, `{${hashes.join(":")}}`, props);
+}
+function _leafHash(value) {
+	switch (typeof value) {
+		case "string": return `'${value}'`;
+		case "number":
+		case "boolean": return "" + value;
+		case "bigint": return `${value}n`;
+		default: return serialize(value);
+	}
+}
+var DiffEntry = class {
+	key;
+	type;
+	newValue;
+	oldValue;
+	constructor(key, type, newValue, oldValue) {
+		this.key = key;
+		this.type = type;
+		this.newValue = newValue;
+		this.oldValue = oldValue;
+	}
+	toString() {
+		return this.toJSON();
+	}
+	toJSON() {
+		switch (this.type) {
+			case "added": return `Added   \`${this.key}\``;
+			case "removed": return `Removed \`${this.key}\``;
+			case "changed": return `Changed \`${this.key}\` from \`${this.oldValue?.toString() || "-"}\` to \`${this.newValue?.toString()}\``;
+		}
+	}
+};
+var DiffHashedObject = class {
+	key;
+	value;
+	hash;
+	props;
+	constructor(key, value, hash, props) {
+		this.key = key;
+		this.value = value;
+		this.hash = hash;
+		this.props = props;
+	}
+	toString() {
+		if (this.props) return `{${Object.keys(this.props).join(",")}}`;
+		else return JSON.stringify(this.value);
+	}
+	toJSON() {
+		const k = this.key || ".";
+		if (this.props) return `${k}({${Object.keys(this.props).join(",")}})`;
+		return `${k}(${this.value})`;
+	}
+};
+
 if (!globalThis.$fetch) {
-  globalThis.$fetch = $fetch$1.create({
+  globalThis.$fetch = $fetch.create({
     baseURL: baseURL()
   });
 }
@@ -144,7 +383,7 @@ function createNuxtApp(options) {
     provide: void 0,
     versions: {
       get nuxt() {
-        return "4.4.2";
+        return "4.4.8";
       },
       get vue() {
         return nuxtApp.vueApp.version;
@@ -367,7 +606,17 @@ const isProcessingMiddleware = () => {
   }
   return false;
 };
-const URL_QUOTE_RE = /"/g;
+const HTML_ATTR_UNSAFE_RE = /[&"'<>]/g;
+const HTML_ATTR_ENCODE_MAP = {
+  "&": "%26",
+  '"': "%22",
+  "'": "%27",
+  "<": "%3C",
+  ">": "%3E"
+};
+function encodeForHtmlAttr(value) {
+  return value.replace(HTML_ATTR_UNSAFE_RE, (c) => HTML_ATTR_ENCODE_MAP[c]);
+}
 const navigateTo = (to, options) => {
   to ||= "/";
   const toPath = typeof to === "string" ? to : "path" in to ? resolveRouteObject(to) : useRouter().resolve(to).href;
@@ -391,8 +640,8 @@ const navigateTo = (to, options) => {
       const location2 = isExternal ? toPath : joinURL((/* @__PURE__ */ useRuntimeConfig()).app.baseURL, fullPath);
       const redirect = async function(response) {
         await nuxtApp.callHook("app:redirected");
-        const encodedLoc = location2.replace(URL_QUOTE_RE, "%22");
         const encodedHeader = encodeURL(location2, isExternalHost);
+        const encodedLoc = encodeForHtmlAttr(encodedHeader);
         nuxtApp.ssrContext["~renderResponse"] = {
           statusCode: sanitizeStatusCode(options?.redirectCode || 302, 302),
           body: `<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=${encodedLoc}"></head></html>`,
@@ -435,7 +684,8 @@ function resolveRouteObject(to) {
 function encodeURL(location2, isExternalHost = false) {
   const url = new URL(location2, "http://localhost");
   if (!isExternalHost) {
-    return url.pathname + url.search + url.hash;
+    const pathname = url.pathname.replace(/^\/{2,}/, "/");
+    return pathname + url.search + url.hash;
   }
   if (location2.startsWith("//")) {
     return url.toString().replace(url.protocol, "");
@@ -482,11 +732,25 @@ const createError = (error) => {
   });
   return nuxtError;
 };
+function freezeHead(head) {
+  const realPush = head.push;
+  head.push = () => ({ dispose: () => {
+  }, patch: () => {
+  }, _poll: () => {
+  } });
+  return () => {
+    head.push = realPush;
+  };
+}
 const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:head",
   enforce: "pre",
   setup(nuxtApp) {
     const head = nuxtApp.ssrContext.head;
+    if (nuxtApp.ssrContext.islandContext) {
+      const unfreeze = freezeHead(head);
+      nuxtApp.hooks.hookOnce("app:created", unfreeze);
+    }
     nuxtApp.vueApp.use(head);
   }
 });
@@ -500,16 +764,18 @@ const matcher = /* @__PURE__ */ (() => {
     if (p.charCodeAt(p.length - 1) === 47) p = p.slice(0, -1) || "/";
     if (p === "/api/cron") {
       r.unshift({ data: $0 });
+    } else if (p === "/api/stripe/webhook") {
+      r.unshift({ data: $0 });
     }
     return r;
   };
 })();
-const _routeRulesMatcher = (path) => defu({}, ...matcher("", path).map((r) => r.data).reverse());
+const _routeRulesMatcher = (path) => defu({}, ...matcher("", typeof path === "string" ? path.toLowerCase() : path).map((r) => r.data).reverse());
 const routeRulesMatcher$1 = _routeRulesMatcher;
 function getRouteRules(arg) {
   const path = typeof arg === "string" ? arg : arg.path;
   try {
-    return routeRulesMatcher$1(path);
+    return routeRulesMatcher$1(path.toLowerCase());
   } catch (e) {
     console.error("[nuxt] Error matching route rules.", e);
     return {};
@@ -527,12 +793,8 @@ const __nuxt_page_meta$8 = {
 const __nuxt_page_meta$7 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$6 = {
-  layout: "authenticated"
-};
-const __nuxt_page_meta$5 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$6 = { layout: "authenticated" };
+const __nuxt_page_meta$5 = { layout: "authenticated" };
 const __nuxt_page_meta$4 = {
   layout: "authenticated"
 };
@@ -546,80 +808,80 @@ const __nuxt_page_meta$1 = {
   layout: "authenticated"
 };
 const __nuxt_page_meta = {
-  layout: "authenticated"
+  layout: "payment"
 };
 const _routes = [
   {
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
     meta: __nuxt_page_meta$a || {},
-    component: () => import('./create-vLhzX0LJ.mjs')
+    component: () => import('./create-BRGa768C.mjs')
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
     meta: __nuxt_page_meta$9 || {},
-    component: () => import('./index-UH2NzQU4.mjs')
+    component: () => import('./index-BYT6lftS.mjs')
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import('./details-CbJHi-bc.mjs')
+    component: () => import('./details-_XipJ5hW.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./edit-DybwwBSY.mjs')
+    component: () => import('./edit-BQggIyQ5.mjs')
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-CSk5hHQw.mjs')
+    component: () => import('./index-BOm2ygst.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./index-oW0h9Ejn.mjs')
+    component: () => import('./index-Dajmh8X8.mjs')
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-BVqRADr4.mjs')
+    component: () => import('./index-C-LMPpcO.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-BAun1wiJ.mjs')
+    component: () => import('./index-CjDm3AMr.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-COFhRBS4.mjs')
+    component: () => import('./index-oQJ-HvxV.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-CIL4_-2i.mjs')
+    component: () => import('./index-CoyKHRq6.mjs')
   },
   {
     name: "forgotpassword",
     path: "/forgotpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./forgotpassword-Bd6nV6I_.mjs')
+    component: () => import('./forgotpassword-Ldt68KdG.mjs')
   },
   {
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import('./login-aaQPME4v.mjs')
+    component: () => import('./login-CRq1aRn5.mjs')
   },
   {
     name: "privacy-policy",
@@ -630,25 +892,25 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import('./signup-B4Uc26e_.mjs')
+    component: () => import('./signup-DdeI_Wne.mjs')
   },
   {
     name: "subscribe",
     path: "/subscribe",
     meta: { ...__nuxt_page_meta || {}, ...{ "groups": ["payment"] } },
-    component: () => import('./subscribe-CDVjCK4Z.mjs')
+    component: () => import('./subscribe-xZWqhbBj.mjs')
   },
   {
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./resetpassword-7gME1NZ-.mjs')
+    component: () => import('./resetpassword-smjc6EMf.mjs')
   },
   {
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import('./index-T-hhzX4s.mjs')
+    component: () => import('./index-CSU_rkkw.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -742,12 +1004,11 @@ function _calculatePosition(to, from, savedPosition, defaultHashScrollBehaviour)
   if (savedPosition) {
     return savedPosition;
   }
-  const isPageNavigation = isChangingPage(to, from);
   if (to.hash) {
     return {
       el: to.hash,
       top: _getHashElementScrollMarginTop(to.hash),
-      behavior: isPageNavigation ? defaultHashScrollBehaviour : "instant"
+      behavior: isChangingPage(to, from) ? defaultHashScrollBehaviour : "instant"
     };
   }
   return {
@@ -768,7 +1029,7 @@ const validate = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to, from) => {
   if (!to.meta?.validate) {
     return;
   }
-  const result = ([__temp, __restore] = executeAsync(() => Promise.resolve(to.meta.validate(to))), __temp = await __temp, __restore(), __temp);
+  const result = ([__temp, __restore] = executeAsync$1(() => Promise.resolve(to.meta.validate(to))), __temp = await __temp, __restore(), __temp);
   if (result === true) {
     return;
   }
@@ -790,21 +1051,21 @@ function useState(...args) {
   if (typeof args[0] !== "string") {
     args.unshift(autoKey);
   }
-  const [_key, init] = args;
+  const [_key, init2] = args;
   if (!_key || typeof _key !== "string") {
     throw new TypeError("[nuxt] [useState] key must be a string: " + _key);
   }
-  if (init !== void 0 && typeof init !== "function") {
-    throw new Error("[nuxt] [useState] init must be a function: " + init);
+  if (init2 !== void 0 && typeof init2 !== "function") {
+    throw new Error("[nuxt] [useState] init must be a function: " + init2);
   }
   const key = useStateKeyPrefix + _key;
   const nuxtApp = useNuxtApp();
   const state = toRef$1(nuxtApp.payload.state, key);
-  if (init) {
-    nuxtApp._state[key] ??= { _default: init };
+  if (init2) {
+    nuxtApp._state[key] ??= { _default: init2 };
   }
-  if (state.value === void 0 && init) {
-    const initialValue = init();
+  if (state.value === void 0 && init2) {
+    const initialValue = init2();
     if (isRef(initialValue)) {
       nuxtApp.payload.state[key] = initialValue;
       return initialValue;
@@ -897,10 +1158,31 @@ function useUserSession() {
     clear
   };
 }
-const auth_45global = /* @__PURE__ */ defineNuxtRouteMiddleware((to, from) => {
+const auth_45global = /* @__PURE__ */ defineNuxtRouteMiddleware(async (to) => {
+  let __temp, __restore;
   const { loggedIn } = useUserSession();
   if (!loggedIn.value && to.path === "/") {
     return navigateTo("/login");
+  }
+  if (!to.path.startsWith("/dashboard")) return;
+  if (!loggedIn.value) {
+    return navigateTo("/login");
+  }
+  const requestFetch = useRequestFetch();
+  try {
+    const me = ([__temp, __restore] = executeAsync(() => requestFetch("/api/user")), __temp = await __temp, __restore(), __temp);
+    const status = me?.subscriptionStatus;
+    const isActive = status === "active" || status === "trialing" || me?.paid === true;
+    if (!isActive) {
+      return navigateTo("/subscribe");
+    }
+  } catch (error) {
+    const code = error?.statusCode ?? error?.response?.status;
+    if (code === 401) {
+      return navigateTo("/login");
+    }
+    console.error("[auth] subscription check failed:", code ?? error);
+    return;
   }
 });
 const manifest_45route_45rule = /* @__PURE__ */ defineNuxtRouteMiddleware((to) => {
@@ -914,6 +1196,8 @@ const globalMiddleware = [
   manifest_45route_45rule
 ];
 const namedMiddleware = {};
+Object.assign(/* @__PURE__ */ Object.create(null), {});
+const pageIslandRoutes = Object.assign(/* @__PURE__ */ Object.create(null), {});
 const plugin = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:router",
   enforce: "pre",
@@ -921,7 +1205,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     let __temp, __restore;
     let routerBase = (/* @__PURE__ */ useRuntimeConfig()).app.baseURL;
     const history = routerOptions.history?.(routerBase) ?? createMemoryHistory(routerBase);
-    const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
+    const routes = routerOptions.routes ? ([__temp, __restore] = executeAsync$1(() => routerOptions.routes(_routes)), __temp = await __temp, __restore(), __temp) ?? _routes : _routes;
     let startPosition;
     const router = createRouter({
       ...routerOptions,
@@ -958,7 +1242,13 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
       _route.value = router.currentRoute.value;
     };
     router.afterEach((to, from) => {
-      if (to.matched.at(-1)?.components?.default === from.matched.at(-1)?.components?.default) {
+      const lastTo = to.matched.at(-1)?.components?.default;
+      const lastFrom = from.matched.at(-1)?.components?.default;
+      if (lastTo === lastFrom) {
+        syncCurrentRoute();
+        return;
+      }
+      if (to.matched.length < from.matched.length && to.matched.every((m, i) => m.components?.default === from.matched[i]?.components?.default)) {
         syncCurrentRoute();
       }
     });
@@ -975,7 +1265,8 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
       named: {}
     };
     const error = /* @__PURE__ */ useError();
-    if (!nuxtApp.ssrContext?.islandContext) {
+    const isServerPage = nuxtApp.ssrContext?.islandContext?.name?.startsWith("page_");
+    if (!nuxtApp.ssrContext?.islandContext || isServerPage) {
       router.afterEach(async (to, _from, failure) => {
         delete nuxtApp._processingMiddleware;
         if (failure) {
@@ -992,19 +1283,19 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
     try {
       if (true) {
         ;
-        [__temp, __restore] = executeAsync(() => router.push(initialURL)), await __temp, __restore();
+        [__temp, __restore] = executeAsync$1(() => router.push(initialURL)), await __temp, __restore();
         ;
       }
       ;
-      [__temp, __restore] = executeAsync(() => router.isReady()), await __temp, __restore();
+      [__temp, __restore] = executeAsync$1(() => router.isReady()), await __temp, __restore();
       ;
     } catch (error2) {
-      [__temp, __restore] = executeAsync(() => nuxtApp.runWithContext(() => showError(error2))), await __temp, __restore();
+      [__temp, __restore] = executeAsync$1(() => nuxtApp.runWithContext(() => showError(error2))), await __temp, __restore();
     }
     const resolvedInitialRoute = router.currentRoute.value;
     const hasDeferredRoute = false;
     syncCurrentRoute();
-    if (nuxtApp.ssrContext?.islandContext) {
+    if (nuxtApp.ssrContext?.islandContext && !isServerPage) {
       return { provide: { router } };
     }
     const initialLayout = nuxtApp.payload.state._layout;
@@ -1015,7 +1306,7 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
         to.meta.layout = initialLayout;
       }
       nuxtApp._processingMiddleware = true;
-      if (!nuxtApp.ssrContext?.islandContext) {
+      if (!nuxtApp.ssrContext?.islandContext || isServerPage) {
         const middlewareEntries = /* @__PURE__ */ new Set([...globalMiddleware, ...nuxtApp._middleware.global]);
         for (const component of to.matched) {
           const componentMiddleware = component.meta.middleware;
@@ -1076,6 +1367,19 @@ const plugin = /* @__PURE__ */ defineNuxtPlugin({
         }
       }
     });
+    if (isServerPage) {
+      router.beforeResolve((to) => {
+        const expected = pageIslandRoutes[nuxtApp.ssrContext.islandContext.name];
+        const actual = to.matched.find((m) => m.components?.default?.__nuxt_island)?.components?.default;
+        if (!expected || expected !== actual?.__nuxt_island) {
+          nuxtApp.ssrContext["~renderResponse"] = {
+            statusCode: 400,
+            statusMessage: "Invalid island request path"
+          };
+          return false;
+        }
+      });
+    }
     router.onError(async () => {
       delete nuxtApp._processingMiddleware;
       await nuxtApp.callHook("page:loading:end");
@@ -1195,6 +1499,7 @@ const inlineConfig = {
       "reload": "i-lucide-rotate-ccw",
       "search": "i-lucide-search",
       "stop": "i-lucide-square",
+      "star": "i-lucide-star",
       "success": "i-lucide-circle-check",
       "system": "i-lucide-monitor",
       "tip": "i-lucide-lightbulb",
@@ -1455,6 +1760,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   setup() {
     const configs = /* @__PURE__ */ useRuntimeConfig();
     const options = useAppConfig().icon;
+    const $fetch = useRequestFetch();
     _api.setFetch($fetch.native);
     const resources = [];
     if (options.provider === "server") {
@@ -1492,7 +1798,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // For type portability
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
-const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-D7WWRYt2.mjs').then((r) => r["default"] || r.default || r));
+const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-DMbdjDDH.mjs').then((r) => r["default"] || r.default || r));
 const AreaChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["AreaChart"] || r.default || r));
 const LineChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["LineChart"] || r.default || r));
 const BarChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["BarChart"] || r.default || r));
@@ -1553,7 +1859,7 @@ const serverPlaceholder = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.d
   default: ServerPlaceholder
 }, Symbol.toStringTag, { value: "Module" }));
 const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
-const __nuxt_component_1$1 = defineComponent({
+const __nuxt_component_0$2 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -1601,9 +1907,10 @@ const createUseAsyncData = defineKeyedFunctionFactory({
         args.unshift(autoKey);
       }
       let [_key, _handler, opts = {}] = args;
-      const key = computed(() => toValue(_key));
-      if (typeof key.value !== "string") {
-        throw new TypeError("[nuxt] [useAsyncData] key must be a string.");
+      const isKeyReactive = isRef(_key) || typeof _key === "function";
+      const key = isKeyReactive ? computed(() => toValue(_key)) : { value: _key };
+      if (!key.value || typeof key.value !== "string") {
+        throw new TypeError("[nuxt] [useAsyncData] key must be a non-empty string.");
       }
       if (typeof _handler !== "function") {
         throw new TypeError("[nuxt] [useAsyncData] handler must be a function.");
@@ -1640,9 +1947,13 @@ const createUseAsyncData = defineKeyedFunctionFactory({
       nuxtApp._asyncData[key.value];
       function createInitialFetch() {
         const initialFetchOptions = { cause: "initial", dedupe: opts.dedupe };
-        if (!nuxtApp._asyncData[key.value]?._init) {
+        const existing = nuxtApp._asyncData[key.value];
+        if (!existing?._init) {
           initialFetchOptions.cachedData = opts.getCachedData(key.value, nuxtApp, { cause: "initial" });
           nuxtApp._asyncData[key.value] = buildAsyncData(nuxtApp, key.value, _handler, opts, initialFetchOptions.cachedData);
+          nuxtApp._asyncData[key.value]._initialCachedData = initialFetchOptions.cachedData;
+        } else if (nuxtApp._asyncDataPromises[key.value]) {
+          initialFetchOptions.cachedData = existing._initialCachedData;
         }
         return () => nuxtApp._asyncData[key.value].execute(initialFetchOptions);
       }
@@ -1776,6 +2087,7 @@ function clearNuxtDataByKey(nuxtApp, key) {
     nuxtApp._asyncData[key].data.value = unref(nuxtApp._asyncData[key]._default());
     nuxtApp._asyncData[key].error.value = void 0;
     nuxtApp._asyncData[key].status.value = "idle";
+    nuxtApp._asyncData[key]._initialCachedData = void 0;
   }
   if (key in nuxtApp._asyncDataPromises) {
     nuxtApp._asyncDataPromises[key] = void 0;
@@ -1847,6 +2159,9 @@ function buildAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
           }
         }
       ).then(async (_result) => {
+        if (nuxtApp._asyncDataPromises[key] !== promise) {
+          return;
+        }
         let result = _result;
         if (options.transform) {
           result = await options.transform(_result);
@@ -1859,7 +2174,7 @@ function buildAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
         asyncData.error.value = void 0;
         asyncData.status.value = "success";
       }).catch((error) => {
-        if (nuxtApp._asyncDataPromises[key] && nuxtApp._asyncDataPromises[key] !== promise) {
+        if (nuxtApp._asyncDataPromises[key] !== promise) {
           return nuxtApp._asyncDataPromises[key];
         }
         if (asyncData._abortController?.signal.aborted) {
@@ -1874,7 +2189,9 @@ function buildAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
         asyncData.status.value = "error";
       }).finally(() => {
         cleanupController.abort();
-        delete nuxtApp._asyncDataPromises[key];
+        if (nuxtApp._asyncDataPromises[key] === promise) {
+          delete nuxtApp._asyncDataPromises[key];
+        }
       });
       nuxtApp._asyncDataPromises[key] = promise;
       return nuxtApp._asyncDataPromises[key];
@@ -1970,12 +2287,12 @@ function generateOptionSegments(opts) {
     } else if (value instanceof ArrayBuffer) {
       segments.push(hash(Object.fromEntries([...new Uint8Array(value).entries()].map(([k, v]) => [k, v.toString()]))));
     } else if (value instanceof FormData) {
-      const obj = {};
+      const entries = [];
       for (const entry2 of value.entries()) {
         const [key, val] = entry2;
-        obj[key] = val instanceof File ? val.name : val;
+        entries.push([key, val instanceof File ? `${val.name}:${val.size}:${val.lastModified}` : val]);
       }
-      segments.push(hash(obj));
+      segments.push(hash(entries));
     } else if (isPlainObject(value)) {
       segments.push(hash(reactive(value)));
     } else {
@@ -1993,11 +2310,6 @@ const createUseFetch = defineKeyedFunctionFactory({
   factory(options = {}) {
     function useFetch2(request, arg1, arg2) {
       const [opts = {}, autoKey] = typeof arg1 === "string" ? [{}, arg1] : [arg1, arg2];
-      const _request = computed(() => toValue(request));
-      const key = computed(() => toValue(opts.key) || "$f" + hash([autoKey, typeof _request.value === "string" ? _request.value : "", ...generateOptionSegments(opts)]));
-      if (!opts.baseURL && typeof _request.value === "string" && (_request.value[0] === "/" && _request.value[1] === "/")) {
-        throw new Error('[nuxt] [useFetch] the request URL must not start with "//".');
-      }
       const factoryOptions = typeof options === "function" ? options(opts) : options;
       const {
         server,
@@ -2017,6 +2329,11 @@ const createUseFetch = defineKeyedFunctionFactory({
         ...opts,
         ...typeof options === "function" ? factoryOptions : {}
       };
+      const _request = computed(() => toValue(request));
+      const key = computed(() => toValue(fetchOptions.key) || "$f" + hash([autoKey, typeof _request.value === "string" ? _request.value : "", ...generateOptionSegments(fetchOptions)]));
+      if (!fetchOptions.baseURL && typeof _request.value === "string" && (_request.value[0] === "/" && _request.value[1] === "/")) {
+        throw new Error('[nuxt] [useFetch] the request URL must not start with "//".');
+      }
       const _fetchOptions = reactive({
         ...fetchDefaults,
         ...fetchOptions,
@@ -2035,10 +2352,13 @@ const createUseFetch = defineKeyedFunctionFactory({
         timeout,
         watch: watchSources === false ? [] : [...watchSources || [], _fetchOptions]
       };
-      const asyncData = useAsyncData(watchSources === false ? key.value : key, (_, { signal }) => {
-        let _$fetch = opts.$fetch || globalThis.$fetch;
-        if (!opts.$fetch) {
-          const isLocalFetch = typeof _request.value === "string" && _request.value[0] === "/" && (!toValue(opts.baseURL) || toValue(opts.baseURL)[0] === "/");
+      if (watchSources === false) {
+        _asyncDataOptions._keyTriggersExecute = false;
+      }
+      const asyncData = useAsyncData(key, (_, { signal }) => {
+        let _$fetch = fetchOptions.$fetch || globalThis.$fetch;
+        if (!fetchOptions.$fetch) {
+          const isLocalFetch = typeof _request.value === "string" && _request.value[0] === "/" && (!toValue(fetchOptions.baseURL) || toValue(fetchOptions.baseURL)[0] === "/");
           if (isLocalFetch) {
             _$fetch = useRequestFetch();
           }
@@ -2057,6 +2377,17 @@ createUseFetch.__nuxt_factory({
   _functionName: "useLazyFetch"
 });
 const firstNonUndefined = (...args) => args.find((arg) => arg !== void 0);
+function sanitizeExternalHref(value) {
+  let candidate = value.replace(/[\u0000-\u001F\s]+/g, "");
+  while (candidate.toLowerCase().startsWith("view-source:")) {
+    candidate = candidate.slice("view-source:".length);
+  }
+  const colon = candidate.indexOf(":");
+  if (colon > 0 && isScriptProtocol(candidate.slice(0, colon + 1))) {
+    return null;
+  }
+  return value;
+}
 // @__NO_SIDE_EFFECTS__
 function defineNuxtLink(options) {
   const componentName = options.componentName || "NuxtLink";
@@ -2082,7 +2413,7 @@ function defineNuxtLink(options) {
   }
   function useNuxtLink(props) {
     const router = useRouter();
-    const config = /* @__PURE__ */ useRuntimeConfig();
+    const config2 = /* @__PURE__ */ useRuntimeConfig();
     const hasTarget = computed(() => !!unref(props.target) && unref(props.target) !== "_self");
     const isAbsoluteUrl = computed(() => {
       const path = unref(props.to) || unref(props.href) || "";
@@ -2111,17 +2442,19 @@ function defineNuxtLink(options) {
     const href = computed(() => {
       const effectiveTrailingSlash = unref(props.trailingSlash) ?? options.trailingSlash;
       if (!to.value || isAbsoluteUrl.value || isHashLinkWithoutHashMode(to.value)) {
-        return to.value;
+        const raw = to.value;
+        return typeof raw === "string" ? sanitizeExternalHref(raw) : raw;
       }
       if (isExternal.value) {
         const path = typeof to.value === "object" && "path" in to.value ? resolveRouteObject(to.value) : to.value;
         const href2 = typeof path === "object" ? router.resolve(path).href : path;
-        return applyTrailingSlashBehavior(href2, effectiveTrailingSlash);
+        const safe = typeof href2 === "string" ? sanitizeExternalHref(href2) : href2;
+        return safe === null ? null : applyTrailingSlashBehavior(safe, effectiveTrailingSlash);
       }
       if (typeof to.value === "object") {
         return router.resolve(to.value)?.href ?? null;
       }
-      return applyTrailingSlashBehavior(joinURL(config.app.baseURL, to.value), effectiveTrailingSlash);
+      return applyTrailingSlashBehavior(joinURL(config2.app.baseURL, to.value), effectiveTrailingSlash);
     });
     return {
       to,
@@ -2134,6 +2467,9 @@ function defineNuxtLink(options) {
       isExactActive: link?.isExactActive ?? computed(() => to.value === router.currentRoute.value.path),
       route: link?.route ?? computed(() => router.resolve(to.value)),
       async navigate(_e) {
+        if (href.value === null) {
+          return;
+        }
         await navigateTo(href.value, { replace: unref(props.replace), external: isExternal.value || hasTarget.value });
       }
     };
@@ -2320,7 +2656,7 @@ function defineNuxtLink(options) {
             }
             event.preventDefault();
             try {
-              const encodedHref = encodeRoutePath(href.value);
+              const encodedHref = encodeRoutePath(href.value ?? "");
               return await (props.replace ? router.replace(encodedHref) : router.push(encodedHref));
             } finally {
             }
@@ -2330,7 +2666,7 @@ function defineNuxtLink(options) {
     }
   });
 }
-const __nuxt_component_0$2 = /* @__PURE__ */ defineNuxtLink(nuxtLinkDefaults);
+const __nuxt_component_0$1 = /* @__PURE__ */ defineNuxtLink(nuxtLinkDefaults);
 function applyTrailingSlashBehavior(to, trailingSlash) {
   const normalizeFn = trailingSlash === "append" ? withTrailingSlash : withoutTrailingSlash;
   const hasProtocolDifferentFromHttp = hasProtocol(to) && !to.startsWith("http");
@@ -2339,9 +2675,22 @@ function applyTrailingSlashBehavior(to, trailingSlash) {
   }
   return normalizeFn(to, true);
 }
+let _initialized = false;
+function init(addIcon2) {
+  if (_initialized)
+    return;
+  const collections = JSON.parse('[{"prefix":"lucide","icons":{"arrow-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 5v14m7-7l-7 7l-7-7\\"/>"},"arrow-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m12 19l-7-7l7-7m7 7H5\\"/>"},"arrow-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7l7 7l-7 7\\"/>"},"arrow-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m5 12l7-7l7 7m-7 7V5\\"/>"},"arrow-up-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M7 7h10v10M7 17L17 7\\"/>"},"check":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 6L9 17l-5-5\\"/>"},"chevron-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 9l6 6l6-6\\"/>"},"chevron-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m15 18l-6-6l6-6\\"/>"},"chevron-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m9 18l6-6l-6-6\\"/>"},"chevron-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m18 15l-6-6l-6 6\\"/>"},"chevrons-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m11 17l-5-5l5-5m7 10l-5-5l5-5\\"/>"},"chevrons-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 17l5-5l-5-5m7 10l5-5l-5-5\\"/>"},"circle-alert":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 8v4m0 4h.01\\"/></g>"},"circle-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m9 12l2 2l4-4\\"/></g>"},"circle-x":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m15 9l-6 6m0-6l6 6\\"/></g>"},"copy":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"copy-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m12 15l2 2l4-4\\"/><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"ellipsis":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"/></g>"},"eye":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0\\"/><circle cx=\\"12\\" cy=\\"12\\" r=\\"3\\"/></g>"},"eye-off":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242\\"/><path d=\\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20\\"/></g>"},"file":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\\"/><path d=\\"M14 2v5a1 1 0 0 0 1 1h5\\"/></g>"},"folder":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\\"/>"},"folder-open":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\\"/>"},"grip-vertical":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"9\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"19\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"19\\" r=\\"1\\"/></g>"},"hash":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 9h16M4 15h16M10 3L8 21m8-18l-2 18\\"/>"},"info":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 16v-4m0-4h.01\\"/></g>"},"lightbulb":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M15 14c.2-1 .7-1.7 1.5-2.5c1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5c.7.7 1.3 1.5 1.5 2.5m0 4h6m-5 4h4\\"/>"},"loader-circle":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M21 12a9 9 0 1 1-6.219-8.56\\"/>"},"menu":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 5h16M4 12h16M4 19h16\\"/>"},"minus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14\\"/>"},"monitor":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"20\\" height=\\"14\\" x=\\"2\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M8 21h8m-4-4v4\\"/></g>"},"moon":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\\"/>"},"panel-left-close":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m7-6l-3-3l3-3\\"/></g>"},"panel-left-open":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m5-12l3 3l-3 3\\"/></g>"},"plus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7v14\\"/>"},"rotate-ccw":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8\\"/><path d=\\"M3 3v5h5\\"/></g>"},"search":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m21 21l-4.34-4.34\\"/><circle cx=\\"11\\" cy=\\"11\\" r=\\"8\\"/></g>"},"square":{"width":24,"height":24,"body":"<rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" rx=\\"2\\"/>"},"star":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z\\"/>"},"sun":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"4\\"/><path d=\\"M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\\"/></g>"},"triangle-alert":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\\"/>"},"upload":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 3v12m5-7l-5-5l-5 5m14 7v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\\"/>"},"x":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M18 6L6 18M6 6l12 12\\"/>"}}}]');
+  for (const collection of collections) {
+    for (const [name, data] of Object.entries(collection.icons)) {
+      addIcon2(collection.prefix ? collection.prefix + ":" + name : name, data);
+    }
+  }
+  _initialized = true;
+}
 async function loadIcon(name, timeout) {
   if (!name)
     return null;
+  init(addIcon);
   const _icon = getIcon(name);
   if (_icon)
     return _icon;
@@ -2403,7 +2752,14 @@ const NuxtIconCss = /* @__PURE__ */ defineComponent({
   setup(props) {
     const nuxt = useNuxtApp();
     const options = useAppConfig().icon;
-    const cssClass = computed(() => props.name ? options.cssSelectorPrefix + props.name : "");
+    const cssClass = computed(() => {
+      if (!props.name) return "";
+      const base = options.cssSelectorPrefix + props.name;
+      if (typeof props.customize === "function") {
+        return base + "--customized-" + hash(props.customize.toString());
+      }
+      return base;
+    });
     const selector = computed(() => "." + escapeCssSelector(cssClass.value));
     function getCSS(icon, withLayer = true) {
       let iconSelector = selector.value;
@@ -2447,9 +2803,9 @@ const NuxtIconCss = /* @__PURE__ */ defineComponent({
               });
             });
           }
-          if (props.name && !ssrCSS.has(props.name)) {
+          if (cssClass.value && !ssrCSS.has(cssClass.value)) {
             const css = getCSS(icon, false);
-            ssrCSS.set(props.name, css);
+            ssrCSS.set(cssClass.value, css);
           }
           return null;
         }
@@ -2495,7 +2851,7 @@ const NuxtIconSvg = /* @__PURE__ */ defineComponent({
     }, slots);
   }
 });
-const __nuxt_component_0$1 = defineComponent({
+const NuxtIcon = defineComponent({
   name: "NuxtIcon",
   props: {
     name: {
@@ -2544,7 +2900,7 @@ const __nuxt_component_0$1 = defineComponent({
 });
 const index = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  default: __nuxt_component_0$1
+  default: NuxtIcon
 }, Symbol.toStringTag, { value: "Module" }));
 const plugin_PkzIodqHrECZiqJYWG6YoAUH8WdazzfetYETfN19XBg = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
   return;
@@ -2583,8 +2939,8 @@ const colors_E7kSti5pGZ28QhUUurq6gGRU3l65WuXO_KJC3GQgzFo = /* @__PURE__ */ defin
   });
   const headData = {
     style: [{
-      innerHTML: () => root.value,
-      tagPriority: -2,
+      innerHTML: root,
+      tagPriority: "critical",
       id: "nuxt-ui-colors"
     }]
   };
@@ -2826,8 +3182,8 @@ class MotionValue {
    * init - The initiating value
    * config - Optional configuration options
    */
-  constructor(init) {
-    this.prev = this.current = init;
+  constructor(init2) {
+    this.prev = this.current = init2;
     this.canTrackVelocity = isFloat(this.current);
   }
   /**
@@ -2944,8 +3300,8 @@ class MotionValue {
     this.stop();
   }
 }
-function getMotionValue(init) {
-  return new MotionValue(init);
+function getMotionValue(init2) {
+  return new MotionValue(init2);
 }
 const { isArray } = Array;
 function useMotionValues() {
@@ -4286,7 +4642,7 @@ function setupMotionComponent(props) {
     tapped: props.tapped,
     focused: props.focused
   }));
-  function applyTransitionHelpers(config, values) {
+  function applyTransitionHelpers(config2, values) {
     for (const transitionKey of ["delay", "duration"]) {
       if (values[transitionKey] == null)
         continue;
@@ -4294,23 +4650,23 @@ function setupMotionComponent(props) {
         values[transitionKey]
       );
       for (const variantKey of ["enter", "visible", "visibleOnce"]) {
-        const variantConfig = config[variantKey];
+        const variantConfig = config2[variantKey];
         if (variantConfig == null)
           continue;
         variantConfig.transition ??= {};
         variantConfig.transition[transitionKey] = transitionValueParsed;
       }
     }
-    return config;
+    return config2;
   }
   const motionConfig = computed(() => {
-    const config = defu(
+    const config2 = defu(
       {},
       propsConfig.value,
       preset.value,
       props.variants || {}
     );
-    return applyTransitionHelpers({ ...config }, props);
+    return applyTransitionHelpers({ ...config2 }, props);
   });
   function setNodeInstance(node, index2, style) {
     node.props ??= {};
@@ -4422,8 +4778,8 @@ const MotionPlugin = {
 };
 const motion_F8atB0kBNE8FIgT_ajBXU_q0VzJ7X_J9WFqahA8C37U = /* @__PURE__ */ defineNuxtPlugin(
   (nuxtApp) => {
-    const config = /* @__PURE__ */ useRuntimeConfig();
-    nuxtApp.vueApp.use(MotionPlugin, config.public.motion);
+    const config2 = /* @__PURE__ */ useRuntimeConfig();
+    nuxtApp.vueApp.use(MotionPlugin, config2.public.motion);
   }
 );
 const plugins = [
@@ -4463,102 +4819,12 @@ function getActiveElement() {
 function isNullish(value) {
   return value === null || value === void 0;
 }
-function renderSlotFragments(children) {
-  if (!children) return [];
-  return children.flatMap((child) => {
-    if (child.type === Fragment) return renderSlotFragments(child.children);
-    return [child];
-  });
-}
-const [injectConfigProviderContext, provideConfigProviderContext] = createContext("ConfigProvider");
-var ConfigProvider_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineComponent({
-  inheritAttrs: false,
-  __name: "ConfigProvider",
-  props: {
-    dir: {
-      type: String,
-      required: false,
-      default: "ltr"
-    },
-    locale: {
-      type: String,
-      required: false,
-      default: "en"
-    },
-    scrollBody: {
-      type: [Boolean, Object],
-      required: false,
-      default: true
-    },
-    nonce: {
-      type: String,
-      required: false,
-      default: void 0
-    },
-    useId: {
-      type: Function,
-      required: false,
-      default: void 0
-    }
-  },
-  setup(__props) {
-    const props = __props;
-    const { dir, locale, scrollBody, nonce } = toRefs(props);
-    provideConfigProviderContext({
-      dir,
-      locale,
-      scrollBody,
-      nonce,
-      useId: props.useId
-    });
-    return (_ctx, _cache) => {
-      return renderSlot(_ctx.$slots, "default");
-    };
-  }
-});
-var ConfigProvider_default = ConfigProvider_vue_vue_type_script_setup_true_lang_default;
-function computedEager(fn, options) {
-  var _options$flush;
-  const result = shallowRef();
-  watchEffect(() => {
-    result.value = fn();
-  }, {
-    ...options,
-    flush: (_options$flush = options === null || options === void 0 ? void 0 : options.flush) !== null && _options$flush !== void 0 ? _options$flush : "sync"
-  });
-  return readonly(result);
-}
 function tryOnScopeDispose(fn, failSilently) {
   if (getCurrentScope()) {
     onScopeDispose(fn, failSilently);
     return true;
   }
   return false;
-}
-// @__NO_SIDE_EFFECTS__
-function createEventHook() {
-  const fns = /* @__PURE__ */ new Set();
-  const off = (fn) => {
-    fns.delete(fn);
-  };
-  const clear = () => {
-    fns.clear();
-  };
-  const on = (fn) => {
-    fns.add(fn);
-    const offFn = () => off(fn);
-    tryOnScopeDispose(offFn);
-    return { off: offFn };
-  };
-  const trigger = (...args) => {
-    return Promise.all(Array.from(fns).map((fn) => fn(...args)));
-  };
-  return {
-    on,
-    off,
-    trigger,
-    clear
-  };
 }
 // @__NO_SIDE_EFFECTS__
 function createGlobalState(stateFactory) {
@@ -4573,7 +4839,6 @@ function createGlobalState(stateFactory) {
     return state;
   });
 }
-const isClient = false;
 typeof WorkerGlobalScope !== "undefined" && globalThis instanceof WorkerGlobalScope;
 const isDef = (val) => typeof val !== "undefined";
 const toString = Object.prototype.toString;
@@ -4598,22 +4863,26 @@ function createFilterWrapper(filter2, fn) {
       })).then(resolve).catch(reject);
     });
   }
+  if ("cancel" in filter2) Object.assign(wrapper, {
+    cancel: filter2.cancel,
+    flush: filter2.flush,
+    isPending: filter2.isPending
+  });
   return wrapper;
 }
-const bypassFilter = (invoke$1) => {
-  return invoke$1();
-};
 function debounceFilter(ms, options = {}) {
   let timer;
   let maxTimer;
   let lastRejector = noop;
-  const _clearTimeout = (timer$1) => {
-    clearTimeout(timer$1);
+  let lastResolve = noop;
+  const _pending = shallowRef(false);
+  const _clearTimeout = (timer2) => {
+    clearTimeout(timer2);
     lastRejector();
     lastRejector = noop;
   };
   let lastInvoker;
-  const filter2 = (invoke$1) => {
+  const handler = (invoke2) => {
     const duration = toValue(ms);
     const maxDuration = toValue(options.maxWait);
     if (timer) _clearTimeout(timer);
@@ -4622,43 +4891,60 @@ function debounceFilter(ms, options = {}) {
         _clearTimeout(maxTimer);
         maxTimer = void 0;
       }
-      return Promise.resolve(invoke$1());
+      _pending.value = false;
+      return Promise.resolve(invoke2());
     }
+    _pending.value = true;
     return new Promise((resolve, reject) => {
       lastRejector = options.rejectOnCancel ? reject : resolve;
-      lastInvoker = invoke$1;
+      lastResolve = resolve;
+      lastInvoker = invoke2;
       if (maxDuration && !maxTimer) maxTimer = setTimeout(() => {
         if (timer) _clearTimeout(timer);
         maxTimer = void 0;
+        _pending.value = false;
         resolve(lastInvoker());
       }, maxDuration);
       timer = setTimeout(() => {
         if (maxTimer) _clearTimeout(maxTimer);
         maxTimer = void 0;
-        resolve(invoke$1());
+        _pending.value = false;
+        resolve(invoke2());
       }, duration);
     });
   };
-  return filter2;
-}
-function pausableFilter(extendFilter = bypassFilter, options = {}) {
-  const { initialState = "active" } = options;
-  const isActive = toRef(initialState === "active");
-  function pause() {
-    isActive.value = false;
-  }
-  function resume() {
-    isActive.value = true;
-  }
-  const eventFilter = (...args) => {
-    if (isActive.value) extendFilter(...args);
-  };
-  return {
-    isActive: readonly(isActive),
-    pause,
-    resume,
-    eventFilter
-  };
+  return Object.assign(handler, {
+    cancel: () => {
+      if (timer) {
+        _clearTimeout(timer);
+        timer = void 0;
+      }
+      if (maxTimer) {
+        _clearTimeout(maxTimer);
+        maxTimer = void 0;
+      }
+      _pending.value = false;
+      lastResolve = noop;
+    },
+    flush: () => {
+      if (_pending.value) {
+        if (timer) {
+          clearTimeout(timer);
+          timer = void 0;
+        }
+        if (maxTimer) {
+          clearTimeout(maxTimer);
+          maxTimer = void 0;
+        }
+        _pending.value = false;
+        const resolve = lastResolve;
+        lastRejector = noop;
+        lastResolve = noop;
+        resolve(lastInvoker());
+      }
+    },
+    isPending: shallowReadonly(_pending)
+  });
 }
 function toArray(value) {
   return Array.isArray(value) ? value : [value];
@@ -4763,54 +5049,8 @@ function refAutoReset(defaultValue, afterMs = 1e4) {
     };
   });
 }
-// @__NO_SIDE_EFFECTS__
 function useDebounceFn(fn, ms = 200, options = {}) {
   return createFilterWrapper(debounceFilter(ms, options), fn);
-}
-function watchWithFilter(source, cb, options = {}) {
-  const { eventFilter = bypassFilter, ...watchOptions } = options;
-  return watch(source, createFilterWrapper(eventFilter, cb), watchOptions);
-}
-function watchPausable(source, cb, options = {}) {
-  const { eventFilter: filter2, initialState = "active", ...watchOptions } = options;
-  const { eventFilter, pause, resume, isActive } = pausableFilter(filter2, { initialState });
-  return {
-    stop: watchWithFilter(source, cb, {
-      ...watchOptions,
-      eventFilter
-    }),
-    pause,
-    resume,
-    isActive
-  };
-}
-function syncRef(left, right, ...[options]) {
-  const { flush = "sync", deep = false, immediate = true, direction = "both", transform = {} } = options || {};
-  const watchers = [];
-  const transformLTR = "ltr" in transform && transform.ltr || ((v) => v);
-  const transformRTL = "rtl" in transform && transform.rtl || ((v) => v);
-  if (direction === "both" || direction === "ltr") watchers.push(watchPausable(left, (newValue) => {
-    watchers.forEach((w) => w.pause());
-    right.value = transformLTR(newValue);
-    watchers.forEach((w) => w.resume());
-  }, {
-    flush,
-    deep,
-    immediate
-  }));
-  if (direction === "both" || direction === "rtl") watchers.push(watchPausable(right, (newValue) => {
-    watchers.forEach((w) => w.pause());
-    left.value = transformRTL(newValue);
-    watchers.forEach((w) => w.resume());
-  }, {
-    flush,
-    deep,
-    immediate
-  }));
-  const stop = () => {
-    watchers.forEach((w) => w.stop());
-  };
-  return stop;
 }
 function tryOnBeforeUnmount(fn, target) {
   if (getLifeCycleTarget()) ;
@@ -4867,15 +5107,19 @@ function watchImmediate(source, cb, options) {
 }
 // @__NO_SIDE_EFFECTS__
 function createReusableTemplate(options = {}) {
-  const { inheritAttrs = true } = options;
+  const { inheritAttrs = true, name = "ReusableTemplate" } = options;
   const render = shallowRef();
-  const define = defineComponent({ setup(_, { slots }) {
-    return () => {
-      render.value = slots.default;
-    };
-  } });
+  const define = defineComponent({
+    name: `${name}.define`,
+    setup(_, { slots }) {
+      return () => {
+        render.value = slots.default;
+      };
+    }
+  });
   const reuse = defineComponent({
     inheritAttrs,
+    name: `${name}.reuse`,
     props: options.props,
     setup(props, { attrs, slots }) {
       return () => {
@@ -4980,7 +5224,7 @@ function onKeyStroke(...args) {
   return useEventListener(target, eventName, listener, passive);
 }
 function useRafFn(fn, options = {}) {
-  const { immediate = true, fpsLimit = null, window: window$1 = defaultWindow, once = false } = options;
+  const { immediate = true, fpsLimit = null, window: window2 = defaultWindow, once = false } = options;
   const isActive = shallowRef(false);
   const intervalLimit = computed(() => {
     const limit = toValue(fpsLimit);
@@ -4988,44 +5232,44 @@ function useRafFn(fn, options = {}) {
   });
   let previousFrameTimestamp = 0;
   let rafId = null;
-  function loop(timestamp$1) {
-    if (!isActive.value || !window$1) return;
-    if (!previousFrameTimestamp) previousFrameTimestamp = timestamp$1;
-    const delta = timestamp$1 - previousFrameTimestamp;
+  function loop(timestamp2) {
+    if (!isActive.value || !window2) return;
+    if (!previousFrameTimestamp) previousFrameTimestamp = timestamp2;
+    const delta = timestamp2 - previousFrameTimestamp;
     if (intervalLimit.value && delta < intervalLimit.value) {
-      rafId = window$1.requestAnimationFrame(loop);
+      rafId = window2.requestAnimationFrame(loop);
       return;
     }
-    previousFrameTimestamp = timestamp$1;
+    previousFrameTimestamp = timestamp2;
     fn({
       delta,
-      timestamp: timestamp$1
+      timestamp: timestamp2
     });
     if (once) {
       isActive.value = false;
       rafId = null;
       return;
     }
-    rafId = window$1.requestAnimationFrame(loop);
+    rafId = window2.requestAnimationFrame(loop);
   }
   function resume() {
-    if (!isActive.value && window$1) {
+    if (!isActive.value && window2) {
       isActive.value = true;
       previousFrameTimestamp = 0;
-      rafId = window$1.requestAnimationFrame(loop);
+      rafId = window2.requestAnimationFrame(loop);
     }
   }
   function pause() {
     isActive.value = false;
-    if (rafId != null && window$1) {
-      window$1.cancelAnimationFrame(rafId);
+    if (rafId != null && window2) {
+      window2.cancelAnimationFrame(rafId);
       rafId = null;
     }
   }
   if (immediate) resume();
   tryOnScopeDispose(pause);
   return {
-    isActive: readonly(isActive),
+    isActive: shallowReadonly(isActive),
     pause,
     resume
   };
@@ -5034,9 +5278,9 @@ function cloneFnJSON(source) {
   return JSON.parse(JSON.stringify(source));
 }
 function useResizeObserver(target, callback, options = {}) {
-  const { window: window$1 = defaultWindow, ...observerOptions } = options;
+  const { window: window2 = defaultWindow, ...observerOptions } = options;
   let observer;
-  const isSupported = /* @__PURE__ */ useSupported(() => window$1 && "ResizeObserver" in window$1);
+  const isSupported = /* @__PURE__ */ useSupported(() => window2 && "ResizeObserver" in window2);
   const cleanup = () => {
     if (observer) {
       observer.disconnect();
@@ -5048,7 +5292,7 @@ function useResizeObserver(target, callback, options = {}) {
     return Array.isArray(_targets) ? _targets.map((el) => unrefElement(el)) : [unrefElement(_targets)];
   }), (els) => {
     cleanup();
-    if (isSupported.value && window$1) {
+    if (isSupported.value && window2) {
       observer = new ResizeObserver(callback);
       for (const _el of els) if (_el) observer.observe(_el, observerOptions);
     }
@@ -5056,27 +5300,25 @@ function useResizeObserver(target, callback, options = {}) {
     immediate: true,
     flush: "post"
   });
-  const stop = () => {
+  const stop2 = () => {
     cleanup();
     stopWatch();
   };
-  tryOnScopeDispose(stop);
+  tryOnScopeDispose(stop2);
   return {
     isSupported,
-    stop
+    stop: stop2
   };
 }
 const events = /* @__PURE__ */ new Map();
 // @__NO_SIDE_EFFECTS__
 function useEventBus(key) {
-  const scope = getCurrentScope();
   function on(listener) {
-    var _scope$cleanups;
     const listeners = events.get(key) || /* @__PURE__ */ new Set();
     listeners.add(listener);
     events.set(key, listeners);
     const _off = () => off(listener);
-    scope === null || scope === void 0 || (_scope$cleanups = scope.cleanups) === null || _scope$cleanups === void 0 || _scope$cleanups.push(_off);
+    tryOnScopeDispose(_off);
     return _off;
   }
   function once(listener) {
@@ -5117,14 +5359,14 @@ function useVModel(props, key, emit, options = {}) {
   if (!key) key = "modelValue";
   event = event || `update:${key.toString()}`;
   const cloneFn = (val) => !clone2 ? val : typeof clone2 === "function" ? clone2(val) : cloneFnJSON(val);
-  const getValue$1 = () => isDef(props[key]) ? cloneFn(props[key]) : defaultValue;
+  const getValue2 = () => isDef(props[key]) ? cloneFn(props[key]) : defaultValue;
   const triggerEmit = (value) => {
     if (shouldEmit) {
       if (shouldEmit(value)) _emit(event, value);
     } else _emit(event, value);
   };
   if (passive) {
-    const proxy = ref(getValue$1());
+    const proxy = ref(getValue2());
     let isUpdating = false;
     watch(() => props[key], (v) => {
       if (!isUpdating) {
@@ -5139,13 +5381,73 @@ function useVModel(props, key, emit, options = {}) {
     return proxy;
   } else return computed({
     get() {
-      return getValue$1();
+      return getValue2();
     },
     set(value) {
       triggerEmit(value);
     }
   });
 }
+function renderSlotFragments(children) {
+  if (!children) return [];
+  return children.flatMap((child) => {
+    if (child.type === Fragment) return renderSlotFragments(child.children);
+    return [child];
+  });
+}
+const [injectConfigProviderContext, provideConfigProviderContext] = /* @__PURE__ */ createContext("ConfigProvider");
+var ConfigProvider_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineComponent({
+  inheritAttrs: false,
+  __name: "ConfigProvider",
+  props: {
+    dir: {
+      type: String,
+      required: false,
+      default: "ltr"
+    },
+    locale: {
+      type: String,
+      required: false,
+      default: "en"
+    },
+    scrollBody: {
+      type: [Boolean, Object],
+      required: false,
+      default: true
+    },
+    nonce: {
+      type: String,
+      required: false,
+      default: void 0
+    },
+    teleportTo: {
+      type: null,
+      required: false,
+      default: void 0
+    },
+    useId: {
+      type: Function,
+      required: false,
+      default: void 0
+    }
+  },
+  setup(__props) {
+    const props = __props;
+    const { dir, locale, scrollBody, nonce, teleportTo } = toRefs(props);
+    provideConfigProviderContext({
+      dir,
+      locale,
+      scrollBody,
+      nonce,
+      teleportTo,
+      useId: props.useId
+    });
+    return (_ctx, _cache) => {
+      return renderSlot(_ctx.$slots, "default");
+    };
+  }
+});
+var ConfigProvider_default = ConfigProvider_vue_vue_type_script_setup_true_lang_default;
 function useEmitAsProps(emit) {
   const vm = getCurrentInstance();
   const events2 = vm?.type.emits;
@@ -5189,7 +5491,7 @@ function useForwardExpose() {
       configurable: true,
       get: () => ref$1 instanceof Element ? ref$1 : ref$1.$el
     });
-    if (!(ref$1 instanceof Element) && !Object.prototype.hasOwnProperty.call(ref$1, "$el")) {
+    if (!(ref$1 instanceof Element) && !Object.hasOwn(ref$1, "$el")) {
       const childExposed = ref$1.$.exposed;
       const merged = Object.assign({}, ret);
       for (const key in childExposed) Object.defineProperty(merged, key, {
@@ -5206,7 +5508,7 @@ function useForwardExpose() {
     currentElement
   };
 }
-function useForwardProps(props) {
+function useForwardProps$1(props) {
   const vm = getCurrentInstance();
   const defaultProps = Object.keys(vm?.type.props ?? {}).reduce((prev, curr) => {
     const defaultValue = (vm?.type.props[curr]).default;
@@ -5228,14 +5530,6 @@ function useForwardProps(props) {
       return prev;
     }, {});
   });
-}
-function useForwardPropsEmits(props, emit) {
-  const parsedProps = useForwardProps(props);
-  const emitsAsProps = emit ? useEmitAsProps(emit) : {};
-  return computed(() => ({
-    ...parsedProps.value,
-    ...emitsAsProps
-  }));
 }
 function useStateMachine(initialState, machine) {
   const state = ref(initialState);
@@ -5332,7 +5626,7 @@ function usePresence(present, node) {
 function getAnimationName(node) {
   return node ? getComputedStyle(node).animationName || "none" : "none";
 }
-var Presence_default = defineComponent({
+var Presence_default = /* @__PURE__ */ defineComponent({
   name: "Presence",
   props: {
     present: {
@@ -5372,7 +5666,7 @@ var Presence_default = defineComponent({
     };
   }
 });
-const Slot = defineComponent({
+const Slot = /* @__PURE__ */ defineComponent({
   name: "PrimitiveSlot",
   inheritAttrs: false,
   setup(_, { attrs, slots }) {
@@ -5399,7 +5693,7 @@ const SELF_CLOSING_TAGS = [
   "img",
   "input"
 ];
-const Primitive = defineComponent({
+const Primitive = /* @__PURE__ */ defineComponent({
   name: "Primitive",
   inheritAttrs: false,
   props: {
@@ -5507,8 +5801,7 @@ var Teleport_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defin
   props: {
     to: {
       type: null,
-      required: false,
-      default: "body"
+      required: false
     },
     disabled: {
       type: Boolean,
@@ -5524,11 +5817,14 @@ var Teleport_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defin
     }
   },
   setup(__props) {
+    const props = __props;
+    const configContext = injectConfigProviderContext({});
+    const target = computed(() => props.to ?? configContext.teleportTo?.value ?? "body");
     const isMounted = /* @__PURE__ */ useMounted();
     return (_ctx, _cache) => {
       return unref(isMounted) || _ctx.forceMount ? (openBlock(), createBlock(Teleport, {
         key: 0,
-        to: _ctx.to,
+        to: target.value,
         disabled: _ctx.disabled,
         defer: _ctx.defer
       }, [renderSlot(_ctx.$slots, "default")], 8, [
@@ -5558,12 +5854,13 @@ function useCollection(options = {}) {
     const collectionNode = context.collectionRef.value;
     if (!collectionNode) return [];
     const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
+    const orderMap = new Map(orderedNodes.map((node, index2) => [node, index2]));
     const items = Array.from(context.itemMap.value.values());
-    const orderedItems = items.sort((a, b) => orderedNodes.indexOf(a.ref) - orderedNodes.indexOf(b.ref));
+    const orderedItems = items.sort((a, b) => (orderMap.get(a.ref) ?? -1) - (orderMap.get(b.ref) ?? -1));
     if (includeDisabledItem) return orderedItems;
     else return orderedItems.filter((i) => i.ref.dataset.disabled !== "");
   };
-  const CollectionSlot = defineComponent({
+  const CollectionSlot = /* @__PURE__ */ defineComponent({
     name: "CollectionSlot",
     inheritAttrs: false,
     setup(_, { slots, attrs }) {
@@ -5577,7 +5874,7 @@ function useCollection(options = {}) {
       }, slots);
     }
   });
-  const CollectionItem = defineComponent({
+  const CollectionItem = /* @__PURE__ */ defineComponent({
     name: "CollectionItem",
     inheritAttrs: false,
     props: { value: { validator: () => true } },
@@ -5633,7 +5930,7 @@ var VisuallyHidden_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
       return openBlock(), createBlock(unref(Primitive), {
         as: _ctx.as,
         "as-child": _ctx.asChild,
-        "aria-hidden": _ctx.feature === "focusable" ? "true" : void 0,
+        "aria-hidden": _ctx.feature === "focusable" || _ctx.feature === "fully-hidden" ? "true" : void 0,
         "data-hidden": _ctx.feature === "fully-hidden" ? "" : void 0,
         tabindex: _ctx.feature === "fully-hidden" ? "-1" : void 0,
         style: {
@@ -5666,7 +5963,7 @@ var VisuallyHidden_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
 });
 var VisuallyHidden_default = VisuallyHidden_vue_vue_type_script_setup_true_lang_default;
 const DEFAULT_MAX = 100;
-const [injectProgressRootContext, provideProgressRootContext] = createContext("ProgressRoot");
+const [injectProgressRootContext, provideProgressRootContext] = /* @__PURE__ */ createContext("ProgressRoot");
 const isNumber = (v) => typeof v === "number";
 function validateValue(value, max) {
   const isValidValueError = isNullish(value) || isNumber(value) && !Number.isNaN(value) && value <= max && value >= 0;
@@ -5842,7 +6139,7 @@ var ToastAnnounceExclude_vue_vue_type_script_setup_true_lang_default = /* @__PUR
   }
 });
 var ToastAnnounceExclude_default = ToastAnnounceExclude_vue_vue_type_script_setup_true_lang_default;
-const [injectToastProviderContext, provideToastProviderContext] = createContext("ToastProvider");
+const [injectToastProviderContext, provideToastProviderContext] = /* @__PURE__ */ createContext("ToastProvider");
 var ToastProvider_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineComponent({
   inheritAttrs: false,
   __name: "ToastProvider",
@@ -5916,9 +6213,6 @@ var ToastAnnounce_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
     const providerContext = injectToastProviderContext();
     const isAnnounced = useTimeout(1e3);
     const renderAnnounceText = ref(false);
-    useRafFn(() => {
-      renderAnnounceText.value = true;
-    });
     return (_ctx, _cache) => {
       return unref(isAnnounced) || renderAnnounceText.value ? (openBlock(), createBlock(unref(VisuallyHidden_default), {
         key: 0,
@@ -5973,7 +6267,7 @@ function getAnnounceTextContent(container) {
   });
   return textContent;
 }
-const [injectToastRootContext, provideToastRootContext] = createContext("ToastRoot");
+const [injectToastRootContext, provideToastRootContext] = /* @__PURE__ */ createContext("ToastRoot");
 var ToastRootImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineComponent({
   inheritAttrs: false,
   __name: "ToastRootImpl",
@@ -6025,7 +6319,7 @@ var ToastRootImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
     const closeTimerRef = ref(0);
     const remainingTime = ref(duration.value);
     const remainingRaf = useRafFn(() => {
-      const elapsedTime = (/* @__PURE__ */ new Date()).getTime() - closeTimerStartTimeRef.value;
+      const elapsedTime = Date.now() - closeTimerStartTimeRef.value;
       remainingTime.value = Math.max(closeTimerRemainingTimeRef.value - elapsedTime, 0);
     }, { fpsLimit: 60 });
     function startTimer(duration$1) {
@@ -6053,7 +6347,7 @@ var ToastRootImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
           emits("resume");
         };
         const handlePause = () => {
-          const elapsedTime = (/* @__PURE__ */ new Date()).getTime() - closeTimerStartTimeRef.value;
+          const elapsedTime = Date.now() - closeTimerStartTimeRef.value;
           closeTimerRemainingTimeRef.value = closeTimerRemainingTimeRef.value - elapsedTime;
           (void 0).clearTimeout(closeTimerRef.value);
           remainingRaf.pause();
@@ -6085,7 +6379,9 @@ var ToastRootImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
         role: "alert",
         "aria-live": _ctx.type === "foreground" ? "assertive" : "polite"
       }, {
-        default: withCtx(() => [createTextVNode(toDisplayString(announceTextContent.value), 1)]),
+        default: withCtx(() => [createCommentVNode("\n      Render each chunk as its own text node so screen readers get the\n      natural pause break between nodes (see comment in utils.ts).\n      Interpolating the array directly with `{{ announceTextContent }}`\n      would route through Vue's `toDisplayString`, which JSON-stringifies\n      arrays — the live region would then announce literal `[`, quotes\n      and commas instead of the toast title and description.\n    "), (openBlock(true), createElementBlock(Fragment, null, renderList(announceTextContent.value, (text, i) => {
+          return openBlock(), createElementBlock(Fragment, { key: i }, [createTextVNode(toDisplayString(text), 1)], 64);
+        }), 128))]),
         _: 1
       }, 8, ["aria-live"])) : createCommentVNode("v-if", true), unref(providerContext).viewport.value ? (openBlock(), createBlock(Teleport, {
         key: 1,
@@ -6508,7 +6804,9 @@ var ToastViewport_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
     const hasToasts = computed(() => providerContext.toastCount.value > 0);
     const headFocusProxyRef = ref();
     const tailFocusProxyRef = ref();
-    const hotkeyMessage = computed(() => hotkey.value.join("+").replace(/Key/g, "").replace(/Digit/g, ""));
+    const KEY_RE = /Key/g;
+    const DIGIT_RE = /Digit/g;
+    const hotkeyMessage = computed(() => hotkey.value.join("+").replace(KEY_RE, "").replace(DIGIT_RE, ""));
     onKeyStroke(hotkey.value, () => {
       currentElement.value.focus();
     });
@@ -6592,6 +6890,7 @@ var ToastViewport_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
           hasToasts.value ? (openBlock(), createBlock(FocusProxy_default, {
             key: 0,
             ref: (node) => {
+              if (!node) return void 0;
               headFocusProxyRef.value = unref(unrefElement)(node);
               return void 0;
             },
@@ -6615,6 +6914,7 @@ var ToastViewport_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
           hasToasts.value ? (openBlock(), createBlock(FocusProxy_default, {
             key: 1,
             ref: (node) => {
+              if (!node) return void 0;
               tailFocusProxyRef.value = unref(unrefElement)(node);
               return void 0;
             },
@@ -6630,7 +6930,7 @@ var ToastViewport_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
   }
 });
 var ToastViewport_default = ToastViewport_vue_vue_type_script_setup_true_lang_default;
-const [injectTooltipProviderContext, provideTooltipProviderContext] = createContext("TooltipProvider");
+const [injectTooltipProviderContext, provideTooltipProviderContext] = /* @__PURE__ */ createContext("TooltipProvider");
 var TooltipProvider_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defineComponent({
   inheritAttrs: false,
   __name: "TooltipProvider",
@@ -6804,13 +7104,6 @@ function mergeClasses(appConfigClass, propClass) {
     propClass
   ].filter(Boolean);
 }
-function getSlotChildrenText(children) {
-  return children.map((node) => {
-    if (!node.children || typeof node.children === "string") return node.children || "";
-    else if (Array.isArray(node.children)) return getSlotChildrenText(node.children);
-    else if (node.children.default) return getSlotChildrenText(node.children.default());
-  }).join("");
-}
 function buildTranslator(locale) {
   return (path, option) => translate(path, option, unref(locale));
 }
@@ -6887,6 +7180,7 @@ const en = /* @__PURE__ */ defineLocale({
     },
     contentSearch: {
       links: "Links",
+      search: "Results",
       theme: "Theme"
     },
     contentSearchButton: {
@@ -6913,6 +7207,9 @@ const en = /* @__PURE__ */ defineLocale({
       close: "Close sidebar",
       open: "Open sidebar"
     },
+    drawer: {
+      close: "Close"
+    },
     error: {
       clear: "Back to home"
     },
@@ -6931,6 +7228,11 @@ const en = /* @__PURE__ */ defineLocale({
     inputNumber: {
       decrement: "Decrement",
       increment: "Increment"
+    },
+    listbox: {
+      noData: "No data",
+      noMatch: "No matching data",
+      search: "Search…"
     },
     modal: {
       close: "Close"
@@ -6951,10 +7253,14 @@ const en = /* @__PURE__ */ defineLocale({
       },
       pre: {
         copy: "Copy code to clipboard"
+      },
+      prompt: {
+        copy: "Copy prompt",
+        openIn: "Open in {name}"
       }
     },
     chatReasoning: {
-      thinking: "Thinking...",
+      thinking: "Thinking…",
       thought: "Thought",
       thoughtFor: "Thought for {duration}"
     },
@@ -6996,12 +7302,71 @@ function usePortal(portal) {
     disabled: disabled.value
   }));
 }
-const [injectThemeContext] = createContext("UTheme", "RootContext");
-function useComponentUI(name, props) {
-  const { ui } = injectThemeContext({ ui: computed(() => ({})) });
+const [_injectThemeContext] = createContext("UTheme", "RootContext");
+const defaultThemeContext = {
+  defaults: computed(() => ({}))
+};
+function injectThemeContext(fallback = defaultThemeContext) {
+  return _injectThemeContext(fallback);
+}
+function camelCase(str) {
+  return str.replace(/-(\w)/g, (_, c) => c.toUpperCase());
+}
+function kebabCase(str) {
+  return str.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+}
+function propIsDefined(vnode, prop) {
+  if (!vnode || !vnode.props) return false;
+  return vnode.props[camelCase(prop)] !== void 0 || vnode.props[kebabCase(prop)] !== void 0;
+}
+function useComponentProps(name, props) {
+  const vm = getCurrentInstance();
+  const { defaults } = injectThemeContext();
+  const appConfig2 = useAppConfig();
+  return new Proxy(props, {
+    get(target, prop, receiver) {
+      if (prop === "__v_isReactive") return true;
+      if (prop === "__v_raw") return target;
+      const raw = Reflect.get(target, prop, receiver);
+      if (typeof prop !== "string") return raw;
+      const themeEntry = name.includes(".") ? get(defaults.value, name) : defaults.value[name];
+      if (prop === "ui") {
+        const themeUi = themeEntry?.ui;
+        if (!raw && !themeUi) return raw;
+        return defu(raw ?? {}, themeUi ?? {});
+      }
+      if (vm && propIsDefined(vm.vnode, prop)) return raw;
+      const themeValue = themeEntry?.[prop];
+      if (themeValue !== void 0) return themeValue;
+      const appConfigEntry = name.includes(".") ? get(appConfig2.ui ?? {}, name) : appConfig2.ui?.[name];
+      const appConfigValue = appConfigEntry?.defaultVariants?.[prop];
+      if (appConfigValue !== void 0) return appConfigValue;
+      const propDef = vm?.type?.props?.[prop];
+      if (propDef && Object.prototype.hasOwnProperty.call(propDef, "default")) {
+        return raw;
+      }
+      return void 0;
+    },
+    // `has`, `ownKeys`, and `getOwnPropertyDescriptor` reflect the underlying
+    // `defineProps` schema only — theme defaults are NOT enumerable. As a
+    // result, `Object.keys(props)`, `for…in`, and `{ ...props }` see only the
+    // declared prop keys, but each value lookup still flows through the proxy.
+    // This is the contract our internal `useForwardProps` relies on.
+    has: (t, p) => Reflect.has(t, p),
+    ownKeys: (t) => Reflect.ownKeys(t),
+    getOwnPropertyDescriptor: (t, p) => Reflect.getOwnPropertyDescriptor(t, p)
+  });
+}
+function useForwardProps(source, emits) {
+  const emitAsProps = emits ? useEmitAsProps(emits) : {};
   return computed(() => {
-    const themeOverrides = get(ui.value, name) || {};
-    return defu(props.ui ?? {}, themeOverrides);
+    const src = isRef(source) ? source.value : source;
+    const out = { ...emitAsProps };
+    for (const key in src) {
+      const value = src[key];
+      if (value !== void 0) out[key] = value;
+    }
+    return out;
   });
 }
 const toastMaxInjectionKey = /* @__PURE__ */ Symbol("nuxt-ui.toast-max");
@@ -7011,15 +7376,34 @@ function useToast() {
   const running = ref(false);
   const queue = [];
   const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+  function mergeDuplicate(index2, toast) {
+    toasts.value[index2] = {
+      ...toasts.value[index2],
+      ...toast,
+      _duplicate: (toasts.value[index2]._duplicate || 0) + 1
+    };
+  }
   async function processQueue() {
     if (running.value || queue.length === 0) {
       return;
     }
     running.value = true;
     while (queue.length > 0) {
-      const toast = queue.shift();
       await nextTick();
-      toasts.value = [...toasts.value, toast].slice(-(max?.value ?? 5));
+      const toast = queue.shift();
+      const maxValue = max?.value ?? 5;
+      if (maxValue <= 0) {
+        if (toasts.value.length) {
+          toasts.value = [];
+        }
+        continue;
+      }
+      const existingIndex = toasts.value.findIndex((t) => t.id === toast.id);
+      if (existingIndex !== -1) {
+        mergeDuplicate(existingIndex, toast);
+        continue;
+      }
+      toasts.value = [...toasts.value, toast].slice(-maxValue);
     }
     running.value = false;
   }
@@ -7031,11 +7415,7 @@ function useToast() {
     };
     const existingIndex = toasts.value.findIndex((t) => t.id === body.id);
     if (existingIndex !== -1) {
-      toasts.value[existingIndex] = {
-        ...toasts.value[existingIndex],
-        ...body,
-        _duplicate: (toasts.value[existingIndex]._duplicate || 0) + 1
-      };
+      mergeDuplicate(existingIndex, body);
       return body;
     }
     queue.push(body);
@@ -7090,7 +7470,96 @@ function useToast() {
   };
 }
 const appConfigTv = appConfig;
-const tv = /* @__PURE__ */ createTV(appConfigTv.ui?.tv);
+const config = appConfigTv.ui?.tv;
+const baseTv = /* @__PURE__ */ createTV(config);
+function findReplacer(value) {
+  if (typeof value === "function") {
+    return value;
+  }
+  if (Array.isArray(value)) {
+    for (let i = value.length - 1; i >= 0; i--) {
+      const replacer = findReplacer(value[i]);
+      if (replacer) {
+        return replacer;
+      }
+    }
+  }
+  return void 0;
+}
+function plainClasses(value) {
+  if (Array.isArray(value)) {
+    return value.flatMap((item) => plainClasses(item));
+  }
+  if (typeof value === "function") {
+    return [];
+  }
+  return [value];
+}
+function applyReplacer(replacer, slotProps, resolveDefaults) {
+  return cnMerge(replacer(resolveDefaults()), ...plainClasses(slotProps.class), ...plainClasses(slotProps.className))(config) ?? "";
+}
+function wrapSlots(slots, directives) {
+  return new Proxy(slots, {
+    get(target, key) {
+      const slot = target[key];
+      if (typeof slot !== "function") {
+        return slot;
+      }
+      return (slotProps = {}) => {
+        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className) ?? directives?.[key];
+        if (!replacer) {
+          return slot(slotProps);
+        }
+        return applyReplacer(replacer, slotProps, () => slot({ ...slotProps, class: void 0, className: void 0 }));
+      };
+    }
+  });
+}
+function extractDirectives(componentConfig) {
+  if (!componentConfig || typeof componentConfig !== "object") {
+    return { config: componentConfig };
+  }
+  let config2 = componentConfig;
+  let directives;
+  if (typeof componentConfig.base === "function") {
+    directives = { base: componentConfig.base };
+    config2 = { ...config2, base: "" };
+  }
+  const slots = componentConfig.slots;
+  if (slots && typeof slots === "object") {
+    const replacers = Object.entries(slots).filter(([, value]) => typeof value === "function");
+    if (replacers.length) {
+      directives ??= {};
+      const cleaned = { ...slots };
+      for (const [slot, replacer] of replacers) {
+        directives[slot] = replacer;
+        cleaned[slot] = "";
+      }
+      config2 = { ...config2, slots: cleaned };
+    }
+  }
+  return { config: config2, directives };
+}
+const tv = ((componentConfig) => {
+  const { config: cleanConfig, directives } = extractDirectives(componentConfig);
+  const component = baseTv(cleanConfig);
+  return new Proxy(component, {
+    apply(target, thisArg, args) {
+      const result = Reflect.apply(target, thisArg, args);
+      if (result && typeof result === "object") {
+        return wrapSlots(result, directives);
+      }
+      if (typeof result === "string") {
+        const slotProps = args[0] ?? {};
+        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className) ?? directives?.base;
+        if (replacer) {
+          return applyReplacer(replacer, slotProps, () => Reflect.apply(target, thisArg, [{ ...slotProps, class: void 0, className: void 0 }]));
+        }
+      }
+      return result;
+    }
+  });
+});
 const _sfc_main$e = {
   __name: "UIcon",
   __ssrInlineRender: true,
@@ -7102,11 +7571,10 @@ const _sfc_main$e = {
   },
   setup(__props) {
     const props = __props;
-    const iconProps = useForwardProps(reactivePick(props, "mode", "size", "customize"));
+    const iconProps = useForwardProps$1(reactivePick(props, "mode", "size", "customize"));
     return (_ctx, _push, _parent, _attrs) => {
-      const _component_Icon = __nuxt_component_0$1;
       if (typeof __props.name === "string") {
-        _push(ssrRenderComponent(_component_Icon, mergeProps({ name: __props.name }, unref(iconProps), _attrs), null, _parent));
+        _push(ssrRenderComponent(unref(NuxtIcon), mergeProps({ name: __props.name }, unref(iconProps), _attrs), null, _parent));
       } else {
         ssrRenderVNode(_push, createVNode(resolveDynamicComponent(__props.name), _attrs, null), _parent);
       }
@@ -7458,7 +7926,7 @@ const getImage = (src, { modifiers = {}, baseURL: baseURL2 } = {}, ctx) => {
 };
 const validateDomains = true;
 const supportsAlias = true;
-const ipxRuntime$ULVtY_KgX1ksWsCxjm4Z5iXOTtY0do9yofc7QYc_q6U = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+const ipxRuntime$_7sWVGajoVbQUOkYlsyEqQKTpsKZ9JfM2G_455zmG2F5Kc = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   getImage,
   operationsGenerator,
@@ -7489,19 +7957,19 @@ const imageOptions = {
     ]
   },
   providers: {
-    ["ipx"]: { provider: ipxRuntime$ULVtY_KgX1ksWsCxjm4Z5iXOTtY0do9yofc7QYc_q6U, defaults: {} }
+    ["ipx"]: { provider: ipxRuntime$_7sWVGajoVbQUOkYlsyEqQKTpsKZ9JfM2G_455zmG2F5Kc, defaults: {} }
   }
 };
 const useImage = (event) => {
-  const config = /* @__PURE__ */ useRuntimeConfig();
+  const config2 = /* @__PURE__ */ useRuntimeConfig();
   const nuxtApp = useNuxtApp();
   return nuxtApp.$img || nuxtApp._img || (nuxtApp._img = createImage({
     ...imageOptions,
     event: nuxtApp.ssrContext?.event,
     nuxt: {
-      baseURL: config.app.baseURL
+      baseURL: config2.app.baseURL
     },
-    runtimeConfig: config
+    runtimeConfig: config2
   }));
 };
 const baseImageProps = {
@@ -7698,14 +8166,16 @@ _sfc_main$d.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("../node_modules/@nuxt/image/dist/runtime/components/NuxtImg.vue");
   return _sfc_setup$d ? _sfc_setup$d(props, ctx) : void 0;
 };
-const __nuxt_component_3$1 = Object.assign(_sfc_main$d, { __name: "NuxtImg" });
+const ImageComponent = Object.assign(_sfc_main$d, { __name: "NuxtImg" });
 const avatarGroupInjectionKey = /* @__PURE__ */ Symbol("nuxt-ui.avatar-group");
 function useAvatarGroup(props) {
   const avatarGroup = inject(avatarGroupInjectionKey, void 0);
   const size = computed(() => props.size ?? avatarGroup?.value.size);
-  provide(avatarGroupInjectionKey, computed(() => ({ size: size.value })));
+  const color2 = computed(() => props.color ?? avatarGroup?.value.color);
+  provide(avatarGroupInjectionKey, computed(() => ({ size: size.value, color: color2.value })));
   return {
-    size
+    size,
+    color: color2
   };
 }
 const theme$6 = {
@@ -7794,27 +8264,27 @@ const _sfc_main$c = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
   }),
   emits: ["update:show"],
   setup(__props) {
-    const props = __props;
+    const _props = __props;
+    const props = useComponentProps("chip", _props);
     const show = useModel(__props, "show", { type: Boolean, ...{ default: true } });
-    const { size } = useAvatarGroup(props);
+    const { size } = useAvatarGroup(_props);
     const appConfig2 = useAppConfig();
-    const uiProp = useComponentUI("chip", props);
-    const ui = computed(() => tv({ extend: tv(theme$6), ...appConfig2.ui?.chip || {} })({
+    const ui = computed(() => tv({ extend: theme$6, ...appConfig2.ui?.chip || {} })({
       color: props.color,
-      size: size.value,
+      size: size.value ?? props.size,
       position: props.position,
       inset: props.inset,
       standalone: props.standalone
     }));
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
-        as: __props.as,
-        "data-slot": "root",
-        class: ui.value.root({ class: [unref(uiProp)?.root, props.class] })
+        as: unref(props).as,
+        "data-slot": _ctx.$attrs["data-slot"] ?? "root",
+        class: ui.value.root({ class: [unref(props).ui?.root, unref(props).class] })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(ssrRenderComponent(unref(Slot), _ctx.$attrs, {
+            _push2(ssrRenderComponent(unref(Slot), { ..._ctx.$attrs, "data-slot": void 0 }, {
               default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
                   ssrRenderSlot(_ctx.$slots, "default", {}, null, _push3, _parent3, _scopeId2);
@@ -7827,9 +8297,9 @@ const _sfc_main$c = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               _: 3
             }, _parent2, _scopeId));
             if (show.value) {
-              _push2(`<span data-slot="base" class="${ssrRenderClass(ui.value.base({ class: unref(uiProp)?.base }))}"${_scopeId}>`);
+              _push2(`<span data-slot="base" class="${ssrRenderClass(ui.value.base({ class: unref(props).ui?.base }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "content", {}, () => {
-                _push2(`${ssrInterpolate(__props.text)}`);
+                _push2(`${ssrInterpolate(unref(props).text)}`);
               }, _push2, _parent2, _scopeId);
               _push2(`</span>`);
             } else {
@@ -7837,7 +8307,7 @@ const _sfc_main$c = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
             }
           } else {
             return [
-              createVNode(unref(Slot), _ctx.$attrs, {
+              createVNode(unref(Slot), { ..._ctx.$attrs, "data-slot": void 0 }, {
                 default: withCtx(() => [
                   renderSlot(_ctx.$slots, "default")
                 ]),
@@ -7846,10 +8316,10 @@ const _sfc_main$c = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
               show.value ? (openBlock(), createBlock("span", {
                 key: 0,
                 "data-slot": "base",
-                class: ui.value.base({ class: unref(uiProp)?.base })
+                class: ui.value.base({ class: unref(props).ui?.base })
               }, [
                 renderSlot(_ctx.$slots, "content", {}, () => [
-                  createTextVNode(toDisplayString(__props.text), 1)
+                  createTextVNode(toDisplayString(unref(props).text), 1)
                 ])
               ], 2)) : createCommentVNode("", true)
             ];
@@ -7868,12 +8338,49 @@ _sfc_main$c.setup = (props, ctx) => {
 };
 const theme$5 = {
   "slots": {
-    "root": "inline-flex items-center justify-center shrink-0 select-none rounded-full align-middle bg-elevated",
+    "root": "inline-flex items-center justify-center shrink-0 select-none rounded-full align-middle",
     "image": "h-full w-full rounded-[inherit] object-cover",
-    "fallback": "font-medium leading-none text-muted truncate",
-    "icon": "text-muted shrink-0"
+    "fallback": "font-medium truncate",
+    "icon": "shrink-0"
   },
   "variants": {
+    "color": {
+      "primary": {
+        "root": "bg-primary/10",
+        "fallback": "text-primary",
+        "icon": "text-primary"
+      },
+      "secondary": {
+        "root": "bg-secondary/10",
+        "fallback": "text-secondary",
+        "icon": "text-secondary"
+      },
+      "success": {
+        "root": "bg-success/10",
+        "fallback": "text-success",
+        "icon": "text-success"
+      },
+      "info": {
+        "root": "bg-info/10",
+        "fallback": "text-info",
+        "icon": "text-info"
+      },
+      "warning": {
+        "root": "bg-warning/10",
+        "fallback": "text-warning",
+        "icon": "text-warning"
+      },
+      "error": {
+        "root": "bg-error/10",
+        "fallback": "text-error",
+        "icon": "text-error"
+      },
+      "neutral": {
+        "root": "bg-elevated",
+        "fallback": "text-muted",
+        "icon": "text-muted"
+      }
+    },
     "size": {
       "3xs": {
         "root": "size-4 text-[8px]"
@@ -7905,7 +8412,8 @@ const theme$5 = {
     }
   },
   "defaultVariants": {
-    "size": "md"
+    "size": "md",
+    "color": "neutral"
   }
 };
 const _sfc_main$b = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
@@ -7918,13 +8426,15 @@ const _sfc_main$b = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
     icon: { type: null, required: false },
     text: { type: String, required: false },
     size: { type: null, required: false },
+    color: { type: null, required: false },
     chip: { type: [Boolean, Object], required: false },
     class: { type: null, required: false },
     style: { type: null, required: false },
     ui: { type: Object, required: false }
   },
   setup(__props) {
-    const props = __props;
+    const _props = __props;
+    const props = useComponentProps("avatar", _props);
     const as = computed(() => {
       if (typeof props.as === "string" || typeof props.as?.render === "function") {
         return { root: props.as };
@@ -7933,14 +8443,14 @@ const _sfc_main$b = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
     });
     const fallback = computed(() => props.text || (props.alt || "").split(" ").map((word) => word.charAt(0)).join("").substring(0, 2));
     const appConfig2 = useAppConfig();
-    const uiProp = useComponentUI("avatar", props);
-    const { size } = useAvatarGroup(props);
-    const ui = computed(() => tv({ extend: tv(theme$5), ...appConfig2.ui?.avatar || {} })({
-      size: size.value
+    const { size, color: color2 } = useAvatarGroup(_props);
+    const ui = computed(() => tv({ extend: theme$5, ...appConfig2.ui?.avatar || {} })({
+      size: size.value ?? props.size,
+      color: color2.value ?? props.color
     }));
-    const rootClass = computed(() => ui.value.root({ class: [uiProp.value?.root, props.class] }));
+    const rootClass = computed(() => ui.value.root({ class: [props.ui?.root, props.class] }));
     const sizePx = computed(() => {
-      const sizeClass = rootClass.value.split(" ").find((c) => /^size-\d+$/.test(c));
+      const sizeClass = (rootClass.value || "").split(" ").find((c) => /^size-\d+$/.test(c));
       if (sizeClass) {
         const num = Number.parseFloat(sizeClass.split("-")[1] ?? "");
         if (!Number.isNaN(num)) return num * 4;
@@ -7957,53 +8467,53 @@ const _sfc_main$b = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
       error.value = true;
     }
     return (_ctx, _push, _parent, _attrs) => {
-      ssrRenderVNode(_push, createVNode(resolveDynamicComponent(props.chip ? _sfc_main$c : unref(Primitive)), mergeProps({
+      ssrRenderVNode(_push, createVNode(resolveDynamicComponent(unref(props).chip ? _sfc_main$c : unref(Primitive)), mergeProps({
         as: as.value.root
-      }, props.chip ? typeof props.chip === "object" ? { inset: true, ...props.chip } : { inset: true } : {}, {
-        "data-slot": "root",
+      }, unref(props).chip ? typeof unref(props).chip === "object" ? { inset: true, ...unref(props).chip } : { inset: true } : {}, {
+        "data-slot": _ctx.$attrs["data-slot"] ?? "root",
         class: rootClass.value,
-        style: props.style
+        style: unref(props).style
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            if (__props.src && !error.value) {
-              ssrRenderVNode(_push2, createVNode(resolveDynamicComponent(as.value.img || unref(__nuxt_component_3$1)), mergeProps({
-                src: __props.src,
-                alt: __props.alt,
+            if (unref(props).src && !error.value) {
+              ssrRenderVNode(_push2, createVNode(resolveDynamicComponent(as.value.img || unref(ImageComponent)), mergeProps({
+                src: unref(props).src,
+                alt: unref(props).alt,
                 width: sizePx.value,
                 height: sizePx.value
               }, _ctx.$attrs, {
                 "data-slot": "image",
-                class: ui.value.image({ class: unref(uiProp)?.image }),
+                class: ui.value.image({ class: unref(props).ui?.image }),
                 onError
               }), null), _parent2, _scopeId);
             } else {
-              _push2(ssrRenderComponent(unref(Slot), _ctx.$attrs, {
+              _push2(ssrRenderComponent(unref(Slot), { ..._ctx.$attrs, "data-slot": void 0 }, {
                 default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                   if (_push3) {
                     ssrRenderSlot(_ctx.$slots, "default", {}, () => {
-                      if (__props.icon) {
+                      if (unref(props).icon) {
                         _push3(ssrRenderComponent(_sfc_main$e, {
-                          name: __props.icon,
+                          name: unref(props).icon,
                           "data-slot": "icon",
-                          class: ui.value.icon({ class: unref(uiProp)?.icon })
+                          class: ui.value.icon({ class: unref(props).ui?.icon })
                         }, null, _parent3, _scopeId2));
                       } else {
-                        _push3(`<span data-slot="fallback" class="${ssrRenderClass(ui.value.fallback({ class: unref(uiProp)?.fallback }))}"${_scopeId2}>${ssrInterpolate(fallback.value || " ")}</span>`);
+                        _push3(`<span data-slot="fallback" class="${ssrRenderClass(ui.value.fallback({ class: unref(props).ui?.fallback }))}"${_scopeId2}>${ssrInterpolate(fallback.value || " ")}</span>`);
                       }
                     }, _push3, _parent3, _scopeId2);
                   } else {
                     return [
                       renderSlot(_ctx.$slots, "default", {}, () => [
-                        __props.icon ? (openBlock(), createBlock(_sfc_main$e, {
+                        unref(props).icon ? (openBlock(), createBlock(_sfc_main$e, {
                           key: 0,
-                          name: __props.icon,
+                          name: unref(props).icon,
                           "data-slot": "icon",
-                          class: ui.value.icon({ class: unref(uiProp)?.icon })
+                          class: ui.value.icon({ class: unref(props).ui?.icon })
                         }, null, 8, ["name", "class"])) : (openBlock(), createBlock("span", {
                           key: 1,
                           "data-slot": "fallback",
-                          class: ui.value.fallback({ class: unref(uiProp)?.fallback })
+                          class: ui.value.fallback({ class: unref(props).ui?.fallback })
                         }, toDisplayString(fallback.value || " "), 3))
                       ])
                     ];
@@ -8014,28 +8524,28 @@ const _sfc_main$b = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
             }
           } else {
             return [
-              __props.src && !error.value ? (openBlock(), createBlock(resolveDynamicComponent(as.value.img || unref(__nuxt_component_3$1)), mergeProps({
+              unref(props).src && !error.value ? (openBlock(), createBlock(resolveDynamicComponent(as.value.img || unref(ImageComponent)), mergeProps({
                 key: 0,
-                src: __props.src,
-                alt: __props.alt,
+                src: unref(props).src,
+                alt: unref(props).alt,
                 width: sizePx.value,
                 height: sizePx.value
               }, _ctx.$attrs, {
                 "data-slot": "image",
-                class: ui.value.image({ class: unref(uiProp)?.image }),
+                class: ui.value.image({ class: unref(props).ui?.image }),
                 onError
-              }), null, 16, ["src", "alt", "width", "height", "class"])) : (openBlock(), createBlock(unref(Slot), mergeProps({ key: 1 }, _ctx.$attrs), {
+              }), null, 16, ["src", "alt", "width", "height", "class"])) : (openBlock(), createBlock(unref(Slot), mergeProps({ key: 1 }, { ..._ctx.$attrs, "data-slot": void 0 }), {
                 default: withCtx(() => [
                   renderSlot(_ctx.$slots, "default", {}, () => [
-                    __props.icon ? (openBlock(), createBlock(_sfc_main$e, {
+                    unref(props).icon ? (openBlock(), createBlock(_sfc_main$e, {
                       key: 0,
-                      name: __props.icon,
+                      name: unref(props).icon,
                       "data-slot": "icon",
-                      class: ui.value.icon({ class: unref(uiProp)?.icon })
+                      class: ui.value.icon({ class: unref(props).ui?.icon })
                     }, null, 8, ["name", "class"])) : (openBlock(), createBlock("span", {
                       key: 1,
                       "data-slot": "fallback",
-                      class: ui.value.fallback({ class: unref(uiProp)?.fallback })
+                      class: ui.value.fallback({ class: unref(props).ui?.fallback })
                     }, toDisplayString(fallback.value || " "), 3))
                   ])
                 ]),
@@ -8059,7 +8569,7 @@ function useComponentIcons(componentProps) {
   const appConfig2 = useAppConfig();
   const props = computed(() => toValue(componentProps));
   const isLeading = computed(() => props.value.icon && props.value.leading || props.value.icon && !props.value.trailing || props.value.loading && !props.value.trailing || !!props.value.leadingIcon);
-  const isTrailing = computed(() => props.value.icon && props.value.trailing || props.value.loading && props.value.trailing || !!props.value.trailingIcon);
+  const isTrailing = computed(() => props.value.icon && props.value.trailing || props.value.loading && props.value.trailing || !!props.value.trailingIcon && props.value.trailing !== false);
   const leadingIconName = computed(() => {
     if (props.value.loading) {
       return props.value.loadingIcon || appConfig2.ui.icons.loading;
@@ -8087,6 +8597,16 @@ function useFieldGroup(props) {
     size: computed(() => props?.size ?? fieldGroup?.value.size)
   };
 }
+const FieldGroupReset = defineComponent({
+  name: "FieldGroupReset",
+  setup(_, { slots }) {
+    provide(fieldGroupInjectionKey, computed(() => ({
+      size: void 0,
+      orientation: void 0
+    })));
+    return () => slots.default?.();
+  }
+});
 const formOptionsInjectionKey = /* @__PURE__ */ Symbol("nuxt-ui.form-options");
 const formBusInjectionKey = /* @__PURE__ */ Symbol("nuxt-ui.form-events");
 const formStateInjectionKey = /* @__PURE__ */ Symbol("nuxt-ui.form-state");
@@ -8122,7 +8642,7 @@ function useFormField(props, opts) {
   function emitFormChange() {
     emitFormEvent("change", formField?.value.name);
   }
-  const emitFormInput = /* @__PURE__ */ useDebounceFn(
+  const emitFormInput = useDebounceFn(
     () => {
       emitFormEvent("input", formField?.value.name, !opts?.deferInputValidation || formField?.value.eagerValidation);
     },
@@ -8173,6 +8693,7 @@ const linkKeys = [
   "href",
   "hreflang",
   "inactiveClass",
+  "locale",
   "media",
   "noPrefetch",
   "noRel",
@@ -8221,7 +8742,7 @@ const _sfc_main$a = {
     type: { type: String, required: false, default: "button" },
     disabled: { type: Boolean, required: false },
     onClick: { type: [Function, Array], required: false },
-    href: { type: String, required: false },
+    href: { type: [String, null], required: false },
     navigate: { type: Function, required: false },
     target: { type: [String, Object, null], required: false },
     rel: { type: [String, Object, null], required: false },
@@ -8284,7 +8805,7 @@ _sfc_main$a.setup = (props, ctx) => {
   return _sfc_setup$a ? _sfc_setup$a(props, ctx) : void 0;
 };
 const theme$4 = {
-  "base": "focus-visible:outline-primary",
+  "base": "outline-primary/25 focus-visible:outline-3 rounded-md",
   "variants": {
     "active": {
       "true": "text-primary",
@@ -8319,6 +8840,7 @@ const _sfc_main$9 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
     inactiveClass: { type: String, required: false },
     custom: { type: Boolean, required: false },
     raw: { type: Boolean, required: false },
+    locale: { type: [Boolean, String], required: false, default: void 0 },
     class: { type: null, required: false },
     to: { type: null, required: false },
     href: { type: null, required: false },
@@ -8341,9 +8863,10 @@ const _sfc_main$9 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
     const props = __props;
     const route = useRoute();
     const appConfig2 = useAppConfig();
-    const nuxtLinkProps = useForwardProps(reactiveOmit(props, "as", "type", "disabled", "active", "exact", "exactQuery", "exactHash", "activeClass", "inactiveClass", "to", "href", "raw", "custom", "class"));
+    const nuxtApp = useNuxtApp();
+    const nuxtLinkProps = useForwardProps$1(reactiveOmit(props, "as", "type", "disabled", "active", "exact", "exactQuery", "exactHash", "activeClass", "inactiveClass", "to", "href", "raw", "custom", "locale", "class"));
     const ui = computed(() => tv({
-      extend: tv(theme$4),
+      extend: theme$4,
       ...defu({
         variants: {
           active: {
@@ -8353,10 +8876,54 @@ const _sfc_main$9 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
         }
       }, appConfig2.ui?.link || {})
     }));
-    const to = computed(() => props.to ?? props.href);
-    function isLinkActive({ route: linkRoute, isActive, isExactActive }) {
+    const to = computed(() => {
+      const path = props.to ?? props.href;
+      if (!path) return path;
+      if (typeof path !== "string") return path;
+      if (props.external || hasProtocol(path, { acceptRelative: true })) {
+        return path;
+      }
+      if (props.locale === false) {
+        return path;
+      }
+      const localePath = nuxtApp.$localePath;
+      if (!localePath) {
+        return path;
+      }
+      const i18n = nuxtApp.$i18n;
+      const codes = i18n?.localeCodes?.value;
+      if (codes?.length && new RegExp(`^/(${codes.join("|")})($|[/?#])`).test(path)) {
+        return path;
+      }
+      const localizedPath = localePath(path, typeof props.locale === "string" ? props.locale : void 0);
+      return localizedPath || path;
+    });
+    const isInternalLink = computed(() => {
+      if (!to.value) return false;
+      if (props.external) return false;
+      if (typeof to.value !== "string") return true;
+      if (hasProtocol(to.value, { acceptRelative: true })) return false;
+      if (props.target && props.target !== "_self") return false;
+      return true;
+    });
+    const rel = computed(() => {
+      if (props.noRel) {
+        return null;
+      }
+      if (props.rel !== void 0) {
+        return props.rel || null;
+      }
+      if (!isInternalLink.value || props.target && props.target !== "_self") {
+        return "noopener noreferrer";
+      }
+      return null;
+    });
+    function isLinkActive({ route: linkRoute, isActive, isExactActive } = {}) {
       if (props.active !== void 0) {
         return props.active;
+      }
+      if (!to.value) {
+        return false;
       }
       if (props.exactQuery === "partial") {
         if (!isPartiallyEqual(linkRoute.query, route.query)) return false;
@@ -8374,7 +8941,7 @@ const _sfc_main$9 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
       }
       return false;
     }
-    function resolveLinkClass({ route: route2, isActive, isExactActive }) {
+    function resolveLinkClass({ route: route2, isActive, isExactActive } = {}) {
       const active = isLinkActive({ route: route2, isActive, isExactActive });
       if (props.raw) {
         return [props.class, active ? props.activeClass : props.inactiveClass];
@@ -8382,98 +8949,180 @@ const _sfc_main$9 = /* @__PURE__ */ Object.assign({ inheritAttrs: false }, {
       return ui.value({ class: props.class, active, disabled: props.disabled });
     }
     return (_ctx, _push, _parent, _attrs) => {
-      const _component_NuxtLink = __nuxt_component_0$2;
-      _push(ssrRenderComponent(_component_NuxtLink, mergeProps(unref(nuxtLinkProps), {
-        to: to.value,
-        custom: ""
-      }, _attrs), {
-        default: withCtx(({ href, navigate, route: linkRoute, isActive, isExactActive, ...rest }, _push2, _parent2, _scopeId) => {
-          if (_push2) {
-            if (__props.custom) {
+      const _component_NuxtLink = __nuxt_component_0$1;
+      if (isInternalLink.value) {
+        _push(ssrRenderComponent(_component_NuxtLink, mergeProps(unref(nuxtLinkProps), {
+          to: to.value,
+          custom: ""
+        }, _attrs), {
+          default: withCtx(({ href, navigate, route: linkRoute, isActive, isExactActive, ...rest }, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              if (__props.custom) {
+                _push2(ssrRenderComponent(unref(Slot), null, {
+                  default: withCtx((_, _push3, _parent3, _scopeId2) => {
+                    if (_push3) {
+                      ssrRenderSlot(_ctx.$slots, "default", {
+                        ..._ctx.$attrs,
+                        ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
+                        as: __props.as,
+                        type: __props.type,
+                        disabled: __props.disabled,
+                        href,
+                        navigate,
+                        rel: rel.value,
+                        target: rest.target,
+                        isExternal: rest.isExternal,
+                        active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                      }, null, _push3, _parent3, _scopeId2);
+                    } else {
+                      return [
+                        renderSlot(_ctx.$slots, "default", {
+                          ..._ctx.$attrs,
+                          ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
+                          as: __props.as,
+                          type: __props.type,
+                          disabled: __props.disabled,
+                          href,
+                          navigate,
+                          rel: rel.value,
+                          target: rest.target,
+                          isExternal: rest.isExternal,
+                          active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                        })
+                      ];
+                    }
+                  }),
+                  _: 2
+                }, _parent2, _scopeId));
+              } else {
+                _push2(ssrRenderComponent(_sfc_main$a, mergeProps({
+                  ..._ctx.$attrs,
+                  ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
+                  as: __props.as,
+                  type: __props.type,
+                  disabled: __props.disabled,
+                  href,
+                  navigate,
+                  rel: rel.value,
+                  target: rest.target,
+                  isExternal: rest.isExternal
+                }, {
+                  class: resolveLinkClass({ route: linkRoute, isActive, isExactActive })
+                }), {
+                  default: withCtx((_, _push3, _parent3, _scopeId2) => {
+                    if (_push3) {
+                      ssrRenderSlot(_ctx.$slots, "default", {
+                        active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                      }, null, _push3, _parent3, _scopeId2);
+                    } else {
+                      return [
+                        renderSlot(_ctx.$slots, "default", {
+                          active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                        })
+                      ];
+                    }
+                  }),
+                  _: 2
+                }, _parent2, _scopeId));
+              }
+            } else {
+              return [
+                __props.custom ? (openBlock(), createBlock(unref(Slot), { key: 0 }, {
+                  default: withCtx(() => [
+                    renderSlot(_ctx.$slots, "default", {
+                      ..._ctx.$attrs,
+                      ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
+                      as: __props.as,
+                      type: __props.type,
+                      disabled: __props.disabled,
+                      href,
+                      navigate,
+                      rel: rel.value,
+                      target: rest.target,
+                      isExternal: rest.isExternal,
+                      active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                    })
+                  ]),
+                  _: 2
+                }, 1024)) : (openBlock(), createBlock(_sfc_main$a, mergeProps({ key: 1 }, {
+                  ..._ctx.$attrs,
+                  ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
+                  as: __props.as,
+                  type: __props.type,
+                  disabled: __props.disabled,
+                  href,
+                  navigate,
+                  rel: rel.value,
+                  target: rest.target,
+                  isExternal: rest.isExternal
+                }, {
+                  class: resolveLinkClass({ route: linkRoute, isActive, isExactActive })
+                }), {
+                  default: withCtx(() => [
+                    renderSlot(_ctx.$slots, "default", {
+                      active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                    })
+                  ]),
+                  _: 2
+                }, 1040, ["class"]))
+              ];
+            }
+          }),
+          _: 3
+        }, _parent));
+      } else if (__props.custom) {
+        _push(ssrRenderComponent(unref(Slot), _attrs, {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
               ssrRenderSlot(_ctx.$slots, "default", {
                 ..._ctx.$attrs,
-                ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
                 as: __props.as,
                 type: __props.type,
                 disabled: __props.disabled,
-                href,
-                navigate,
-                rel: rest.rel,
-                target: rest.target,
-                isExternal: rest.isExternal,
-                active: isLinkActive({ route: linkRoute, isActive, isExactActive })
+                ...to.value ? { href: String(to.value), target: props.target, rel: rel.value, isExternal: true } : {},
+                active: __props.active ?? false
               }, null, _push2, _parent2, _scopeId);
             } else {
-              _push2(ssrRenderComponent(_sfc_main$a, mergeProps({
-                ..._ctx.$attrs,
-                ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
-                as: __props.as,
-                type: __props.type,
-                disabled: __props.disabled,
-                href,
-                navigate,
-                rel: rest.rel,
-                target: rest.target,
-                isExternal: rest.isExternal
-              }, {
-                class: resolveLinkClass({ route: linkRoute, isActive, isExactActive })
-              }), {
-                default: withCtx((_, _push3, _parent3, _scopeId2) => {
-                  if (_push3) {
-                    ssrRenderSlot(_ctx.$slots, "default", {
-                      active: isLinkActive({ route: linkRoute, isActive, isExactActive })
-                    }, null, _push3, _parent3, _scopeId2);
-                  } else {
-                    return [
-                      renderSlot(_ctx.$slots, "default", {
-                        active: isLinkActive({ route: linkRoute, isActive, isExactActive })
-                      })
-                    ];
-                  }
-                }),
-                _: 2
-              }, _parent2, _scopeId));
+              return [
+                renderSlot(_ctx.$slots, "default", {
+                  ..._ctx.$attrs,
+                  as: __props.as,
+                  type: __props.type,
+                  disabled: __props.disabled,
+                  ...to.value ? { href: String(to.value), target: props.target, rel: rel.value, isExternal: true } : {},
+                  active: __props.active ?? false
+                })
+              ];
             }
-          } else {
-            return [
-              __props.custom ? renderSlot(_ctx.$slots, "default", mergeProps({ key: 0 }, {
-                ..._ctx.$attrs,
-                ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
-                as: __props.as,
-                type: __props.type,
-                disabled: __props.disabled,
-                href,
-                navigate,
-                rel: rest.rel,
-                target: rest.target,
-                isExternal: rest.isExternal,
-                active: isLinkActive({ route: linkRoute, isActive, isExactActive })
-              })) : (openBlock(), createBlock(_sfc_main$a, mergeProps({ key: 1 }, {
-                ..._ctx.$attrs,
-                ...__props.exact && isExactActive ? { "aria-current": props.ariaCurrentValue } : {},
-                as: __props.as,
-                type: __props.type,
-                disabled: __props.disabled,
-                href,
-                navigate,
-                rel: rest.rel,
-                target: rest.target,
-                isExternal: rest.isExternal
-              }, {
-                class: resolveLinkClass({ route: linkRoute, isActive, isExactActive })
-              }), {
-                default: withCtx(() => [
-                  renderSlot(_ctx.$slots, "default", {
-                    active: isLinkActive({ route: linkRoute, isActive, isExactActive })
-                  })
-                ]),
-                _: 2
-              }, 1040, ["class"]))
-            ];
-          }
-        }),
-        _: 3
-      }, _parent));
+          }),
+          _: 3
+        }, _parent));
+      } else {
+        _push(ssrRenderComponent(_sfc_main$a, mergeProps({
+          ..._ctx.$attrs,
+          as: __props.as,
+          type: __props.type,
+          disabled: __props.disabled,
+          ...to.value ? { href: String(to.value), target: props.target, rel: rel.value, isExternal: true } : {}
+        }, {
+          class: resolveLinkClass()
+        }, _attrs), {
+          default: withCtx((_, _push2, _parent2, _scopeId) => {
+            if (_push2) {
+              ssrRenderSlot(_ctx.$slots, "default", {
+                active: __props.active ?? false
+              }, null, _push2, _parent2, _scopeId);
+            } else {
+              return [
+                renderSlot(_ctx.$slots, "default", {
+                  active: __props.active ?? false
+                })
+              ];
+            }
+          }),
+          _: 3
+        }, _parent));
+      }
     };
   }
 });
@@ -8580,212 +9229,212 @@ const theme$3 = {
     {
       "color": "primary",
       "variant": "solid",
-      "class": "text-inverted bg-primary hover:bg-primary/75 active:bg-primary/75 disabled:bg-primary aria-disabled:bg-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+      "class": "text-inverted bg-primary hover:bg-primary/75 active:bg-primary/75 disabled:bg-primary aria-disabled:bg-primary outline-primary/25 focus-visible:outline-3"
     },
     {
       "color": "secondary",
       "variant": "solid",
-      "class": "text-inverted bg-secondary hover:bg-secondary/75 active:bg-secondary/75 disabled:bg-secondary aria-disabled:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
+      "class": "text-inverted bg-secondary hover:bg-secondary/75 active:bg-secondary/75 disabled:bg-secondary aria-disabled:bg-secondary outline-secondary/25 focus-visible:outline-3"
     },
     {
       "color": "success",
       "variant": "solid",
-      "class": "text-inverted bg-success hover:bg-success/75 active:bg-success/75 disabled:bg-success aria-disabled:bg-success focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-success"
+      "class": "text-inverted bg-success hover:bg-success/75 active:bg-success/75 disabled:bg-success aria-disabled:bg-success outline-success/25 focus-visible:outline-3"
     },
     {
       "color": "info",
       "variant": "solid",
-      "class": "text-inverted bg-info hover:bg-info/75 active:bg-info/75 disabled:bg-info aria-disabled:bg-info focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-info"
+      "class": "text-inverted bg-info hover:bg-info/75 active:bg-info/75 disabled:bg-info aria-disabled:bg-info outline-info/25 focus-visible:outline-3"
     },
     {
       "color": "warning",
       "variant": "solid",
-      "class": "text-inverted bg-warning hover:bg-warning/75 active:bg-warning/75 disabled:bg-warning aria-disabled:bg-warning focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-warning"
+      "class": "text-inverted bg-warning hover:bg-warning/75 active:bg-warning/75 disabled:bg-warning aria-disabled:bg-warning outline-warning/25 focus-visible:outline-3"
     },
     {
       "color": "error",
       "variant": "solid",
-      "class": "text-inverted bg-error hover:bg-error/75 active:bg-error/75 disabled:bg-error aria-disabled:bg-error focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-error"
+      "class": "text-inverted bg-error hover:bg-error/75 active:bg-error/75 disabled:bg-error aria-disabled:bg-error outline-error/25 focus-visible:outline-3"
     },
     {
       "color": "primary",
       "variant": "outline",
-      "class": "ring ring-inset ring-primary/50 text-primary hover:bg-primary/10 active:bg-primary/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      "class": "ring ring-inset ring-primary/50 text-primary hover:bg-primary/10 active:bg-primary/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent outline-primary/25 focus-visible:outline-3 focus-visible:ring-primary"
     },
     {
       "color": "secondary",
       "variant": "outline",
-      "class": "ring ring-inset ring-secondary/50 text-secondary hover:bg-secondary/10 active:bg-secondary/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+      "class": "ring ring-inset ring-secondary/50 text-secondary hover:bg-secondary/10 active:bg-secondary/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent outline-secondary/25 focus-visible:outline-3 focus-visible:ring-secondary"
     },
     {
       "color": "success",
       "variant": "outline",
-      "class": "ring ring-inset ring-success/50 text-success hover:bg-success/10 active:bg-success/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-success"
+      "class": "ring ring-inset ring-success/50 text-success hover:bg-success/10 active:bg-success/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent outline-success/25 focus-visible:outline-3 focus-visible:ring-success"
     },
     {
       "color": "info",
       "variant": "outline",
-      "class": "ring ring-inset ring-info/50 text-info hover:bg-info/10 active:bg-info/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-info"
+      "class": "ring ring-inset ring-info/50 text-info hover:bg-info/10 active:bg-info/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent outline-info/25 focus-visible:outline-3 focus-visible:ring-info"
     },
     {
       "color": "warning",
       "variant": "outline",
-      "class": "ring ring-inset ring-warning/50 text-warning hover:bg-warning/10 active:bg-warning/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-warning"
+      "class": "ring ring-inset ring-warning/50 text-warning hover:bg-warning/10 active:bg-warning/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent outline-warning/25 focus-visible:outline-3 focus-visible:ring-warning"
     },
     {
       "color": "error",
       "variant": "outline",
-      "class": "ring ring-inset ring-error/50 text-error hover:bg-error/10 active:bg-error/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent focus:outline-none focus-visible:ring-2 focus-visible:ring-error"
+      "class": "ring ring-inset ring-error/50 text-error hover:bg-error/10 active:bg-error/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent outline-error/25 focus-visible:outline-3 focus-visible:ring-error"
     },
     {
       "color": "primary",
       "variant": "soft",
-      "class": "text-primary bg-primary/10 hover:bg-primary/15 active:bg-primary/15 focus:outline-none focus-visible:bg-primary/15 disabled:bg-primary/10 aria-disabled:bg-primary/10"
+      "class": "text-primary bg-primary/10 hover:bg-primary/15 active:bg-primary/15 outline-primary/25 focus-visible:outline-3 disabled:bg-primary/10 aria-disabled:bg-primary/10"
     },
     {
       "color": "secondary",
       "variant": "soft",
-      "class": "text-secondary bg-secondary/10 hover:bg-secondary/15 active:bg-secondary/15 focus:outline-none focus-visible:bg-secondary/15 disabled:bg-secondary/10 aria-disabled:bg-secondary/10"
+      "class": "text-secondary bg-secondary/10 hover:bg-secondary/15 active:bg-secondary/15 outline-secondary/25 focus-visible:outline-3 disabled:bg-secondary/10 aria-disabled:bg-secondary/10"
     },
     {
       "color": "success",
       "variant": "soft",
-      "class": "text-success bg-success/10 hover:bg-success/15 active:bg-success/15 focus:outline-none focus-visible:bg-success/15 disabled:bg-success/10 aria-disabled:bg-success/10"
+      "class": "text-success bg-success/10 hover:bg-success/15 active:bg-success/15 outline-success/25 focus-visible:outline-3 disabled:bg-success/10 aria-disabled:bg-success/10"
     },
     {
       "color": "info",
       "variant": "soft",
-      "class": "text-info bg-info/10 hover:bg-info/15 active:bg-info/15 focus:outline-none focus-visible:bg-info/15 disabled:bg-info/10 aria-disabled:bg-info/10"
+      "class": "text-info bg-info/10 hover:bg-info/15 active:bg-info/15 outline-info/25 focus-visible:outline-3 disabled:bg-info/10 aria-disabled:bg-info/10"
     },
     {
       "color": "warning",
       "variant": "soft",
-      "class": "text-warning bg-warning/10 hover:bg-warning/15 active:bg-warning/15 focus:outline-none focus-visible:bg-warning/15 disabled:bg-warning/10 aria-disabled:bg-warning/10"
+      "class": "text-warning bg-warning/10 hover:bg-warning/15 active:bg-warning/15 outline-warning/25 focus-visible:outline-3 disabled:bg-warning/10 aria-disabled:bg-warning/10"
     },
     {
       "color": "error",
       "variant": "soft",
-      "class": "text-error bg-error/10 hover:bg-error/15 active:bg-error/15 focus:outline-none focus-visible:bg-error/15 disabled:bg-error/10 aria-disabled:bg-error/10"
+      "class": "text-error bg-error/10 hover:bg-error/15 active:bg-error/15 outline-error/25 focus-visible:outline-3 disabled:bg-error/10 aria-disabled:bg-error/10"
     },
     {
       "color": "primary",
       "variant": "subtle",
-      "class": "text-primary ring ring-inset ring-primary/25 bg-primary/10 hover:bg-primary/15 active:bg-primary/15 disabled:bg-primary/10 aria-disabled:bg-primary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      "class": "text-primary ring ring-inset ring-primary/25 bg-primary/10 hover:bg-primary/15 active:bg-primary/15 disabled:bg-primary/10 aria-disabled:bg-primary/10 outline-primary/25 focus-visible:outline-3 focus-visible:ring-primary"
     },
     {
       "color": "secondary",
       "variant": "subtle",
-      "class": "text-secondary ring ring-inset ring-secondary/25 bg-secondary/10 hover:bg-secondary/15 active:bg-secondary/15 disabled:bg-secondary/10 aria-disabled:bg-secondary/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
+      "class": "text-secondary ring ring-inset ring-secondary/25 bg-secondary/10 hover:bg-secondary/15 active:bg-secondary/15 disabled:bg-secondary/10 aria-disabled:bg-secondary/10 outline-secondary/25 focus-visible:outline-3 focus-visible:ring-secondary"
     },
     {
       "color": "success",
       "variant": "subtle",
-      "class": "text-success ring ring-inset ring-success/25 bg-success/10 hover:bg-success/15 active:bg-success/15 disabled:bg-success/10 aria-disabled:bg-success/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-success"
+      "class": "text-success ring ring-inset ring-success/25 bg-success/10 hover:bg-success/15 active:bg-success/15 disabled:bg-success/10 aria-disabled:bg-success/10 outline-success/25 focus-visible:outline-3 focus-visible:ring-success"
     },
     {
       "color": "info",
       "variant": "subtle",
-      "class": "text-info ring ring-inset ring-info/25 bg-info/10 hover:bg-info/15 active:bg-info/15 disabled:bg-info/10 aria-disabled:bg-info/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-info"
+      "class": "text-info ring ring-inset ring-info/25 bg-info/10 hover:bg-info/15 active:bg-info/15 disabled:bg-info/10 aria-disabled:bg-info/10 outline-info/25 focus-visible:outline-3 focus-visible:ring-info"
     },
     {
       "color": "warning",
       "variant": "subtle",
-      "class": "text-warning ring ring-inset ring-warning/25 bg-warning/10 hover:bg-warning/15 active:bg-warning/15 disabled:bg-warning/10 aria-disabled:bg-warning/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-warning"
+      "class": "text-warning ring ring-inset ring-warning/25 bg-warning/10 hover:bg-warning/15 active:bg-warning/15 disabled:bg-warning/10 aria-disabled:bg-warning/10 outline-warning/25 focus-visible:outline-3 focus-visible:ring-warning"
     },
     {
       "color": "error",
       "variant": "subtle",
-      "class": "text-error ring ring-inset ring-error/25 bg-error/10 hover:bg-error/15 active:bg-error/15 disabled:bg-error/10 aria-disabled:bg-error/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-error"
+      "class": "text-error ring ring-inset ring-error/25 bg-error/10 hover:bg-error/15 active:bg-error/15 disabled:bg-error/10 aria-disabled:bg-error/10 outline-error/25 focus-visible:outline-3 focus-visible:ring-error"
     },
     {
       "color": "primary",
       "variant": "ghost",
-      "class": "text-primary hover:bg-primary/10 active:bg-primary/10 focus:outline-none focus-visible:bg-primary/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
+      "class": "text-primary hover:bg-primary/10 active:bg-primary/10 outline-primary/25 focus-visible:outline-3 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
     },
     {
       "color": "secondary",
       "variant": "ghost",
-      "class": "text-secondary hover:bg-secondary/10 active:bg-secondary/10 focus:outline-none focus-visible:bg-secondary/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
+      "class": "text-secondary hover:bg-secondary/10 active:bg-secondary/10 outline-secondary/25 focus-visible:outline-3 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
     },
     {
       "color": "success",
       "variant": "ghost",
-      "class": "text-success hover:bg-success/10 active:bg-success/10 focus:outline-none focus-visible:bg-success/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
+      "class": "text-success hover:bg-success/10 active:bg-success/10 outline-success/25 focus-visible:outline-3 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
     },
     {
       "color": "info",
       "variant": "ghost",
-      "class": "text-info hover:bg-info/10 active:bg-info/10 focus:outline-none focus-visible:bg-info/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
+      "class": "text-info hover:bg-info/10 active:bg-info/10 outline-info/25 focus-visible:outline-3 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
     },
     {
       "color": "warning",
       "variant": "ghost",
-      "class": "text-warning hover:bg-warning/10 active:bg-warning/10 focus:outline-none focus-visible:bg-warning/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
+      "class": "text-warning hover:bg-warning/10 active:bg-warning/10 outline-warning/25 focus-visible:outline-3 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
     },
     {
       "color": "error",
       "variant": "ghost",
-      "class": "text-error hover:bg-error/10 active:bg-error/10 focus:outline-none focus-visible:bg-error/10 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
+      "class": "text-error hover:bg-error/10 active:bg-error/10 outline-error/25 focus-visible:outline-3 disabled:bg-transparent aria-disabled:bg-transparent dark:disabled:bg-transparent dark:aria-disabled:bg-transparent"
     },
     {
       "color": "primary",
       "variant": "link",
-      "class": "text-primary hover:text-primary/75 active:text-primary/75 disabled:text-primary aria-disabled:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+      "class": "text-primary hover:text-primary/75 active:text-primary/75 disabled:text-primary aria-disabled:text-primary outline-primary/25 focus-visible:outline-3"
     },
     {
       "color": "secondary",
       "variant": "link",
-      "class": "text-secondary hover:text-secondary/75 active:text-secondary/75 disabled:text-secondary aria-disabled:text-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-secondary"
+      "class": "text-secondary hover:text-secondary/75 active:text-secondary/75 disabled:text-secondary aria-disabled:text-secondary outline-secondary/25 focus-visible:outline-3"
     },
     {
       "color": "success",
       "variant": "link",
-      "class": "text-success hover:text-success/75 active:text-success/75 disabled:text-success aria-disabled:text-success focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-success"
+      "class": "text-success hover:text-success/75 active:text-success/75 disabled:text-success aria-disabled:text-success outline-success/25 focus-visible:outline-3"
     },
     {
       "color": "info",
       "variant": "link",
-      "class": "text-info hover:text-info/75 active:text-info/75 disabled:text-info aria-disabled:text-info focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-info"
+      "class": "text-info hover:text-info/75 active:text-info/75 disabled:text-info aria-disabled:text-info outline-info/25 focus-visible:outline-3"
     },
     {
       "color": "warning",
       "variant": "link",
-      "class": "text-warning hover:text-warning/75 active:text-warning/75 disabled:text-warning aria-disabled:text-warning focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warning"
+      "class": "text-warning hover:text-warning/75 active:text-warning/75 disabled:text-warning aria-disabled:text-warning outline-warning/25 focus-visible:outline-3"
     },
     {
       "color": "error",
       "variant": "link",
-      "class": "text-error hover:text-error/75 active:text-error/75 disabled:text-error aria-disabled:text-error focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-error"
+      "class": "text-error hover:text-error/75 active:text-error/75 disabled:text-error aria-disabled:text-error outline-error/25 focus-visible:outline-3"
     },
     {
       "color": "neutral",
       "variant": "solid",
-      "class": "text-inverted bg-inverted hover:bg-inverted/90 active:bg-inverted/90 disabled:bg-inverted aria-disabled:bg-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted"
+      "class": "text-inverted bg-inverted hover:bg-inverted/90 active:bg-inverted/90 disabled:bg-inverted aria-disabled:bg-inverted outline-inverted/25 focus-visible:outline-3"
     },
     {
       "color": "neutral",
       "variant": "outline",
-      "class": "ring ring-inset ring-accented text-default bg-default hover:bg-elevated active:bg-elevated disabled:bg-default aria-disabled:bg-default focus:outline-none focus-visible:ring-2 focus-visible:ring-inverted"
+      "class": "ring ring-inset ring-accented text-default bg-default hover:bg-elevated active:bg-elevated disabled:bg-default aria-disabled:bg-default outline-inverted/25 focus-visible:outline-3 focus-visible:ring-inverted"
     },
     {
       "color": "neutral",
       "variant": "soft",
-      "class": "text-default bg-elevated hover:bg-accented/75 active:bg-accented/75 focus:outline-none focus-visible:bg-accented/75 disabled:bg-elevated aria-disabled:bg-elevated"
+      "class": "text-default bg-elevated hover:bg-accented/75 active:bg-accented/75 outline-inverted/25 focus-visible:outline-3 disabled:bg-elevated aria-disabled:bg-elevated"
     },
     {
       "color": "neutral",
       "variant": "subtle",
-      "class": "ring ring-inset ring-accented text-default bg-elevated hover:bg-accented/75 active:bg-accented/75 disabled:bg-elevated aria-disabled:bg-elevated focus:outline-none focus-visible:ring-2 focus-visible:ring-inverted"
+      "class": "ring ring-inset ring-accented text-default bg-elevated hover:bg-accented/75 active:bg-accented/75 disabled:bg-elevated aria-disabled:bg-elevated outline-inverted/25 focus-visible:outline-3 focus-visible:ring-inverted"
     },
     {
       "color": "neutral",
       "variant": "ghost",
-      "class": "text-default hover:bg-elevated active:bg-elevated focus:outline-none focus-visible:bg-elevated hover:disabled:bg-transparent dark:hover:disabled:bg-transparent hover:aria-disabled:bg-transparent dark:hover:aria-disabled:bg-transparent"
+      "class": "text-default hover:bg-elevated active:bg-elevated outline-inverted/25 focus-visible:outline-3 hover:disabled:bg-transparent dark:hover:disabled:bg-transparent hover:aria-disabled:bg-transparent dark:hover:aria-disabled:bg-transparent"
     },
     {
       "color": "neutral",
       "variant": "link",
-      "class": "text-muted hover:text-default active:text-default disabled:text-muted aria-disabled:text-muted focus:outline-none focus-visible:ring-inset focus-visible:ring-2 focus-visible:ring-inverted"
+      "class": "text-muted hover:text-default active:text-default disabled:text-muted aria-disabled:text-muted outline-inverted/25 focus-visible:outline-3"
     },
     {
       "size": "xs",
@@ -8866,6 +9515,7 @@ const _sfc_main$8 = {
     exactQuery: { type: [Boolean, String], required: false },
     exactHash: { type: Boolean, required: false },
     inactiveClass: { type: String, required: false },
+    locale: { type: [Boolean, String], required: false },
     to: { type: null, required: false },
     href: { type: null, required: false },
     external: { type: Boolean, required: false },
@@ -8884,11 +9534,11 @@ const _sfc_main$8 = {
     replace: { type: Boolean, required: false }
   },
   setup(__props) {
-    const props = __props;
+    const _props = __props;
     const slots = useSlots();
+    const props = useComponentProps("button", _props);
     const appConfig2 = useAppConfig();
-    const uiProp = useComponentUI("button", props);
-    const { orientation, size: buttonSize } = useFieldGroup(props);
+    const { orientation, size: buttonSize } = useFieldGroup(_props);
     const linkProps = useForwardProps(pickLinkProps(props));
     const loadingAutoState = ref(false);
     const formLoading = inject(formLoadingInjectionKey, void 0);
@@ -8908,7 +9558,7 @@ const _sfc_main$8 = {
       computed(() => ({ ...props, loading: isLoading.value }))
     );
     const ui = computed(() => tv({
-      extend: tv(theme$3),
+      extend: theme$3,
       ...defu({
         variants: {
           active: {
@@ -8924,7 +9574,7 @@ const _sfc_main$8 = {
     })({
       color: props.color,
       variant: props.variant,
-      size: buttonSize.value,
+      size: buttonSize.value ?? props.size,
       loading: isLoading.value,
       block: props.block,
       square: props.square || !slots.default && !props.label,
@@ -8934,18 +9584,17 @@ const _sfc_main$8 = {
     }));
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(_sfc_main$9, mergeProps({
-        type: __props.type,
-        disabled: __props.disabled || isLoading.value
+        type: unref(props).type,
+        disabled: unref(props).disabled || isLoading.value
       }, unref(omit)(unref(linkProps), ["type", "disabled", "onClick"]), { custom: "" }, _attrs), {
         default: withCtx(({ active, ...slotProps }, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            _push2(ssrRenderComponent(_sfc_main$a, mergeProps(slotProps, {
-              "data-slot": "base",
+            _push2(ssrRenderComponent(_sfc_main$a, mergeProps({ "data-slot": "base" }, slotProps, {
               class: ui.value.base({
-                class: [unref(uiProp)?.base, props.class],
+                class: [unref(props).ui?.base, unref(props).class],
                 active,
-                ...active && __props.activeVariant ? { variant: __props.activeVariant } : {},
-                ...active && __props.activeColor ? { color: __props.activeColor } : {}
+                ...active && unref(props).activeVariant ? { variant: unref(props).activeVariant } : {},
+                ...active && unref(props).activeColor ? { color: unref(props).activeColor } : {}
               }),
               onClick: onClickWrapper
             }), {
@@ -8956,22 +9605,22 @@ const _sfc_main$8 = {
                       _push3(ssrRenderComponent(_sfc_main$e, {
                         name: unref(leadingIconName),
                         "data-slot": "leadingIcon",
-                        class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon, active })
+                        class: ui.value.leadingIcon({ class: unref(props).ui?.leadingIcon, active })
                       }, null, _parent3, _scopeId2));
-                    } else if (!!__props.avatar) {
+                    } else if (!!unref(props).avatar) {
                       _push3(ssrRenderComponent(_sfc_main$b, mergeProps({
-                        size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
-                      }, __props.avatar, {
+                        size: unref(props).ui?.leadingAvatarSize || ui.value.leadingAvatarSize()
+                      }, unref(props).avatar, {
                         "data-slot": "leadingAvatar",
-                        class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar, active })
+                        class: ui.value.leadingAvatar({ class: unref(props).ui?.leadingAvatar, active })
                       }), null, _parent3, _scopeId2));
                     } else {
                       _push3(`<!---->`);
                     }
                   }, _push3, _parent3, _scopeId2);
                   ssrRenderSlot(_ctx.$slots, "default", { ui: ui.value }, () => {
-                    if (__props.label !== void 0 && __props.label !== null) {
-                      _push3(`<span data-slot="label" class="${ssrRenderClass(ui.value.label({ class: unref(uiProp)?.label, active }))}"${_scopeId2}>${ssrInterpolate(__props.label)}</span>`);
+                    if (unref(props).label !== void 0 && unref(props).label !== null) {
+                      _push3(`<span data-slot="label" class="${ssrRenderClass(ui.value.label({ class: unref(props).ui?.label, active }))}"${_scopeId2}>${ssrInterpolate(unref(props).label)}</span>`);
                     } else {
                       _push3(`<!---->`);
                     }
@@ -8981,7 +9630,7 @@ const _sfc_main$8 = {
                       _push3(ssrRenderComponent(_sfc_main$e, {
                         name: unref(trailingIconName),
                         "data-slot": "trailingIcon",
-                        class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon, active })
+                        class: ui.value.trailingIcon({ class: unref(props).ui?.trailingIcon, active })
                       }, null, _parent3, _scopeId2));
                     } else {
                       _push3(`<!---->`);
@@ -8994,28 +9643,28 @@ const _sfc_main$8 = {
                         key: 0,
                         name: unref(leadingIconName),
                         "data-slot": "leadingIcon",
-                        class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon, active })
-                      }, null, 8, ["name", "class"])) : !!__props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                        class: ui.value.leadingIcon({ class: unref(props).ui?.leadingIcon, active })
+                      }, null, 8, ["name", "class"])) : !!unref(props).avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
                         key: 1,
-                        size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
-                      }, __props.avatar, {
+                        size: unref(props).ui?.leadingAvatarSize || ui.value.leadingAvatarSize()
+                      }, unref(props).avatar, {
                         "data-slot": "leadingAvatar",
-                        class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar, active })
+                        class: ui.value.leadingAvatar({ class: unref(props).ui?.leadingAvatar, active })
                       }), null, 16, ["size", "class"])) : createCommentVNode("", true)
                     ]),
                     renderSlot(_ctx.$slots, "default", { ui: ui.value }, () => [
-                      __props.label !== void 0 && __props.label !== null ? (openBlock(), createBlock("span", {
+                      unref(props).label !== void 0 && unref(props).label !== null ? (openBlock(), createBlock("span", {
                         key: 0,
                         "data-slot": "label",
-                        class: ui.value.label({ class: unref(uiProp)?.label, active })
-                      }, toDisplayString(__props.label), 3)) : createCommentVNode("", true)
+                        class: ui.value.label({ class: unref(props).ui?.label, active })
+                      }, toDisplayString(unref(props).label), 3)) : createCommentVNode("", true)
                     ]),
                     renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => [
                       unref(isTrailing) && unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
                         key: 0,
                         name: unref(trailingIconName),
                         "data-slot": "trailingIcon",
-                        class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon, active })
+                        class: ui.value.trailingIcon({ class: unref(props).ui?.trailingIcon, active })
                       }, null, 8, ["name", "class"])) : createCommentVNode("", true)
                     ])
                   ];
@@ -9025,13 +9674,12 @@ const _sfc_main$8 = {
             }, _parent2, _scopeId));
           } else {
             return [
-              createVNode(_sfc_main$a, mergeProps(slotProps, {
-                "data-slot": "base",
+              createVNode(_sfc_main$a, mergeProps({ "data-slot": "base" }, slotProps, {
                 class: ui.value.base({
-                  class: [unref(uiProp)?.base, props.class],
+                  class: [unref(props).ui?.base, unref(props).class],
                   active,
-                  ...active && __props.activeVariant ? { variant: __props.activeVariant } : {},
-                  ...active && __props.activeColor ? { color: __props.activeColor } : {}
+                  ...active && unref(props).activeVariant ? { variant: unref(props).activeVariant } : {},
+                  ...active && unref(props).activeColor ? { color: unref(props).activeColor } : {}
                 }),
                 onClick: onClickWrapper
               }), {
@@ -9041,28 +9689,28 @@ const _sfc_main$8 = {
                       key: 0,
                       name: unref(leadingIconName),
                       "data-slot": "leadingIcon",
-                      class: ui.value.leadingIcon({ class: unref(uiProp)?.leadingIcon, active })
-                    }, null, 8, ["name", "class"])) : !!__props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                      class: ui.value.leadingIcon({ class: unref(props).ui?.leadingIcon, active })
+                    }, null, 8, ["name", "class"])) : !!unref(props).avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
                       key: 1,
-                      size: unref(uiProp)?.leadingAvatarSize || ui.value.leadingAvatarSize()
-                    }, __props.avatar, {
+                      size: unref(props).ui?.leadingAvatarSize || ui.value.leadingAvatarSize()
+                    }, unref(props).avatar, {
                       "data-slot": "leadingAvatar",
-                      class: ui.value.leadingAvatar({ class: unref(uiProp)?.leadingAvatar, active })
+                      class: ui.value.leadingAvatar({ class: unref(props).ui?.leadingAvatar, active })
                     }), null, 16, ["size", "class"])) : createCommentVNode("", true)
                   ]),
                   renderSlot(_ctx.$slots, "default", { ui: ui.value }, () => [
-                    __props.label !== void 0 && __props.label !== null ? (openBlock(), createBlock("span", {
+                    unref(props).label !== void 0 && unref(props).label !== null ? (openBlock(), createBlock("span", {
                       key: 0,
                       "data-slot": "label",
-                      class: ui.value.label({ class: unref(uiProp)?.label, active })
-                    }, toDisplayString(__props.label), 3)) : createCommentVNode("", true)
+                      class: ui.value.label({ class: unref(props).ui?.label, active })
+                    }, toDisplayString(unref(props).label), 3)) : createCommentVNode("", true)
                   ]),
                   renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => [
                     unref(isTrailing) && unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
                       key: 0,
                       name: unref(trailingIconName),
                       "data-slot": "trailingIcon",
-                      class: ui.value.trailingIcon({ class: unref(uiProp)?.trailingIcon, active })
+                      class: ui.value.trailingIcon({ class: unref(props).ui?.trailingIcon, active })
                     }, null, 8, ["name", "class"])) : createCommentVNode("", true)
                   ])
                 ]),
@@ -9086,7 +9734,7 @@ const theme$2 = {
   "slots": {
     "root": "gap-2",
     "base": "relative overflow-hidden rounded-full bg-accented",
-    "indicator": "rounded-full size-full transition-transform duration-200 ease-out",
+    "indicator": "rounded-full size-full transition-transform duration-200 ease-out motion-reduce:data-[state=indeterminate]:animate-pulse",
     "status": "flex text-dimmed transition-[width] duration-200",
     "steps": "grid items-end",
     "step": "truncate text-end row-start-1 col-start-1 transition-opacity"
@@ -9281,56 +9929,56 @@ const theme$2 = {
       "orientation": "horizontal",
       "animation": "carousel",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "carousel",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "carousel-inverse",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "carousel-inverse",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "swing",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[swing_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "swing",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "elastic",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[elastic_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[elastic_2s_ease-in-out_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "elastic",
       "class": {
-        "indicator": "data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]"
       }
     }
   ],
@@ -9360,13 +10008,13 @@ const _sfc_main$7 = {
   },
   emits: ["update:modelValue", "update:max"],
   setup(__props, { emit: __emit }) {
-    const props = __props;
+    const _props = __props;
     const emits = __emit;
     const slots = useSlots();
+    const props = useComponentProps("progress", _props);
     const { dir } = useLocale();
     const appConfig2 = useAppConfig();
-    const uiProp = useComponentUI("progress", props);
-    const rootProps = useForwardPropsEmits(reactivePick(props, "getValueLabel", "getValueText", "modelValue"), emits);
+    const rootProps = useForwardProps(reactivePick(props, "getValueLabel", "getValueText", "modelValue"), emits);
     const isIndeterminate = computed(() => rootProps.value.modelValue === null);
     const hasSteps = computed(() => Array.isArray(props.max));
     const realMax = computed(() => {
@@ -9437,7 +10085,7 @@ const _sfc_main$7 = {
       }
       return "other";
     }
-    const ui = computed(() => tv({ extend: tv(theme$2), ...appConfig2.ui?.progress || {} })({
+    const ui = computed(() => tv({ extend: theme$2, ...appConfig2.ui?.progress || {} })({
       animation: props.animation,
       size: props.size,
       color: props.color,
@@ -9446,15 +10094,15 @@ const _sfc_main$7 = {
     }));
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
-        as: __props.as,
-        "data-orientation": __props.orientation,
+        as: unref(props).as,
+        "data-orientation": unref(props).orientation,
         "data-slot": "root",
-        class: ui.value.root({ class: [unref(uiProp)?.root, props.class] })
+        class: ui.value.root({ class: [unref(props).ui?.root, unref(props).class] })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
-            if (!isIndeterminate.value && (__props.status || !!slots.status)) {
-              _push2(`<div data-slot="status" class="${ssrRenderClass(ui.value.status({ class: unref(uiProp)?.status }))}" style="${ssrRenderStyle(statusStyle.value)}"${_scopeId}>`);
+            if (!isIndeterminate.value && (unref(props).status || !!slots.status)) {
+              _push2(`<div data-slot="status" class="${ssrRenderClass(ui.value.status({ class: unref(props).ui?.status }))}" style="${ssrRenderStyle(statusStyle.value)}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "status", { percent: percent.value }, () => {
                 _push2(`${ssrInterpolate(percent.value)}% `);
               }, _push2, _parent2, _scopeId);
@@ -9465,21 +10113,21 @@ const _sfc_main$7 = {
             _push2(ssrRenderComponent(unref(ProgressRoot_default), mergeProps(unref(rootProps), {
               max: realMax.value,
               "data-slot": "base",
-              class: ui.value.base({ class: unref(uiProp)?.base }),
+              class: ui.value.base({ class: unref(props).ui?.base }),
               style: { "transform": "translateZ(0)" }
             }), {
               default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                 if (_push3) {
                   _push3(ssrRenderComponent(unref(ProgressIndicator_default), {
                     "data-slot": "indicator",
-                    class: ui.value.indicator({ class: unref(uiProp)?.indicator }),
+                    class: ui.value.indicator({ class: unref(props).ui?.indicator }),
                     style: indicatorStyle.value
                   }, null, _parent3, _scopeId2));
                 } else {
                   return [
                     createVNode(unref(ProgressIndicator_default), {
                       "data-slot": "indicator",
-                      class: ui.value.indicator({ class: unref(uiProp)?.indicator }),
+                      class: ui.value.indicator({ class: unref(props).ui?.indicator }),
                       style: indicatorStyle.value
                     }, null, 8, ["class", "style"])
                   ];
@@ -9488,9 +10136,9 @@ const _sfc_main$7 = {
               _: 1
             }, _parent2, _scopeId));
             if (hasSteps.value) {
-              _push2(`<div data-slot="steps" class="${ssrRenderClass(ui.value.steps({ class: unref(uiProp)?.steps }))}"${_scopeId}><!--[-->`);
-              ssrRenderList(__props.max, (step, index2) => {
-                _push2(`<div data-slot="step" class="${ssrRenderClass(ui.value.step({ class: unref(uiProp)?.step, step: stepVariant(index2) }))}"${_scopeId}>`);
+              _push2(`<div data-slot="steps" class="${ssrRenderClass(ui.value.steps({ class: unref(props).ui?.steps }))}"${_scopeId}><!--[-->`);
+              ssrRenderList(unref(props).max, (step, index2) => {
+                _push2(`<div data-slot="step" class="${ssrRenderClass(ui.value.step({ class: unref(props).ui?.step, step: stepVariant(index2) }))}"${_scopeId}>`);
                 ssrRenderSlot(_ctx.$slots, `step-${index2}`, { step }, () => {
                   _push2(`${ssrInterpolate(step)}`);
                 }, _push2, _parent2, _scopeId);
@@ -9502,10 +10150,10 @@ const _sfc_main$7 = {
             }
           } else {
             return [
-              !isIndeterminate.value && (__props.status || !!slots.status) ? (openBlock(), createBlock("div", {
+              !isIndeterminate.value && (unref(props).status || !!slots.status) ? (openBlock(), createBlock("div", {
                 key: 0,
                 "data-slot": "status",
-                class: ui.value.status({ class: unref(uiProp)?.status }),
+                class: ui.value.status({ class: unref(props).ui?.status }),
                 style: statusStyle.value
               }, [
                 renderSlot(_ctx.$slots, "status", { percent: percent.value }, () => [
@@ -9515,13 +10163,13 @@ const _sfc_main$7 = {
               createVNode(unref(ProgressRoot_default), mergeProps(unref(rootProps), {
                 max: realMax.value,
                 "data-slot": "base",
-                class: ui.value.base({ class: unref(uiProp)?.base }),
+                class: ui.value.base({ class: unref(props).ui?.base }),
                 style: { "transform": "translateZ(0)" }
               }), {
                 default: withCtx(() => [
                   createVNode(unref(ProgressIndicator_default), {
                     "data-slot": "indicator",
-                    class: ui.value.indicator({ class: unref(uiProp)?.indicator }),
+                    class: ui.value.indicator({ class: unref(props).ui?.indicator }),
                     style: indicatorStyle.value
                   }, null, 8, ["class", "style"])
                 ]),
@@ -9530,13 +10178,13 @@ const _sfc_main$7 = {
               hasSteps.value ? (openBlock(), createBlock("div", {
                 key: 1,
                 "data-slot": "steps",
-                class: ui.value.steps({ class: unref(uiProp)?.steps })
+                class: ui.value.steps({ class: unref(props).ui?.steps })
               }, [
-                (openBlock(true), createBlock(Fragment, null, renderList(__props.max, (step, index2) => {
+                (openBlock(true), createBlock(Fragment, null, renderList(unref(props).max, (step, index2) => {
                   return openBlock(), createBlock("div", {
                     key: index2,
                     "data-slot": "step",
-                    class: ui.value.step({ class: unref(uiProp)?.step, step: stepVariant(index2) })
+                    class: ui.value.step({ class: unref(props).ui?.step, step: stepVariant(index2) })
                   }, [
                     renderSlot(_ctx.$slots, `step-${index2}`, { step }, () => [
                       createTextVNode(toDisplayString(step), 1)
@@ -9560,7 +10208,7 @@ _sfc_main$7.setup = (props, ctx) => {
 };
 const theme$1 = {
   "slots": {
-    "root": "relative group overflow-hidden bg-default shadow-lg rounded-lg ring ring-default p-4 flex gap-2.5 focus:outline-none",
+    "root": "relative group overflow-hidden bg-default shadow-lg rounded-lg ring ring-default p-4 flex gap-2.5",
     "wrapper": "w-0 flex-1 flex flex-col",
     "title": "text-sm font-medium text-highlighted",
     "description": "text-sm text-muted",
@@ -9574,31 +10222,31 @@ const theme$1 = {
   "variants": {
     "color": {
       "primary": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
+        "root": "outline-primary/25 focus-visible:outline-3 focus-visible:ring-primary",
         "icon": "text-primary"
       },
       "secondary": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-secondary",
+        "root": "outline-secondary/25 focus-visible:outline-3 focus-visible:ring-secondary",
         "icon": "text-secondary"
       },
       "success": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-success",
+        "root": "outline-success/25 focus-visible:outline-3 focus-visible:ring-success",
         "icon": "text-success"
       },
       "info": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-info",
+        "root": "outline-info/25 focus-visible:outline-3 focus-visible:ring-info",
         "icon": "text-info"
       },
       "warning": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warning",
+        "root": "outline-warning/25 focus-visible:outline-3 focus-visible:ring-warning",
         "icon": "text-warning"
       },
       "error": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-error",
+        "root": "outline-error/25 focus-visible:outline-3 focus-visible:ring-error",
         "icon": "text-error"
       },
       "neutral": {
-        "root": "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted",
+        "root": "outline-inverted/25 focus-visible:outline-3 focus-visible:ring-inverted",
         "icon": "text-highlighted"
       }
     },
@@ -9636,24 +10284,24 @@ const _sfc_main$6 = {
     close: { type: [Boolean, Object], required: false, default: true },
     closeIcon: { type: null, required: false },
     actions: { type: Array, required: false },
+    duration: { type: Number, required: false },
     progress: { type: [Boolean, Object], required: false, default: true },
     class: { type: null, required: false },
     ui: { type: Object, required: false },
     defaultOpen: { type: Boolean, required: false },
     open: { type: Boolean, required: false },
-    type: { type: String, required: false },
-    duration: { type: Number, required: false }
+    type: { type: String, required: false }
   },
   emits: ["escapeKeyDown", "pause", "resume", "swipeStart", "swipeMove", "swipeCancel", "swipeEnd", "update:open"],
   setup(__props, { expose: __expose, emit: __emit }) {
-    const props = __props;
+    const _props = __props;
     const emits = __emit;
     const slots = useSlots();
+    const props = useComponentProps("toast", _props);
     const { t } = useLocale();
     const appConfig2 = useAppConfig();
-    const uiProp = useComponentUI("toast", props);
-    const rootProps = useForwardPropsEmits(reactivePick(props, "as", "defaultOpen", "open", "duration", "type"), emits);
-    const ui = computed(() => tv({ extend: tv(theme$1), ...appConfig2.ui?.toast || {} })({
+    const rootProps = useForwardProps(reactivePick(props, "as", "defaultOpen", "open", "duration", "type"), emits);
+    const ui = computed(() => tv({ extend: theme$1, ...appConfig2.ui?.toast || {} })({
       color: props.color,
       orientation: props.orientation,
       title: !!props.title || !!slots.title
@@ -9668,53 +10316,53 @@ const _sfc_main$6 = {
         ref_key: "rootRef",
         ref: rootRef
       }, unref(rootProps), {
-        "data-orientation": __props.orientation,
+        "data-orientation": unref(props).orientation,
         "data-slot": "root",
-        class: ui.value.root({ class: [unref(uiProp)?.root, props.class] }),
+        class: ui.value.root({ class: [unref(props).ui?.root, unref(props).class] }),
         style: { "--height": height.value }
       }, _attrs), {
-        default: withCtx(({ remaining, duration, open }, _push2, _parent2, _scopeId) => {
+        default: withCtx(({ remaining, duration: totalDuration, open }, _push2, _parent2, _scopeId) => {
           if (_push2) {
             ssrRenderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
-              if (__props.avatar) {
+              if (unref(props).avatar) {
                 _push2(ssrRenderComponent(_sfc_main$b, mergeProps({
-                  size: unref(uiProp)?.avatarSize || ui.value.avatarSize()
-                }, __props.avatar, {
+                  size: unref(props).ui?.avatarSize || ui.value.avatarSize()
+                }, unref(props).avatar, {
                   "data-slot": "avatar",
-                  class: ui.value.avatar({ class: unref(uiProp)?.avatar })
+                  class: ui.value.avatar({ class: unref(props).ui?.avatar })
                 }), null, _parent2, _scopeId));
-              } else if (__props.icon) {
+              } else if (unref(props).icon) {
                 _push2(ssrRenderComponent(_sfc_main$e, {
-                  name: __props.icon,
+                  name: unref(props).icon,
                   "data-slot": "icon",
-                  class: ui.value.icon({ class: unref(uiProp)?.icon })
+                  class: ui.value.icon({ class: unref(props).ui?.icon })
                 }, null, _parent2, _scopeId));
               } else {
                 _push2(`<!---->`);
               }
             }, _push2, _parent2, _scopeId);
-            _push2(`<div data-slot="wrapper" class="${ssrRenderClass(ui.value.wrapper({ class: unref(uiProp)?.wrapper }))}"${_scopeId}>`);
-            if (__props.title || !!slots.title) {
+            _push2(`<div data-slot="wrapper" class="${ssrRenderClass(ui.value.wrapper({ class: unref(props).ui?.wrapper }))}"${_scopeId}>`);
+            if (unref(props).title || !!slots.title) {
               _push2(ssrRenderComponent(unref(ToastTitle_default), {
                 "data-slot": "title",
-                class: ui.value.title({ class: unref(uiProp)?.title })
+                class: ui.value.title({ class: unref(props).ui?.title })
               }, {
                 default: withCtx((_, _push3, _parent3, _scopeId2) => {
                   if (_push3) {
                     ssrRenderSlot(_ctx.$slots, "title", {}, () => {
-                      if (typeof __props.title === "function") {
-                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(__props.title()), null, null), _parent3, _scopeId2);
-                      } else if (typeof __props.title === "object") {
-                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(__props.title), null, null), _parent3, _scopeId2);
+                      if (typeof unref(props).title === "function") {
+                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(unref(props).title()), null, null), _parent3, _scopeId2);
+                      } else if (typeof unref(props).title === "object") {
+                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(unref(props).title), null, null), _parent3, _scopeId2);
                       } else {
-                        _push3(`<!--[-->${ssrInterpolate(__props.title)}<!--]-->`);
+                        _push3(`<!--[-->${ssrInterpolate(unref(props).title)}<!--]-->`);
                       }
                     }, _push3, _parent3, _scopeId2);
                   } else {
                     return [
                       renderSlot(_ctx.$slots, "title", {}, () => [
-                        typeof __props.title === "function" ? (openBlock(), createBlock(resolveDynamicComponent(__props.title()), { key: 0 })) : typeof __props.title === "object" ? (openBlock(), createBlock(resolveDynamicComponent(__props.title), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
-                          createTextVNode(toDisplayString(__props.title), 1)
+                        typeof unref(props).title === "function" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).title()), { key: 0 })) : typeof unref(props).title === "object" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).title), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
+                          createTextVNode(toDisplayString(unref(props).title), 1)
                         ], 64))
                       ])
                     ];
@@ -9725,27 +10373,27 @@ const _sfc_main$6 = {
             } else {
               _push2(`<!---->`);
             }
-            if (__props.description || !!slots.description) {
+            if (unref(props).description || !!slots.description) {
               _push2(ssrRenderComponent(unref(ToastDescription_default), {
                 "data-slot": "description",
-                class: ui.value.description({ class: unref(uiProp)?.description })
+                class: ui.value.description({ class: unref(props).ui?.description })
               }, {
                 default: withCtx((_, _push3, _parent3, _scopeId2) => {
                   if (_push3) {
                     ssrRenderSlot(_ctx.$slots, "description", {}, () => {
-                      if (typeof __props.description === "function") {
-                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(__props.description()), null, null), _parent3, _scopeId2);
-                      } else if (typeof __props.description === "object") {
-                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(__props.description), null, null), _parent3, _scopeId2);
+                      if (typeof unref(props).description === "function") {
+                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(unref(props).description()), null, null), _parent3, _scopeId2);
+                      } else if (typeof unref(props).description === "object") {
+                        ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(unref(props).description), null, null), _parent3, _scopeId2);
                       } else {
-                        _push3(`<!--[-->${ssrInterpolate(__props.description)}<!--]-->`);
+                        _push3(`<!--[-->${ssrInterpolate(unref(props).description)}<!--]-->`);
                       }
                     }, _push3, _parent3, _scopeId2);
                   } else {
                     return [
                       renderSlot(_ctx.$slots, "description", {}, () => [
-                        typeof __props.description === "function" ? (openBlock(), createBlock(resolveDynamicComponent(__props.description()), { key: 0 })) : typeof __props.description === "object" ? (openBlock(), createBlock(resolveDynamicComponent(__props.description), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
-                          createTextVNode(toDisplayString(__props.description), 1)
+                        typeof unref(props).description === "function" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).description()), { key: 0 })) : typeof unref(props).description === "object" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).description), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
+                          createTextVNode(toDisplayString(unref(props).description), 1)
                         ], 64))
                       ])
                     ];
@@ -9756,11 +10404,11 @@ const _sfc_main$6 = {
             } else {
               _push2(`<!---->`);
             }
-            if (__props.orientation === "vertical" && (__props.actions?.length || !!slots.actions)) {
-              _push2(`<div data-slot="actions" class="${ssrRenderClass(ui.value.actions({ class: unref(uiProp)?.actions }))}"${_scopeId}>`);
+            if (unref(props).orientation === "vertical" && (unref(props).actions?.length || !!slots.actions)) {
+              _push2(`<div data-slot="actions" class="${ssrRenderClass(ui.value.actions({ class: unref(props).ui?.actions }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "actions", {}, () => {
                 _push2(`<!--[-->`);
-                ssrRenderList(__props.actions, (action, index2) => {
+                ssrRenderList(unref(props).actions, (action, index2) => {
                   _push2(ssrRenderComponent(unref(ToastAction_default), {
                     key: index2,
                     "alt-text": action.label || "Action",
@@ -9772,13 +10420,13 @@ const _sfc_main$6 = {
                       if (_push3) {
                         _push3(ssrRenderComponent(_sfc_main$8, mergeProps({
                           size: "xs",
-                          color: __props.color
+                          color: unref(props).color
                         }, { ref_for: true }, action), null, _parent3, _scopeId2));
                       } else {
                         return [
                           createVNode(_sfc_main$8, mergeProps({
                             size: "xs",
-                            color: __props.color
+                            color: unref(props).color
                           }, { ref_for: true }, action), null, 16, ["color"])
                         ];
                       }
@@ -9793,12 +10441,12 @@ const _sfc_main$6 = {
               _push2(`<!---->`);
             }
             _push2(`</div>`);
-            if (__props.orientation === "horizontal" && (__props.actions?.length || !!slots.actions) || __props.close) {
-              _push2(`<div data-slot="actions" class="${ssrRenderClass(ui.value.actions({ class: unref(uiProp)?.actions, orientation: "horizontal" }))}"${_scopeId}>`);
-              if (__props.orientation === "horizontal" && (__props.actions?.length || !!slots.actions)) {
+            if (unref(props).orientation === "horizontal" && (unref(props).actions?.length || !!slots.actions) || unref(props).close) {
+              _push2(`<div data-slot="actions" class="${ssrRenderClass(ui.value.actions({ class: unref(props).ui?.actions, orientation: "horizontal" }))}"${_scopeId}>`);
+              if (unref(props).orientation === "horizontal" && (unref(props).actions?.length || !!slots.actions)) {
                 ssrRenderSlot(_ctx.$slots, "actions", {}, () => {
                   _push2(`<!--[-->`);
-                  ssrRenderList(__props.actions, (action, index2) => {
+                  ssrRenderList(unref(props).actions, (action, index2) => {
                     _push2(ssrRenderComponent(unref(ToastAction_default), {
                       key: index2,
                       "alt-text": action.label || "Action",
@@ -9810,13 +10458,13 @@ const _sfc_main$6 = {
                         if (_push3) {
                           _push3(ssrRenderComponent(_sfc_main$8, mergeProps({
                             size: "xs",
-                            color: __props.color
+                            color: unref(props).color
                           }, { ref_for: true }, action), null, _parent3, _scopeId2));
                         } else {
                           return [
                             createVNode(_sfc_main$8, mergeProps({
                               size: "xs",
-                              color: __props.color
+                              color: unref(props).color
                             }, { ref_for: true }, action), null, 16, ["color"])
                           ];
                         }
@@ -9829,20 +10477,20 @@ const _sfc_main$6 = {
               } else {
                 _push2(`<!---->`);
               }
-              if (__props.close || !!slots.close) {
+              if (unref(props).close || !!slots.close) {
                 _push2(ssrRenderComponent(unref(ToastClose_default), { "as-child": "" }, {
                   default: withCtx((_, _push3, _parent3, _scopeId2) => {
                     if (_push3) {
                       ssrRenderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
-                        if (__props.close) {
+                        if (unref(props).close) {
                           _push3(ssrRenderComponent(_sfc_main$8, mergeProps({
-                            icon: __props.closeIcon || unref(appConfig2).ui.icons.close,
+                            icon: unref(props).closeIcon || unref(appConfig2).ui.icons.close,
                             color: "neutral",
                             variant: "link",
                             "aria-label": unref(t)("toast.close")
-                          }, typeof __props.close === "object" ? __props.close : {}, {
+                          }, typeof unref(props).close === "object" ? unref(props).close : {}, {
                             "data-slot": "close",
-                            class: ui.value.close({ class: unref(uiProp)?.close }),
+                            class: ui.value.close({ class: unref(props).ui?.close }),
                             onClick: () => {
                             }
                           }), null, _parent3, _scopeId2));
@@ -9853,15 +10501,15 @@ const _sfc_main$6 = {
                     } else {
                       return [
                         renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                          __props.close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                          unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
                             key: 0,
-                            icon: __props.closeIcon || unref(appConfig2).ui.icons.close,
+                            icon: unref(props).closeIcon || unref(appConfig2).ui.icons.close,
                             color: "neutral",
                             variant: "link",
                             "aria-label": unref(t)("toast.close")
-                          }, typeof __props.close === "object" ? __props.close : {}, {
+                          }, typeof unref(props).close === "object" ? unref(props).close : {}, {
                             "data-slot": "close",
-                            class: ui.value.close({ class: unref(uiProp)?.close }),
+                            class: ui.value.close({ class: unref(props).ui?.close }),
                             onClick: withModifiers(() => {
                             }, ["stop"])
                           }), null, 16, ["icon", "aria-label", "class", "onClick"])) : createCommentVNode("", true)
@@ -9878,14 +10526,14 @@ const _sfc_main$6 = {
             } else {
               _push2(`<!---->`);
             }
-            if (__props.progress && open && remaining > 0 && duration) {
+            if (unref(props).progress && open && remaining > 0 && totalDuration) {
               _push2(ssrRenderComponent(_sfc_main$7, mergeProps({
-                "model-value": remaining / duration * 100,
-                color: __props.color
-              }, typeof __props.progress === "object" ? __props.progress : {}, {
+                "model-value": remaining / totalDuration * 100,
+                color: unref(props).color
+              }, typeof unref(props).progress === "object" ? unref(props).progress : {}, {
                 size: "sm",
                 "data-slot": "progress",
-                class: ui.value.progress({ class: unref(uiProp)?.progress })
+                class: ui.value.progress({ class: unref(props).ui?.progress })
               }), null, _parent2, _scopeId));
             } else {
               _push2(`<!---->`);
@@ -9893,58 +10541,58 @@ const _sfc_main$6 = {
           } else {
             return [
               renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => [
-                __props.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                unref(props).avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
                   key: 0,
-                  size: unref(uiProp)?.avatarSize || ui.value.avatarSize()
-                }, __props.avatar, {
+                  size: unref(props).ui?.avatarSize || ui.value.avatarSize()
+                }, unref(props).avatar, {
                   "data-slot": "avatar",
-                  class: ui.value.avatar({ class: unref(uiProp)?.avatar })
-                }), null, 16, ["size", "class"])) : __props.icon ? (openBlock(), createBlock(_sfc_main$e, {
+                  class: ui.value.avatar({ class: unref(props).ui?.avatar })
+                }), null, 16, ["size", "class"])) : unref(props).icon ? (openBlock(), createBlock(_sfc_main$e, {
                   key: 1,
-                  name: __props.icon,
+                  name: unref(props).icon,
                   "data-slot": "icon",
-                  class: ui.value.icon({ class: unref(uiProp)?.icon })
+                  class: ui.value.icon({ class: unref(props).ui?.icon })
                 }, null, 8, ["name", "class"])) : createCommentVNode("", true)
               ]),
               createVNode("div", {
                 "data-slot": "wrapper",
-                class: ui.value.wrapper({ class: unref(uiProp)?.wrapper })
+                class: ui.value.wrapper({ class: unref(props).ui?.wrapper })
               }, [
-                __props.title || !!slots.title ? (openBlock(), createBlock(unref(ToastTitle_default), {
+                unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(ToastTitle_default), {
                   key: 0,
                   "data-slot": "title",
-                  class: ui.value.title({ class: unref(uiProp)?.title })
+                  class: ui.value.title({ class: unref(props).ui?.title })
                 }, {
                   default: withCtx(() => [
                     renderSlot(_ctx.$slots, "title", {}, () => [
-                      typeof __props.title === "function" ? (openBlock(), createBlock(resolveDynamicComponent(__props.title()), { key: 0 })) : typeof __props.title === "object" ? (openBlock(), createBlock(resolveDynamicComponent(__props.title), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
-                        createTextVNode(toDisplayString(__props.title), 1)
+                      typeof unref(props).title === "function" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).title()), { key: 0 })) : typeof unref(props).title === "object" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).title), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
+                        createTextVNode(toDisplayString(unref(props).title), 1)
                       ], 64))
                     ])
                   ]),
                   _: 3
                 }, 8, ["class"])) : createCommentVNode("", true),
-                __props.description || !!slots.description ? (openBlock(), createBlock(unref(ToastDescription_default), {
+                unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(ToastDescription_default), {
                   key: 1,
                   "data-slot": "description",
-                  class: ui.value.description({ class: unref(uiProp)?.description })
+                  class: ui.value.description({ class: unref(props).ui?.description })
                 }, {
                   default: withCtx(() => [
                     renderSlot(_ctx.$slots, "description", {}, () => [
-                      typeof __props.description === "function" ? (openBlock(), createBlock(resolveDynamicComponent(__props.description()), { key: 0 })) : typeof __props.description === "object" ? (openBlock(), createBlock(resolveDynamicComponent(__props.description), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
-                        createTextVNode(toDisplayString(__props.description), 1)
+                      typeof unref(props).description === "function" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).description()), { key: 0 })) : typeof unref(props).description === "object" ? (openBlock(), createBlock(resolveDynamicComponent(unref(props).description), { key: 1 })) : (openBlock(), createBlock(Fragment, { key: 2 }, [
+                        createTextVNode(toDisplayString(unref(props).description), 1)
                       ], 64))
                     ])
                   ]),
                   _: 3
                 }, 8, ["class"])) : createCommentVNode("", true),
-                __props.orientation === "vertical" && (__props.actions?.length || !!slots.actions) ? (openBlock(), createBlock("div", {
+                unref(props).orientation === "vertical" && (unref(props).actions?.length || !!slots.actions) ? (openBlock(), createBlock("div", {
                   key: 2,
                   "data-slot": "actions",
-                  class: ui.value.actions({ class: unref(uiProp)?.actions })
+                  class: ui.value.actions({ class: unref(props).ui?.actions })
                 }, [
                   renderSlot(_ctx.$slots, "actions", {}, () => [
-                    (openBlock(true), createBlock(Fragment, null, renderList(__props.actions, (action, index2) => {
+                    (openBlock(true), createBlock(Fragment, null, renderList(unref(props).actions, (action, index2) => {
                       return openBlock(), createBlock(unref(ToastAction_default), {
                         key: index2,
                         "alt-text": action.label || "Action",
@@ -9955,7 +10603,7 @@ const _sfc_main$6 = {
                         default: withCtx(() => [
                           createVNode(_sfc_main$8, mergeProps({
                             size: "xs",
-                            color: __props.color
+                            color: unref(props).color
                           }, { ref_for: true }, action), null, 16, ["color"])
                         ]),
                         _: 2
@@ -9964,13 +10612,13 @@ const _sfc_main$6 = {
                   ])
                 ], 2)) : createCommentVNode("", true)
               ], 2),
-              __props.orientation === "horizontal" && (__props.actions?.length || !!slots.actions) || __props.close ? (openBlock(), createBlock("div", {
+              unref(props).orientation === "horizontal" && (unref(props).actions?.length || !!slots.actions) || unref(props).close ? (openBlock(), createBlock("div", {
                 key: 0,
                 "data-slot": "actions",
-                class: ui.value.actions({ class: unref(uiProp)?.actions, orientation: "horizontal" })
+                class: ui.value.actions({ class: unref(props).ui?.actions, orientation: "horizontal" })
               }, [
-                __props.orientation === "horizontal" && (__props.actions?.length || !!slots.actions) ? renderSlot(_ctx.$slots, "actions", { key: 0 }, () => [
-                  (openBlock(true), createBlock(Fragment, null, renderList(__props.actions, (action, index2) => {
+                unref(props).orientation === "horizontal" && (unref(props).actions?.length || !!slots.actions) ? renderSlot(_ctx.$slots, "actions", {}, () => [
+                  (openBlock(true), createBlock(Fragment, null, renderList(unref(props).actions, (action, index2) => {
                     return openBlock(), createBlock(unref(ToastAction_default), {
                       key: index2,
                       "alt-text": action.label || "Action",
@@ -9981,28 +10629,28 @@ const _sfc_main$6 = {
                       default: withCtx(() => [
                         createVNode(_sfc_main$8, mergeProps({
                           size: "xs",
-                          color: __props.color
+                          color: unref(props).color
                         }, { ref_for: true }, action), null, 16, ["color"])
                       ]),
                       _: 2
                     }, 1032, ["alt-text", "onClick"]);
                   }), 128))
-                ]) : createCommentVNode("", true),
-                __props.close || !!slots.close ? (openBlock(), createBlock(unref(ToastClose_default), {
+                ], void 0, 0) : createCommentVNode("", true),
+                unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(ToastClose_default), {
                   key: 1,
                   "as-child": ""
                 }, {
                   default: withCtx(() => [
                     renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                      __props.close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                      unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
                         key: 0,
-                        icon: __props.closeIcon || unref(appConfig2).ui.icons.close,
+                        icon: unref(props).closeIcon || unref(appConfig2).ui.icons.close,
                         color: "neutral",
                         variant: "link",
                         "aria-label": unref(t)("toast.close")
-                      }, typeof __props.close === "object" ? __props.close : {}, {
+                      }, typeof unref(props).close === "object" ? unref(props).close : {}, {
                         "data-slot": "close",
-                        class: ui.value.close({ class: unref(uiProp)?.close }),
+                        class: ui.value.close({ class: unref(props).ui?.close }),
                         onClick: withModifiers(() => {
                         }, ["stop"])
                       }), null, 16, ["icon", "aria-label", "class", "onClick"])) : createCommentVNode("", true)
@@ -10011,14 +10659,14 @@ const _sfc_main$6 = {
                   _: 3
                 })) : createCommentVNode("", true)
               ], 2)) : createCommentVNode("", true),
-              __props.progress && open && remaining > 0 && duration ? (openBlock(), createBlock(_sfc_main$7, mergeProps({
+              unref(props).progress && open && remaining > 0 && totalDuration ? (openBlock(), createBlock(_sfc_main$7, mergeProps({
                 key: 1,
-                "model-value": remaining / duration * 100,
-                color: __props.color
-              }, typeof __props.progress === "object" ? __props.progress : {}, {
+                "model-value": remaining / totalDuration * 100,
+                color: unref(props).color
+              }, typeof unref(props).progress === "object" ? unref(props).progress : {}, {
                 size: "sm",
                 "data-slot": "progress",
-                class: ui.value.progress({ class: unref(uiProp)?.progress })
+                class: ui.value.progress({ class: unref(props).ui?.progress })
               }), null, 16, ["model-value", "color", "class"])) : createCommentVNode("", true)
             ];
           }
@@ -10128,10 +10776,10 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
     swipeThreshold: { type: Number, required: false }
   },
   setup(__props) {
-    const props = __props;
+    const _props = __props;
+    const props = useComponentProps("toaster", _props);
     const { toasts, remove } = useToast();
     const appConfig2 = useAppConfig();
-    const uiProp = useComponentUI("toaster", props);
     provide(toastMaxInjectionKey, toRef$1(() => props.max));
     const providerProps = useForwardProps(reactivePick(props, "duration", "label", "swipeThreshold", "disableSwipe"));
     const portalProps = usePortal(toRef$1(() => props.portal));
@@ -10150,7 +10798,7 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
       }
       return "right";
     });
-    const ui = computed(() => tv({ extend: tv(theme), ...appConfig2.ui?.toaster || {} })({
+    const ui = computed(() => tv({ extend: theme, ...appConfig2.ui?.toaster || {} })({
       position: props.position,
       swipeDirection: swipeDirection.value
     }));
@@ -10180,7 +10828,7 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                 ref_for: true,
                 ref_key: "refs",
                 ref: refs,
-                progress: __props.progress
+                progress: unref(props).progress
               }, { ref_for: true }, unref(omit)(toast, ["id", "close", "_duplicate", "_updated"]), {
                 close: toast.close,
                 "data-expanded": expanded.value,
@@ -10195,7 +10843,7 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                   "--transform": "translateY(var(--translate)) scale(var(--scale))"
                 },
                 "data-slot": "base",
-                class: ui.value.base({ class: [unref(uiProp)?.base, toast.onClick ? "cursor-pointer" : void 0] }),
+                class: ui.value.base({ class: [unref(props).ui?.base, toast.onClick ? "cursor-pointer" : void 0] }),
                 "onUpdate:open": ($event) => onUpdateOpen($event, toast.id),
                 onClick: ($event) => toast.onClick && toast.onClick(toast)
               }), null, _parent2, _scopeId));
@@ -10207,11 +10855,11 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                   _push3(ssrRenderComponent(unref(ToastViewport_default), {
                     "data-expanded": expanded.value,
                     "data-slot": "viewport",
-                    class: ui.value.viewport({ class: [unref(uiProp)?.viewport, props.class] }),
+                    class: ui.value.viewport({ class: [unref(props).ui?.viewport, unref(props).class] }),
                     style: {
                       "--scale-factor": "0.05",
-                      "--translate-factor": __props.position?.startsWith("top") ? "1px" : "-1px",
-                      "--gap": __props.position?.startsWith("top") ? "16px" : "-16px",
+                      "--translate-factor": unref(props).position?.startsWith("top") ? "1px" : "-1px",
+                      "--gap": unref(props).position?.startsWith("top") ? "16px" : "-16px",
                       "--front-height": `${frontHeight.value}px`,
                       "--height": `${height.value}px`
                     },
@@ -10223,11 +10871,11 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                     createVNode(unref(ToastViewport_default), {
                       "data-expanded": expanded.value,
                       "data-slot": "viewport",
-                      class: ui.value.viewport({ class: [unref(uiProp)?.viewport, props.class] }),
+                      class: ui.value.viewport({ class: [unref(props).ui?.viewport, unref(props).class] }),
                       style: {
                         "--scale-factor": "0.05",
-                        "--translate-factor": __props.position?.startsWith("top") ? "1px" : "-1px",
-                        "--gap": __props.position?.startsWith("top") ? "16px" : "-16px",
+                        "--translate-factor": unref(props).position?.startsWith("top") ? "1px" : "-1px",
+                        "--gap": unref(props).position?.startsWith("top") ? "16px" : "-16px",
                         "--front-height": `${frontHeight.value}px`,
                         "--height": `${height.value}px`
                       },
@@ -10248,7 +10896,7 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                   ref_for: true,
                   ref_key: "refs",
                   ref: refs,
-                  progress: __props.progress
+                  progress: unref(props).progress
                 }, { ref_for: true }, unref(omit)(toast, ["id", "close", "_duplicate", "_updated"]), {
                   close: toast.close,
                   "data-expanded": expanded.value,
@@ -10263,7 +10911,7 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                     "--transform": "translateY(var(--translate)) scale(var(--scale))"
                   },
                   "data-slot": "base",
-                  class: ui.value.base({ class: [unref(uiProp)?.base, toast.onClick ? "cursor-pointer" : void 0] }),
+                  class: ui.value.base({ class: [unref(props).ui?.base, toast.onClick ? "cursor-pointer" : void 0] }),
                   "onUpdate:open": ($event) => onUpdateOpen($event, toast.id),
                   onClick: ($event) => toast.onClick && toast.onClick(toast)
                 }), null, 16, ["progress", "close", "data-expanded", "data-front", "data-pulsing", "style", "class", "onUpdate:open", "onClick"]);
@@ -10273,11 +10921,11 @@ const _sfc_main$5 = /* @__PURE__ */ Object.assign(__default__$1, {
                   createVNode(unref(ToastViewport_default), {
                     "data-expanded": expanded.value,
                     "data-slot": "viewport",
-                    class: ui.value.viewport({ class: [unref(uiProp)?.viewport, props.class] }),
+                    class: ui.value.viewport({ class: [unref(props).ui?.viewport, unref(props).class] }),
                     style: {
                       "--scale-factor": "0.05",
-                      "--translate-factor": __props.position?.startsWith("top") ? "1px" : "-1px",
-                      "--gap": __props.position?.startsWith("top") ? "16px" : "-16px",
+                      "--translate-factor": unref(props).position?.startsWith("top") ? "1px" : "-1px",
+                      "--gap": unref(props).position?.startsWith("top") ? "16px" : "-16px",
                       "--front-height": `${frontHeight.value}px`,
                       "--height": `${height.value}px`
                     },
@@ -10437,7 +11085,7 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign(__default__, {
   },
   setup(__props) {
     const props = __props;
-    const configProviderProps = useForwardProps(reactivePick(props, "scrollBody"));
+    const configProviderProps = useForwardProps$1(reactivePick(props, "scrollBody"));
     const tooltipProps = toRef$1(() => props.tooltip);
     const toasterProps = toRef$1(() => props.toaster);
     const locale = toRef$1(() => props.locale);
@@ -10479,7 +11127,7 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign(__default__, {
                         renderSlot(_ctx.$slots, "default")
                       ]),
                       _: 3
-                    }, 16)) : renderSlot(_ctx.$slots, "default", { key: 1 }),
+                    }, 16)) : renderSlot(_ctx.$slots, "default", {}, void 0, void 0, 1),
                     createVNode(_sfc_main$4)
                   ];
                 }
@@ -10495,7 +11143,7 @@ const _sfc_main$3 = /* @__PURE__ */ Object.assign(__default__, {
                       renderSlot(_ctx.$slots, "default")
                     ]),
                     _: 3
-                  }, 16)) : renderSlot(_ctx.$slots, "default", { key: 1 }),
+                  }, 16)) : renderSlot(_ctx.$slots, "default", {}, void 0, void 0, 1),
                   createVNode(_sfc_main$4)
                 ]),
                 _: 3
@@ -10516,10 +11164,10 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-DdGsT4DN.mjs').then((m) => m.default || m)),
-  default: defineAsyncComponent(() => import('./default-BTUtYy9B.mjs').then((m) => m.default || m)),
-  form: defineAsyncComponent(() => import('./form-pOyfk5HG.mjs').then((m) => m.default || m)),
-  payment: defineAsyncComponent(() => import('./payment-BRRUJSNt.mjs').then((m) => m.default || m))
+  authenticated: defineAsyncComponent(() => import('./authenticated-DCIxZJFb.mjs').then((m) => m.default || m)),
+  default: defineAsyncComponent(() => import('./default-D6BhmMrf.mjs').then((m) => m.default || m)),
+  form: defineAsyncComponent(() => import('./form-Flt6bszS.mjs').then((m) => m.default || m)),
+  payment: defineAsyncComponent(() => import('./payment-Cp8Rb9d4.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
 const LayoutLoader = defineComponent({
@@ -10854,8 +11502,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-BCVzs1W1.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-6H2TT8M-.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-CL7y-lte.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-B0d76mYc.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -10878,14 +11526,25 @@ const _sfc_main = {
     nuxtApp.ssrContext.url;
     const SingleRenderer = false;
     provide(PageRouteSymbol, useRoute());
-    nuxtApp.hooks.callHookWith((hooks) => hooks.map((hook) => hook()), "vue:setup");
+    nuxtApp.hooks.callHookWith((hooks) => hooks.map((hook) => hook()), "vue:setup", []);
     const error = /* @__PURE__ */ useError();
     const abortRender = error.value && !nuxtApp.ssrContext.error;
+    function invokeAppErrorHandler(err, target, info) {
+      const errorHandler = nuxtApp.vueApp.config.errorHandler;
+      if (errorHandler && !errorHandler.__nuxt_default) {
+        try {
+          errorHandler(err, target, info);
+        } catch (handlerError) {
+          console.error("[nuxt] Error in `app.config.errorHandler`", handlerError);
+        }
+      }
+    }
     onErrorCaptured((err, target, info) => {
       nuxtApp.hooks.callHook("vue:error", err, target, info)?.catch((hookError) => console.error("[nuxt] Error in `vue:error` hook", hookError));
       {
         const p = nuxtApp.runWithContext(() => showError(err));
         onServerPrefetch(() => p);
+        invokeAppErrorHandler(err, target, info);
         return false;
       }
     });
@@ -10936,5 +11595,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { useEventBus as $, tv as A, isArrayOfArray as B, _sfc_main$e as C, _sfc_main$b as D, get as E, _sfc_main$c as F, looseToNumber as G, getDisplayValue as H, useNuxtData as I, useRuntimeConfig as J, useLocale as K, reactiveOmit as L, createReusableTemplate as M, _sfc_main$9 as N, pickLinkProps as O, Primitive as P, _sfc_main$a as Q, omit as R, formBusInjectionKey as S, Teleport_default as T, formStateInjectionKey as U, VisuallyHidden_default as V, formErrorsInjectionKey as W, formInputsInjectionKey as X, formLoadingInjectionKey as Y, formOptionsInjectionKey as Z, __nuxt_component_0$2 as _, useRoute as a, inputIdInjectionKey as a0, formFieldInjectionKey as a1, useMotion as a2, __nuxt_component_0$1 as a3, useEventListener as a4, refAutoReset as a5, useDebounceFn as a6, isClient as a7, injectTooltipProviderContext as a8, useTimeoutFn as a9, getSlotChildrenText as aa, __nuxt_component_3$1 as ab, useEmitAsProps as ac, tryOnScopeDispose as ad, createEventHook as ae, createSharedComposable as af, usePrimitiveElement as ag, syncRef as ah, injectConfigProviderContext as ai, computedEager as aj, tryOnBeforeUnmount as ak, onKeyStroke as al, createGlobalState as am, AUTOFOCUS_ON_MOUNT as an, focusFirst as ao, getTabbableCandidates as ap, focus as aq, AUTOFOCUS_ON_UNMOUNT as ar, EVENT_OPTIONS as as, getTabbableEdges as at, useFetch as b, __nuxt_component_1$1 as c, unrefElement as d, entry_default as default, useVModel as e, useCollection as f, createContext as g, useForwardProps as h, isNullish as i, useForwardExpose as j, useResizeObserver as k, useForwardPropsEmits as l, Presence_default as m, navigateTo as n, getActiveElement as o, useUserSession as p, _sfc_main$8 as q, refreshNuxtData as r, useAppConfig as s, useComponentUI as t, useHead as u, reactivePick as v, usePortal as w, useFormField as x, useFieldGroup as y, useComponentIcons as z };
+export { tryOnBeforeUnmount as $, useComponentIcons as A, tv as B, isArrayOfArray as C, _sfc_main$e as D, _sfc_main$b as E, FieldGroupReset as F, get as G, _sfc_main$c as H, looseToNumber as I, getDisplayValue as J, useNuxtData as K, useRuntimeConfig as L, useEmitAsProps as M, useLocale as N, createReusableTemplate as O, Primitive as P, createSharedComposable as Q, reactiveOmit as R, usePrimitiveElement as S, Teleport_default as T, _sfc_main$9 as U, VisuallyHidden_default as V, pickLinkProps as W, _sfc_main$a as X, omit as Y, refAutoReset as Z, __nuxt_component_0$1 as _, useRoute as a, onKeyStroke as a0, createGlobalState as a1, AUTOFOCUS_ON_UNMOUNT as a2, focus as a3, AUTOFOCUS_ON_MOUNT as a4, focusFirst as a5, getTabbableCandidates as a6, EVENT_OPTIONS as a7, getTabbableEdges as a8, formBusInjectionKey as a9, formStateInjectionKey as aa, formErrorsInjectionKey as ab, formInputsInjectionKey as ac, formLoadingInjectionKey as ad, formOptionsInjectionKey as ae, useEventBus as af, inputIdInjectionKey as ag, formFieldInjectionKey as ah, useMotion as ai, NuxtIcon as aj, useFetch as b, __nuxt_component_0$2 as c, unrefElement as d, entry_default as default, useVModel as e, isNullish as f, useCollection as g, createContext as h, injectConfigProviderContext as i, useForwardProps$1 as j, useForwardExpose as k, useResizeObserver as l, Presence_default as m, navigateTo as n, getActiveElement as o, useUserSession as p, _sfc_main$8 as q, refreshNuxtData as r, useComponentProps as s, useAppConfig as t, useHead as u, useForwardProps as v, reactivePick as w, usePortal as x, useFormField as y, useFieldGroup as z };
 //# sourceMappingURL=server.mjs.map

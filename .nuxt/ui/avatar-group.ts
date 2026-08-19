@@ -10,6 +10,16 @@ const size = [
   "3xl"
 ] as const
 
+const color = [
+  "primary",
+  "secondary",
+  "success",
+  "info",
+  "warning",
+  "error",
+  "neutral"
+] as const
+
 export default {
   "slots": {
     "root": "inline-flex flex-row-reverse justify-end",
@@ -44,9 +54,19 @@ export default {
       "3xl": {
         "base": "ring-3 -me-2"
       }
+    },
+    "color": {
+      "primary": "",
+      "secondary": "",
+      "success": "",
+      "info": "",
+      "warning": "",
+      "error": "",
+      "neutral": ""
     }
   },
   "defaultVariants": {
-    "size": "md" as typeof size[number]
+    "size": "md" as typeof size[number],
+    "color": "neutral" as typeof color[number]
   }
 }

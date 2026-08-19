@@ -1,6 +1,6 @@
-import { d as defineEventHandler, r as readValidatedBody, c as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
-import { s as schemaImport } from '../../../_/Lead.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -12,7 +12,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'mongoose';
 
 const Lead = schemaImport;
 const bodySchema = z.object({
@@ -40,9 +39,19 @@ const bodySchema = z.object({
 const index_put = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
   try {
+    const existing = await Lead.findById(body._id).select("status").lean();
+    const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
+    const update = { ...body };
+    if (statusChanged) {
+      update.lastContactedAt = /* @__PURE__ */ new Date();
+      update.$inc = { contactCount: 1 };
+    }
+    const { $inc, ...setFields } = update;
+    const mongoUpdate = { $set: setFields };
+    if ($inc) mongoUpdate.$inc = $inc;
     await Lead.findOneAndUpdate(
       { _id: body._id },
-      { ...body },
+      mongoUpdate,
       { new: true }
     );
   } catch (error) {

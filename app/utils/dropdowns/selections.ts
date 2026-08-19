@@ -9,7 +9,11 @@ export const selection_status_lead = [
 
 export const selection_campaign_status_lead = [
   { label: 'lead (new)', value: 'new' },
+  { label: 'appointment', value: 'appointment' },
+  { label: 'active', value: 'active' },
+  { label: 'under contract', value: 'under contract' },
   { label: 'closed', value: 'closed' },
+  { label: 'archive', value: 'archive' },
 ];
 
 export const selection_days = [
@@ -23,9 +27,9 @@ export const selection_days = [
   ];
 
   export const selection_frequencies = [
-    { label: 'Once a Month (Every 4 weeks)', value: '1' },
-    { label: 'Twice a Month (Every other week)', value: '2' },
-    { label: 'Four Times a Month (Every week)', value: '4' }
+    { label: 'Monthly (once every 4 weeks)', value: '1' },
+    { label: 'Every other week (biweekly)', value: '2' },
+    { label: 'Weekly', value: '4' }
   ]
 
 export const selection_save = [

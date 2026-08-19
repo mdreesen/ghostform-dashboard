@@ -1,5 +1,5 @@
-import { d as defineEventHandler, e as getRouterParam, c as createError } from '../../../nitro/nitro.mjs';
-import { s as schemaImport } from '../../../_/Lead.mjs';
+import { a as defineEventHandler, l as getRouterParam, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -11,7 +11,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'mongoose';
 
 const Lead = schemaImport;
 const index_get = defineEventHandler(async (event) => {

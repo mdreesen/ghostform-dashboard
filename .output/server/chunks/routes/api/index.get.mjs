@@ -1,6 +1,6 @@
-import { d as defineEventHandler } from '../../nitro/nitro.mjs';
-import { C as CampaignModelImport } from '../../_/Campaign.mjs';
+import { a as defineEventHandler, b as createError, f as buildDailyBriefing, n as narrateBriefing } from '../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -12,15 +12,19 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'mongoose';
-import '../../_/mongodb.mjs';
-import '../../_/User.mjs';
 
-const Campaign = CampaignModelImport;
 const index_get = defineEventHandler(async (event) => {
+  var _a;
   const user = await loggedInUser(event);
-  const data = await Campaign.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
-  return data;
+  if (!(user == null ? void 0 : user._id)) {
+    throw createError({ statusCode: 401, message: "Session trace missing or expired." });
+  }
+  const briefing = await buildDailyBriefing(String(user._id), {
+    coldLeadAfterDays: (_a = user.coldLeadAfterDays) != null ? _a : 14
+  });
+  const narrated = await narrateBriefing(briefing);
+  if (narrated) briefing.headline = narrated;
+  return briefing;
 });
 
 export { index_get as default };

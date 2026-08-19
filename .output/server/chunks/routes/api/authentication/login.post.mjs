@@ -1,8 +1,7 @@
-import { d as defineEventHandler, r as readValidatedBody, s as setUserSession, c as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModel, e as setUserSession, b as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
-import { c as connectDB } from '../../../_/mongodb.mjs';
-import { U as UserModel } from '../../../_/User.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,7 +13,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'mongoose';
 
 const User = UserModel;
 const bodySchema = z.object({

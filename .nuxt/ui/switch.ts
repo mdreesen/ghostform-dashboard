@@ -20,7 +20,7 @@ export default {
   "slots": {
     "root": "relative flex items-start",
     "base": [
-      "inline-flex items-center shrink-0 rounded-full border-2 border-transparent focus-visible:outline-2 focus-visible:outline-offset-2 data-[state=unchecked]:bg-accented",
+      "inline-flex items-center shrink-0 rounded-full border-2 border-transparent focus-visible:outline-3 data-[state=unchecked]:bg-accented",
       "transition-[background] duration-200"
     ],
     "container": "flex items-center",
@@ -36,31 +36,31 @@ export default {
   "variants": {
     "color": {
       "primary": {
-        "base": "data-[state=checked]:bg-primary focus-visible:outline-primary",
+        "base": "data-[state=checked]:bg-primary outline-primary/25",
         "icon": "group-data-[state=checked]:text-primary"
       },
       "secondary": {
-        "base": "data-[state=checked]:bg-secondary focus-visible:outline-secondary",
+        "base": "data-[state=checked]:bg-secondary outline-secondary/25",
         "icon": "group-data-[state=checked]:text-secondary"
       },
       "success": {
-        "base": "data-[state=checked]:bg-success focus-visible:outline-success",
+        "base": "data-[state=checked]:bg-success outline-success/25",
         "icon": "group-data-[state=checked]:text-success"
       },
       "info": {
-        "base": "data-[state=checked]:bg-info focus-visible:outline-info",
+        "base": "data-[state=checked]:bg-info outline-info/25",
         "icon": "group-data-[state=checked]:text-info"
       },
       "warning": {
-        "base": "data-[state=checked]:bg-warning focus-visible:outline-warning",
+        "base": "data-[state=checked]:bg-warning outline-warning/25",
         "icon": "group-data-[state=checked]:text-warning"
       },
       "error": {
-        "base": "data-[state=checked]:bg-error focus-visible:outline-error",
+        "base": "data-[state=checked]:bg-error outline-error/25",
         "icon": "group-data-[state=checked]:text-error"
       },
       "neutral": {
-        "base": "data-[state=checked]:bg-inverted focus-visible:outline-inverted",
+        "base": "data-[state=checked]:bg-inverted outline-inverted/25",
         "icon": "group-data-[state=checked]:text-highlighted"
       }
     },
@@ -111,6 +111,9 @@ export default {
         "icon": "animate-spin"
       }
     },
+    "highlight": {
+      "true": ""
+    },
     "required": {
       "true": {
         "label": "after:content-['*'] after:ms-0.5 after:text-error"
@@ -125,6 +128,57 @@ export default {
       }
     }
   },
+  "compoundVariants": [
+    {
+      "color": "primary" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-primary"
+      }
+    },
+    {
+      "color": "secondary" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-secondary"
+      }
+    },
+    {
+      "color": "success" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-success"
+      }
+    },
+    {
+      "color": "info" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-info"
+      }
+    },
+    {
+      "color": "warning" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-warning"
+      }
+    },
+    {
+      "color": "error" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-error"
+      }
+    },
+    {
+      "color": "neutral" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring ring-inverted"
+      }
+    }
+  ],
   "defaultVariants": {
     "color": "primary" as typeof color[number],
     "size": "md" as typeof size[number]

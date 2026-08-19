@@ -1,3 +1,13 @@
+const color = [
+  "primary",
+  "secondary",
+  "success",
+  "info",
+  "warning",
+  "error",
+  "neutral"
+] as const
+
 const size = [
   "3xs",
   "2xs",
@@ -12,12 +22,49 @@ const size = [
 
 export default {
   "slots": {
-    "root": "inline-flex items-center justify-center shrink-0 select-none rounded-full align-middle bg-elevated",
+    "root": "inline-flex items-center justify-center shrink-0 select-none rounded-full align-middle",
     "image": "h-full w-full rounded-[inherit] object-cover",
-    "fallback": "font-medium leading-none text-muted truncate",
-    "icon": "text-muted shrink-0"
+    "fallback": "font-medium truncate",
+    "icon": "shrink-0"
   },
   "variants": {
+    "color": {
+      "primary": {
+        "root": "bg-primary/10",
+        "fallback": "text-primary",
+        "icon": "text-primary"
+      },
+      "secondary": {
+        "root": "bg-secondary/10",
+        "fallback": "text-secondary",
+        "icon": "text-secondary"
+      },
+      "success": {
+        "root": "bg-success/10",
+        "fallback": "text-success",
+        "icon": "text-success"
+      },
+      "info": {
+        "root": "bg-info/10",
+        "fallback": "text-info",
+        "icon": "text-info"
+      },
+      "warning": {
+        "root": "bg-warning/10",
+        "fallback": "text-warning",
+        "icon": "text-warning"
+      },
+      "error": {
+        "root": "bg-error/10",
+        "fallback": "text-error",
+        "icon": "text-error"
+      },
+      "neutral": {
+        "root": "bg-elevated",
+        "fallback": "text-muted",
+        "icon": "text-muted"
+      }
+    },
     "size": {
       "3xs": {
         "root": "size-4 text-[8px]"
@@ -49,6 +96,7 @@ export default {
     }
   },
   "defaultVariants": {
-    "size": "md" as typeof size[number]
+    "size": "md" as typeof size[number],
+    "color": "neutral" as typeof color[number]
   }
 }

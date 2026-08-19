@@ -1,5 +1,6 @@
-import { d as defineEventHandler, a as readBody } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, h as readBody } from '../../../nitro/nitro.mjs';
 import Stripe from 'stripe';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

@@ -1,6 +1,6 @@
-import { d as defineEventHandler, a as readBody, c as createError } from '../../../../nitro/nitro.mjs';
-import { s as schemaImport } from '../../../../_/Lead.mjs';
+import { a as defineEventHandler, h as readBody, b as createError, s as schemaImport } from '../../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
+import 'mongoose';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -12,9 +12,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'mongoose';
-import '../../../../_/mongodb.mjs';
-import '../../../../_/User.mjs';
 
 const LeadModel = schemaImport;
 const schedule_post = defineEventHandler(async (event) => {

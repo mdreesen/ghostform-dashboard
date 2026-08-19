@@ -5,6 +5,7 @@ import { getPaginationRowModel } from '@tanstack/vue-table'
 import type { Lead } from '~/types/lead';
 
 const UBadge = resolveComponent('UBadge');
+const UButton = resolveComponent('UButton');
 
 const props = defineProps({
   data: {
@@ -14,7 +15,41 @@ const props = defineProps({
   },
 });
 
-// const useData = computed(() => props.data.all);
+const toast = useToast();
+// Track leads mid-request so their button can show a saving state.
+const marking = ref<Set<string>>(new Set());
+
+/**
+ * Turn a lead's last-contact timestamp into a short human label, matching the
+ * Daily Briefing wording. Falls back through lastContactedAt -> updatedAt so
+ * older leads still read sensibly.
+ */
+function lastContactLabel(lead: any): string {
+  const raw = lead?.lastContactedAt;
+  if (!raw) return 'Never';
+  const days = Math.floor((Date.now() - new Date(raw).getTime()) / 86400000);
+  if (days <= 0) return 'Today';
+  if (days === 1) return '1 day ago';
+  return `${days} days ago`;
+}
+
+/**
+ * Mark a lead as contacted from the table. Same endpoint the briefing uses;
+ * refreshes the shared caches so both the table and the briefing update.
+ */
+async function markContacted(lead: any) {
+  if (!lead?._id || marking.value.has(lead._id)) return;
+  marking.value.add(lead._id);
+  try {
+    await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' });
+    toast.success(`Marked ${lead.name || 'lead'} as contacted`);
+    await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')]);
+  } catch {
+    toast.error('Could not update. Please try again.');
+  } finally {
+    marking.value.delete(lead._id);
+  }
+}
 
 const columns: TableColumn<Lead>[] = [
   {
@@ -93,6 +128,38 @@ const columns: TableColumn<Lead>[] = [
     accessorKey: 'budget',
     header: 'Budget',
   },
+  {
+    id: 'last_contact',
+    header: 'Last contact',
+    cell: ({ row }) => {
+      const label = lastContactLabel(row.original)
+      return h(
+        'span',
+        { class: label === 'Never' ? 'text-[#8A847C]' : 'text-[#1F1B16]' },
+        label
+      )
+    }
+  },
+  {
+    id: 'actions',
+    header: '',
+    cell: ({ row }) => {
+      const lead = row.original as any
+      const busy = marking.value.has(lead?._id)
+      return h(
+        UButton,
+        {
+          size: 'xs',
+          color: 'primary',
+          variant: 'subtle',
+          loading: busy,
+          disabled: busy,
+          onClick: () => markContacted(lead)
+        },
+        () => (busy ? 'Saving…' : '✓ Contacted')
+      )
+    }
+  },
 ]
 
 const table = useTemplateRef('table')
@@ -111,9 +178,9 @@ const pagination = ref({
 </script>
 
 <template>
-  <div class="backdrop-blur-xl bg-white/2 border border-white/8 rounded-[2.5rem] overflow-hidden w-full">
+  <div class="border border-[#DDD6C9] bg-[#F7F4EF] overflow-hidden w-full">
     <div class="flex flex-col flex-1 w-full p-5">
-      <div class="flex px-4 py-3.5 border-b border-accented">
+      <div class="flex px-4 py-3.5 border-b border-[#DDD6C9]">
         <UInput :model-value="table?.tableApi?.getColumn('email')?.getFilterValue() as string" class="max-w-sm"
           placeholder="Filter emails..."
           @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)" />
@@ -124,7 +191,7 @@ const pagination = ref({
         }" class="flex-1">
         <template #name-cell="{ row }">
           <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
-            class="text-cyan-400 hover:text-cyan-700 underline font-medium">
+            class="text-[#B5563A] hover:text-[#8f4229] underline underline-offset-2 font-medium">
             {{ row.original?.name ? row.original?.name : 'Not Specified' }}
           </NuxtLink>
         </template>
@@ -142,7 +209,7 @@ const pagination = ref({
         </template>
       </UTable>
 
-      <div class="flex justify-end border-t border-default pt-4 px-4 color-cyan-400">
+      <div class="flex justify-end border-t border-[#DDD6C9] pt-4 px-4">
         <UPagination :page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
           :items-per-page="table?.tableApi?.getState().pagination.pageSize"
           :total="table?.tableApi?.getFilteredRowModel().rows.length"

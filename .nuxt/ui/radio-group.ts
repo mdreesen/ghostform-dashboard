@@ -40,7 +40,7 @@ export default {
     "legend": "mb-1 block font-medium text-default",
     "item": "flex items-start",
     "container": "flex items-center",
-    "base": "rounded-full ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2",
+    "base": "rounded-full ring ring-inset ring-accented overflow-hidden focus-visible:outline-3",
     "indicator": "flex items-center justify-center size-full after:bg-default after:rounded-full" as typeof indicator[number],
     "wrapper": "w-full",
     "label": "block font-medium text-default",
@@ -49,31 +49,31 @@ export default {
   "variants": {
     "color": {
       "primary": {
-        "base": "focus-visible:outline-primary",
+        "base": "outline-primary/25 focus-visible:ring-primary",
         "indicator": "bg-primary" as typeof indicator[number]
       },
       "secondary": {
-        "base": "focus-visible:outline-secondary",
+        "base": "outline-secondary/25 focus-visible:ring-secondary",
         "indicator": "bg-secondary" as typeof indicator[number]
       },
       "success": {
-        "base": "focus-visible:outline-success",
+        "base": "outline-success/25 focus-visible:ring-success",
         "indicator": "bg-success" as typeof indicator[number]
       },
       "info": {
-        "base": "focus-visible:outline-info",
+        "base": "outline-info/25 focus-visible:ring-info",
         "indicator": "bg-info" as typeof indicator[number]
       },
       "warning": {
-        "base": "focus-visible:outline-warning",
+        "base": "outline-warning/25 focus-visible:ring-warning",
         "indicator": "bg-warning" as typeof indicator[number]
       },
       "error": {
-        "base": "focus-visible:outline-error",
+        "base": "outline-error/25 focus-visible:ring-error",
         "indicator": "bg-error" as typeof indicator[number]
       },
       "neutral": {
-        "base": "focus-visible:outline-inverted",
+        "base": "outline-inverted/25 focus-visible:ring-inverted",
         "indicator": "bg-inverted" as typeof indicator[number]
       }
     },
@@ -151,6 +151,9 @@ export default {
         "container": "h-6",
         "indicator": "after:size-2" as typeof indicator[number]
       }
+    },
+    "highlight": {
+      "true": ""
     },
     "disabled": {
       "true": {
@@ -340,13 +343,61 @@ export default {
       "class": {
         "item": "cursor-not-allowed"
       }
+    },
+    {
+      "color": "primary" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-primary"
+      }
+    },
+    {
+      "color": "secondary" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-secondary"
+      }
+    },
+    {
+      "color": "success" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-success"
+      }
+    },
+    {
+      "color": "info" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-info"
+      }
+    },
+    {
+      "color": "warning" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-warning"
+      }
+    },
+    {
+      "color": "error" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-error"
+      }
+    },
+    {
+      "color": "neutral" as typeof color[number],
+      "highlight": true,
+      "class": {
+        "base": "ring-inverted"
+      }
     }
   ],
   "defaultVariants": {
     "size": "md" as typeof size[number],
     "color": "primary" as typeof color[number],
     "variant": "list" as typeof variant[number],
-    "orientation": "vertical" as typeof orientation[number],
     "indicator": "start" as typeof indicator[number]
   }
 }

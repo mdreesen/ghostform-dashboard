@@ -39,7 +39,7 @@ export default {
     "list": "isolate min-w-0",
     "label": "w-full flex items-center gap-1.5 font-semibold text-xs/5 text-highlighted px-2.5 py-1.5",
     "item": "min-w-0",
-    "link": "group relative w-full flex items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
+    "link": "group relative w-full flex items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none focus-visible:before:outline-3",
     "linkLeadingIcon": "shrink-0 size-5",
     "linkLeadingAvatar": "shrink-0",
     "linkLeadingAvatarSize": "2xs",
@@ -53,14 +53,14 @@ export default {
     "childList": "isolate",
     "childLabel": "text-xs text-highlighted",
     "childItem": "",
-    "childLink": "group relative size-full flex items-start text-start text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
+    "childLink": "group relative size-full flex items-start text-start text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none focus-visible:before:outline-3",
     "childLinkWrapper": "min-w-0",
     "childLinkIcon": "size-5 shrink-0",
     "childLinkLabel": "truncate",
     "childLinkLabelExternalIcon": "inline-block size-3 align-top text-dimmed",
     "childLinkDescription": "text-muted",
     "separator": "px-2 h-px bg-border",
-    "viewportWrapper": "absolute top-full left-0 flex w-full",
+    "viewportWrapper": "absolute top-full start-0 flex w-full",
     "viewport": "relative overflow-hidden bg-default shadow-lg rounded-md ring ring-default h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left,right] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-1",
     "content": "",
     "indicator": "absolute left-0 data-[state=visible]:animate-[fade-in_100ms_ease-out] data-[state=hidden]:animate-[fade-out_100ms_ease-in] data-[state=hidden]:opacity-0 bottom-0 z-2 w-(--reka-navigation-menu-indicator-size) translate-x-(--reka-navigation-menu-indicator-position) flex h-2.5 items-end justify-center overflow-hidden transition-[translate,width] duration-200",
@@ -69,32 +69,32 @@ export default {
   "variants": {
     "color": {
       "primary": {
-        "link": "focus-visible:before:ring-primary",
-        "childLink": "focus-visible:before:ring-primary"
+        "link": "before:outline-primary/25",
+        "childLink": "before:outline-primary/25"
       },
       "secondary": {
-        "link": "focus-visible:before:ring-secondary",
-        "childLink": "focus-visible:before:ring-secondary"
+        "link": "before:outline-secondary/25",
+        "childLink": "before:outline-secondary/25"
       },
       "success": {
-        "link": "focus-visible:before:ring-success",
-        "childLink": "focus-visible:before:ring-success"
+        "link": "before:outline-success/25",
+        "childLink": "before:outline-success/25"
       },
       "info": {
-        "link": "focus-visible:before:ring-info",
-        "childLink": "focus-visible:before:ring-info"
+        "link": "before:outline-info/25",
+        "childLink": "before:outline-info/25"
       },
       "warning": {
-        "link": "focus-visible:before:ring-warning",
-        "childLink": "focus-visible:before:ring-warning"
+        "link": "before:outline-warning/25",
+        "childLink": "before:outline-warning/25"
       },
       "error": {
-        "link": "focus-visible:before:ring-error",
-        "childLink": "focus-visible:before:ring-error"
+        "link": "before:outline-error/25",
+        "childLink": "before:outline-error/25"
       },
       "neutral": {
-        "link": "focus-visible:before:ring-inverted",
-        "childLink": "focus-visible:before:ring-inverted"
+        "link": "before:outline-inverted/25",
+        "childLink": "before:outline-inverted/25"
       }
     },
     "highlightColor": {
@@ -119,7 +119,7 @@ export default {
         "childList": "grid p-2",
         "childLink": "px-3 py-2 gap-2 before:inset-x-px before:inset-y-0",
         "childLinkLabel": "font-medium",
-        "content": "absolute top-0 left-0 w-full max-h-[70vh] overflow-y-auto"
+        "content": "absolute top-0 start-0 w-full max-h-[70vh] overflow-y-auto"
       },
       "vertical": {
         "root": "flex-col",
@@ -192,7 +192,7 @@ export default {
       "class": {
         "childList": "ms-5 border-s border-default",
         "childItem": "ps-1.5 -ms-px",
-        "content": "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden"
+        "content": "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] data-[state=closed]:overflow-hidden"
       }
     },
     {

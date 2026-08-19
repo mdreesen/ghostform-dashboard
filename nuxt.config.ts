@@ -30,13 +30,16 @@ export default defineNuxtConfig({
       }
     },
     scheduledTasks: {
-      // Shifting '0 9 * * *' (Once a day) to '0 * * * *' (At minute 0 of every hour)
-      '0 * * * *': ['lead:reminders']
+      // Local-dev only (Vercel uses vercel.json). Once per day to mirror
+      // the Hobby-plan cron: '0 15 * * *' = 15:00 UTC (US morning).
+      '0 15 * * *': ['lead:reminders']
     },
   },
   routeRules: {
     // Disable caching so Vercel executes the function fresh
-    '/api/cron': { swr: false, cache: false }
+    '/api/cron': { swr: false, cache: false },
+    // Stripe webhook must run fresh and read the raw body for signature checks.
+    '/api/stripe/webhook': { swr: false, cache: false }
   },
 
   app: {
@@ -47,6 +50,12 @@ export default defineNuxtConfig({
       },
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap'
+        },
       ],
     }
   },
@@ -54,7 +63,7 @@ export default defineNuxtConfig({
     position: "top-right",
     duration: 5000,
     maxToasts: 5,
-    theme: "dark",
+    theme: "light",
     showIcon: true,
   },
   qrcode: {
