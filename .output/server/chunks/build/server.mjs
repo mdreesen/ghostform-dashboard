@@ -881,7 +881,7 @@ const _routes = [
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import('./login-CRq1aRn5.mjs')
+    component: () => import('./login-CIADrefe.mjs')
   },
   {
     name: "privacy-policy",
@@ -892,7 +892,7 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import('./signup-DdeI_Wne.mjs')
+    component: () => import('./signup-CcEuaD_u.mjs')
   },
   {
     name: "subscribe",

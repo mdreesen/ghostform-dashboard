@@ -97,7 +97,7 @@ useMotion(formRef, { ...formVarient() });
 
                 <transition name="slide-up" mode="out-in">
 
-                  <UDrawer title="Reset your password" :overlay="false" class="bg-black">
+                  <UDrawer title="Reset your password" :overlay="false" class="bg-white">
                     <UButton label="Forgot password" color="neutral" variant="subtle" />
 
                     <template #body>
@@ -132,14 +132,14 @@ useMotion(formRef, { ...formVarient() });
 
           <div v-motion="{ ...inputVarient() }" class="relative flex items-center justify-center py-4">
             <div class="absolute w-full border-t border-gray-700"></div>
-            <span class="relative z-10 bg-gray-800/80 backdrop-blur-md px-4 text-gray-400 text-sm">OR</span>
+            <span class="relative z-10 bg-gray-900/80 backdrop-blur-md px-4 text-white-800 text-sm">OR</span>
           </div>
 
           <!-- Signup Link -->
           <div class="text-center" v-motion="{ ...inputVarient() }">
             <p class="text-gray-400 text-sm">
               Don't have an account?
-              <NuxtLink to="/signup" class="text-blue-400 hover:underline transition-colors">Sign up</NuxtLink>
+              <NuxtLink to="/signup" class="text-[#B5563A] hover:underline transition-colors">Sign up</NuxtLink>
             </p>
           </div>
 
