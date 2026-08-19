@@ -56,7 +56,7 @@ declare global {
   const getMap: typeof import('../../node_modules/vue-chrts').getMap
   const getPin: typeof import('../../node_modules/vue-chrts').getPin
   const getRouteRules: typeof import('../../node_modules/nuxt/dist/app/composables/manifest').getRouteRules
-  const ghostFormUrl: typeof import('../../app/utils/ghostFormUrl').ghostFormUrl
+  const ghostFormUrl: typeof import('../../app/utils/ghostFormUrl_legacy').ghostFormUrl
   const h: typeof import('vue').h
   const hasInjectionContext: typeof import('vue').hasInjectionContext
   const inject: typeof import('vue').inject
@@ -173,7 +173,6 @@ declare global {
   const useMotions: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').useMotions
   const useNuxtApp: typeof import('../../node_modules/nuxt/dist/app/nuxt').useNuxtApp
   const useNuxtData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').useNuxtData
-  const useNuxtDevTools: typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools').useNuxtDevTools
   const useOverlay: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useOverlay').useOverlay
   const usePWA: typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index').usePWA
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview').usePreviewMode
@@ -338,7 +337,7 @@ declare module 'vue' {
     readonly getMap: UnwrapRef<typeof import('../../node_modules/vue-chrts')['getMap']>
     readonly getPin: UnwrapRef<typeof import('../../node_modules/vue-chrts')['getPin']>
     readonly getRouteRules: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/manifest')['getRouteRules']>
-    readonly ghostFormUrl: UnwrapRef<typeof import('../../app/utils/ghostFormUrl')['ghostFormUrl']>
+    readonly ghostFormUrl: UnwrapRef<typeof import('../../app/utils/ghostFormUrl_legacy')['ghostFormUrl']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hasInjectionContext: UnwrapRef<typeof import('vue')['hasInjectionContext']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
@@ -455,7 +454,6 @@ declare module 'vue' {
     readonly useMotions: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['useMotions']>
     readonly useNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['useNuxtApp']>
     readonly useNuxtData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['useNuxtData']>
-    readonly useNuxtDevTools: UnwrapRef<typeof import('../../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools')['useNuxtDevTools']>
     readonly useOverlay: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useOverlay')['useOverlay']>
     readonly usePWA: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['usePWA']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
