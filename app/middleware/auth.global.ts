@@ -1,42 +1,50 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const { loggedIn } = useUserSession();
 
-  // Not authenticated at all and hitting the root -> straight to login.
+  // Not authenticated at all and hitting the root -> login.
   if (!loggedIn.value && to.path === '/') {
     return navigateTo('/login');
   }
 
-  // ---- Auth + subscription gate for the dashboard ----
-  // A logged-out user is sent to login/signup. A logged-in user without an
-  // active subscription is sent to the plan page. The session's `loggedIn`
-  // flag can be stale, so we confirm against /api/user - the authoritative
-  // source. This is a UX guard; the server also enforces access on the data
-  // endpoints themselves (see requirePaidUser), so this can't be bypassed by
-  // skipping the client redirect.
-  if (to.path.startsWith('/dashboard')) {
-    if (!loggedIn.value) {
+  // Everything below only guards the dashboard.
+  if (!to.path.startsWith('/dashboard')) return;
+
+  if (!loggedIn.value) {
+    return navigateTo('/login');
+  }
+
+  // IMPORTANT: use useRequestFetch(), not $fetch.
+  // During SSR (i.e. a page refresh) a plain $fetch to an internal API sends
+  // NO cookies, so /api/user 401s even for a perfectly valid session and the
+  // user gets bounced. useRequestFetch forwards the incoming request's
+  // headers/cookies, so the session resolves correctly on both server and
+  // client.
+  const requestFetch = useRequestFetch();
+
+  try {
+    const me = await requestFetch<any>('/api/user');
+    const status = me?.subscriptionStatus;
+    const isActive =
+      status === 'active' || status === 'trialing' || me?.paid === true;
+
+    if (!isActive) {
+      return navigateTo('/subscribe');
+    }
+  } catch (error: any) {
+    const code = error?.statusCode ?? error?.response?.status;
+
+    // Session genuinely missing/invalid -> log in again.
+    if (code === 401) {
       return navigateTo('/login');
     }
 
-    try {
-      const me = await $fetch<any>('/api/user');
-      const status = me?.subscriptionStatus;
-      const isActive = status === 'active' || status === 'trialing' || me?.paid === true;
-
-      if (!isActive) {
-        return navigateTo('/subscribe');
-      }
-    } catch (error: any) {
-      // A 401 means the session is missing/invalid - send to login, not the
-      // plan page (this used to fail-safe to /subscribe for EVERY error,
-      // which was the wrong destination for "you're not logged in").
-      if (error?.statusCode === 401 || error?.response?.status === 401) {
-        return navigateTo('/login');
-      }
-      // Any other failure (network blip, real server error): fail safe to
-      // the plan page rather than letting an unconfirmed user into the
-      // dashboard.
-      return navigateTo('/subscribe');
-    }
+    // Anything else (network blip, 500, timeout) is OUR problem, not the
+    // user's. Fail OPEN and let them through: the server still enforces
+    // access on every data endpoint via requirePaidUser, so an unsubscribed
+    // user can't actually read anything. Previously this redirected to
+    // /subscribe, which kicked paying customers to the pricing page on any
+    // transient error.
+    console.error('[auth] subscription check failed:', code ?? error);
+    return;
   }
 });

@@ -74,7 +74,8 @@ const activeLeads = computed(() =>
           {{ heroLine }}
         </h1>
         <p class="text-[16px] text-[#8A847C] leading-relaxed max-w-[42ch] gf-rise" style="--d:.24s">
-          Lets get started!
+          Everyone below has gone quiet, come in new, or slipped past a follow-up
+          you meant to make. Start at the top.
         </p>
       </div>
     </section>
@@ -139,15 +140,21 @@ const activeLeads = computed(() =>
     </section>
 
     <!-- ── 03 Charts ────────────────────────────────────────── -->
-    <section v-if="chart_data" class="gf-depth mb-28">
+    <section class="gf-depth mb-28">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
         <span class="gf-eyebrow">03 — Trend</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Leads over time</span>
       </div>
-      <div class="flex flex-wrap items-center justify-evenly gap-12">
-        <ClientOnly><baseChartsLine :data="chart_data" /></ClientOnly>
-        <ClientOnly><baseChartsDonut :data="chart_data" /></ClientOnly>
-      </div>
+      <ClientOnly>
+        <div v-if="chart_data" class="flex flex-wrap items-center justify-evenly gap-12">
+          <baseChartsLine :data="chart_data" />
+          <baseChartsDonut :data="chart_data" />
+        </div>
+        <p v-else class="text-[14px] text-[#8A847C] py-10">Loading chart data…</p>
+        <template #fallback>
+          <p class="text-[14px] text-[#8A847C] py-10">Loading chart data…</p>
+        </template>
+      </ClientOnly>
     </section>
 
     <!-- ── 04 All leads ─────────────────────────────────────── -->

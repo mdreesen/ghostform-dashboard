@@ -34,6 +34,11 @@
   --ui-border: #DDD6C9;
   --ui-primary: #B5563A;
   --vis-donut-background-color: transparent;
+  --vis-dark-axis-label-color: #1F1B16;
+  --vis-dark-axis-tick-label-color: #1F1B16;
+  --vis-axis-tick-label-color: #1F1B16;
+  --vis-axis-label-color: #1F1B16;
+  --vis-legend-label-color: #1F1B16;
 }
 
 html { scroll-behavior: smooth; }

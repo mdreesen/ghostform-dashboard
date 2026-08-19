@@ -32,7 +32,6 @@ interface _GlobalComponents {
   BaseChartsLine: typeof import("../../app/components/base/Charts/Line.vue")['default']
   BaseDeleteProfile: typeof import("../../app/components/base/DeleteProfile.vue")['default']
   BaseEngineActive: typeof import("../../app/components/base/EngineActive.vue")['default']
-  BaseGhostForm: typeof import("../../app/components/base/GhostForm.vue")['default']
   BaseHeaderAuth: typeof import("../../app/components/base/Header/Auth.vue")['default']
   BaseHeaderBase: typeof import("../../app/components/base/Header/Base.vue")['default']
   BaseHeaderSection: typeof import("../../app/components/base/Header/Section.vue")['default']
@@ -247,7 +246,6 @@ interface _GlobalComponents {
   LazyBaseChartsLine: LazyComponent<typeof import("../../app/components/base/Charts/Line.vue")['default']>
   LazyBaseDeleteProfile: LazyComponent<typeof import("../../app/components/base/DeleteProfile.vue")['default']>
   LazyBaseEngineActive: LazyComponent<typeof import("../../app/components/base/EngineActive.vue")['default']>
-  LazyBaseGhostForm: LazyComponent<typeof import("../../app/components/base/GhostForm.vue")['default']>
   LazyBaseHeaderAuth: LazyComponent<typeof import("../../app/components/base/Header/Auth.vue")['default']>
   LazyBaseHeaderBase: LazyComponent<typeof import("../../app/components/base/Header/Base.vue")['default']>
   LazyBaseHeaderSection: LazyComponent<typeof import("../../app/components/base/Header/Section.vue")['default']>
