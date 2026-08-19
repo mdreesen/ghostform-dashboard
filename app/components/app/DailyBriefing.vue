@@ -1,13 +1,5 @@
 <script setup lang="ts">
-/**
- * Daily "Who to Contact" briefing.
- * Reads from /api/briefing (cached under 'briefing', prefetched in the
- * authenticated layout). Ranked list bucketed into Overdue / New / Cold, each
- * row showing time since last contact plus one-tap actions.
- *
- * Marking contacted (or sending a message) removes the lead optimistically with
- * a 3D file-away animation, then persists.
- */
+
 interface BriefingLead {
   _id: string
   name: string

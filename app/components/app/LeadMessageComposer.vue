@@ -85,18 +85,12 @@ async function afterSend(label: string) {
   source.value = null
 }
 
-/**
- * Text path: open the device's Messages app with the draft prefilled, then
- * record the touch. We can't confirm they hit send — but they took a deliberate
- * action, and an over-eager stamp just means the lead resurfaces later once it
- * goes cold again, which is the safer failure direction than nagging them.
- */
 async function openMessages() {
   if (!hasPhone.value || !message.value.trim()) return
   sending.value = true
   try {
     window.location.href = smsHref.value
-    await $fetch(`/api/leads/${props.leadId}/contacted`, { method: 'POST' })
+    // await $fetch(`/api/leads/${props.leadId}/contacted`, { method: 'POST' })
     await afterSend(`Opened Messages for ${props.leadName || 'lead'}`)
   } catch {
     toast.error('Could not record the contact. The message app should still open.')

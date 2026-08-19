@@ -54,6 +54,10 @@ body {
 
 textarea { field-sizing: content; }
 
+input {
+  color: #1F1B16;
+}
+
 /* Legacy hook kept so any remaining `.background` usages don't go black */
 .background { background-color: #F7F4EF; }
 
