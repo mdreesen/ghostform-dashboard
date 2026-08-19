@@ -93,6 +93,7 @@ async function markContacted() {
               v-if="lead?._id"
               :lead-id="String(lead._id)"
               :lead-name="lead?.name"
+              :lead-phone="lead?.phone"
             />
           </ClientOnly>
           <button

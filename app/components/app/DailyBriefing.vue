@@ -160,6 +160,7 @@ async function markContacted(lead: BriefingLead) {
           <appLeadMessageComposer
             :lead-id="lead._id"
             :lead-name="lead.name"
+            :lead-phone="lead.phone"
             @sent="onLeadSent"
           />
           <button
