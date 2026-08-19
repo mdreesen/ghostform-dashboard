@@ -898,7 +898,7 @@ const _routes = [
     name: "subscribe",
     path: "/subscribe",
     meta: { ...__nuxt_page_meta || {}, ...{ "groups": ["payment"] } },
-    component: () => import('./subscribe-xZWqhbBj.mjs')
+    component: () => import('./subscribe-CurHBC2f.mjs')
   },
   {
     name: "id-resetpassword",
