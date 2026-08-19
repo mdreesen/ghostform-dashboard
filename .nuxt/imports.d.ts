@@ -36,7 +36,7 @@ export { definePageMeta, PageMeta } from '#app/composables/pages';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
 export { useCSV } from '../app/utils/csv';
 export { date, month, timeZone, formatDate, useFormatDate, yearMonthDayFormat } from '../app/utils/date';
-export { ghostFormUrl } from '../app/utils/ghostFormUrl_legacy';
+export { ghostFormUrl } from '../app/utils/ghostFormUrl';
 export { default as loggedInUser } from '../app/utils/loggedInUser';
 export { nameSpreadsheet } from '../app/utils/names';
 export { useSpreadsheet, LeadRecord } from '../app/utils/spreadsheet';
@@ -61,3 +61,4 @@ export { useScrollspy } from '../node_modules/@nuxt/ui/dist/runtime/composables/
 export { useTour } from '../node_modules/@nuxt/ui/dist/runtime/composables/useTour';
 export { useToast } from '../node_modules/nuxt-notify/dist/runtime/composables/useToast';
 export { usePWA, useTransparentPwaIcon, useMaskablePwaIcon, useFaviconPwaIcon, useApplePwaIcon, useAppleSplashScreenPwaIcon } from '../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index';
+export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

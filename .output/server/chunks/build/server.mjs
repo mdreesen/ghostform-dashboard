@@ -793,12 +793,8 @@ const __nuxt_page_meta$8 = {
 const __nuxt_page_meta$7 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$6 = {
-  layout: "authenticated"
-};
-const __nuxt_page_meta$5 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$6 = { layout: "authenticated" };
+const __nuxt_page_meta$5 = { layout: "authenticated" };
 const __nuxt_page_meta$4 = {
   layout: "authenticated"
 };
@@ -843,13 +839,13 @@ const _routes = [
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-BkJEiKDD.mjs')
+    component: () => import('./index-BOm2ygst.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./index-kYWtLSQQ.mjs')
+    component: () => import('./index-Dajmh8X8.mjs')
   },
   {
     name: "dashboard-home",
@@ -867,7 +863,7 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-DmxeB_iw.mjs')
+    component: () => import('./index-oQJ-HvxV.mjs')
   },
   {
     name: "dashboard",
