@@ -44,7 +44,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: 'GhostForm', // default fallback title
+      title: 'GhostForm Dashboard', // default fallback title
       htmlAttrs: {
         lang: 'en',
       },
@@ -105,8 +105,8 @@ export default defineNuxtConfig({
   pwa: {
     /* PWA options */
     manifest: {
-      name: 'GhostForm',
-      short_name: 'GhostForm',
+      name: 'GhostForm Dashboard',
+      short_name: 'GhostForm Dashboard',
       description: 'Manifest your leads instantly.',
       orientation: 'natural',
       lang: 'en',
