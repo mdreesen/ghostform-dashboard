@@ -1,1 +1,0 @@
-import{e as a,s as o,c as r,K as n,A as _,o as c}from"./RM0Ckf33.js";const p=a({__name:"form",async setup(l){let e,t;return[e,t]=o(()=>_("/api/user",{key:"get_user",lazy:!0},"$CMfEJoZiRU")),await e,t(),(s,u)=>(c(),r("main",null,[n(s.$slots,"default")]))}});export{p as default};

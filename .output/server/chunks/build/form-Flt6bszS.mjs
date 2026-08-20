@@ -3,6 +3,7 @@ import { ssrRenderAttrs, ssrRenderSlot } from 'vue/server-renderer';
 import { b as useFetch } from './server.mjs';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

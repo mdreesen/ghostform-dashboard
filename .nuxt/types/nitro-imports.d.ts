@@ -164,6 +164,7 @@ declare global {
   const sendRedirect: typeof import('../../node_modules/h3').sendRedirect
   const sendStream: typeof import('../../node_modules/h3').sendStream
   const sendWebResponse: typeof import('../../node_modules/h3').sendWebResponse
+  const sendWelcomeEmail: typeof import('../../server/utils/welcomeEmail').sendWelcomeEmail
   const serveStatic: typeof import('../../node_modules/h3').serveStatic
   const sessionHooks: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').sessionHooks
   const setCookie: typeof import('../../node_modules/h3').setCookie
@@ -424,3 +425,4 @@ export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/se
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';
+export { sendWelcomeEmail } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/welcomeEmail';

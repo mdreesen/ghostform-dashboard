@@ -1,7 +1,8 @@
-import { a as defineEventHandler, h as readBody, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, i as readBody, b as createError } from '../../../nitro/nitro.mjs';
 import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

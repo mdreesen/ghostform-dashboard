@@ -38,7 +38,33 @@ const userSchema = new Schema({
   timezone: { type: String, default: 'America/Denver' },
   // How many days of silence before a lead is considered "cold" and
   // resurfaced in the daily briefing. Per-realtor tunable.
-  coldLeadAfterDays: { type: Number, default: 14 }
+  coldLeadAfterDays: { type: Number, default: 14 },
+  // Whether the realtor has finished (or skipped) the guided tour.
+  tour_completed: { type: Boolean, default: false },
+
+  // ============================================================
+  // Social voice profile — captured once, then used to make every
+  // generated post sound like this specific realtor rather than
+  // generic real-estate filler. Without it, AI posts all read the
+  // same and agents stop using the feature.
+  // ============================================================
+  voice: {
+    // How they talk: 'warm' | 'straight' | 'playful' | 'polished'
+    tone: { type: String, default: 'warm' },
+    // Free text: "former teacher, two kids, obsessed with trail running"
+    about: { type: String, default: '' },
+    // What they want to be known for locally
+    focus: { type: String, default: '' },
+    // 'none' | 'some' | 'lots'
+    emoji: { type: String, default: 'some' },
+    // 'none' | 'few' | 'many'
+    hashtags: { type: String, default: 'few' },
+    // Words/phrases they actually use, and ones to avoid
+    phrases: { type: String, default: '' },
+    avoid: { type: String, default: '' },
+    // Pasted samples of their real posts — by far the strongest signal
+    samples: { type: String, default: '' }
+  }
 }, { timestamps: true })
 
 export default mongoose.models.User || mongoose.model('User', userSchema)

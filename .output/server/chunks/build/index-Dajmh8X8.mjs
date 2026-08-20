@@ -3,7 +3,7 @@ import { _ as __nuxt_component_0, a as _sfc_main$4 } from './Modal-BDoaUPlC.mjs'
 import { u as useHead, K as useNuxtData, q as _sfc_main$8, _ as __nuxt_component_0$1, w as reactivePick, L as useRuntimeConfig } from './server.mjs';
 import { defineComponent, computed, mergeProps, unref, ref, withCtx, createVNode, createTextVNode, useAttrs, toRef, h, resolveDynamicComponent, useSSRContext } from 'vue';
 import { ssrRenderAttrs, ssrRenderStyle, ssrRenderComponent, ssrRenderList, ssrInterpolate, ssrRenderAttr, ssrRenderClass, ssrIncludeBooleanAttr, ssrLooseContain, ssrLooseEqual, ssrRenderVNode } from 'vue/server-renderer';
-import { E as defu } from '../nitro/nitro.mjs';
+import { G as defu } from '../nitro/nitro.mjs';
 import { encode } from 'uqr';
 import './utils-y1felsNN.mjs';
 import 'aria-hidden';
@@ -25,6 +25,7 @@ import 'devalue';
 import 'unhead/plugins';
 import 'unhead/utils';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

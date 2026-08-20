@@ -1,4 +1,5 @@
 import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import mongoose, { Schema } from 'mongoose';
+import { Resend } from 'resend';
 import http, { Server as Server$1 } from 'node:http';
 import https, { Server } from 'node:https';
 import nodeCrypto, { createHash } from 'node:crypto';
@@ -5308,7 +5309,7 @@ function _expandFromEnv(value) {
 const _inlineRuntimeConfig = {
   "app": {
     "baseURL": "/",
-    "buildId": "a7678bac-983b-4f49-93f7-99bb387b30a5",
+    "buildId": "7b91d385-91c8-4fb5-8bf6-47fbac5d711d",
     "buildAssetsDir": "/_nuxt/",
     "cdnURL": ""
   },
@@ -6191,646 +6192,660 @@ const assets = {
   "/favicon.ico": {
     "type": "image/vnd.microsoft.icon",
     "etag": "\"4a82-Cq74D5kyjiUvih5Pxl9gJIOqLII\"",
-    "mtime": "2026-08-19T20:07:05.540Z",
+    "mtime": "2026-08-20T03:18:20.329Z",
     "size": 19074,
     "path": "../public/favicon.ico"
-  },
-  "/robots.txt": {
-    "type": "text/plain; charset=utf-8",
-    "etag": "\"41-FluGBVH9Oar1S8FXibDgHSdYMFM\"",
-    "mtime": "2026-08-19T20:07:05.540Z",
-    "size": 65,
-    "path": "../public/robots.txt"
   },
   "/manifest.webmanifest": {
     "type": "application/manifest+json",
     "etag": "\"31c-NITbSR1r/+vEZ6vGOHRC9YLm8ig\"",
-    "mtime": "2026-08-19T20:07:05.513Z",
+    "mtime": "2026-08-20T03:18:20.309Z",
     "size": 796,
     "path": "../public/manifest.webmanifest"
   },
+  "/robots.txt": {
+    "type": "text/plain; charset=utf-8",
+    "etag": "\"41-FluGBVH9Oar1S8FXibDgHSdYMFM\"",
+    "mtime": "2026-08-20T03:18:20.329Z",
+    "size": 65,
+    "path": "../public/robots.txt"
+  },
   "/sw.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"f11-3xfZJ6AQONr7Pavt51OZwM9eVvQ\"",
-    "mtime": "2026-08-19T20:07:06.649Z",
-    "size": 3857,
+    "etag": "\"f70-GzKj+WoujkcLegfE4ggtAVdtS00\"",
+    "mtime": "2026-08-20T03:18:21.300Z",
+    "size": 3952,
     "path": "../public/sw.js"
   },
   "/workbox-fdfec1f0.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"5b6d-3rd/N7QbM5KIdY0Q5H6EUvcK2EE\"",
-    "mtime": "2026-08-19T20:07:06.650Z",
+    "mtime": "2026-08-20T03:18:21.300Z",
     "size": 23405,
     "path": "../public/workbox-fdfec1f0.js"
   },
   "/_fonts/178SDQEgKlkYIwN3m_zkIjcMBXox4CVikxxdM0ZM8vo-jb38HpZEzI0_yhPLZ-Yy9g2MdhSlJbWEEPtE4J-7mA4.woff2": {
     "type": "font/woff2",
     "etag": "\"2998-n4Ng0qtMjpor9BjKimp6sLXh5BI\"",
-    "mtime": "2026-08-19T20:07:05.520Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 10648,
     "path": "../public/_fonts/178SDQEgKlkYIwN3m_zkIjcMBXox4CVikxxdM0ZM8vo-jb38HpZEzI0_yhPLZ-Yy9g2MdhSlJbWEEPtE4J-7mA4.woff2"
   },
   "/_fonts/5M2MKUFWnEpuT8NeCYosby4H1wQsStpPWE7MBNFFD6Q-6gJALEDS7yNhRMCqenJPe8GZSicXSdryDX23b39FgW8.woff2": {
     "type": "font/woff2",
     "etag": "\"4e30-CJVl1taa8AaNO619z7s06dRAxFQ\"",
-    "mtime": "2026-08-19T20:07:05.521Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 20016,
     "path": "../public/_fonts/5M2MKUFWnEpuT8NeCYosby4H1wQsStpPWE7MBNFFD6Q-6gJALEDS7yNhRMCqenJPe8GZSicXSdryDX23b39FgW8.woff2"
   },
   "/_fonts/AIcocMSXl6nLNQXbUptJf69FjdmzotJy-Fioo4iy220-SB6HQ5Gm3Vcgx3qj0cg_Wze4ux2YBnw264Bp9JBOtqc.woff2": {
     "type": "font/woff2",
     "etag": "\"2f04-ntsyPpeWIrXM3hz1Nt0hG95RmwU\"",
-    "mtime": "2026-08-19T20:07:05.520Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 12036,
     "path": "../public/_fonts/AIcocMSXl6nLNQXbUptJf69FjdmzotJy-Fioo4iy220-SB6HQ5Gm3Vcgx3qj0cg_Wze4ux2YBnw264Bp9JBOtqc.woff2"
-  },
-  "/_fonts/ERDypvkxXdChOV_B5u1ryQXmRbXDEMV5qjyhhW3xYeU-k61Y5mwieeHUzISWavQeKX6iyBBLnhRtxyom_DNxZzo.woff2": {
-    "type": "font/woff2",
-    "etag": "\"4a64-m06OCqyGws0mpyGBBfmbbVtFPSU\"",
-    "mtime": "2026-08-19T20:07:05.520Z",
-    "size": 19044,
-    "path": "../public/_fonts/ERDypvkxXdChOV_B5u1ryQXmRbXDEMV5qjyhhW3xYeU-k61Y5mwieeHUzISWavQeKX6iyBBLnhRtxyom_DNxZzo.woff2"
   },
   "/_fonts/CFNPQVcnBImzX0EtDNVhm6rxBn1xmGUJ07BRlOI64c-AuN8M25eo79PWJa2sA8bcOzJYOX3pV7Xznm4ZDHm7L4.woff2": {
     "type": "font/woff2",
     "etag": "\"6afc-065UyE/loH4v/KPT2cqQjWbu2Yc\"",
-    "mtime": "2026-08-19T20:07:05.520Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 27388,
     "path": "../public/_fonts/CFNPQVcnBImzX0EtDNVhm6rxBn1xmGUJ07BRlOI64c-AuN8M25eo79PWJa2sA8bcOzJYOX3pV7Xznm4ZDHm7L4.woff2"
+  },
+  "/_fonts/ERDypvkxXdChOV_B5u1ryQXmRbXDEMV5qjyhhW3xYeU-k61Y5mwieeHUzISWavQeKX6iyBBLnhRtxyom_DNxZzo.woff2": {
+    "type": "font/woff2",
+    "etag": "\"4a64-m06OCqyGws0mpyGBBfmbbVtFPSU\"",
+    "mtime": "2026-08-20T03:18:20.312Z",
+    "size": 19044,
+    "path": "../public/_fonts/ERDypvkxXdChOV_B5u1ryQXmRbXDEMV5qjyhhW3xYeU-k61Y5mwieeHUzISWavQeKX6iyBBLnhRtxyom_DNxZzo.woff2"
   },
   "/_fonts/HgJel4iAS5mDVqJaDUYKmxaMJg4zKHTGmyD1FQkOsTM-2hVuuQIZ4GSGMgNv6dvlqz7cfD6lr7xLohUph7OCgFg.woff2": {
     "type": "font/woff2",
     "etag": "\"bd30-HcBE9IJP1a9r/tZ/7ki+cPoGnz8\"",
-    "mtime": "2026-08-19T20:07:05.521Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 48432,
     "path": "../public/_fonts/HgJel4iAS5mDVqJaDUYKmxaMJg4zKHTGmyD1FQkOsTM-2hVuuQIZ4GSGMgNv6dvlqz7cfD6lr7xLohUph7OCgFg.woff2"
   },
   "/_fonts/HhYBt2tJo2k_2FsC1MSJ02On6MHSDmuCPvumUmOm5zc-yFegZxCeG5mKQV3aepxTxPDsb0t6St8NI3MRVbeEMG4.woff2": {
     "type": "font/woff2",
     "etag": "\"9e70-0fSSZlKD7bJtOv0dU+bvhgiNq/c\"",
-    "mtime": "2026-08-19T20:07:05.521Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 40560,
     "path": "../public/_fonts/HhYBt2tJo2k_2FsC1MSJ02On6MHSDmuCPvumUmOm5zc-yFegZxCeG5mKQV3aepxTxPDsb0t6St8NI3MRVbeEMG4.woff2"
-  },
-  "/_fonts/IbbswF-_Vv86nKnoVzycaklhFj9_jJEnyisnqN6LmPo-m6Ab3Re0t4DnCyR1DwEHCEvwfevkTcA65xJQ4ZPG4co.woff2": {
-    "type": "font/woff2",
-    "etag": "\"166bc-r/t3z77mQ+DDMQr+Pkm5yR2/0FE\"",
-    "mtime": "2026-08-19T20:07:05.521Z",
-    "size": 91836,
-    "path": "../public/_fonts/IbbswF-_Vv86nKnoVzycaklhFj9_jJEnyisnqN6LmPo-m6Ab3Re0t4DnCyR1DwEHCEvwfevkTcA65xJQ4ZPG4co.woff2"
   },
   "/_fonts/KCD5gdyGvwD04J2YZVfG5P-c82WM-ESA68SM8qCokq0-VU4O6gA3mknWHXkXUMY7aShByLKqEZOCYay7MuxAVuU.woff2": {
     "type": "font/woff2",
     "etag": "\"c9b4-M34QudaP9GdXqIjZ6Tla/ROWz5M\"",
-    "mtime": "2026-08-19T20:07:05.522Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 51636,
     "path": "../public/_fonts/KCD5gdyGvwD04J2YZVfG5P-c82WM-ESA68SM8qCokq0-VU4O6gA3mknWHXkXUMY7aShByLKqEZOCYay7MuxAVuU.woff2"
   },
-  "/_fonts/XBS0oYP4cksqAElU3IMxAgwpzDzoJIEwfkOV-ozb58o-GfiQeHg5K0elW9dt1_DFU0HCdwAzUNFfFmYXBrpZ7S0.woff2": {
+  "/_fonts/IbbswF-_Vv86nKnoVzycaklhFj9_jJEnyisnqN6LmPo-m6Ab3Re0t4DnCyR1DwEHCEvwfevkTcA65xJQ4ZPG4co.woff2": {
     "type": "font/woff2",
-    "etag": "\"2d10-e7FQEQbLCqMJBoSFzJ7HVEw7B/8\"",
-    "mtime": "2026-08-19T20:07:05.521Z",
-    "size": 11536,
-    "path": "../public/_fonts/XBS0oYP4cksqAElU3IMxAgwpzDzoJIEwfkOV-ozb58o-GfiQeHg5K0elW9dt1_DFU0HCdwAzUNFfFmYXBrpZ7S0.woff2"
+    "etag": "\"166bc-r/t3z77mQ+DDMQr+Pkm5yR2/0FE\"",
+    "mtime": "2026-08-20T03:18:20.312Z",
+    "size": 91836,
+    "path": "../public/_fonts/IbbswF-_Vv86nKnoVzycaklhFj9_jJEnyisnqN6LmPo-m6Ab3Re0t4DnCyR1DwEHCEvwfevkTcA65xJQ4ZPG4co.woff2"
+  },
+  "/_fonts/ev87GAhzYOSqfvXc9scW-ZQJf7sUSUyGMr0CTeNoHF4-OPxwrsi67j0FWChFcXKyN9HLyQ7mKYh_4Vn2yBtMd_0.woff2": {
+    "type": "font/woff2",
+    "etag": "\"329c-pgjdqEJ/pRymFTiPlGRBo4a6JGc\"",
+    "mtime": "2026-08-20T03:18:20.313Z",
+    "size": 12956,
+    "path": "../public/_fonts/ev87GAhzYOSqfvXc9scW-ZQJf7sUSUyGMr0CTeNoHF4-OPxwrsi67j0FWChFcXKyN9HLyQ7mKYh_4Vn2yBtMd_0.woff2"
   },
   "/_fonts/UzhR3nAaijOxr33OombACPQO7z-6yxLefOdxL2qrdkM-a0beAYA6HgY0fQ5vpHiCL_P_ChfPRJkoN6xel0ZbT_M.woff2": {
     "type": "font/woff2",
     "etag": "\"4938-N3S2eKZrRgCJpY2MefXWBufCQaA\"",
-    "mtime": "2026-08-19T20:07:05.522Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 18744,
     "path": "../public/_fonts/UzhR3nAaijOxr33OombACPQO7z-6yxLefOdxL2qrdkM-a0beAYA6HgY0fQ5vpHiCL_P_ChfPRJkoN6xel0ZbT_M.woff2"
   },
   "/_fonts/ez4lVSyRqqCUuKH6dN6OoXAdOd1Tig7Lx0sxWNqSyss-FAPjTJvN2otlgkrcoQlc70SE03hjkWoDwAr5QrM_lH4.woff2": {
     "type": "font/woff2",
     "etag": "\"2828-F3GDdFn8yIqL/ZsbzNDCHlQrmMo\"",
-    "mtime": "2026-08-19T20:07:05.522Z",
+    "mtime": "2026-08-20T03:18:20.313Z",
     "size": 10280,
     "path": "../public/_fonts/ez4lVSyRqqCUuKH6dN6OoXAdOd1Tig7Lx0sxWNqSyss-FAPjTJvN2otlgkrcoQlc70SE03hjkWoDwAr5QrM_lH4.woff2"
   },
   "/_fonts/_Q-se7FdIUrHjDmNsUL0V1o4K296p_VatHM-Pv4kyIc-poDrWqUb4dHlPgVcAp1htO9EsFEw_Puw06dBCjRLmMs.woff2": {
     "type": "font/woff2",
     "etag": "\"b238-3zvpRFpuhxtq7yyHaRlbSb0N5E0\"",
-    "mtime": "2026-08-19T20:07:05.522Z",
+    "mtime": "2026-08-20T03:18:20.312Z",
     "size": 45624,
     "path": "../public/_fonts/_Q-se7FdIUrHjDmNsUL0V1o4K296p_VatHM-Pv4kyIc-poDrWqUb4dHlPgVcAp1htO9EsFEw_Puw06dBCjRLmMs.woff2"
-  },
-  "/_fonts/ev87GAhzYOSqfvXc9scW-ZQJf7sUSUyGMr0CTeNoHF4-OPxwrsi67j0FWChFcXKyN9HLyQ7mKYh_4Vn2yBtMd_0.woff2": {
-    "type": "font/woff2",
-    "etag": "\"329c-pgjdqEJ/pRymFTiPlGRBo4a6JGc\"",
-    "mtime": "2026-08-19T20:07:05.522Z",
-    "size": 12956,
-    "path": "../public/_fonts/ev87GAhzYOSqfvXc9scW-ZQJf7sUSUyGMr0CTeNoHF4-OPxwrsi67j0FWChFcXKyN9HLyQ7mKYh_4Vn2yBtMd_0.woff2"
-  },
-  "/_fonts/ffbDlYcgTaEOnso-ipkZyoviU7H_qu1vdDKLzdRMiGk-z0cz_vXe9FMQpUr1XPibpV3rF_SBN35ESvr3xAG3hgg.woff2": {
-    "type": "font/woff2",
-    "etag": "\"2c08-0jmpRV2Mkkir4F2SgNetftT+X2g\"",
-    "mtime": "2026-08-19T20:07:05.522Z",
-    "size": 11272,
-    "path": "../public/_fonts/ffbDlYcgTaEOnso-ipkZyoviU7H_qu1vdDKLzdRMiGk-z0cz_vXe9FMQpUr1XPibpV3rF_SBN35ESvr3xAG3hgg.woff2"
   },
   "/_fonts/gKY12I0xR6XlZGrxmgE6Ajg7dolnFcwq2-CgW16emfc-X7w6QUwy0G27X1sBOv3U2zKeLNfjYiwTzwCsHp_sD_I.woff2": {
     "type": "font/woff2",
     "etag": "\"5084-wzEMqHmSXhs0bT3Vh/Szi16YDd8\"",
-    "mtime": "2026-08-19T20:07:05.523Z",
+    "mtime": "2026-08-20T03:18:20.313Z",
     "size": 20612,
     "path": "../public/_fonts/gKY12I0xR6XlZGrxmgE6Ajg7dolnFcwq2-CgW16emfc-X7w6QUwy0G27X1sBOv3U2zKeLNfjYiwTzwCsHp_sD_I.woff2"
+  },
+  "/_fonts/ffbDlYcgTaEOnso-ipkZyoviU7H_qu1vdDKLzdRMiGk-z0cz_vXe9FMQpUr1XPibpV3rF_SBN35ESvr3xAG3hgg.woff2": {
+    "type": "font/woff2",
+    "etag": "\"2c08-0jmpRV2Mkkir4F2SgNetftT+X2g\"",
+    "mtime": "2026-08-20T03:18:20.313Z",
+    "size": 11272,
+    "path": "../public/_fonts/ffbDlYcgTaEOnso-ipkZyoviU7H_qu1vdDKLzdRMiGk-z0cz_vXe9FMQpUr1XPibpV3rF_SBN35ESvr3xAG3hgg.woff2"
   },
   "/_fonts/hlBhAijgZdVxBjR74rbt7K71I0wV1mB3jH1hVBCHlKk-FRNF6Y0H_i7oP64VN4wUyVdHpXDaloc-0nVuax5BR6w.woff2": {
     "type": "font/woff2",
     "etag": "\"8368-LmGNgqQjbZky4QjuDYsGzoM544k\"",
-    "mtime": "2026-08-19T20:07:05.523Z",
+    "mtime": "2026-08-20T03:18:20.313Z",
     "size": 33640,
     "path": "../public/_fonts/hlBhAijgZdVxBjR74rbt7K71I0wV1mB3jH1hVBCHlKk-FRNF6Y0H_i7oP64VN4wUyVdHpXDaloc-0nVuax5BR6w.woff2"
+  },
+  "/_fonts/XBS0oYP4cksqAElU3IMxAgwpzDzoJIEwfkOV-ozb58o-GfiQeHg5K0elW9dt1_DFU0HCdwAzUNFfFmYXBrpZ7S0.woff2": {
+    "type": "font/woff2",
+    "etag": "\"2d10-e7FQEQbLCqMJBoSFzJ7HVEw7B/8\"",
+    "mtime": "2026-08-20T03:18:20.312Z",
+    "size": 11536,
+    "path": "../public/_fonts/XBS0oYP4cksqAElU3IMxAgwpzDzoJIEwfkOV-ozb58o-GfiQeHg5K0elW9dt1_DFU0HCdwAzUNFfFmYXBrpZ7S0.woff2"
   },
   "/_fonts/pZrE-slef2USYSteHMofh38tG-0x5V8w3-m5O8o55BA-2lkoGCOmO7jeyF1uZ0eej8W_w9soLdR904X6bIAsF0k.woff2": {
     "type": "font/woff2",
     "etag": "\"8ed0-eh/Gun7T5jVPFsV7DfQgO0ITAUc\"",
-    "mtime": "2026-08-19T20:07:05.523Z",
+    "mtime": "2026-08-20T03:18:20.313Z",
     "size": 36560,
     "path": "../public/_fonts/pZrE-slef2USYSteHMofh38tG-0x5V8w3-m5O8o55BA-2lkoGCOmO7jeyF1uZ0eej8W_w9soLdR904X6bIAsF0k.woff2"
   },
   "/_fonts/zkQRrBN3g9v_dVJWVkYryI2HWN4gfl77yu_FVFWNDYY-dCKEZ5lgZTVD30ATELD5lKDbBeBCP_ph7B4YtZQnSns.woff2": {
     "type": "font/woff2",
     "etag": "\"14d18-Uh4k0XQeDHQ4ioQoYVD4qScmVZc\"",
-    "mtime": "2026-08-19T20:07:05.523Z",
+    "mtime": "2026-08-20T03:18:20.313Z",
     "size": 85272,
     "path": "../public/_fonts/zkQRrBN3g9v_dVJWVkYryI2HWN4gfl77yu_FVFWNDYY-dCKEZ5lgZTVD30ATELD5lKDbBeBCP_ph7B4YtZQnSns.woff2"
   },
   "/_fonts/zp_5eX_kcCb1NC9W_nqDxOyw80DU-fOCfH6vtlxk4Z8-noxSJKtVKEVnythGOQu3KozvszjDOTsJmBloptS0j1U.woff2": {
     "type": "font/woff2",
     "etag": "\"64f4-tK7ixsAzSz1n1+rZ0d41uh7QBHY\"",
-    "mtime": "2026-08-19T20:07:05.523Z",
+    "mtime": "2026-08-20T03:18:20.313Z",
     "size": 25844,
     "path": "../public/_fonts/zp_5eX_kcCb1NC9W_nqDxOyw80DU-fOCfH6vtlxk4Z8-noxSJKtVKEVnythGOQu3KozvszjDOTsJmBloptS0j1U.woff2"
   },
-  "/_nuxt/3o406Gi4.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"1559-D7eNTVswJJM3MxiXEkc9JEC/OSE\"",
-    "mtime": "2026-08-19T20:07:05.529Z",
-    "size": 5465,
-    "path": "../public/_nuxt/3o406Gi4.js"
+  "/images/logo-icon.webp": {
+    "type": "image/webp",
+    "etag": "\"4a82-Cq74D5kyjiUvih5Pxl9gJIOqLII\"",
+    "mtime": "2026-08-20T03:18:20.329Z",
+    "size": 19074,
+    "path": "../public/images/logo-icon.webp"
   },
-  "/_nuxt/5n1Y7vy-.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"26b-dgJcI3OKTwbWsZjN4OQ/RJYSgAE\"",
-    "mtime": "2026-08-19T20:07:05.529Z",
-    "size": 619,
-    "path": "../public/_nuxt/5n1Y7vy-.js"
+  "/images/maskable-icon.png": {
+    "type": "image/png",
+    "etag": "\"10776-rXNH1SRllJ7mDAxOd7BPoWAdctY\"",
+    "mtime": "2026-08-20T03:18:20.330Z",
+    "size": 67446,
+    "path": "../public/images/maskable-icon.png"
   },
-  "/_nuxt/B1jZ417w.js": {
+  "/_nuxt/1-M_puPu.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"350b-xQSV0zBCyug5saJFsZmjRr+HhgE\"",
-    "mtime": "2026-08-19T20:07:05.529Z",
-    "size": 13579,
-    "path": "../public/_nuxt/B1jZ417w.js"
+    "etag": "\"3ba2-8qypusoEAR+hHJaEZj2GMAjmDtw\"",
+    "mtime": "2026-08-20T03:18:20.319Z",
+    "size": 15266,
+    "path": "../public/_nuxt/1-M_puPu.js"
   },
-  "/_nuxt/B4EoU2sE.js": {
+  "/_nuxt/5mn9ZmLQ.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"b8a-A5FqNm1z9TeUD9vlNfD7EwBH5xs\"",
-    "mtime": "2026-08-19T20:07:05.529Z",
-    "size": 2954,
-    "path": "../public/_nuxt/B4EoU2sE.js"
-  },
-  "/_nuxt/B59cOIHz.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"300-uKjw2mkmegJTOtNuWC2dw4heNeg\"",
-    "mtime": "2026-08-19T20:07:05.529Z",
+    "etag": "\"300-i9OtngTTlbUJJUnahO5gckuAvQw\"",
+    "mtime": "2026-08-20T03:18:20.319Z",
     "size": 768,
-    "path": "../public/_nuxt/B59cOIHz.js"
+    "path": "../public/_nuxt/5mn9ZmLQ.js"
   },
   "/_nuxt/BBnX5xw4.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"1674-HyZL1eUl9QW4o4RCa0ogOE8HLCk\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
+    "mtime": "2026-08-20T03:18:20.320Z",
     "size": 5748,
     "path": "../public/_nuxt/BBnX5xw4.js"
   },
-  "/_nuxt/BG0Lzpya.js": {
+  "/_nuxt/BFLoh4ic.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"171-z7tMj0bFDiCDlW3X5zdNIVZWDxM\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
+    "etag": "\"1559-BNG23xi+tjND2yRbY6n8Cuxyfdg\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 5465,
+    "path": "../public/_nuxt/BFLoh4ic.js"
+  },
+  "/_nuxt/BDhUDwhF.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"140e-PaMyETxiyuZANb+koMqGUZ/JcB4\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 5134,
+    "path": "../public/_nuxt/BDhUDwhF.js"
+  },
+  "/_nuxt/BLMIWanL.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"eb9-Q0EdIdQvBlR1cHolC5ND40AUkY0\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 3769,
+    "path": "../public/_nuxt/BLMIWanL.js"
+  },
+  "/_nuxt/BOCCkVhq.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"171-jYZ1OY3HorJ6rPD5H0szgtsX/kA\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
     "size": 369,
-    "path": "../public/_nuxt/BG0Lzpya.js"
+    "path": "../public/_nuxt/BOCCkVhq.js"
   },
-  "/_nuxt/BGihvDxp.js": {
+  "/_nuxt/BQJv40aq.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"326a-H5cKe47jgLgYhIqQvAmuREV2MYA\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
+    "etag": "\"17ce-zlVG394vrkVoYwLROrifUhd6dKk\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 6094,
+    "path": "../public/_nuxt/BQJv40aq.js"
+  },
+  "/_nuxt/BdjmSfQd.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3b7-7wLP5NChnM4YXwBP+ff2h/Hrs6M\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 951,
+    "path": "../public/_nuxt/BdjmSfQd.js"
+  },
+  "/_nuxt/BSJ3AHlA.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"eb7-sSDoB24Jv3xIvk5xpPDW5YOukFI\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 3767,
+    "path": "../public/_nuxt/BSJ3AHlA.js"
+  },
+  "/_nuxt/BfFBV_lz.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"117-+TNGK8NnRWrjJ6tzLoMLzmua6mM\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 279,
+    "path": "../public/_nuxt/BfFBV_lz.js"
+  },
+  "/_nuxt/BsFbslFC.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"326a-ZLWHLQGhrgcn0iotQcJtH7h8cYI\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
     "size": 12906,
-    "path": "../public/_nuxt/BGihvDxp.js"
+    "path": "../public/_nuxt/BsFbslFC.js"
   },
-  "/_nuxt/BhUkqrMw.js": {
+  "/_nuxt/Bd9_vhvs.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"d96-iJl8ukQEiU/8z1NGbijDyYDI68w\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
-    "size": 3478,
-    "path": "../public/_nuxt/BhUkqrMw.js"
+    "etag": "\"788c-Eo4/2wSjWJynQmqLRCsAZSVfFpM\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 30860,
+    "path": "../public/_nuxt/Bd9_vhvs.js"
   },
-  "/_nuxt/BQOiN5Kl.js": {
+  "/_nuxt/BvuVtu_J.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"e315-R0Tn3GPBeKNIhe/6+uSBA3eK1CU\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
-    "size": 58133,
-    "path": "../public/_nuxt/BQOiN5Kl.js"
+    "etag": "\"e7a7-jc8Coivog8rb67CFL5dWpbBYTgg\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
+    "size": 59303,
+    "path": "../public/_nuxt/BvuVtu_J.js"
   },
-  "/_nuxt/BiI7D3R4.js": {
+  "/_nuxt/C5-xew6c.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"27a6-Kh6Szjv7oHMIUwTrzYgjI1ZZP1A\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
-    "size": 10150,
-    "path": "../public/_nuxt/BiI7D3R4.js"
-  },
-  "/_nuxt/Bp8os18_.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"230a-5oijO1vG+DGOQQgF8K5gKSEFS/8\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
-    "size": 8970,
-    "path": "../public/_nuxt/Bp8os18_.js"
-  },
-  "/_nuxt/Bsuv2Ix9.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"144c-o3azflSY+EpMi61rsTWMMAj64QQ\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
+    "etag": "\"144c-lqsmiG/gHgq57ZnA3l0HoQxbAo4\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
     "size": 5196,
-    "path": "../public/_nuxt/Bsuv2Ix9.js"
+    "path": "../public/_nuxt/C5-xew6c.js"
   },
-  "/_nuxt/Bg9K3vjk.js": {
+  "/_nuxt/BrJAAMCJ.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"13c2d-GO4Jt7AXnZFB/tYAWQAX9Pkv/YQ\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
-    "size": 80941,
-    "path": "../public/_nuxt/Bg9K3vjk.js"
+    "etag": "\"14dbf-+pqGdSyruyJzQDMsj8aobhSNlHs\"",
+    "mtime": "2026-08-20T03:18:20.320Z",
+    "size": 85439,
+    "path": "../public/_nuxt/BrJAAMCJ.js"
   },
   "/_nuxt/BxDnoh6j.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"92c7-vG6vOYtkkbZDLii2UTnzFg3touY\"",
-    "mtime": "2026-08-19T20:07:05.530Z",
+    "mtime": "2026-08-20T03:18:20.321Z",
     "size": 37575,
     "path": "../public/_nuxt/BxDnoh6j.js"
   },
-  "/_nuxt/BxcXCvN3.js": {
+  "/_nuxt/CC8wsXuW.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"18f3-ACaf2CEQht9bA9Ku8UybDcgoO8w\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
-    "size": 6387,
-    "path": "../public/_nuxt/BxcXCvN3.js"
+    "etag": "\"10dbc-Vu8SHC5rv4sKl+zUmJp4JosOJhA\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
+    "size": 69052,
+    "path": "../public/_nuxt/CC8wsXuW.js"
   },
-  "/_nuxt/BxqpRxyX.js": {
+  "/_nuxt/CGgS7ChF.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"b0b-3z4nt80U3xWeTLweVkn9UR+gRHc\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
-    "size": 2827,
-    "path": "../public/_nuxt/BxqpRxyX.js"
+    "etag": "\"2526-/PIG3mLh050bdG3lsaluC4WwUEQ\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
+    "size": 9510,
+    "path": "../public/_nuxt/CGgS7ChF.js"
   },
   "/_nuxt/CJ8D7aUY.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"3b1-j0x+UuZtuUpM4NJwMVGjeC7HTrE\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
+    "mtime": "2026-08-20T03:18:20.321Z",
     "size": 945,
     "path": "../public/_nuxt/CJ8D7aUY.js"
   },
-  "/_nuxt/CM023gdO.js": {
+  "/_nuxt/C7zARH-e.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"67ca-VCwT8pYHEpe14oS5eECtLKNInjg\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
-    "size": 26570,
-    "path": "../public/_nuxt/CM023gdO.js"
+    "etag": "\"19dcf-XAtBuQyfZJ8Js4bW7nJerdf/Mnk\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
+    "size": 105935,
+    "path": "../public/_nuxt/C7zARH-e.js"
   },
-  "/_nuxt/CMwo0itD.js": {
+  "/_nuxt/COdLIc7C.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"1ee4-oiLCEHQ1Qj7shxFlkMbZxvhOjVQ\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
-    "size": 7908,
-    "path": "../public/_nuxt/CMwo0itD.js"
-  },
-  "/_nuxt/CM_oDRX4.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"e7a7-2ronEhuB9tDj2la/cvMIYzNobCU\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
-    "size": 59303,
-    "path": "../public/_nuxt/CM_oDRX4.js"
-  },
-  "/_nuxt/COqDWO-9.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"788c-YLgZHd+x2pDVyK/0rha+sD8BSSU\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
-    "size": 30860,
-    "path": "../public/_nuxt/COqDWO-9.js"
-  },
-  "/_nuxt/CYneuFRK.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"12f-+3sTGNDZMKa3us3ZrzN8VuHYGzA\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
+    "etag": "\"12f-XKMUhdVF/q42UOShg9TeR4N/oHM\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
     "size": 303,
-    "path": "../public/_nuxt/CYneuFRK.js"
-  },
-  "/_nuxt/C9W1TCrT.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"76e96-FXQKBPG3L8FOXKcg/zssiWgSi/o\"",
-    "mtime": "2026-08-19T20:07:05.531Z",
-    "size": 487062,
-    "path": "../public/_nuxt/C9W1TCrT.js"
+    "path": "../public/_nuxt/COdLIc7C.js"
   },
   "/_nuxt/CQwIRofc.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"15b561-5TupHPdnMMFTErdaiD+3ykH0P9Y\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
+    "mtime": "2026-08-20T03:18:20.322Z",
     "size": 1422689,
     "path": "../public/_nuxt/CQwIRofc.js"
   },
-  "/_nuxt/C_BfwE1T.js": {
+  "/_nuxt/CR0oQglT.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"180b-ZUqsmOPZjtdwBC88Q7UIm2JFEJY\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
+    "etag": "\"230a-4BGpi6RteGTI/dIMG7cRL/BzFCg\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
+    "size": 8970,
+    "path": "../public/_nuxt/CR0oQglT.js"
+  },
+  "/_nuxt/Cu6pV3q1.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"67ca-ngLBz1CTjOaeWdqBzKaYQR+uxsY\"",
+    "mtime": "2026-08-20T03:18:20.322Z",
+    "size": 26570,
+    "path": "../public/_nuxt/Cu6pV3q1.js"
+  },
+  "/_nuxt/CjkeT5th.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"180b-ZDuMbRCND4wh0L4HxD9Bh6TdIA0\"",
+    "mtime": "2026-08-20T03:18:20.321Z",
     "size": 6155,
-    "path": "../public/_nuxt/C_BfwE1T.js"
-  },
-  "/_nuxt/C_vKONXY.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"10dbc-aGWGDP/7sy2uJRIDkQrX4e6tauY\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
-    "size": 69052,
-    "path": "../public/_nuxt/C_vKONXY.js"
-  },
-  "/_nuxt/Cjkx0D10.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"17d-4Q9ltAiT/Qsn15GwPzM2GcC8wmU\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
-    "size": 381,
-    "path": "../public/_nuxt/Cjkx0D10.js"
+    "path": "../public/_nuxt/CjkeT5th.js"
   },
   "/_nuxt/Cpj98o6Y.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"ec-QtY1KaLA8vnMK3l2IvajpxyuPmY\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
+    "mtime": "2026-08-20T03:18:20.322Z",
     "size": 236,
     "path": "../public/_nuxt/Cpj98o6Y.js"
-  },
-  "/_nuxt/CobboNG2.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"19dcf-d3kjIYXE1C66gsMKev8wGyTHVIo\"",
-    "mtime": "2026-08-19T20:07:05.532Z",
-    "size": 105935,
-    "path": "../public/_nuxt/CobboNG2.js"
-  },
-  "/_nuxt/D-5PhtWK.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"eb9-cXad7bFLcg2m8IYhDc1y6piokoU\"",
-    "mtime": "2026-08-19T20:07:05.533Z",
-    "size": 3769,
-    "path": "../public/_nuxt/D-5PhtWK.js"
-  },
-  "/_nuxt/D3TXLEyM.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"2c9-Qb71D/jZkm+K50ALpBxZIePq8u4\"",
-    "mtime": "2026-08-19T20:07:05.533Z",
-    "size": 713,
-    "path": "../public/_nuxt/D3TXLEyM.js"
   },
   "/_nuxt/D4k11_F0.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"d1-HZnY3q6dPZouTgQpXm8JowVUA10\"",
-    "mtime": "2026-08-19T20:07:05.534Z",
+    "mtime": "2026-08-20T03:18:20.322Z",
     "size": 209,
     "path": "../public/_nuxt/D4k11_F0.js"
   },
-  "/_nuxt/DBhxLq0T.js": {
+  "/_nuxt/D55Fjqni.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"102e-cq2Af6DeZrqmF9c9JBf2v+TLtJk\"",
-    "mtime": "2026-08-19T20:07:05.533Z",
-    "size": 4142,
-    "path": "../public/_nuxt/DBhxLq0T.js"
+    "etag": "\"d96-Ug4HmdBN4HsG2q2dWbn50/ojJWE\"",
+    "mtime": "2026-08-20T03:18:20.322Z",
+    "size": 3478,
+    "path": "../public/_nuxt/D55Fjqni.js"
   },
-  "/_nuxt/DFJjHAfx.js": {
+  "/_nuxt/DDQaaUvj.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"117-kRSDdBUhnMJ4fSu8XcbuaKQFoYI\"",
-    "mtime": "2026-08-19T20:07:05.534Z",
-    "size": 279,
-    "path": "../public/_nuxt/DFJjHAfx.js"
+    "etag": "\"102e-ug7JLO4CJHG9f/Kjte9v4PEgZ5U\"",
+    "mtime": "2026-08-20T03:18:20.322Z",
+    "size": 4142,
+    "path": "../public/_nuxt/DDQaaUvj.js"
+  },
+  "/_nuxt/DFcPLkE7.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"b0b-pOtFfkmRwvJASNX/qTwzOklDZF4\"",
+    "mtime": "2026-08-20T03:18:20.322Z",
+    "size": 2827,
+    "path": "../public/_nuxt/DFcPLkE7.js"
   },
   "/_nuxt/DGDmzsDN.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"338-MILo6o8M9DMxjaaeQLy1r/0A7p8\"",
-    "mtime": "2026-08-19T20:07:05.534Z",
+    "mtime": "2026-08-20T03:18:20.322Z",
     "size": 824,
     "path": "../public/_nuxt/DGDmzsDN.js"
   },
-  "/_nuxt/DGnzFbjX.js": {
+  "/_nuxt/DMSsYjjn.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"140e-phmDF0PteFrCx/O7OuHdj/+0DWQ\"",
-    "mtime": "2026-08-19T20:07:05.534Z",
-    "size": 5134,
-    "path": "../public/_nuxt/DGnzFbjX.js"
+    "etag": "\"23ca-K37TeFOxWRhE7wAowxkyALOO/fo\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 9162,
+    "path": "../public/_nuxt/DMSsYjjn.js"
   },
-  "/_nuxt/DlAUqK2U.js": {
+  "/_nuxt/DJ_qXAnr.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"5b-eFCz/UrraTh721pgAl0VxBNR1es\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
-    "size": 91,
-    "path": "../public/_nuxt/DlAUqK2U.js"
+    "etag": "\"18f3-0BTnecnjf3iOixweDadAlEQbtWo\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 6387,
+    "path": "../public/_nuxt/DJ_qXAnr.js"
+  },
+  "/_nuxt/DT4egsDi.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"161b-3HZUe9MNpNxewIw0OopAnYuuGjw\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 5659,
+    "path": "../public/_nuxt/DT4egsDi.js"
+  },
+  "/_nuxt/DZBI4BCP.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3569-nKCDRXP3+9qaj4EGBISJt+Nhn+Q\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 13673,
+    "path": "../public/_nuxt/DZBI4BCP.js"
   },
   "/_nuxt/D_L1N4xU.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"8aeb-BOapy5YcLlzi+UJ1L+SDjtAoaPs\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
+    "mtime": "2026-08-20T03:18:20.323Z",
     "size": 35563,
     "path": "../public/_nuxt/D_L1N4xU.js"
   },
-  "/_nuxt/DluM8mHe.js": {
+  "/_nuxt/DlAUqK2U.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"1383-f1Hg04zZDbh/Eb50id2eVfRpUAo\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
+    "etag": "\"5b-eFCz/UrraTh721pgAl0VxBNR1es\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 91,
+    "path": "../public/_nuxt/DlAUqK2U.js"
+  },
+  "/_nuxt/DnWxsvMl.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"17d-sg4BWMxeonfsryR/E1i17Ow10XA\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 381,
+    "path": "../public/_nuxt/DnWxsvMl.js"
+  },
+  "/_nuxt/DpaVI3q3.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"e315-sqmLce0kYYL8ke5zSSAye/5NfjY\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
+    "size": 58133,
+    "path": "../public/_nuxt/DpaVI3q3.js"
+  },
+  "/_nuxt/DuYIj5Cb.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"1383-FO+QVIloSersDCmVW3hsbSUM0JM\"",
+    "mtime": "2026-08-20T03:18:20.323Z",
     "size": 4995,
-    "path": "../public/_nuxt/DluM8mHe.js"
+    "path": "../public/_nuxt/DuYIj5Cb.js"
   },
-  "/_nuxt/DmBT9mfB.js": {
+  "/_nuxt/DvCAm8dA.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"1301-pt16LnjDg25siDiTmqs4rI13qBg\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
-    "size": 4865,
-    "path": "../public/_nuxt/DmBT9mfB.js"
-  },
-  "/_nuxt/Dtrm0UjV.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"3ba2-QjydqV2GdCD1Xpt249rT/Z4wPbY\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
-    "size": 15266,
-    "path": "../public/_nuxt/Dtrm0UjV.js"
+    "etag": "\"b8a-a+wtXMZemwIkzFJi0FnKN0wWA6E\"",
+    "mtime": "2026-08-20T03:18:20.324Z",
+    "size": 2954,
+    "path": "../public/_nuxt/DvCAm8dA.js"
   },
   "/_nuxt/DvXkyWUv.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"5c0-PJCkhAVySodc5GTg299aDe0ZWN0\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
+    "mtime": "2026-08-20T03:18:20.324Z",
     "size": 1472,
     "path": "../public/_nuxt/DvXkyWUv.js"
   },
-  "/_nuxt/Dw-EyM0Y.js": {
+  "/_nuxt/DxDQEH3u.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"3b7-ir5hJFRH9NHtifcqLrA+Nv56ijc\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
-    "size": 951,
-    "path": "../public/_nuxt/Dw-EyM0Y.js"
-  },
-  "/_nuxt/ENSrfkDD.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"17ce-DAyKV+22Xa4B7W4dsUt6B0R/X+4\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
-    "size": 6094,
-    "path": "../public/_nuxt/ENSrfkDD.js"
+    "etag": "\"2c9-e42hk/qB2ZTKLtepezAAXYG7SHs\"",
+    "mtime": "2026-08-20T03:18:20.324Z",
+    "size": 713,
+    "path": "../public/_nuxt/DxDQEH3u.js"
   },
   "/_nuxt/LeadMessageComposer.PBuAaUbR.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"b1-QK3sCzMqDq3wHELOy3D+lH135m8\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
+    "mtime": "2026-08-20T03:18:20.324Z",
     "size": 177,
     "path": "../public/_nuxt/LeadMessageComposer.PBuAaUbR.css"
   },
-  "/_nuxt/DRrKPWdd.js": {
+  "/_nuxt/CwWimU6I.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"72e8f-HIaKUP35M7nHduEUT+DiDZ/Dhe4\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
-    "size": 470671,
-    "path": "../public/_nuxt/DRrKPWdd.js"
-  },
-  "/_nuxt/RM0Ckf33.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"757b7-lErRTx+8vuUgiHI889RhWGfnxGo\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
-    "size": 481207,
-    "path": "../public/_nuxt/RM0Ckf33.js"
+    "etag": "\"76e96-HoYSgK76IBFD8UE5xHO3NLim5/w\"",
+    "mtime": "2026-08-20T03:18:20.322Z",
+    "size": 487062,
+    "path": "../public/_nuxt/CwWimU6I.js"
   },
   "/_nuxt/DTToT-jx.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"e4b51-kI4C5IhmNJtOONsnXSoEs4p6WWA\"",
-    "mtime": "2026-08-19T20:07:05.535Z",
+    "mtime": "2026-08-20T03:18:20.323Z",
     "size": 936785,
     "path": "../public/_nuxt/DTToT-jx.js"
+  },
+  "/_nuxt/Mr_Dsb13.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"260b-ptDVQ1SZHFtPDVPUzbnaLrawz2E\"",
+    "mtime": "2026-08-20T03:18:20.324Z",
+    "size": 9739,
+    "path": "../public/_nuxt/Mr_Dsb13.js"
   },
   "/_nuxt/TDtrdbi3.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"ef-6ksjCgqoQ3jaCb39TGNgg/+X0qI\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
+    "mtime": "2026-08-20T03:18:20.324Z",
     "size": 239,
     "path": "../public/_nuxt/TDtrdbi3.js"
+  },
+  "/_nuxt/VDFeuUOD.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"1ee4-DsRLYFgGhTgaQ4j3UDmUbVvTEno\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
+    "size": 7908,
+    "path": "../public/_nuxt/VDFeuUOD.js"
+  },
+  "/_nuxt/authenticated.CHKVh1Xe.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"122-h1oG/JVbpMWuyPYIaHcVXBwhQKI\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
+    "size": 290,
+    "path": "../public/_nuxt/authenticated.CHKVh1Xe.css"
   },
   "/_nuxt/error-404.C3kT2QX-.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"97e-Xk26Nv4oQLpK3PtofolSggS9Z1M\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
+    "mtime": "2026-08-20T03:18:20.325Z",
     "size": 2430,
     "path": "../public/_nuxt/error-404.C3kT2QX-.css"
   },
   "/_nuxt/error-500.BW0Y54Of.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"773-NSoEX19gPmM2NozVKWotHuvxtho\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
+    "mtime": "2026-08-20T03:18:20.325Z",
     "size": 1907,
     "path": "../public/_nuxt/error-500.BW0Y54Of.css"
-  },
-  "/_nuxt/h_WKv8kl.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"eb7-TAG4vRndMtxi26/bS9jxBUl+kTE\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
-    "size": 3767,
-    "path": "../public/_nuxt/h_WKv8kl.js"
-  },
-  "/_nuxt/entry.C9m3rq_f.css": {
-    "type": "text/css; charset=utf-8",
-    "etag": "\"3c9a5-7JFE3T2mD5+64tdArju8mV6YrS0\"",
-    "mtime": "2026-08-19T20:07:05.536Z",
-    "size": 248229,
-    "path": "../public/_nuxt/entry.C9m3rq_f.css"
   },
   "/_nuxt/index.Czu9rbBZ.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"b1-RlxBl2r9WyVWV9REEHTbJ8uESa8\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
+    "mtime": "2026-08-20T03:18:20.325Z",
     "size": 177,
     "path": "../public/_nuxt/index.Czu9rbBZ.css"
   },
   "/_nuxt/index.DBcToSA2.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"a7-q4oeoJvCwAIDVO3zUGHW1xwh6s4\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
+    "mtime": "2026-08-20T03:18:20.325Z",
     "size": 167,
     "path": "../public/_nuxt/index.DBcToSA2.css"
   },
-  "/_nuxt/index.Dm_2NoXB.css": {
+  "/_nuxt/index.snEbB0SQ.css": {
     "type": "text/css; charset=utf-8",
-    "etag": "\"6c2-Tjnpf3XjqrAr5caCi/3IEuwc7lc\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
+    "etag": "\"6c2-EDPbllr4dK3r5vHJdHqgkRusg7g\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
     "size": 1730,
-    "path": "../public/_nuxt/index.Dm_2NoXB.css"
-  },
-  "/_nuxt/jQHPCQkX.js": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"fb3-DUSx0QE/ehS8N5Rw+83x7zM3Dek\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
-    "size": 4019,
-    "path": "../public/_nuxt/jQHPCQkX.js"
+    "path": "../public/_nuxt/index.snEbB0SQ.css"
   },
   "/_nuxt/login.BxZ07SwJ.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"a7-4ga/V/qtIEWDzd2bunALxURMCJo\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
+    "mtime": "2026-08-20T03:18:20.325Z",
     "size": 167,
     "path": "../public/_nuxt/login.BxZ07SwJ.css"
   },
-  "/_nuxt/nSq_tazC.js": {
+  "/_nuxt/pRDNhjz-.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"161b-K+JnPFsH2LNqEFm8Xwdjos4MggY\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
-    "size": 5659,
-    "path": "../public/_nuxt/nSq_tazC.js"
+    "etag": "\"1301-aA0A4t8tv31H8DXZxoJ3mMrfdko\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
+    "size": 4865,
+    "path": "../public/_nuxt/pRDNhjz-.js"
   },
-  "/_nuxt/obCbeOV1.js": {
+  "/_nuxt/q79R6TNk.js": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"23ca-1yEHuV7rA2Ml+OUXh6C7bNHTjhA\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
-    "size": 9162,
-    "path": "../public/_nuxt/obCbeOV1.js"
+    "etag": "\"26b-i+yTGW6WYpwa1tTbKoF6MpZbS3s\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
+    "size": 619,
+    "path": "../public/_nuxt/q79R6TNk.js"
+  },
+  "/_nuxt/entry.C6kFS2R9.css": {
+    "type": "text/css; charset=utf-8",
+    "etag": "\"3cc64-VcvUablCzLaX+kVpLMbbKyafs7k\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
+    "size": 248932,
+    "path": "../public/_nuxt/entry.C6kFS2R9.css"
+  },
+  "/_nuxt/qii8AU-h.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"27a6-p6rCYvUjVGaVKXtCwnnjRzO1KNQ\"",
+    "mtime": "2026-08-20T03:18:20.326Z",
+    "size": 10150,
+    "path": "../public/_nuxt/qii8AU-h.js"
   },
   "/_nuxt/signup.DormQ6GA.css": {
     "type": "text/css; charset=utf-8",
     "etag": "\"2bb-p31Si3hmJEWCTZntoDxSCqEpgQA\"",
-    "mtime": "2026-08-19T20:07:05.537Z",
+    "mtime": "2026-08-20T03:18:20.326Z",
     "size": 699,
     "path": "../public/_nuxt/signup.DormQ6GA.css"
   },
   "/_nuxt/y283U8c5.js": {
     "type": "text/javascript; charset=utf-8",
     "etag": "\"10a-Db2t2EoRABusrUWr4gVvmgyWB9g\"",
-    "mtime": "2026-08-19T20:07:05.538Z",
+    "mtime": "2026-08-20T03:18:20.326Z",
     "size": 266,
     "path": "../public/_nuxt/y283U8c5.js"
   },
-  "/images/logo-icon.webp": {
-    "type": "image/webp",
-    "etag": "\"4a82-Cq74D5kyjiUvih5Pxl9gJIOqLII\"",
-    "mtime": "2026-08-19T20:07:05.540Z",
-    "size": 19074,
-    "path": "../public/images/logo-icon.webp"
+  "/_nuxt/builds/meta/7b91d385-91c8-4fb5-8bf6-47fbac5d711d.json": {
+    "type": "application/json",
+    "etag": "\"58-SOYirr/vpnozUAvtjlqIWaeGPos\"",
+    "mtime": "2026-08-20T03:18:20.305Z",
+    "size": 88,
+    "path": "../public/_nuxt/builds/meta/7b91d385-91c8-4fb5-8bf6-47fbac5d711d.json"
   },
   "/_nuxt/builds/latest.json": {
     "type": "application/json",
-    "etag": "\"47-w7GqYLM26uqV2AVkKqzdlGC2Eiw\"",
-    "mtime": "2026-08-19T20:07:05.512Z",
+    "etag": "\"47-f3eCtVKz6IOSp1ZaTPkK+vWeLvY\"",
+    "mtime": "2026-08-20T03:18:20.307Z",
     "size": 71,
     "path": "../public/_nuxt/builds/latest.json"
   },
-  "/_nuxt/builds/meta/a7678bac-983b-4f49-93f7-99bb387b30a5.json": {
-    "type": "application/json",
-    "etag": "\"58-v4Rh9xv1KNUpty1K94XNRGhRQ3c\"",
-    "mtime": "2026-08-19T20:07:05.510Z",
-    "size": 88,
-    "path": "../public/_nuxt/builds/meta/a7678bac-983b-4f49-93f7-99bb387b30a5.json"
+  "/_nuxt/asZNYdsC.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"75875-T9U/qv1XWwRHJFKCPMHsw5KDK+g\"",
+    "mtime": "2026-08-20T03:18:20.325Z",
+    "size": 481397,
+    "path": "../public/_nuxt/asZNYdsC.js"
   },
-  "/images/maskable-icon.png": {
-    "type": "image/png",
-    "etag": "\"10776-rXNH1SRllJ7mDAxOd7BPoWAdctY\"",
-    "mtime": "2026-08-19T20:07:05.541Z",
-    "size": 67446,
-    "path": "../public/images/maskable-icon.png"
+  "/_nuxt/uZY4_19a.js": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"72e8f-UoEC3nXvns99W2Nl/iM17q3mOYc\"",
+    "mtime": "2026-08-20T03:18:20.326Z",
+    "size": 470671,
+    "path": "../public/_nuxt/uZY4_19a.js"
   }
 };
 
@@ -7337,7 +7352,7 @@ function publicAssetsURL(...path) {
 	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
-function buildPrompt$1(briefing) {
+function buildPrompt$2(briefing) {
   const { totals, leads } = briefing;
   const sample = leads.slice(0, 5).map((l) => {
     const first = (l.name || "A lead").split(" ")[0];
@@ -7367,7 +7382,7 @@ async function narrateWithAnthropic(briefing, apiKey) {
       body: {
         model: "claude-3-5-haiku-latest",
         max_tokens: 150,
-        messages: [{ role: "user", content: buildPrompt$1(briefing) }]
+        messages: [{ role: "user", content: buildPrompt$2(briefing) }]
       }
     });
     const text = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
@@ -7389,7 +7404,7 @@ async function narrateWithOpenAI(briefing, apiKey) {
       body: {
         model: "gpt-4o-mini",
         max_tokens: 150,
-        messages: [{ role: "user", content: buildPrompt$1(briefing) }]
+        messages: [{ role: "user", content: buildPrompt$2(briefing) }]
       }
     });
     const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
@@ -7602,7 +7617,7 @@ Do you have a few minutes this week? Just reply here and we'll find a time.
 Best,
 ${lead.agentName || ""}`;
 }
-function buildPrompt(lead, channel) {
+function buildPrompt$1(lead, channel) {
   const facts = [];
   facts.push(`Lead first name: ${firstName(lead.name)}`);
   if (money(lead.budget)) facts.push(`Budget: ${money(lead.budget)}`);
@@ -7635,7 +7650,7 @@ async function draftWithAnthropic(lead, channel, apiKey) {
       body: {
         model: "claude-3-5-haiku-latest",
         max_tokens: 250,
-        messages: [{ role: "user", content: buildPrompt(lead, channel) }]
+        messages: [{ role: "user", content: buildPrompt$1(lead, channel) }]
       }
     });
     const text = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
@@ -7657,7 +7672,7 @@ async function draftWithOpenAI(lead, channel, apiKey) {
       body: {
         model: "gpt-4o-mini",
         max_tokens: 250,
-        messages: [{ role: "user", content: buildPrompt(lead, channel) }]
+        messages: [{ role: "user", content: buildPrompt$1(lead, channel) }]
       }
     });
     const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
@@ -7728,11 +7743,36 @@ const userSchema = new Schema({
   timezone: { type: String, default: "America/Denver" },
   // How many days of silence before a lead is considered "cold" and
   // resurfaced in the daily briefing. Per-realtor tunable.
-  coldLeadAfterDays: { type: Number, default: 14 }
+  coldLeadAfterDays: { type: Number, default: 14 },
+  // Whether the realtor has finished (or skipped) the guided tour.
+  tour_completed: { type: Boolean, default: false },
+  // ============================================================
+  // Social voice profile — captured once, then used to make every
+  // generated post sound like this specific realtor rather than
+  // generic real-estate filler. Without it, AI posts all read the
+  // same and agents stop using the feature.
+  // ============================================================
+  voice: {
+    // How they talk: 'warm' | 'straight' | 'playful' | 'polished'
+    tone: { type: String, default: "warm" },
+    // Free text: "former teacher, two kids, obsessed with trail running"
+    about: { type: String, default: "" },
+    // What they want to be known for locally
+    focus: { type: String, default: "" },
+    // 'none' | 'some' | 'lots'
+    emoji: { type: String, default: "some" },
+    // 'none' | 'few' | 'many'
+    hashtags: { type: String, default: "few" },
+    // Words/phrases they actually use, and ones to avoid
+    phrases: { type: String, default: "" },
+    avoid: { type: String, default: "" },
+    // Pasted samples of their real posts — by far the strongest signal
+    samples: { type: String, default: "" }
+  }
 }, { timestamps: true });
-const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
+const UserModelImport = mongoose.models.User || mongoose.model("User", userSchema);
 
-const UserDoc = UserModel;
+const UserDoc = UserModelImport;
 const ACTIVE_STATUSES = /* @__PURE__ */ new Set(["active", "trialing"]);
 async function requirePaidUser(event) {
   await connectDB();
@@ -7751,6 +7791,405 @@ async function requirePaidUser(event) {
     });
   }
   return dbUser;
+}
+
+const TOPICS = {
+  open_house: {
+    label: "Open house this weekend",
+    brief: "Invite people to an upcoming open house. Give a reason to show up beyond the address."
+  },
+  just_listed: {
+    label: "New listing",
+    brief: "Announce a new listing. Lead with what makes the home feel like a home, not a spec sheet."
+  },
+  just_sold: {
+    label: "Just sold / closed",
+    brief: "Celebrate a closing. Centre the clients, not the agent. No bragging about volume."
+  },
+  market_note: {
+    label: "Local market note",
+    brief: "Share one useful observation about the local market. Practical, not doom or hype."
+  },
+  tip: {
+    label: "Advice for buyers or sellers",
+    brief: "One genuinely useful tip. Specific enough that it could only come from someone who does this work."
+  },
+  personal: {
+    label: "Something personal / local",
+    brief: "A human post about life in the area. Builds familiarity. Real estate stays in the background."
+  },
+  testimonial: {
+    label: "Client thank-you",
+    brief: "Thank a client warmly and specifically, without naming private details."
+  }
+};
+const PLATFORM_RULES = {
+  facebook: "Facebook: conversational, 2-4 short paragraphs, can be up to ~120 words. Line breaks between thoughts. Ends with a question or an easy invitation to reply. Hashtags are unusual here \u2014 use none or one.",
+  instagram: 'Instagram: written to sit under a photo. First line must work as a hook on its own, since the rest is hidden behind "more". 40-80 words. Hashtags go at the end, on their own line.',
+  x: 'X: under 260 characters, single thought, no fluff. No "thread" language. At most one hashtag, often none.'
+};
+function toneLine(tone) {
+  switch (tone) {
+    case "straight":
+      return "Plain and direct. No exclamation marks. Short sentences.";
+    case "playful":
+      return "Light and a bit funny. Never goofy or cringe.";
+    case "polished":
+      return "Composed and professional, but still human. No corporate stiffness.";
+    default:
+      return "Warm and neighbourly. Sounds like a person, not a brand.";
+  }
+}
+function emojiLine(level) {
+  if (level === "none") return "Use NO emoji at all.";
+  if (level === "lots") return "Emoji are welcome \u2014 a few, placed naturally.";
+  return "At most one emoji, and only if it genuinely adds something.";
+}
+function hashtagLine(level, platform) {
+  if (level === "none") return "No hashtags.";
+  if (level === "many") {
+    return platform === "instagram" ? "Include 8-12 relevant hashtags on their own line at the end." : "Include 2-3 hashtags at the end.";
+  }
+  return platform === "instagram" ? "Include 3-5 relevant hashtags on their own line at the end." : "Include at most 1 hashtag, or none.";
+}
+function buildPrompt(platform, topicKey, ctx, details) {
+  var _a;
+  const v = ctx.voice || {};
+  const topic = TOPICS[topicKey] || TOPICS.personal;
+  const lines = [
+    `You are ghostwriting a social media post for a real estate agent. It must sound like THEM, not like a marketing template.`,
+    ``,
+    `AGENT`,
+    `- Name: ${ctx.agentName || "the agent"}`,
+    ctx.company ? `- Brokerage: ${ctx.company}` : "",
+    ctx.region ? `- Area they serve: ${ctx.region}` : "",
+    v.about ? `- About them: ${v.about}` : "",
+    v.focus ? `- What they want to be known for: ${v.focus}` : "",
+    ``,
+    `VOICE`,
+    `- ${toneLine(v.tone)}`,
+    `- ${emojiLine(v.emoji)}`,
+    `- ${hashtagLine(v.hashtags, platform)}`,
+    v.phrases ? `- Words and phrases they actually use: ${v.phrases}` : "",
+    v.avoid ? `- NEVER use these words or phrases: ${v.avoid}` : "",
+    ``
+  ];
+  if ((_a = v.samples) == null ? void 0 : _a.trim()) {
+    lines.push(
+      `THEIR REAL POSTS (match this rhythm and vocabulary closely \u2014 this is the strongest signal you have):`,
+      v.samples.trim(),
+      ``
+    );
+  }
+  lines.push(
+    `POST TO WRITE`,
+    `- Topic: ${topic == null ? void 0 : topic.label}`,
+    `- Goal: ${topic == null ? void 0 : topic.brief}`,
+    details ? `- Specific details to use: ${details}` : "",
+    ``,
+    `PLATFORM`,
+    `- ${PLATFORM_RULES[platform]}`,
+    ``,
+    `RULES`,
+    `- Do NOT invent facts: no addresses, prices, square footage, dates, or statistics that weren't given to you.`,
+    `- No fair-housing risk: never reference or imply a preferred race, religion, family status, nationality, disability, or "good schools"/"safe neighbourhood" as a proxy for those.`,
+    `- Avoid realtor clich\xE9s: "Just Listed!!", "Your dream home awaits", "Don't miss out", "DM me".`,
+    `- No fake urgency or guarantees about the market.`,
+    ``,
+    `Return ONLY JSON, no markdown fence:`,
+    `{"body": "the post text", "hashtags": "space-separated hashtags or empty string", "imageIdea": "one short line describing the photo to pair with it"}`
+  );
+  return lines.filter(Boolean).join("\n");
+}
+async function withAnthropic(prompt, key) {
+  var _a, _b, _c;
+  try {
+    const res = await $fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+      },
+      body: {
+        model: "claude-3-5-haiku-latest",
+        max_tokens: 700,
+        messages: [{ role: "user", content: prompt }]
+      }
+    });
+    return (_c = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text) != null ? _c : null;
+  } catch (err) {
+    console.error("[social] Anthropic failed:", err);
+    return null;
+  }
+}
+async function withOpenAI(prompt, key) {
+  var _a, _b, _c, _d;
+  try {
+    const res = await $fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "content-type": "application/json" },
+      body: {
+        model: "gpt-4o-mini",
+        max_tokens: 700,
+        messages: [{ role: "user", content: prompt }]
+      }
+    });
+    return (_d = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content) != null ? _d : null;
+  } catch (err) {
+    console.error("[social] OpenAI failed:", err);
+    return null;
+  }
+}
+function parseJson(raw) {
+  try {
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+    if (start === -1 || end === -1) return null;
+    const parsed = JSON.parse(cleaned.slice(start, end + 1));
+    if (!(parsed == null ? void 0 : parsed.body)) return null;
+    return {
+      body: String(parsed.body).trim(),
+      hashtags: String(parsed.hashtags || "").trim(),
+      imageIdea: String(parsed.imageIdea || "").trim()
+    };
+  } catch {
+    return null;
+  }
+}
+function templatePost(platform, topicKey, ctx, details) {
+  var _a;
+  const area = ctx.region || "the area";
+  const detail = details == null ? void 0 : details.trim();
+  const bodies = {
+    open_house: `Open house this weekend${detail ? ` \u2014 ${detail}` : ` in ${area}`}. Come by, have a look around, ask me anything. No pressure, no sign-in sheet you'll regret.`,
+    just_listed: `New listing${detail ? `: ${detail}` : ` in ${area}`}. Happy to walk you through it or send over the details \u2014 just say the word.`,
+    just_sold: `Keys handed over this week.${detail ? ` ${detail}` : ""} Always a good day when it all comes together for people who deserve it.`,
+    market_note: `A quick note on the ${area} market${detail ? `: ${detail}` : "."} Happy to talk through what it means for your situation specifically.`,
+    tip: detail || `One thing I'd tell anyone buying in ${area}: get your financing sorted before you fall in love with a house. It changes what you can move on.`,
+    personal: detail || `One of the things I like about working in ${area} is that you run into people you know everywhere you go.`,
+    testimonial: `Grateful for the folks who trusted me with this one.${detail ? ` ${detail}` : ""} It genuinely doesn't get old.`
+  };
+  let body = bodies[topicKey] || bodies.personal;
+  if (platform === "x" && body.length > 255) body = body.slice(0, 252) + "\u2026";
+  const tags = ((_a = ctx.voice) == null ? void 0 : _a.hashtags) === "none" ? "" : platform === "instagram" ? `#${area.replace(/[^a-zA-Z]/g, "")}RealEstate #MontanaHomes #LocalRealtor` : "";
+  return {
+    body,
+    hashtags: tags,
+    imageIdea: topicKey === "personal" ? "A real photo from your day \u2014 not a stock image." : "A bright, straight-on photo of the home or street."
+  };
+}
+async function generateSocialPosts(platform, topicKey, ctx, opts = {}) {
+  var _a;
+  const count = Math.min(Math.max((_a = opts.count) != null ? _a : 3, 1), 5);
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (anthropicKey || openaiKey) {
+    const prompt = buildPrompt(platform, topicKey, ctx, opts.details);
+    const results = [];
+    for (let i = 0; i < count; i++) {
+      const variation = i === 0 ? prompt : `${prompt}
+
+Write a DIFFERENT post from the one you'd write first \u2014 a different angle or opening entirely.`;
+      const raw = anthropicKey ? await withAnthropic(variation, anthropicKey) : await withOpenAI(variation, openaiKey);
+      const parsed = raw ? parseJson(raw) : null;
+      if (parsed) results.push(parsed);
+    }
+    if (results.length) return { posts: results, source: "ai" };
+  }
+  return {
+    posts: [templatePost(platform, topicKey, ctx, opts.details)],
+    source: "template"
+  };
+}
+
+const PALETTE = {
+  paper: "#F7F4EF",
+  paperWarm: "#EFEAE0",
+  ink: "#1F1B16",
+  gray: "#8A847C",
+  graySoft: "#A9A39A",
+  rust: "#B5563A",
+  hair: "#DDD6C9"
+};
+function welcomeHtml(firstName, domain) {
+  const p = PALETTE;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${p.paper};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${p.ink};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${p.paper};padding:40px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${p.paper};">
+
+        <!-- Wordmark -->
+        <tr><td style="padding-bottom:36px;">
+          <span style="font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:700;letter-spacing:-0.3px;color:${p.ink};">GhostForm</span>
+        </td></tr>
+
+        <!-- Headline -->
+        <tr><td style="padding-bottom:18px;">
+          <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.5px;color:${p.ink};">
+            Welcome, ${firstName}.
+          </h1>
+        </td></tr>
+
+        <tr><td style="padding-bottom:30px;">
+          <p style="margin:0;font-size:16px;line-height:1.65;color:${p.gray};">
+            You just did the thing most agents put off: you set up a system so the
+            follow-up happens whether or not you remember it.
+          </p>
+        </td></tr>
+
+        <!-- Why this was a good call -->
+        <tr><td style="padding-bottom:12px;">
+          <p style="margin:0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5A6349;font-weight:600;">
+            Why this matters
+          </p>
+        </td></tr>
+
+        <tr><td style="padding-bottom:30px;">
+          <p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:${p.ink};">
+            Most leads aren't lost to competition. They're lost to silence \u2014 the
+            buyer you meant to call back on Tuesday who signed with someone else
+            by Friday.
+          </p>
+          <p style="margin:0;font-size:15px;line-height:1.7;color:${p.gray};">
+            GhostForm exists to close that gap. Every morning it hands you a short
+            list: who's new, who's gone quiet, and who you promised to follow up
+            with. No spreadsheet to maintain, no CRM to babysit.
+          </p>
+        </td></tr>
+
+        <!-- What you now have -->
+        <tr><td style="padding-bottom:14px;border-top:1px solid ${p.hair};padding-top:30px;">
+          <p style="margin:0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5A6349;font-weight:600;">
+            What you now have
+          </p>
+        </td></tr>
+
+        <tr><td style="padding-bottom:32px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${[
+    ["A QR code for your open houses", "Guests sign in on their own phone. It works even with no cell signal \u2014 the leads sync once you\u2019re back in range."],
+    ["Your morning call list", "New leads, cold leads, and overdue follow-ups, ranked so you start at the top."],
+    ["Follow-ups that send themselves", "Set an email once and it goes out weekly, biweekly, or monthly to everyone at that stage."],
+    ["Messages written for you", "One tap drafts a text or email using what that lead actually told you."]
+  ].map(([title, body]) => `
+            <tr><td style="padding-bottom:18px;">
+              <p style="margin:0 0 4px;font-family:Georgia,serif;font-size:16px;font-weight:600;color:${p.ink};">${title}</p>
+              <p style="margin:0;font-size:14px;line-height:1.6;color:${p.gray};">${body}</p>
+            </td></tr>`).join("")}
+          </table>
+        </td></tr>
+
+        <!-- The one action that matters -->
+        <tr><td style="background:${p.paperWarm};border:1px solid ${p.hair};padding:28px;">
+          <p style="margin:0 0 8px;font-family:Georgia,serif;font-size:18px;font-weight:600;color:${p.ink};">
+            Start here: print one QR code
+          </p>
+          <p style="margin:0 0 20px;font-size:14px;line-height:1.65;color:${p.gray};">
+            It takes about two minutes. Put it on the table at your next showing and
+            let it collect a lead \u2014 that's the moment this stops being another tool
+            you signed up for.
+          </p>
+          <a href="${domain}/dashboard/forms"
+             style="display:inline-block;background:${p.rust};color:${p.paper};text-decoration:none;padding:14px 28px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;">
+            Get my QR code
+          </a>
+        </td></tr>
+
+        <!-- Trial terms, stated plainly -->
+        <tr><td style="padding-top:30px;">
+          <p style="margin:0;font-size:13px;line-height:1.65;color:${p.graySoft};">
+            You're on a 30-day free trial. Your card isn't charged until day 31, and
+            you can cancel any time before then from your profile.
+          </p>
+        </td></tr>
+
+        <!-- Personal sign-off -->
+        <tr><td style="padding-top:30px;border-top:1px solid ${p.hair};margin-top:30px;">
+          <p style="margin:24px 0 0;font-size:14px;line-height:1.7;color:${p.gray};">
+            I built GhostForm myself here in Kalispell, and I read every reply to this
+            address. If something's confusing or missing, tell me \u2014 I'd rather hear it
+            than have you quietly stop using it.
+          </p>
+          <p style="margin:16px 0 0;font-size:14px;color:${p.ink};font-weight:500;">
+            \u2014 Michael
+          </p>
+        </td></tr>
+
+        <tr><td style="padding-top:34px;">
+          <p style="margin:0;font-size:11px;color:${p.graySoft};letter-spacing:0.3px;">
+            GhostForm \xB7 Built in the Flathead Valley, Montana
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+function welcomeText(firstName, domain) {
+  return `Welcome, ${firstName}.
+
+You just did the thing most agents put off: you set up a system so the follow-up
+happens whether or not you remember it.
+
+WHY THIS MATTERS
+Most leads aren't lost to competition. They're lost to silence \u2014 the buyer you
+meant to call back on Tuesday who signed with someone else by Friday. GhostForm
+exists to close that gap. Every morning it hands you a short list: who's new,
+who's gone quiet, and who you promised to follow up with.
+
+WHAT YOU NOW HAVE
+- A QR code for your open houses. Guests sign in on their own phone. Works with
+  no cell signal; leads sync when you're back in range.
+- Your morning call list. New, cold, and overdue follow-ups, ranked.
+- Follow-ups that send themselves. Weekly, biweekly, or monthly.
+- Messages written for you, using what that lead actually told you.
+
+START HERE: PRINT ONE QR CODE
+Two minutes. Put it on the table at your next showing and let it collect a lead.
+${domain}/dashboard/forms
+
+You're on a 30-day free trial. Your card isn't charged until day 31, and you can
+cancel any time before then from your profile.
+
+I built GhostForm myself in Kalispell, and I read every reply to this
+address. If something's confusing or missing, tell me.
+
+\u2014 White Raven Development Team
+
+GhostForm \xB7 Built in the Flathead Valley, Montana`;
+}
+async function sendWelcomeEmail(email, company) {
+  if (!email) return false;
+  const key = process.env.RESEND_KEY;
+  if (!key) {
+    console.error("[welcome] RESEND_KEY not set \u2014 skipping welcome email.");
+    return false;
+  }
+  const raw = (company || "").trim();
+  const firstName = raw ? raw.charAt(0).toUpperCase() + raw.slice(1) : "there";
+  const domain = (process.env.PROJECT_DOMAIN || "").replace(/\/$/, "");
+  try {
+    const resend = new Resend(key);
+    await resend.emails.send({
+      from: "Michael at GhostForm <hello@ascendpod.com>",
+      to: [email],
+      replyTo: "michaeldreesen90@gmail.com",
+      subject: "Welcome to GhostForm \u2014 start here",
+      html: welcomeHtml(firstName, domain),
+      text: welcomeText(firstName, domain)
+    });
+    return true;
+  } catch (error) {
+    console.error("[welcome] Send failed:", (error == null ? void 0 : error.message) || error);
+    return false;
+  }
 }
 
 const sessionHooks = createHooks();
@@ -7915,11 +8354,17 @@ const _lazy_YUWevn = () => import('../routes/api/leads/create.post.mjs');
 const _lazy_t9F3bu = () => import('../routes/api/index4.get.mjs');
 const _lazy_0Doaks = () => import('../routes/api/leads/tiers.get.mjs');
 const _lazy_i191PU = () => import('../routes/api/qr_code/_id_.get.mjs');
+const _lazy_rfaZfx = () => import('../routes/api/social/generate.post.mjs');
+const _lazy_W7kQn6 = () => import('../routes/api/index5.get.mjs');
+const _lazy_YyhPdT = () => import('../routes/api/social/save.post.mjs');
+const _lazy_PGwJYq = () => import('../routes/api/social/status.post.mjs');
 const _lazy_UPg2Ir = () => import('../routes/api/stripe/subscribe.post.mjs');
 const _lazy_pjRUBv = () => import('../routes/api/stripe/webhook.post.mjs');
 const _lazy_JDeNrs = () => import('../routes/api/test-reminder.get.mjs');
-const _lazy_V0fc_M = () => import('../routes/api/index5.get.mjs');
+const _lazy_V0fc_M = () => import('../routes/api/index6.get.mjs');
 const _lazy_24ztMZ = () => import('../routes/api/index.put.mjs');
+const _lazy_q1wdXI = () => import('../routes/api/user/tour.post.mjs');
+const _lazy_5mZRNa = () => import('../routes/api/user/voice.post.mjs');
 const _lazy_mqdDEE = () => import('../routes/renderer.mjs').then(function (n) { return n.r; });
 
 const handlers = [
@@ -7949,11 +8394,17 @@ const handlers = [
   { route: '/api/leads', handler: _lazy_t9F3bu, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/tiers', handler: _lazy_0Doaks, lazy: true, middleware: false, method: "get" },
   { route: '/api/qr_code/:id', handler: _lazy_i191PU, lazy: true, middleware: false, method: "get" },
+  { route: '/api/social/generate', handler: _lazy_rfaZfx, lazy: true, middleware: false, method: "post" },
+  { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
+  { route: '/api/social/save', handler: _lazy_YyhPdT, lazy: true, middleware: false, method: "post" },
+  { route: '/api/social/status', handler: _lazy_PGwJYq, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/subscribe', handler: _lazy_UPg2Ir, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/webhook', handler: _lazy_pjRUBv, lazy: true, middleware: false, method: "post" },
   { route: '/api/test-reminder', handler: _lazy_JDeNrs, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_V0fc_M, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_24ztMZ, lazy: true, middleware: false, method: "put" },
+  { route: '/api/user/tour', handler: _lazy_q1wdXI, lazy: true, middleware: false, method: "post" },
+  { route: '/api/user/voice', handler: _lazy_5mZRNa, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_mqdDEE, lazy: true, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _z1ZgpX, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _QEBMFR, lazy: false, middleware: false, method: "get" },
@@ -8379,5 +8830,5 @@ setupGracefulShutdown(listener, nitroApp);
 }
 const nodeServer = {};
 
-export { $fetch$1 as $, getResponseStatusText as A, getResponseStatus as B, useNitroApp as C, serialize$1 as D, defu as E, hasProtocol as F, isScriptProtocol as G, joinURL as H, klona as I, isEqual as J, parseQuery as K, hash$1 as L, withQuery as M, sanitizeStatusCode as N, parseURL as O, decodePath as P, appendResponseHeader as Q, defuFn as R, withTrailingSlash as S, withoutTrailingSlash as T, UserModel as U, withLeadingSlash as V, baseURL as W, createHooks as X, encodeParam as Y, nodeServer as Z, defineEventHandler as a, createError$1 as b, connectDB as c, defineTask as d, setUserSession as e, buildDailyBriefing as f, requirePaidUser as g, readBody as h, getHeader as i, runTask as j, generateLeadDraft as k, getRouterParam as l, setResponseHeader as m, narrateBriefing as n, readRawBody as o, requireUserSession as p, buildAssetsURL as q, readValidatedBody as r, schemaImport as s, publicAssetsURL as t, useRuntimeConfig as u, encodePath as v, defineRenderHandler as w, getQuery as x, destr as y, getRouteRules as z };
+export { $fetch$1 as $, destr as A, getRouteRules as B, getResponseStatusText as C, getResponseStatus as D, useNitroApp as E, serialize$1 as F, defu as G, hasProtocol as H, isScriptProtocol as I, joinURL as J, klona as K, isEqual as L, parseQuery as M, hash$1 as N, withQuery as O, sanitizeStatusCode as P, parseURL as Q, decodePath as R, appendResponseHeader as S, defuFn as T, UserModelImport as U, withTrailingSlash as V, withoutTrailingSlash as W, withLeadingSlash as X, baseURL as Y, createHooks as Z, encodeParam as _, defineEventHandler as a, nodeServer as a0, createError$1 as b, connectDB as c, defineTask as d, setUserSession as e, sendWelcomeEmail as f, buildDailyBriefing as g, requirePaidUser as h, readBody as i, getHeader as j, runTask as k, generateLeadDraft as l, getRouterParam as m, narrateBriefing as n, setResponseHeader as o, generateSocialPosts as p, requireUserSession as q, readValidatedBody as r, schemaImport as s, readRawBody as t, buildAssetsURL as u, publicAssetsURL as v, useRuntimeConfig as w, encodePath as x, defineRenderHandler as y, getQuery as z };
 //# sourceMappingURL=nitro.mjs.map

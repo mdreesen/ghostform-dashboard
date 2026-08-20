@@ -1,7 +1,8 @@
-import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModel, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModelImport, b as createError, f as sendWelcomeEmail } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,7 +15,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-const User = UserModel;
+const User = UserModelImport;
 const bodySchema = z.object({
   company: z.string(),
   category: z.string(),
@@ -47,6 +48,10 @@ const signup_post = defineEventHandler(async (event) => {
       privacy_policy
     });
     await registerUser.save();
+    const sent = await sendWelcomeEmail(email.toLowerCase().trim(), company);
+    if (!sent) {
+      console.error("[signup] Account created but welcome email did not send:", email);
+    }
   } catch (error) {
     console.log(error);
     throw createError({

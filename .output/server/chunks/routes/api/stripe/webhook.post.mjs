@@ -1,6 +1,7 @@
-import { a as defineEventHandler, c as connectDB, i as getHeader, o as readRawBody, b as createError, U as UserModel } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, c as connectDB, j as getHeader, t as readRawBody, b as createError, U as UserModelImport } from '../../../nitro/nitro.mjs';
 import Stripe from 'stripe';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -13,7 +14,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-const UserDoc = UserModel;
+const UserDoc = UserModelImport;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const ACTIVE_STATUSES = /* @__PURE__ */ new Set(["active", "trialing"]);
 const PRICE_TO_PLAN = {

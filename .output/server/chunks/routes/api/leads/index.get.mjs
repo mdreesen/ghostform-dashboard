@@ -1,5 +1,6 @@
-import { a as defineEventHandler, l as getRouterParam, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, m as getRouterParam, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

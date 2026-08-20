@@ -148,7 +148,10 @@ async function markContacted(lead: BriefingLead) {
           </p>
         </NuxtLink>
 
-        <div class="gf-actions flex gap-2.5 opacity-60 group-hover:opacity-100 transition-opacity">
+        <div
+          class="gf-actions flex gap-2.5 opacity-60 group-hover:opacity-100 transition-opacity"
+          :data-tour="lead._id === visibleLeads[0]?._id ? 'lead-actions' : undefined"
+        >
           <appLeadMessageComposer
             :lead-id="lead._id"
             :lead-name="lead.name"

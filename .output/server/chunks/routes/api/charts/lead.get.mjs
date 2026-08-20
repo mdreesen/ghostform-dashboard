@@ -1,5 +1,6 @@
-import { a as defineEventHandler, g as requirePaidUser, s as schemaImport } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, h as requirePaidUser, s as schemaImport } from '../../../nitro/nitro.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

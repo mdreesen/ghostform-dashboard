@@ -1,5 +1,5 @@
 import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { computed, toValue, unref, mergeProps, createVNode, resolveDynamicComponent, ref, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, defineComponent, provide, useModel, createTextVNode, createCommentVNode, mergeModels, getCurrentScope, onScopeDispose, getCurrentInstance, toHandlerKey, camelize as camelize$1, toRef as toRef$1, inject, shallowRef, h, Teleport, customRef, hasInjectionContext, effectScope, cloneVNode, createElementBlock, nextTick, toRefs, useSlots, isRef, Comment, resolveComponent, reactive, onServerPrefetch, watchEffect, markRaw, Fragment, useAttrs, shallowReadonly, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, isReadonly, isShallow, isReactive } from 'vue';
-import { D as serialize, E as defu, F as hasProtocol, G as isScriptProtocol, H as joinURL, I as klona, J as isEqual, K as parseQuery, L as hash, M as withQuery, N as sanitizeStatusCode, O as parseURL, v as encodePath, P as decodePath, Q as appendResponseHeader, R as defuFn, S as withTrailingSlash, T as withoutTrailingSlash, V as withLeadingSlash, b as createError$1, $ as $fetch, W as baseURL, X as createHooks, Y as encodeParam } from '../nitro/nitro.mjs';
+import { F as serialize, G as defu, H as hasProtocol, I as isScriptProtocol, J as joinURL, K as klona, L as isEqual, M as parseQuery, N as hash, O as withQuery, P as sanitizeStatusCode, Q as parseURL, x as encodePath, R as decodePath, S as appendResponseHeader, T as defuFn, V as withTrailingSlash, W as withoutTrailingSlash, X as withLeadingSlash, b as createError$1, $ as $fetch, Y as baseURL, Z as createHooks, _ as encodeParam } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { Icon, getIcon, loadIcon as loadIcon$1, addIcon, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
 import { debounce } from 'perfect-debounce';
@@ -13,6 +13,7 @@ import { createTV, cnMerge } from 'tailwind-variants';
 import { getIconCSS } from '@iconify/utils/lib/css/icon';
 import { u as useHead$1, h as headSymbol, a as useSeoMeta$1 } from '../routes/renderer.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -781,6 +782,9 @@ function getRouteRules(arg) {
     return {};
   }
 }
+const __nuxt_page_meta$b = {
+  layout: "authenticated"
+};
 const __nuxt_page_meta$a = {
   layout: "authenticated"
 };
@@ -790,20 +794,18 @@ const __nuxt_page_meta$9 = {
 const __nuxt_page_meta$8 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$7 = {
+const __nuxt_page_meta$7 = { layout: "authenticated" };
+const __nuxt_page_meta$6 = { layout: "authenticated" };
+const __nuxt_page_meta$5 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$6 = { layout: "authenticated" };
-const __nuxt_page_meta$5 = { layout: "authenticated" };
 const __nuxt_page_meta$4 = {
   layout: "authenticated"
 };
 const __nuxt_page_meta$3 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$2 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$2 = { layout: "authenticated" };
 const __nuxt_page_meta$1 = {
   layout: "authenticated"
 };
@@ -814,62 +816,68 @@ const _routes = [
   {
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
-    meta: __nuxt_page_meta$a || {},
+    meta: __nuxt_page_meta$b || {},
     component: () => import('./create-BRGa768C.mjs')
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
-    meta: __nuxt_page_meta$9 || {},
+    meta: __nuxt_page_meta$a || {},
     component: () => import('./index-BYT6lftS.mjs')
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
-    meta: __nuxt_page_meta$8 || {},
-    component: () => import('./details-_XipJ5hW.mjs')
+    meta: __nuxt_page_meta$9 || {},
+    component: () => import('./details-CbU9ePym.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
-    meta: __nuxt_page_meta$7 || {},
+    meta: __nuxt_page_meta$8 || {},
     component: () => import('./edit-BQggIyQ5.mjs')
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
-    meta: __nuxt_page_meta$6 || {},
+    meta: __nuxt_page_meta$7 || {},
     component: () => import('./index-BOm2ygst.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
-    meta: __nuxt_page_meta$5 || {},
+    meta: __nuxt_page_meta$6 || {},
     component: () => import('./index-Dajmh8X8.mjs')
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
-    meta: __nuxt_page_meta$4 || {},
+    meta: __nuxt_page_meta$5 || {},
     component: () => import('./index-C-LMPpcO.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
-    meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CjDm3AMr.mjs')
+    meta: __nuxt_page_meta$4 || {},
+    component: () => import('./index-BrBsptDi.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
+    meta: __nuxt_page_meta$3 || {},
+    component: () => import('./index-OUEpfjwf.mjs')
+  },
+  {
+    name: "dashboard-social",
+    path: "/dashboard/social",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-oQJ-HvxV.mjs')
+    component: () => import('./index-BNtqThje.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-CoyKHRq6.mjs')
+    component: () => import('./index-CE6_hxd-.mjs')
   },
   {
     name: "forgotpassword",
@@ -1859,7 +1867,7 @@ const serverPlaceholder = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.d
   default: ServerPlaceholder
 }, Symbol.toStringTag, { value: "Module" }));
 const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
-const __nuxt_component_0$2 = defineComponent({
+const __nuxt_component_1$1 = defineComponent({
   name: "ClientOnly",
   inheritAttrs: false,
   props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
@@ -11164,7 +11172,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-DCIxZJFb.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-TvldbVpF.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-D6BhmMrf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-Flt6bszS.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-Cp8Rb9d4.mjs').then((m) => m.default || m))
@@ -11595,5 +11603,5 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 
-export { tryOnBeforeUnmount as $, useComponentIcons as A, tv as B, isArrayOfArray as C, _sfc_main$e as D, _sfc_main$b as E, FieldGroupReset as F, get as G, _sfc_main$c as H, looseToNumber as I, getDisplayValue as J, useNuxtData as K, useRuntimeConfig as L, useEmitAsProps as M, useLocale as N, createReusableTemplate as O, Primitive as P, createSharedComposable as Q, reactiveOmit as R, usePrimitiveElement as S, Teleport_default as T, _sfc_main$9 as U, VisuallyHidden_default as V, pickLinkProps as W, _sfc_main$a as X, omit as Y, refAutoReset as Z, __nuxt_component_0$1 as _, useRoute as a, onKeyStroke as a0, createGlobalState as a1, AUTOFOCUS_ON_UNMOUNT as a2, focus as a3, AUTOFOCUS_ON_MOUNT as a4, focusFirst as a5, getTabbableCandidates as a6, EVENT_OPTIONS as a7, getTabbableEdges as a8, formBusInjectionKey as a9, formStateInjectionKey as aa, formErrorsInjectionKey as ab, formInputsInjectionKey as ac, formLoadingInjectionKey as ad, formOptionsInjectionKey as ae, useEventBus as af, inputIdInjectionKey as ag, formFieldInjectionKey as ah, useMotion as ai, NuxtIcon as aj, useFetch as b, __nuxt_component_0$2 as c, unrefElement as d, entry_default as default, useVModel as e, isNullish as f, useCollection as g, createContext as h, injectConfigProviderContext as i, useForwardProps$1 as j, useForwardExpose as k, useResizeObserver as l, Presence_default as m, navigateTo as n, getActiveElement as o, useUserSession as p, _sfc_main$8 as q, refreshNuxtData as r, useComponentProps as s, useAppConfig as t, useHead as u, useForwardProps as v, reactivePick as w, usePortal as x, useFormField as y, useFieldGroup as z };
+export { tryOnBeforeUnmount as $, useComponentIcons as A, tv as B, isArrayOfArray as C, _sfc_main$e as D, _sfc_main$b as E, FieldGroupReset as F, get as G, _sfc_main$c as H, looseToNumber as I, getDisplayValue as J, useNuxtData as K, useRuntimeConfig as L, useEmitAsProps as M, useLocale as N, createReusableTemplate as O, Primitive as P, createSharedComposable as Q, reactiveOmit as R, usePrimitiveElement as S, Teleport_default as T, _sfc_main$9 as U, VisuallyHidden_default as V, pickLinkProps as W, _sfc_main$a as X, omit as Y, refAutoReset as Z, __nuxt_component_0$1 as _, useRoute as a, onKeyStroke as a0, createGlobalState as a1, AUTOFOCUS_ON_UNMOUNT as a2, focus as a3, AUTOFOCUS_ON_MOUNT as a4, focusFirst as a5, getTabbableCandidates as a6, EVENT_OPTIONS as a7, getTabbableEdges as a8, formBusInjectionKey as a9, formStateInjectionKey as aa, formErrorsInjectionKey as ab, formInputsInjectionKey as ac, formLoadingInjectionKey as ad, formOptionsInjectionKey as ae, useEventBus as af, inputIdInjectionKey as ag, formFieldInjectionKey as ah, useMotion as ai, NuxtIcon as aj, useFetch as b, __nuxt_component_1$1 as c, unrefElement as d, entry_default as default, useVModel as e, isNullish as f, useCollection as g, createContext as h, injectConfigProviderContext as i, useForwardProps$1 as j, useForwardExpose as k, useResizeObserver as l, Presence_default as m, navigateTo as n, getActiveElement as o, useUserSession as p, _sfc_main$8 as q, refreshNuxtData as r, useComponentProps as s, useAppConfig as t, useHead as u, useForwardProps as v, reactivePick as w, usePortal as x, useFormField as y, useFieldGroup as z };
 //# sourceMappingURL=server.mjs.map

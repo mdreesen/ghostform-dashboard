@@ -1,5 +1,6 @@
-import { a as defineEventHandler, i as getHeader, b as createError, j as runTask } from '../../nitro/nitro.mjs';
+import { a as defineEventHandler, j as getHeader, b as createError, k as runTask } from '../../nitro/nitro.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

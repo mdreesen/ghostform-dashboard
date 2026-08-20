@@ -1,9 +1,10 @@
-import { a as defineEventHandler, b as createError, s as schemaImport, U as UserModel } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError, s as schemaImport, U as UserModelImport } from '../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { H as HomeModel } from '../../../_/Home.mjs';
 import Stripe from 'stripe';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -16,7 +17,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-const UserDoc = UserModel;
+const UserDoc = UserModelImport;
 const Lead = schemaImport;
 const Campaign = CampaignModelImport;
 const Home = HomeModel;

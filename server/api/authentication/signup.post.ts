@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { connectDB } from "../../../lib/database/mongodb";
-
+import { sendWelcomeEmail } from '~~/server/utils/welcomeEmail';
 import { Model } from 'mongoose';
 import UserModel from '../../../lib/database/models/User';
 import { User } from '~/types/user';
@@ -45,6 +45,15 @@ export default defineEventHandler(async (event) => {
     });
 
     await registerUser.save();
+
+    // Welcome email — fired after the account exists, and deliberately NOT
+    // awaited into the try/catch's failure path: sendWelcomeEmail never throws,
+    // so a mail problem can't turn a successful signup into an error the user
+    // sees. Worst case they get an account with no welcome email, which we log.
+    const sent = await sendWelcomeEmail(email.toLowerCase().trim(), company);
+    if (!sent) {
+      console.error('[signup] Account created but welcome email did not send:', email);
+    }
 
   } catch (error) {
     console.log(error);

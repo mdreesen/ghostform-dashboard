@@ -81,7 +81,7 @@ const activeLeads = computed(() =>
     </section>
 
     <!-- ── 01 Who to reach ──────────────────────────────────── -->
-    <section class="gf-depth mb-28" style="--d:.05s">
+    <section class="gf-depth mb-28" style="--d:.05s" data-tour="briefing">
       <ClientOnly>
         <appDailyBriefing />
       </ClientOnly>

@@ -9,6 +9,7 @@ import { a as useRoute, b as useFetch, r as refreshNuxtData, n as navigateTo } f
 import { u as useToast } from './useToast-LG3isBA-.mjs';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

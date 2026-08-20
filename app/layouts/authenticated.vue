@@ -20,6 +20,12 @@ const authenticated = computed(() => {
     <main class="bg-[#F7F4EF] text-[#1F1B16] selection:bg-[#B5563A]/15 min-h-screen">
         <template v-if="authenticated">
             <baseNavBar />
+
+            <!-- Guided tour: auto-runs once for new accounts; replayable from
+                 the profile page via window.dispatchEvent(new Event('gf:tour')) -->
+            <ClientOnly>
+              <baseTour :auto="!user?.tour_completed" />
+            </ClientOnly>
             <!-- gf-stage establishes the perspective context that .gf-depth
                  blocks animate within as they scroll into view -->
             <div class="gf-stage pt-24 pb-28 px-6 sm:px-10 lg:px-12">

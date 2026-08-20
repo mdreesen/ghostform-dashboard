@@ -8,6 +8,7 @@ import { u as useToast } from './useToast-LG3isBA-.mjs';
 import './server.mjs';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

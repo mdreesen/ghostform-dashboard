@@ -42,6 +42,7 @@ export const BaseNavBar: typeof import("../app/components/base/NavBar.vue")['def
 export const BaseQrCode: typeof import("../app/components/base/QrCode.vue")['default']
 export const BaseTable: typeof import("../app/components/base/Table.vue")['default']
 export const BaseTerrain: typeof import("../app/components/base/Terrain.vue")['default']
+export const BaseTour: typeof import("../app/components/base/Tour.vue")['default']
 export const BaseButton: typeof import("../app/components/base/button.vue")['default']
 export const BaseFooter: typeof import("../app/components/base/footer.vue")['default']
 export const BaseIcon: typeof import("../app/components/base/icon.vue")['default']
@@ -257,6 +258,7 @@ export const LazyBaseNavBar: LazyComponent<typeof import("../app/components/base
 export const LazyBaseQrCode: LazyComponent<typeof import("../app/components/base/QrCode.vue")['default']>
 export const LazyBaseTable: LazyComponent<typeof import("../app/components/base/Table.vue")['default']>
 export const LazyBaseTerrain: LazyComponent<typeof import("../app/components/base/Terrain.vue")['default']>
+export const LazyBaseTour: LazyComponent<typeof import("../app/components/base/Tour.vue")['default']>
 export const LazyBaseButton: LazyComponent<typeof import("../app/components/base/button.vue")['default']>
 export const LazyBaseFooter: LazyComponent<typeof import("../app/components/base/footer.vue")['default']>
 export const LazyBaseIcon: LazyComponent<typeof import("../app/components/base/icon.vue")['default']>

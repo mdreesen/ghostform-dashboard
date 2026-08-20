@@ -1,6 +1,7 @@
-import { a as defineEventHandler, b as createError, h as readBody, s as schemaImport, k as generateLeadDraft } from '../../../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError, i as readBody, s as schemaImport, l as generateLeadDraft } from '../../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

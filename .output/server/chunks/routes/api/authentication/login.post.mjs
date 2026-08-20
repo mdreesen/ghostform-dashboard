@@ -1,7 +1,8 @@
-import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModel, e as setUserSession, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModelImport, e as setUserSession, b as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,7 +15,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-const User = UserModel;
+const User = UserModelImport;
 const bodySchema = z.object({
   email: z.email(),
   password: z.string().min(8)

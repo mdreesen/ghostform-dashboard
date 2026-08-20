@@ -1,7 +1,8 @@
-import { a as defineEventHandler, r as readValidatedBody, U as UserModel, b as createError } from '../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, U as UserModelImport, b as createError } from '../../nitro/nitro.mjs';
 import { z } from 'zod';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
@@ -14,7 +15,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-const User = UserModel;
+const User = UserModelImport;
 const bodySchema = z.object({
   name: z.string().nullable(),
   company: z.string().nullable(),

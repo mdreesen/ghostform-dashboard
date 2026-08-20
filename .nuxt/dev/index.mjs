@@ -2886,7 +2886,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3005,7 +3005,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"37dbe-I19GpHjM1t+vkQCBIIiO65ijE6s\"",
+    "mtime": "2026-08-20T03:12:51.772Z",
+    "size": 228798,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"cbe19-24ibpB/SpDi3ThhqHKCOn8V25bE\"",
+    "mtime": "2026-08-20T03:12:51.774Z",
+    "size": 835097,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3619,11 +3634,36 @@ const userSchema = new Schema({
   timezone: { type: String, default: "America/Denver" },
   // How many days of silence before a lead is considered "cold" and
   // resurfaced in the daily briefing. Per-realtor tunable.
-  coldLeadAfterDays: { type: Number, default: 14 }
+  coldLeadAfterDays: { type: Number, default: 14 },
+  // Whether the realtor has finished (or skipped) the guided tour.
+  tour_completed: { type: Boolean, default: false },
+  // ============================================================
+  // Social voice profile — captured once, then used to make every
+  // generated post sound like this specific realtor rather than
+  // generic real-estate filler. Without it, AI posts all read the
+  // same and agents stop using the feature.
+  // ============================================================
+  voice: {
+    // How they talk: 'warm' | 'straight' | 'playful' | 'polished'
+    tone: { type: String, default: "warm" },
+    // Free text: "former teacher, two kids, obsessed with trail running"
+    about: { type: String, default: "" },
+    // What they want to be known for locally
+    focus: { type: String, default: "" },
+    // 'none' | 'some' | 'lots'
+    emoji: { type: String, default: "some" },
+    // 'none' | 'few' | 'many'
+    hashtags: { type: String, default: "few" },
+    // Words/phrases they actually use, and ones to avoid
+    phrases: { type: String, default: "" },
+    avoid: { type: String, default: "" },
+    // Pasted samples of their real posts — by far the strongest signal
+    samples: { type: String, default: "" }
+  }
 }, { timestamps: true });
-const UserModel = mongoose.models.User || mongoose.model("User", userSchema);
+const UserModelImport = mongoose.models.User || mongoose.model("User", userSchema);
 
-const UserDoc$2 = UserModel;
+const UserDoc$2 = UserModelImport;
 const ACTIVE_STATUSES$1 = /* @__PURE__ */ new Set(["active", "trialing"]);
 async function requirePaidUser(event) {
   await connectDB();
@@ -3642,6 +3682,194 @@ async function requirePaidUser(event) {
     });
   }
   return dbUser;
+}
+
+const PALETTE = {
+  paper: "#F7F4EF",
+  paperWarm: "#EFEAE0",
+  ink: "#1F1B16",
+  gray: "#8A847C",
+  graySoft: "#A9A39A",
+  rust: "#B5563A",
+  hair: "#DDD6C9"
+};
+function welcomeHtml(firstName, domain) {
+  const p = PALETTE;
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:${p.paper};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:${p.ink};">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${p.paper};padding:40px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:${p.paper};">
+
+        <!-- Wordmark -->
+        <tr><td style="padding-bottom:36px;">
+          <span style="font-family:Georgia,'Times New Roman',serif;font-size:19px;font-weight:700;letter-spacing:-0.3px;color:${p.ink};">GhostForm</span>
+        </td></tr>
+
+        <!-- Headline -->
+        <tr><td style="padding-bottom:18px;">
+          <h1 style="margin:0;font-family:Georgia,'Times New Roman',serif;font-size:32px;line-height:1.15;font-weight:600;letter-spacing:-0.5px;color:${p.ink};">
+            Welcome, ${firstName}.
+          </h1>
+        </td></tr>
+
+        <tr><td style="padding-bottom:30px;">
+          <p style="margin:0;font-size:16px;line-height:1.65;color:${p.gray};">
+            You just did the thing most agents put off: you set up a system so the
+            follow-up happens whether or not you remember it.
+          </p>
+        </td></tr>
+
+        <!-- Why this was a good call -->
+        <tr><td style="padding-bottom:12px;">
+          <p style="margin:0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5A6349;font-weight:600;">
+            Why this matters
+          </p>
+        </td></tr>
+
+        <tr><td style="padding-bottom:30px;">
+          <p style="margin:0 0 14px;font-size:15px;line-height:1.7;color:${p.ink};">
+            Most leads aren't lost to competition. They're lost to silence \u2014 the
+            buyer you meant to call back on Tuesday who signed with someone else
+            by Friday.
+          </p>
+          <p style="margin:0;font-size:15px;line-height:1.7;color:${p.gray};">
+            GhostForm exists to close that gap. Every morning it hands you a short
+            list: who's new, who's gone quiet, and who you promised to follow up
+            with. No spreadsheet to maintain, no CRM to babysit.
+          </p>
+        </td></tr>
+
+        <!-- What you now have -->
+        <tr><td style="padding-bottom:14px;border-top:1px solid ${p.hair};padding-top:30px;">
+          <p style="margin:0;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#5A6349;font-weight:600;">
+            What you now have
+          </p>
+        </td></tr>
+
+        <tr><td style="padding-bottom:32px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${[
+    ["A QR code for your open houses", "Guests sign in on their own phone. It works even with no cell signal \u2014 the leads sync once you\u2019re back in range."],
+    ["Your morning call list", "New leads, cold leads, and overdue follow-ups, ranked so you start at the top."],
+    ["Follow-ups that send themselves", "Set an email once and it goes out weekly, biweekly, or monthly to everyone at that stage."],
+    ["Messages written for you", "One tap drafts a text or email using what that lead actually told you."]
+  ].map(([title, body]) => `
+            <tr><td style="padding-bottom:18px;">
+              <p style="margin:0 0 4px;font-family:Georgia,serif;font-size:16px;font-weight:600;color:${p.ink};">${title}</p>
+              <p style="margin:0;font-size:14px;line-height:1.6;color:${p.gray};">${body}</p>
+            </td></tr>`).join("")}
+          </table>
+        </td></tr>
+
+        <!-- The one action that matters -->
+        <tr><td style="background:${p.paperWarm};border:1px solid ${p.hair};padding:28px;">
+          <p style="margin:0 0 8px;font-family:Georgia,serif;font-size:18px;font-weight:600;color:${p.ink};">
+            Start here: print one QR code
+          </p>
+          <p style="margin:0 0 20px;font-size:14px;line-height:1.65;color:${p.gray};">
+            It takes about two minutes. Put it on the table at your next showing and
+            let it collect a lead \u2014 that's the moment this stops being another tool
+            you signed up for.
+          </p>
+          <a href="${domain}/dashboard/forms"
+             style="display:inline-block;background:${p.rust};color:${p.paper};text-decoration:none;padding:14px 28px;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;">
+            Get my QR code
+          </a>
+        </td></tr>
+
+        <!-- Trial terms, stated plainly -->
+        <tr><td style="padding-top:30px;">
+          <p style="margin:0;font-size:13px;line-height:1.65;color:${p.graySoft};">
+            You're on a 30-day free trial. Your card isn't charged until day 31, and
+            you can cancel any time before then from your profile.
+          </p>
+        </td></tr>
+
+        <!-- Personal sign-off -->
+        <tr><td style="padding-top:30px;border-top:1px solid ${p.hair};margin-top:30px;">
+          <p style="margin:24px 0 0;font-size:14px;line-height:1.7;color:${p.gray};">
+            I built GhostForm myself here in Kalispell, and I read every reply to this
+            address. If something's confusing or missing, tell me \u2014 I'd rather hear it
+            than have you quietly stop using it.
+          </p>
+          <p style="margin:16px 0 0;font-size:14px;color:${p.ink};font-weight:500;">
+            \u2014 Michael
+          </p>
+        </td></tr>
+
+        <tr><td style="padding-top:34px;">
+          <p style="margin:0;font-size:11px;color:${p.graySoft};letter-spacing:0.3px;">
+            GhostForm \xB7 Built in the Flathead Valley, Montana
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+function welcomeText(firstName, domain) {
+  return `Welcome, ${firstName}.
+
+You just did the thing most agents put off: you set up a system so the follow-up
+happens whether or not you remember it.
+
+WHY THIS MATTERS
+Most leads aren't lost to competition. They're lost to silence \u2014 the buyer you
+meant to call back on Tuesday who signed with someone else by Friday. GhostForm
+exists to close that gap. Every morning it hands you a short list: who's new,
+who's gone quiet, and who you promised to follow up with.
+
+WHAT YOU NOW HAVE
+- A QR code for your open houses. Guests sign in on their own phone. Works with
+  no cell signal; leads sync when you're back in range.
+- Your morning call list. New, cold, and overdue follow-ups, ranked.
+- Follow-ups that send themselves. Weekly, biweekly, or monthly.
+- Messages written for you, using what that lead actually told you.
+
+START HERE: PRINT ONE QR CODE
+Two minutes. Put it on the table at your next showing and let it collect a lead.
+${domain}/dashboard/forms
+
+You're on a 30-day free trial. Your card isn't charged until day 31, and you can
+cancel any time before then from your profile.
+
+I built GhostForm myself in Kalispell, and I read every reply to this
+address. If something's confusing or missing, tell me.
+
+\u2014 White Raven Development Team
+
+GhostForm \xB7 Built in the Flathead Valley, Montana`;
+}
+async function sendWelcomeEmail(email, company) {
+  if (!email) return false;
+  const key = process.env.RESEND_KEY;
+  if (!key) {
+    console.error("[welcome] RESEND_KEY not set \u2014 skipping welcome email.");
+    return false;
+  }
+  const raw = (company || "").trim();
+  const firstName = raw ? raw.charAt(0).toUpperCase() + raw.slice(1) : "there";
+  const domain = (process.env.PROJECT_DOMAIN || "").replace(/\/$/, "");
+  try {
+    const resend = new Resend(key);
+    await resend.emails.send({
+      from: "Michael at GhostForm <hello@ascendpod.com>",
+      to: [email],
+      replyTo: "michaeldreesen90@gmail.com",
+      subject: "Welcome to GhostForm \u2014 start here",
+      html: welcomeHtml(firstName, domain),
+      text: welcomeText(firstName, domain)
+    });
+    return true;
+  } catch (error) {
+    console.error("[welcome] Send failed:", (error == null ? void 0 : error.message) || error);
+    return false;
+  }
 }
 
 const sessionHooks = createHooks();
@@ -4223,31 +4451,37 @@ const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_d8uRs7 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_z7u2Qs = () => Promise.resolve().then(function () { return signup_post$1; });
-const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$b; });
+const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$d; });
 const _lazy_0YaBRe = () => Promise.resolve().then(function () { return index_delete$3; });
-const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$9; });
-const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$1; });
+const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$b; });
+const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$3; });
 const _lazy_6dQdG0 = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_oJWXNf = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; });
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
-const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$7; });
+const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$9; });
 const _lazy_0rvesM = () => Promise.resolve().then(function () { return contacted_post$1; });
 const _lazy_yBxanF = () => Promise.resolve().then(function () { return draft_post$1; });
 const _lazy_qc34eq = () => Promise.resolve().then(function () { return index_delete$1; });
-const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$5; });
+const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_f4xwzm = () => Promise.resolve().then(function () { return index_put$3; });
 const _lazy_ygINZT = () => Promise.resolve().then(function () { return schedule_post$1; });
 const _lazy_lZmAO2 = () => Promise.resolve().then(function () { return sendMessage_post$1; });
 const _lazy_YUWevn = () => Promise.resolve().then(function () { return create_post$1; });
-const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$3; });
+const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_0Doaks = () => Promise.resolve().then(function () { return tiers_get$1; });
 const _lazy_i191PU = () => Promise.resolve().then(function () { return _id__get$1; });
+const _lazy_rfaZfx = () => Promise.resolve().then(function () { return generate_post$1; });
+const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$3; });
+const _lazy_YyhPdT = () => Promise.resolve().then(function () { return save_post$1; });
+const _lazy_PGwJYq = () => Promise.resolve().then(function () { return status_post$1; });
 const _lazy_UPg2Ir = () => Promise.resolve().then(function () { return subscribe_post$1; });
 const _lazy_pjRUBv = () => Promise.resolve().then(function () { return webhook_post$1; });
 const _lazy_JDeNrs = () => Promise.resolve().then(function () { return testReminder_get$1; });
 const _lazy_V0fc_M = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_24ztMZ = () => Promise.resolve().then(function () { return index_put$1; });
+const _lazy_q1wdXI = () => Promise.resolve().then(function () { return tour_post$1; });
+const _lazy_5mZRNa = () => Promise.resolve().then(function () { return voice_post$1; });
 const _lazy_mqdDEE = () => Promise.resolve().then(function () { return renderer; });
 
 const handlers = [
@@ -4277,11 +4511,17 @@ const handlers = [
   { route: '/api/leads', handler: _lazy_t9F3bu, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/tiers', handler: _lazy_0Doaks, lazy: true, middleware: false, method: "get" },
   { route: '/api/qr_code/:id', handler: _lazy_i191PU, lazy: true, middleware: false, method: "get" },
+  { route: '/api/social/generate', handler: _lazy_rfaZfx, lazy: true, middleware: false, method: "post" },
+  { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
+  { route: '/api/social/save', handler: _lazy_YyhPdT, lazy: true, middleware: false, method: "post" },
+  { route: '/api/social/status', handler: _lazy_PGwJYq, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/subscribe', handler: _lazy_UPg2Ir, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/webhook', handler: _lazy_pjRUBv, lazy: true, middleware: false, method: "post" },
   { route: '/api/test-reminder', handler: _lazy_JDeNrs, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_V0fc_M, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_24ztMZ, lazy: true, middleware: false, method: "put" },
+  { route: '/api/user/tour', handler: _lazy_q1wdXI, lazy: true, middleware: false, method: "post" },
+  { route: '/api/user/voice', handler: _lazy_5mZRNa, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_mqdDEE, lazy: true, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _z1ZgpX, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _QEBMFR, lazy: false, middleware: false, method: "get" },
@@ -4808,13 +5048,13 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$5 = UserModel;
+const User$7 = UserModelImport;
 const loggedInUser = defineEventHandler(async (event) => {
   await connectDB();
   const { user } = await requireUserSession(event);
   const userEmail = user == null ? void 0 : user.email;
   try {
-    const findUser = await User$5.findOne({ email: userEmail });
+    const findUser = await User$7.findOne({ email: userEmail });
     if (!findUser) {
       throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
     }
@@ -4843,7 +5083,7 @@ const homeSchema = new Schema({
 }, { timestamps: true });
 const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 
-const UserDoc$1 = UserModel;
+const UserDoc$1 = UserModelImport;
 const Lead$7 = schemaImport;
 const Campaign$4 = CampaignModelImport;
 const Home$1 = HomeModel;
@@ -4882,13 +5122,13 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: delete_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$4 = UserModel;
-const bodySchema$a = z.object({
+const User$6 = UserModelImport;
+const bodySchema$e = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$a.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$e.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -4900,7 +5140,7 @@ const forgot_post = defineEventHandler(async (event) => {
     await connectDB();
     if (question !== "7") throw createError({ statusCode: 401, statusMessage: "Try again" });
     else {
-      const userFound = await User$4.findOne({ email });
+      const userFound = await User$6.findOne({ email });
       if (!userFound) throw createError({ statusCode: 401, statusMessage: "Wrong credentials" });
       const resend = new Resend(`${process.env.RESEND_KEY}`);
       await resend.emails.send({
@@ -4910,7 +5150,7 @@ const forgot_post = defineEventHandler(async (event) => {
         // Subject line
         html: htmlBody
       });
-      await User$4.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
+      await User$6.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
     }
   } catch (error) {
     console.log(error);
@@ -4926,17 +5166,17 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: forgot_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$3 = UserModel;
-const bodySchema$9 = z.object({
+const User$5 = UserModelImport;
+const bodySchema$d = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$9.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$d.parse);
   try {
     await connectDB();
-    const user = await User$3.findOne({ email });
+    const user = await User$5.findOne({ email });
     const passwordMatches = bcrypt.compare(password, (_a = user == null ? void 0 : user.password) != null ? _a : "");
     if (await passwordMatches) {
       await setUserSession(event, {
@@ -4986,19 +5226,19 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: login_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$2 = UserModel;
-const bodySchema$8 = z.object({
+const User$4 = UserModelImport;
+const bodySchema$c = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$8.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$c.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Try again" });
-    await User$2.findOneAndUpdate({ resetPasswordToken: token }, {
+    await User$4.findOneAndUpdate({ resetPasswordToken: token }, {
       password: hashedPassword
     });
   } catch (error) {
@@ -5015,8 +5255,8 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: reset
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$1 = UserModel;
-const bodySchema$7 = z.object({
+const User$3 = UserModelImport;
+const bodySchema$b = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5025,10 +5265,10 @@ const bodySchema$7 = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$7.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$b.parse);
   try {
     await connectDB();
-    const user = await User$1.findOne({ email });
+    const user = await User$3.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedEmail = await bcrypt.hash(email, 15);
     const hashedCompany = await bcrypt.hash(company, 15);
@@ -5037,7 +5277,7 @@ const signup_post = defineEventHandler(async (event) => {
     if (!password && !confirm_password) throw createError({ statusCode: 401, statusMessage: "Please insert password.", data: { errorMessage: "The requested item could not be found." } });
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Passwords do not match.", data: { errorMessage: "The requested item could not be found." } });
     if (user) throw createError({ statusCode: 401, statusMessage: "User already registered.", data: { errorMessage: "The requested item could not be found." } });
-    const registerUser = new User$1({
+    const registerUser = new User$3({
       company: company.toLowerCase(),
       company_hashed: hashedCompany.trim(),
       category: category.toLowerCase(),
@@ -5048,6 +5288,10 @@ const signup_post = defineEventHandler(async (event) => {
       privacy_policy
     });
     await registerUser.save();
+    const sent = await sendWelcomeEmail(email.toLowerCase().trim(), company);
+    if (!sent) {
+      console.error("[signup] Account created but welcome email did not send:", email);
+    }
   } catch (error) {
     console.log(error);
     throw createError({
@@ -5062,7 +5306,7 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const index_get$a = defineEventHandler(async (event) => {
+const index_get$c = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) {
@@ -5076,18 +5320,18 @@ const index_get$a = defineEventHandler(async (event) => {
   return briefing;
 });
 
-const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$a
+  default: index_get$c
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$3 = CampaignModelImport;
-const bodySchema$6 = z.object({
+const bodySchema$a = z.object({
   _id: z.string()
 });
 const index_delete$2 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$6.parse);
+    const body = await readValidatedBody(event, bodySchema$a.parse);
     await Campaign$3.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5104,19 +5348,19 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$2 = CampaignModelImport;
-const index_get$8 = defineEventHandler(async (event) => {
+const index_get$a = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
   const data = await Campaign$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$8
+  default: index_get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const save_post = defineEventHandler(async (event) => {
+const save_post$2 = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) {
@@ -5158,13 +5402,13 @@ const save_post = defineEventHandler(async (event) => {
   }
 });
 
-const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: save_post
+  default: save_post$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$5 = z.object({
+const bodySchema$9 = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5173,7 +5417,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$5.parse);
+  const body = await readValidatedBody(event, bodySchema$9.parse);
   try {
     await Campaign.updateOne(
       { _id: body._id, userId: user._id },
@@ -5255,14 +5499,14 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$5 = HomeModel;
-const bodySchema$4 = z.object({
+const bodySchema$8 = z.object({
   name: z.string().nullable(),
   address: z.string().nullable(),
   owner: z.string().nullable(),
   notes: z.string().nullable()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$4.parse);
+  const body = await readValidatedBody(event, bodySchema$8.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -5281,15 +5525,15 @@ const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home = HomeModel;
-const index_get$6 = defineEventHandler(async (event) => {
+const index_get$8 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const data = await Home.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$6
+  default: index_get$8
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$4 = schemaImport;
@@ -5383,7 +5627,7 @@ const index_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$3 = schemaImport;
-const index_get$4 = defineEventHandler(async (event) => {
+const index_get$6 = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
     const data = await Lead$3.findById(id).lean();
@@ -5397,13 +5641,13 @@ const index_get$4 = defineEventHandler(async (event) => {
   }
 });
 
-const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$4
+  default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$3 = z.object({
+const bodySchema$7 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -5426,7 +5670,7 @@ const bodySchema$3 = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$3.parse);
+  const body = await readValidatedBody(event, bodySchema$7.parse);
   try {
     const existing = await Lead$2.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
@@ -5495,7 +5739,7 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 
 const LeadModel$1 = schemaImport;
 const resend$1 = new Resend(process.env.RESEND_KEY);
-const bodySchema$2 = z.object({
+const bodySchema$6 = z.object({
   // The (possibly realtor-edited) message body to send.
   message: z.string().min(1),
   // Optional custom subject; defaults to a friendly follow-up line.
@@ -5508,7 +5752,7 @@ const sendMessage_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session expired." });
   }
-  const { message, subject } = await readValidatedBody(event, bodySchema$2.parse);
+  const { message, subject } = await readValidatedBody(event, bodySchema$6.parse);
   const lead = await LeadModel$1.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
@@ -5548,7 +5792,7 @@ const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$1 = schemaImport;
-const bodySchema$1 = z.object({
+const bodySchema$5 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -5569,7 +5813,7 @@ const bodySchema$1 = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$1.parse);
+  const body = await readValidatedBody(event, bodySchema$5.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$1.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -5597,7 +5841,7 @@ const selection_status_lead = [
 ];
 
 const Lead = schemaImport;
-const index_get$2 = defineEventHandler(async (event) => {
+const index_get$4 = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   const findLeadStatus = selection_status_lead.map((item) => {
@@ -5614,9 +5858,9 @@ const index_get$2 = defineEventHandler(async (event) => {
   };
 });
 
-const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$2
+  default: index_get$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const tiers_get = defineEventHandler(async (event) => {
@@ -5668,6 +5912,134 @@ const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: _id__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const bodySchema$4 = z.object({
+  platform: z.enum(["facebook", "instagram", "x"]),
+  topic: z.string().default("personal"),
+  details: z.string().optional(),
+  count: z.number().min(1).max(5).optional()
+});
+const generate_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$4.parse);
+  const { posts, source } = await generateSocialPosts(
+    platform,
+    topic,
+    {
+      agentName: user.name || user.company,
+      company: user.company,
+      region: user.region,
+      voice: user.voice
+    },
+    { count, details }
+  );
+  return { platform, topic, source, posts };
+});
+
+const generate_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: generate_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const socialPostSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+  platform: {
+    type: String,
+    enum: ["facebook", "instagram", "x"],
+    required: true
+  },
+  // What prompted this post — lets us avoid regenerating the same angle twice
+  // and lets the UI group by theme.
+  topic: { type: String, default: "general" },
+  body: { type: String, required: true },
+  hashtags: { type: String, default: "" },
+  // Suggestion for what image to pair with it (we don't generate images).
+  imageIdea: { type: String, default: "" },
+  status: {
+    type: String,
+    enum: ["draft", "approved", "posted", "discarded"],
+    default: "draft",
+    index: true
+  },
+  // Set when the realtor marks it posted (manually today, automatically later).
+  postedAt: { type: Date, default: null },
+  // Optional: when they intend to post it.
+  scheduledFor: { type: Date, default: null }
+}, { timestamps: true });
+const SocialPostModel = mongoose.models.SocialPost || mongoose.model("SocialPost", socialPostSchema);
+
+const SocialPost$2 = SocialPostModel;
+const index_get$2 = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const all = await SocialPost$2.find({
+    userId: user._id,
+    status: { $ne: "discarded" }
+  }).sort({ createdAt: -1 }).limit(60).lean();
+  return {
+    approved: all.filter((p) => p.status === "approved"),
+    drafts: all.filter((p) => p.status === "draft"),
+    posted: all.filter((p) => p.status === "posted").slice(0, 15)
+  };
+});
+
+const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const SocialPost$1 = SocialPostModel;
+const bodySchema$3 = z.object({
+  platform: z.enum(["facebook", "instagram", "x"]),
+  topic: z.string().default("general"),
+  body: z.string().min(1),
+  hashtags: z.string().optional(),
+  imageIdea: z.string().optional(),
+  status: z.enum(["draft", "approved"]).default("approved")
+});
+const save_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const data = await readValidatedBody(event, bodySchema$3.parse);
+  const created = await SocialPost$1.create({ userId: user._id, ...data });
+  return { success: true, _id: String(created._id) };
+});
+
+const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: save_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const SocialPost = SocialPostModel;
+const bodySchema$2 = z.object({
+  _id: z.string(),
+  status: z.enum(["draft", "approved", "posted", "discarded"]),
+  body: z.string().optional()
+});
+const status_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { _id, status, body } = await readValidatedBody(event, bodySchema$2.parse);
+  const update = { status };
+  if (typeof body === "string" && body.trim()) update.body = body.trim();
+  if (status === "posted") update.postedAt = /* @__PURE__ */ new Date();
+  const res = await SocialPost.updateOne({ _id, userId: user._id }, { $set: update });
+  if (res.matchedCount === 0) {
+    throw createError({ statusCode: 404, message: "Post not found." });
+  }
+  return { success: true };
+});
+
+const status_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: status_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const stripe$1 = new Stripe(process.env.STRIPE_SECRET_KEY);
 const subscribe_post = defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -5701,7 +6073,7 @@ const subscribe_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePr
   default: subscribe_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const UserDoc = UserModel;
+const UserDoc = UserModelImport;
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const ACTIVE_STATUSES = /* @__PURE__ */ new Set(["active", "trialing"]);
 const PRICE_TO_PLAN = {
@@ -5875,8 +6247,8 @@ const index_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User = UserModel;
-const bodySchema = z.object({
+const User$2 = UserModelImport;
+const bodySchema$1 = z.object({
   name: z.string().nullable(),
   company: z.string().nullable(),
   phone: z.string().nullable(),
@@ -5885,7 +6257,7 @@ const bodySchema = z.object({
   calendar_link: z.string().nullable()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { name, company, phone, email, region, calendar_link } = await readValidatedBody(event, bodySchema.parse);
+  const { name, company, phone, email, region, calendar_link } = await readValidatedBody(event, bodySchema$1.parse);
   const obj = {
     name,
     company,
@@ -5896,7 +6268,7 @@ const index_put = defineEventHandler(async (event) => {
   };
   try {
     const user = await loggedInUser(event);
-    await User.findOneAndUpdate(
+    await User$2.findOneAndUpdate(
       { _id: user == null ? void 0 : user._id },
       { ...obj },
       { new: true }
@@ -5913,6 +6285,48 @@ const index_put = defineEventHandler(async (event) => {
 const index_put$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: index_put
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const User$1 = UserModelImport;
+const tour_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) {
+    throw createError({ statusCode: 401, message: "Session expired." });
+  }
+  await User$1.updateOne({ _id: user._id }, { $set: { tour_completed: true } });
+  return { success: true };
+});
+
+const tour_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: tour_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const User = UserModelImport;
+const bodySchema = z.object({
+  tone: z.enum(["warm", "straight", "playful", "polished"]).optional(),
+  about: z.string().max(500).optional(),
+  focus: z.string().max(300).optional(),
+  emoji: z.enum(["none", "some", "lots"]).optional(),
+  hashtags: z.enum(["none", "few", "many"]).optional(),
+  phrases: z.string().max(400).optional(),
+  avoid: z.string().max(400).optional(),
+  samples: z.string().max(4e3).optional()
+});
+const voice_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const voice = await readValidatedBody(event, bodySchema.parse);
+  await User.updateOne(
+    { _id: user._id },
+    { $set: Object.fromEntries(Object.entries(voice).map(([k, v]) => [`voice.${k}`, v])) }
+  );
+  return { success: true };
+});
+
+const voice_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: voice_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

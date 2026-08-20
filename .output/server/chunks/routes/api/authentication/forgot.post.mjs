@@ -1,4 +1,4 @@
-import { a as defineEventHandler, r as readValidatedBody, c as connectDB, b as createError, U as UserModel } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, c as connectDB, b as createError, U as UserModelImport } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import { nanoid } from 'nanoid';
 import { Resend } from 'resend';
@@ -15,7 +15,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-const User = UserModel;
+const User = UserModelImport;
 const bodySchema = z.object({
   email: z.email(),
   question: z.string()

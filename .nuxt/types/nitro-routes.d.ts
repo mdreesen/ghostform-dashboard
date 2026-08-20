@@ -72,6 +72,18 @@ declare module "nitropack/types" {
     '/api/qr_code/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qr_code/[id].get').default>>>>
     }
+    '/api/social/generate': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/generate.post').default>>>>
+    }
+    '/api/social': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/index.get').default>>>>
+    }
+    '/api/social/save': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/save.post').default>>>>
+    }
+    '/api/social/status': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/status.post').default>>>>
+    }
     '/api/stripe/subscribe': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/stripe/subscribe.post').default>>>>
     }
@@ -84,6 +96,12 @@ declare module "nitropack/types" {
     '/api/user': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/index.get').default>>>>
       'put': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/index.put').default>>>>
+    }
+    '/api/user/tour': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/tour.post').default>>>>
+    }
+    '/api/user/voice': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/voice.post').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>

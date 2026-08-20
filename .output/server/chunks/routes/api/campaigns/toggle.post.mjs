@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'resend';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';
