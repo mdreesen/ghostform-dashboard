@@ -113,7 +113,7 @@ function welcomeHtml(firstName: string, domain: string) {
             than have you quietly stop using it.
           </p>
           <p style="margin:16px 0 0;font-size:14px;color:${p.ink};font-weight:500;">
-            — Michael
+            — White Raven Development
           </p>
         </td></tr>
 
@@ -192,7 +192,7 @@ export async function sendWelcomeEmail(email: string, company?: string): Promise
     await resend.emails.send({
       from: 'Michael at GhostForm <hello@ascendpod.com>',
       to: [email],
-      replyTo: 'michaeldreesen90@gmail.com',
+      replyTo: 'whiteravendev90@gmail.com',
       subject: 'Welcome to GhostForm — start here',
       html: welcomeHtml(firstName, domain),
       text: welcomeText(firstName, domain)

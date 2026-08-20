@@ -3009,16 +3009,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"39502-l8GaHmuioipsSTNxUZbe/tTupS4\"",
-    "mtime": "2026-08-20T14:58:33.756Z",
-    "size": 234754,
+    "etag": "\"396f3-cJnysLm6qUDssW/x/8zfF1eQvgU\"",
+    "mtime": "2026-08-20T15:14:27.449Z",
+    "size": 235251,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"d1dfa-p0J6g7Z0dS+SI4GEqv958gBDM4I\"",
-    "mtime": "2026-08-20T14:58:33.757Z",
-    "size": 859642,
+    "etag": "\"d1e54-/pJEF3LV85PEmIVBhhfy6C34Ae4\"",
+    "mtime": "2026-08-20T15:14:27.450Z",
+    "size": 859732,
     "path": "index.mjs.map"
   }
 };
@@ -3890,7 +3890,7 @@ function welcomeHtml(firstName, domain) {
             than have you quietly stop using it.
           </p>
           <p style="margin:16px 0 0;font-size:14px;color:${p.ink};font-weight:500;">
-            \u2014 Michael
+            \u2014 White Raven Development
           </p>
         </td></tr>
 
@@ -3954,7 +3954,7 @@ async function sendWelcomeEmail(email, company) {
     await resend.emails.send({
       from: "Michael at GhostForm <hello@ascendpod.com>",
       to: [email],
-      replyTo: "michaeldreesen90@gmail.com",
+      replyTo: "whiteravendev90@gmail.com",
       subject: "Welcome to GhostForm \u2014 start here",
       html: welcomeHtml(firstName, domain),
       text: welcomeText(firstName, domain)
@@ -5082,7 +5082,7 @@ const reminders = defineTask({
             return {
               from: `${useCleanString(agentName)}@ascendpod.com`,
               to: lead.email,
-              replyTo: campaign.userId.email || "michaeldreesen90@gmail.com",
+              replyTo: campaign.userId.email || "whiteravendev90@gmail.com",
               subject: campaign.subject,
               text: personalizedText
             };
