@@ -98,7 +98,7 @@ useMotion(formRef, { ...formVarient() });
                 <transition name="slide-up" mode="out-in">
 
                   <UDrawer title="Reset your password" :overlay="false" class="bg-white">
-                    <UButton label="Forgot password" color="neutral" variant="subtle" />
+                    <UButton label="Forgot password" color="neutral" variant="subtle" class="bg-white" />
 
                     <template #body>
                       <form @submit.prevent="forgotpassword" class="space-y-6">

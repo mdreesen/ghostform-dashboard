@@ -162,13 +162,13 @@ useMotion(formRef, { ...formVarient() });
 
       </div>
 
-      <footer class="mt-8 flex justify-between items-center px-4">
+      <!-- <footer class="mt-8 flex justify-between items-center px-4">
         <div class="flex items-center gap-2">
           <div class="w-1.5 h-1.5 rounded-full bg-[#30cf43] shadow-[0_0_8px_#30cf43]"></div>
           <span class="text-[10px] font-bold text-[#8A847C] uppercase tracking-widest">Ghost-Node Active</span>
         </div>
         <span class="text-[10px] font-mono text-[#A9A39A] italic-none">v3.0.4-LITE</span>
-      </footer>
+      </footer> -->
     </main>
   </div>
 </template>

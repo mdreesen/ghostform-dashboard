@@ -39,6 +39,9 @@ import 'devalue';
 import 'unhead/plugins';
 import 'unhead/utils';
 
+var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 function timeZone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
@@ -68,9 +71,10 @@ const _sfc_main$4 = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
-      _push(`<!--[--><h1 class="text-4xl md:text-5xl font-bold tracking-tighter">${__props.text ?? ""}</h1>`);
+      var _a, _b;
+      _push(`<!--[--><h1 class="text-4xl md:text-5xl font-bold tracking-tighter">${(_a = __props.text) != null ? _a : ""}</h1>`);
       if (__props.subText) {
-        _push(`<span class="font-bold tracking-tighter">${__props.subText ?? ""}</span>`);
+        _push(`<span class="font-bold tracking-tighter">${(_b = __props.subText) != null ? _b : ""}</span>`);
       } else {
         _push(`<!---->`);
       }
@@ -349,52 +353,59 @@ const _sfc_main$3 = {
     const appConfig = useAppConfig();
     const { orientation, size: fieldGroupSize } = useFieldGroup(_props);
     const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
-    const ui = computed(() => tv({ extend: theme$1, ...appConfig.ui?.badge || {} })({
-      color: props.color,
-      variant: props.variant,
-      size: fieldGroupSize.value ?? props.size,
-      square: props.square || !slots.default && !props.label,
-      fieldGroup: orientation.value
-    }));
+    const ui = computed(() => {
+      var _a, _b;
+      return tv({ extend: theme$1, ...((_a = appConfig.ui) == null ? void 0 : _a.badge) || {} })({
+        color: props.color,
+        variant: props.variant,
+        size: (_b = fieldGroupSize.value) != null ? _b : props.size,
+        square: props.square || !slots.default && !props.label,
+        fieldGroup: orientation.value
+      });
+    });
     return (_ctx, _push, _parent, _attrs) => {
+      var _a;
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: unref(props).as,
         "data-slot": "base",
-        class: ui.value.base({ class: [unref(props).ui?.base, unref(props).class] })
+        class: ui.value.base({ class: [(_a = unref(props).ui) == null ? void 0 : _a.base, unref(props).class] })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
             ssrRenderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
+              var _a2, _b, _c;
               if (unref(isLeading) && unref(leadingIconName)) {
                 _push2(ssrRenderComponent(_sfc_main$e, {
                   name: unref(leadingIconName),
                   "data-slot": "leadingIcon",
-                  class: ui.value.leadingIcon({ class: unref(props).ui?.leadingIcon })
+                  class: ui.value.leadingIcon({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.leadingIcon })
                 }, null, _parent2, _scopeId));
               } else if (!!unref(props).avatar) {
                 _push2(ssrRenderComponent(_sfc_main$b, mergeProps({
-                  size: unref(props).ui?.leadingAvatarSize || ui.value.leadingAvatarSize()
+                  size: ((_b = unref(props).ui) == null ? void 0 : _b.leadingAvatarSize) || ui.value.leadingAvatarSize()
                 }, unref(props).avatar, {
                   "data-slot": "leadingAvatar",
-                  class: ui.value.leadingAvatar({ class: unref(props).ui?.leadingAvatar })
+                  class: ui.value.leadingAvatar({ class: (_c = unref(props).ui) == null ? void 0 : _c.leadingAvatar })
                 }), null, _parent2, _scopeId));
               } else {
                 _push2(`<!---->`);
               }
             }, _push2, _parent2, _scopeId);
             ssrRenderSlot(_ctx.$slots, "default", { ui: ui.value }, () => {
+              var _a2;
               if (unref(props).label !== void 0 && unref(props).label !== null) {
-                _push2(`<span data-slot="label" class="${ssrRenderClass(ui.value.label({ class: unref(props).ui?.label }))}"${_scopeId}>${ssrInterpolate(unref(props).label)}</span>`);
+                _push2(`<span data-slot="label" class="${ssrRenderClass(ui.value.label({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.label }))}"${_scopeId}>${ssrInterpolate(unref(props).label)}</span>`);
               } else {
                 _push2(`<!---->`);
               }
             }, _push2, _parent2, _scopeId);
             ssrRenderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => {
+              var _a2;
               if (unref(isTrailing) && unref(trailingIconName)) {
                 _push2(ssrRenderComponent(_sfc_main$e, {
                   name: unref(trailingIconName),
                   "data-slot": "trailingIcon",
-                  class: ui.value.trailingIcon({ class: unref(props).ui?.trailingIcon })
+                  class: ui.value.trailingIcon({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.trailingIcon })
                 }, null, _parent2, _scopeId));
               } else {
                 _push2(`<!---->`);
@@ -402,35 +413,44 @@ const _sfc_main$3 = {
             }, _push2, _parent2, _scopeId);
           } else {
             return [
-              renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => [
-                unref(isLeading) && unref(leadingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
-                  key: 0,
-                  name: unref(leadingIconName),
-                  "data-slot": "leadingIcon",
-                  class: ui.value.leadingIcon({ class: unref(props).ui?.leadingIcon })
-                }, null, 8, ["name", "class"])) : !!unref(props).avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
-                  key: 1,
-                  size: unref(props).ui?.leadingAvatarSize || ui.value.leadingAvatarSize()
-                }, unref(props).avatar, {
-                  "data-slot": "leadingAvatar",
-                  class: ui.value.leadingAvatar({ class: unref(props).ui?.leadingAvatar })
-                }), null, 16, ["size", "class"])) : createCommentVNode("", true)
-              ]),
-              renderSlot(_ctx.$slots, "default", { ui: ui.value }, () => [
-                unref(props).label !== void 0 && unref(props).label !== null ? (openBlock(), createBlock("span", {
-                  key: 0,
-                  "data-slot": "label",
-                  class: ui.value.label({ class: unref(props).ui?.label })
-                }, toDisplayString(unref(props).label), 3)) : createCommentVNode("", true)
-              ]),
-              renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => [
-                unref(isTrailing) && unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
-                  key: 0,
-                  name: unref(trailingIconName),
-                  "data-slot": "trailingIcon",
-                  class: ui.value.trailingIcon({ class: unref(props).ui?.trailingIcon })
-                }, null, 8, ["name", "class"])) : createCommentVNode("", true)
-              ])
+              renderSlot(_ctx.$slots, "leading", { ui: ui.value }, () => {
+                var _a2, _b, _c;
+                return [
+                  unref(isLeading) && unref(leadingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
+                    key: 0,
+                    name: unref(leadingIconName),
+                    "data-slot": "leadingIcon",
+                    class: ui.value.leadingIcon({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.leadingIcon })
+                  }, null, 8, ["name", "class"])) : !!unref(props).avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                    key: 1,
+                    size: ((_b = unref(props).ui) == null ? void 0 : _b.leadingAvatarSize) || ui.value.leadingAvatarSize()
+                  }, unref(props).avatar, {
+                    "data-slot": "leadingAvatar",
+                    class: ui.value.leadingAvatar({ class: (_c = unref(props).ui) == null ? void 0 : _c.leadingAvatar })
+                  }), null, 16, ["size", "class"])) : createCommentVNode("", true)
+                ];
+              }),
+              renderSlot(_ctx.$slots, "default", { ui: ui.value }, () => {
+                var _a2;
+                return [
+                  unref(props).label !== void 0 && unref(props).label !== null ? (openBlock(), createBlock("span", {
+                    key: 0,
+                    "data-slot": "label",
+                    class: ui.value.label({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.label })
+                  }, toDisplayString(unref(props).label), 3)) : createCommentVNode("", true)
+                ];
+              }),
+              renderSlot(_ctx.$slots, "trailing", { ui: ui.value }, () => {
+                var _a2;
+                return [
+                  unref(isTrailing) && unref(trailingIconName) ? (openBlock(), createBlock(_sfc_main$e, {
+                    key: 0,
+                    name: unref(trailingIconName),
+                    "data-slot": "trailingIcon",
+                    class: ui.value.trailingIcon({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.trailingIcon })
+                  }, null, 8, ["name", "class"])) : createCommentVNode("", true)
+                ];
+              })
             ];
           }
         }),
@@ -452,12 +472,16 @@ function isStandardSchema(schema) {
   return "~standard" in schema;
 }
 async function validateStandardSchema(state, schema) {
+  var _a;
   const result = await schema["~standard"].validate(state);
   if (result.issues) {
     return {
-      errors: result.issues?.map((issue) => ({
-        name: issue.path?.map((item) => typeof item === "object" ? item.key : item).join(".") || "",
-        message: issue.message
+      errors: ((_a = result.issues) == null ? void 0 : _a.map((issue) => {
+        var _a2;
+        return {
+          name: ((_a2 = issue.path) == null ? void 0 : _a2.map((item) => typeof item === "object" ? item.key : item).join(".")) || "",
+          message: issue.message
+        };
       })) || [],
       result: null
     };
@@ -496,7 +520,7 @@ function validateSchema(state, schema) {
 function getAtPath(data, path) {
   if (!path) return data;
   const value = path.split(".").reduce(
-    (value2, key) => value2?.[key],
+    (value2, key) => value2 == null ? void 0 : value2[key],
     data
   );
   return value;
@@ -522,10 +546,10 @@ function setAtPath(data, path, value) {
   return data;
 }
 class FormValidationException extends Error {
-  formId;
-  errors;
   constructor(formId, errors) {
     super("Form validation exception");
+    __publicField(this, "formId");
+    __publicField(this, "errors");
     this.formId = formId;
     this.errors = errors;
     Object.setPrototypeOf(this, FormValidationException.prototype);
@@ -557,12 +581,16 @@ const _sfc_main$2 = {
   },
   emits: ["submit", "error"],
   setup(__props, { expose: __expose, emit: __emit }) {
+    var _a;
     const _props = __props;
     const emits = __emit;
     const props = useComponentProps("form", _props);
     const appConfig = useAppConfig();
-    const ui = computed(() => tv({ extend: theme, ...appConfig.ui?.form || {} }));
-    const formId = props.id ?? useId();
+    const ui = computed(() => {
+      var _a2;
+      return tv({ extend: theme, ...((_a2 = appConfig.ui) == null ? void 0 : _a2.form) || {} });
+    });
+    const formId = (_a = props.id) != null ? _a : useId();
     const formRef = useTemplateRef("formRef");
     const bus = useEventBus(`form-${formId}`);
     const parentBus = props.nested === true && inject(
@@ -571,7 +599,7 @@ const _sfc_main$2 = {
     );
     const parentState = props.nested === true ? inject(formStateInjectionKey, void 0) : void 0;
     const state = computed(() => {
-      if (parentState?.value) {
+      if (parentState == null ? void 0 : parentState.value) {
         return props.name ? getAtPath(parentState.value, props.name) : parentState.value;
       }
       return props.state;
@@ -587,14 +615,18 @@ const _sfc_main$2 = {
     const touchedFields = reactive(/* @__PURE__ */ new Set());
     const blurredFields = reactive(/* @__PURE__ */ new Set());
     function resolveErrorIds(errs) {
-      return errs.map((err) => ({
-        ...err,
-        id: err?.name ? inputs.value[err.name]?.id : void 0
-      }));
+      return errs.map((err) => {
+        var _a2;
+        return {
+          ...err,
+          id: (err == null ? void 0 : err.name) ? (_a2 = inputs.value[err.name]) == null ? void 0 : _a2.id : void 0
+        };
+      });
     }
     const transformedState = ref(null);
     async function getErrors() {
-      let errs = props.validate ? await props.validate(state.value) ?? [] : [];
+      var _a2;
+      let errs = props.validate ? (_a2 = await props.validate(state.value)) != null ? _a2 : [] : [];
       if (props.schema) {
         const { errors: errors2, result } = await validateSchema(state.value, props.schema);
         if (errors2) {
@@ -606,6 +638,7 @@ const _sfc_main$2 = {
       return resolveErrorIds(errs);
     }
     async function _validate(opts = { silent: false, nested: false, transform: false }) {
+      var _a2, _b;
       const names = opts.name && !Array.isArray(opts.name) ? [opts.name] : opts.name;
       let nestedResults = [];
       let nestedErrors = [];
@@ -624,7 +657,7 @@ const _sfc_main$2 = {
       } else {
         errors.value = allErrors;
       }
-      if (errors.value?.length) {
+      if ((_a2 = errors.value) == null ? void 0 : _a2.length) {
         if (opts.silent) return false;
         throw new FormValidationException(formId, errors.value);
       }
@@ -636,18 +669,19 @@ const _sfc_main$2 = {
             Object.assign(transformedState.value, result.output);
           }
         });
-        return transformedState.value ?? state.value;
+        return (_b = transformedState.value) != null ? _b : state.value;
       }
       return state.value;
     }
     const loading = ref(false);
     provide(formLoadingInjectionKey, readonly(loading));
     async function onSubmitWrapper(payload) {
+      var _a2;
       loading.value = !!props.loadingAuto;
       const event = payload;
       try {
         event.data = await _validate({ nested: true, transform: props.transform });
-        await props.onSubmit?.(event);
+        await ((_a2 = props.onSubmit) == null ? void 0 : _a2.call(props, event));
         dirtyFields.clear();
       } catch (error) {
         if (!(error instanceof FormValidationException)) {
@@ -681,13 +715,17 @@ const _sfc_main$2 = {
       return { ...error, name: formPath + "." + error.name };
     }
     function stripFormPath(error, formPath) {
+      var _a2;
       const prefix = formPath + ".";
-      const name2 = error?.name?.startsWith(prefix) ? error.name.substring(prefix.length) : error.name;
+      const name2 = ((_a2 = error == null ? void 0 : error.name) == null ? void 0 : _a2.startsWith(prefix)) ? error.name.substring(prefix.length) : error.name;
       return { ...error, name: name2 };
     }
     function filterFormErrors(errors2, formPath) {
       if (!formPath) return errors2;
-      return errors2.filter((e) => e?.name?.startsWith(formPath + ".")).map((e) => stripFormPath(e, formPath));
+      return errors2.filter((e) => {
+        var _a2;
+        return (_a2 = e == null ? void 0 : e.name) == null ? void 0 : _a2.startsWith(formPath + ".");
+      }).map((e) => stripFormPath(e, formPath));
     }
     function getFormErrors(form) {
       return form.api.getErrors().map(
@@ -709,7 +747,10 @@ const _sfc_main$2 = {
     }
     function filterErrorsByNames(allErrors, names) {
       const nameSet = new Set(names);
-      const patterns = names.map((name2) => inputs.value?.[name2]?.pattern).filter(Boolean);
+      const patterns = names.map((name2) => {
+        var _a2, _b;
+        return (_b = (_a2 = inputs.value) == null ? void 0 : _a2[name2]) == null ? void 0 : _b.pattern;
+      }).filter(Boolean);
       const matchesNames = (error) => {
         if (!error.name) return false;
         if (nameSet.has(error.name)) return true;
@@ -779,13 +820,14 @@ const _sfc_main$2 = {
     };
     __expose(api);
     return (_ctx, _push, _parent, _attrs) => {
+      var _a2;
       ssrRenderVNode(_push, createVNode(resolveDynamicComponent(unref(parentBus) ? "div" : "form"), mergeProps({
         id: unref(formId),
         ref_key: "formRef",
         ref: formRef,
         name: unref(parentBus) ? void 0 : unref(props).name,
         method: "post",
-        class: ui.value({ class: [unref(props).ui?.base, unref(props).class] }),
+        class: ui.value({ class: [(_a2 = unref(props).ui) == null ? void 0 : _a2.base, unref(props).class] }),
         onSubmit: onSubmitWrapper
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
@@ -884,6 +926,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "index",
   __ssrInlineRender: true,
   setup(__props) {
+    var _a, _b, _c, _d;
     const savingVoice = ref(false);
     const voice = reactive({
       tone: "warm",
@@ -906,10 +949,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       calendar_link: z.string().nullable()
     });
     const state = reactive({
-      name: data.value?.name,
-      email: data.value?.email,
-      phone: data.value?.phone,
-      company: data.value?.company,
+      name: (_a = data.value) == null ? void 0 : _a.name,
+      email: (_b = data.value) == null ? void 0 : _b.email,
+      phone: (_c = data.value) == null ? void 0 : _c.phone,
+      company: (_d = data.value) == null ? void 0 : _d.company,
       region: data.value.region,
       calendar_link: data.value.calendar_link
     });
@@ -1006,7 +1049,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       class: "truncate"
                     }, null, _parent3, _scopeId2));
                   } else {
-                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).name)}${_scopeId2}>${ssrInterpolate(unref(state).name || "—")}</span>`);
+                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).name)}${_scopeId2}>${ssrInterpolate(unref(state).name || "\u2014")}</span>`);
                   }
                 } else {
                   return [
@@ -1021,7 +1064,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).name
-                    }, toDisplayString(unref(state).name || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).name || "\u2014"), 9, ["title"]))
                   ];
                 }
               }),
@@ -1043,7 +1086,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       class: "truncate"
                     }, null, _parent3, _scopeId2));
                   } else {
-                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).email)}${_scopeId2}>${ssrInterpolate(unref(state).email || "—")}</span>`);
+                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).email)}${_scopeId2}>${ssrInterpolate(unref(state).email || "\u2014")}</span>`);
                   }
                 } else {
                   return [
@@ -1059,7 +1102,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).email
-                    }, toDisplayString(unref(state).email || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).email || "\u2014"), 9, ["title"]))
                   ];
                 }
               }),
@@ -1082,7 +1125,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       class: "truncate"
                     }, null, _parent3, _scopeId2));
                   } else {
-                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).phone)}${_scopeId2}>${ssrInterpolate(unref(state).phone || "—")}</span>`);
+                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).phone)}${_scopeId2}>${ssrInterpolate(unref(state).phone || "\u2014")}</span>`);
                   }
                 } else {
                   return [
@@ -1098,7 +1141,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).phone
-                    }, toDisplayString(unref(state).phone || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).phone || "\u2014"), 9, ["title"]))
                   ];
                 }
               }),
@@ -1120,7 +1163,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       class: "truncate"
                     }, null, _parent3, _scopeId2));
                   } else {
-                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).company)}${_scopeId2}>${ssrInterpolate(unref(state).company || "—")}</span>`);
+                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).company)}${_scopeId2}>${ssrInterpolate(unref(state).company || "\u2014")}</span>`);
                   }
                 } else {
                   return [
@@ -1135,7 +1178,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).company
-                    }, toDisplayString(unref(state).company || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).company || "\u2014"), 9, ["title"]))
                   ];
                 }
               }),
@@ -1156,7 +1199,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       class: "truncate"
                     }, null, _parent3, _scopeId2));
                   } else {
-                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).region)}${_scopeId2}>${ssrInterpolate(unref(state).region || "—")}</span>`);
+                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).region)}${_scopeId2}>${ssrInterpolate(unref(state).region || "\u2014")}</span>`);
                   }
                 } else {
                   return [
@@ -1171,7 +1214,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).region
-                    }, toDisplayString(unref(state).region || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).region || "\u2014"), 9, ["title"]))
                   ];
                 }
               }),
@@ -1192,7 +1235,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       class: "truncate"
                     }, null, _parent3, _scopeId2));
                   } else {
-                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).calendar_link)}${_scopeId2}>${ssrInterpolate(unref(state).calendar_link || "—")}</span>`);
+                    _push3(`<span class="block truncate text-sm font-medium text-[#8A847C] max-w-50"${ssrRenderAttr("title", unref(state).calendar_link)}${_scopeId2}>${ssrInterpolate(unref(state).calendar_link || "\u2014")}</span>`);
                   }
                 } else {
                   return [
@@ -1207,7 +1250,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).calendar_link
-                    }, toDisplayString(unref(state).calendar_link || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).calendar_link || "\u2014"), 9, ["title"]))
                   ];
                 }
               }),
@@ -1272,7 +1315,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).name
-                    }, toDisplayString(unref(state).name || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).name || "\u2014"), 9, ["title"]))
                   ]),
                   _: 1
                 }),
@@ -1293,7 +1336,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).email
-                    }, toDisplayString(unref(state).email || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).email || "\u2014"), 9, ["title"]))
                   ]),
                   _: 1
                 })
@@ -1315,7 +1358,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                     key: 1,
                     class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                     title: unref(state).phone
-                  }, toDisplayString(unref(state).phone || "—"), 9, ["title"]))
+                  }, toDisplayString(unref(state).phone || "\u2014"), 9, ["title"]))
                 ]),
                 _: 1
               }),
@@ -1336,7 +1379,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).company
-                    }, toDisplayString(unref(state).company || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).company || "\u2014"), 9, ["title"]))
                   ]),
                   _: 1
                 }),
@@ -1356,7 +1399,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).region
-                    }, toDisplayString(unref(state).region || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).region || "\u2014"), 9, ["title"]))
                   ]),
                   _: 1
                 }),
@@ -1376,7 +1419,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
                       key: 1,
                       class: "block truncate text-sm font-medium text-[#8A847C] max-w-50",
                       title: unref(state).calendar_link
-                    }, toDisplayString(unref(state).calendar_link || "—"), 9, ["title"]))
+                    }, toDisplayString(unref(state).calendar_link || "\u2014"), 9, ["title"]))
                   ]),
                   _: 1
                 })
@@ -1412,7 +1455,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         }),
         _: 1
       }, _parent));
-      _push(`</div></section></div></main></div><div id="voice" class="mb-10 pb-10 border-b border-[#DDD6C9]"><p class="gf-eyebrow mb-3">Your voice</p><p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]"> This is what makes your social posts sound like you instead of like every other agent. The samples box matters most — paste a couple of posts you&#39;ve actually written. </p><div class="grid sm:grid-cols-2 gap-6 mb-6"><div><label class="gf-eyebrow block mb-3">How you come across</label><select class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"><option value="warm"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "warm") : ssrLooseEqual(unref(voice).tone, "warm")) ? " selected" : ""}>Warm and neighbourly</option><option value="straight"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "straight") : ssrLooseEqual(unref(voice).tone, "straight")) ? " selected" : ""}>Plain and direct</option><option value="playful"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "playful") : ssrLooseEqual(unref(voice).tone, "playful")) ? " selected" : ""}>Light and a bit funny</option><option value="polished"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "polished") : ssrLooseEqual(unref(voice).tone, "polished")) ? " selected" : ""}>Composed and professional</option></select></div><div><label class="gf-eyebrow block mb-3">Emoji</label><select class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"><option value="none"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).emoji) ? ssrLooseContain(unref(voice).emoji, "none") : ssrLooseEqual(unref(voice).emoji, "none")) ? " selected" : ""}>None</option><option value="some"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).emoji) ? ssrLooseContain(unref(voice).emoji, "some") : ssrLooseEqual(unref(voice).emoji, "some")) ? " selected" : ""}>A few</option><option value="lots"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).emoji) ? ssrLooseContain(unref(voice).emoji, "lots") : ssrLooseEqual(unref(voice).emoji, "lots")) ? " selected" : ""}>Plenty</option></select></div></div><div class="space-y-6"><div><label class="gf-eyebrow block mb-3">A bit about you</label><input${ssrRenderAttr("value", unref(voice).about)} placeholder="Grew up here, two kids, spend every free weekend on the lake" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"></div><div><label class="gf-eyebrow block mb-3">What you want to be known for</label><input${ssrRenderAttr("value", unref(voice).focus)} placeholder="First-time buyers, and knowing every back road in the valley" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"></div><div><label class="gf-eyebrow block mb-3">Words to avoid</label><input${ssrRenderAttr("value", unref(voice).avoid)} placeholder="dream home, don&#39;t miss out, hustle" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"></div><div><label class="gf-eyebrow block mb-3">Paste a couple of your real posts</label><textarea rows="7" placeholder="Paste two or three posts you&#39;ve written before. This teaches it your rhythm better than anything else here." class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]">${ssrInterpolate(unref(voice).samples)}</textarea></div></div><button${ssrIncludeBooleanAttr(savingVoice.value) ? " disabled" : ""} class="mt-7 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40">${ssrInterpolate(savingVoice.value ? "Saving…" : "Save my voice")}</button></div><div class="flex flex-col mt-4 pt-8 border-t border-gray-700 text-gray-400"><span>Date: ${ssrInterpolate(unref(formatDate)())}</span><span>Time zone: ${ssrInterpolate(unref(timeZone)())}</span><span>Version: ${ssrInterpolate(unref(packageJson).version)}</span>`);
+      _push(`</div></section></div></main></div><div id="voice" class="mb-10 pb-10 border-b border-[#DDD6C9]"><p class="gf-eyebrow mb-3">Your voice</p><p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]"> This is what makes your social posts sound like you instead of like every other agent. The samples box matters most \u2014 paste a couple of posts you&#39;ve actually written. </p><div class="grid sm:grid-cols-2 gap-6 mb-6"><div><label class="gf-eyebrow block mb-3">How you come across</label><select class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"><option value="warm"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "warm") : ssrLooseEqual(unref(voice).tone, "warm")) ? " selected" : ""}>Warm and neighbourly</option><option value="straight"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "straight") : ssrLooseEqual(unref(voice).tone, "straight")) ? " selected" : ""}>Plain and direct</option><option value="playful"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "playful") : ssrLooseEqual(unref(voice).tone, "playful")) ? " selected" : ""}>Light and a bit funny</option><option value="polished"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).tone) ? ssrLooseContain(unref(voice).tone, "polished") : ssrLooseEqual(unref(voice).tone, "polished")) ? " selected" : ""}>Composed and professional</option></select></div><div><label class="gf-eyebrow block mb-3">Emoji</label><select class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"><option value="none"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).emoji) ? ssrLooseContain(unref(voice).emoji, "none") : ssrLooseEqual(unref(voice).emoji, "none")) ? " selected" : ""}>None</option><option value="some"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).emoji) ? ssrLooseContain(unref(voice).emoji, "some") : ssrLooseEqual(unref(voice).emoji, "some")) ? " selected" : ""}>A few</option><option value="lots"${ssrIncludeBooleanAttr(Array.isArray(unref(voice).emoji) ? ssrLooseContain(unref(voice).emoji, "lots") : ssrLooseEqual(unref(voice).emoji, "lots")) ? " selected" : ""}>Plenty</option></select></div></div><div class="space-y-6"><div><label class="gf-eyebrow block mb-3">A bit about you</label><input${ssrRenderAttr("value", unref(voice).about)} placeholder="Grew up here, two kids, spend every free weekend on the lake" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"></div><div><label class="gf-eyebrow block mb-3">What you want to be known for</label><input${ssrRenderAttr("value", unref(voice).focus)} placeholder="First-time buyers, and knowing every back road in the valley" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"></div><div><label class="gf-eyebrow block mb-3">Words to avoid</label><input${ssrRenderAttr("value", unref(voice).avoid)} placeholder="dream home, don&#39;t miss out, hustle" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]"></div><div><label class="gf-eyebrow block mb-3">Paste a couple of your real posts</label><textarea rows="7" placeholder="Paste two or three posts you&#39;ve written before. This teaches it your rhythm better than anything else here." class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]">${ssrInterpolate(unref(voice).samples)}</textarea></div></div><button${ssrIncludeBooleanAttr(savingVoice.value) ? " disabled" : ""} class="mt-7 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40">${ssrInterpolate(savingVoice.value ? "Saving\u2026" : "Save my voice")}</button></div><div class="flex flex-col mt-4 pt-8 border-t border-gray-700 text-gray-400"><span>Date: ${ssrInterpolate(unref(formatDate)())}</span><span>Time zone: ${ssrInterpolate(unref(timeZone)())}</span><span>Version: ${ssrInterpolate(unref(packageJson).version)}</span>`);
       _push(ssrRenderComponent(_component_NuxtLink, {
         to: "/privacy-policy",
         class: "underline"

@@ -106,13 +106,22 @@ const _sfc_main = {
     const slots = useSlots();
     const props = useComponentProps("formField", _props);
     const appConfig = useAppConfig();
-    const ui = computed(() => tv({ extend: theme, ...appConfig.ui?.formField || {} })({
-      size: props.size,
-      required: props.required,
-      orientation: props.orientation
-    }));
+    const ui = computed(() => {
+      var _a;
+      return tv({ extend: theme, ...((_a = appConfig.ui) == null ? void 0 : _a.formField) || {} })({
+        size: props.size,
+        required: props.required,
+        orientation: props.orientation
+      });
+    });
     const formErrors = inject(formErrorsInjectionKey, null);
-    const error = computed(() => props.error || formErrors?.value?.find((error2) => error2.name === props.name || props.errorPattern && error2.name?.match(props.errorPattern))?.message);
+    const error = computed(() => {
+      var _a, _b;
+      return props.error || ((_b = (_a = formErrors == null ? void 0 : formErrors.value) == null ? void 0 : _a.find((error2) => {
+        var _a2;
+        return error2.name === props.name || props.errorPattern && ((_a2 = error2.name) == null ? void 0 : _a2.match(props.errorPattern));
+      })) == null ? void 0 : _b.message);
+    });
     const id = ref(useId());
     const ariaId = id.value;
     const formInputs = inject(formInputsInjectionKey, void 0);
@@ -135,21 +144,23 @@ const _sfc_main = {
       ariaId
     })));
     return (_ctx, _push, _parent, _attrs) => {
+      var _a;
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: unref(props).as,
         "data-orientation": unref(props).orientation,
         "data-slot": "root",
-        class: ui.value.root({ class: [unref(props).ui?.root, unref(props).class] })
+        class: ui.value.root({ class: [(_a = unref(props).ui) == null ? void 0 : _a.root, unref(props).class] })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
+          var _a2, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p;
           if (_push2) {
-            _push2(`<div data-slot="wrapper" class="${ssrRenderClass(ui.value.wrapper({ class: unref(props).ui?.wrapper }))}"${_scopeId}>`);
+            _push2(`<div data-slot="wrapper" class="${ssrRenderClass(ui.value.wrapper({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.wrapper }))}"${_scopeId}>`);
             if (unref(props).label || !!slots.label) {
-              _push2(`<div data-slot="labelWrapper" class="${ssrRenderClass(ui.value.labelWrapper({ class: unref(props).ui?.labelWrapper }))}"${_scopeId}>`);
+              _push2(`<div data-slot="labelWrapper" class="${ssrRenderClass(ui.value.labelWrapper({ class: (_b = unref(props).ui) == null ? void 0 : _b.labelWrapper }))}"${_scopeId}>`);
               _push2(ssrRenderComponent(unref(Label_default), {
                 for: id.value,
                 "data-slot": "label",
-                class: ui.value.label({ class: unref(props).ui?.label })
+                class: ui.value.label({ class: (_c = unref(props).ui) == null ? void 0 : _c.label })
               }, {
                 default: withCtx((_2, _push3, _parent3, _scopeId2) => {
                   if (_push3) {
@@ -171,7 +182,7 @@ const _sfc_main = {
                 _: 3
               }, _parent2, _scopeId));
               if (unref(props).hint || !!slots.hint) {
-                _push2(`<span${ssrRenderAttr("id", `${unref(ariaId)}-hint`)} data-slot="hint" class="${ssrRenderClass(ui.value.hint({ class: unref(props).ui?.hint }))}"${_scopeId}>`);
+                _push2(`<span${ssrRenderAttr("id", `${unref(ariaId)}-hint`)} data-slot="hint" class="${ssrRenderClass(ui.value.hint({ class: (_d = unref(props).ui) == null ? void 0 : _d.hint }))}"${_scopeId}>`);
                 ssrRenderSlot(_ctx.$slots, "hint", {
                   hint: unref(props).hint
                 }, () => {
@@ -186,7 +197,7 @@ const _sfc_main = {
               _push2(`<!---->`);
             }
             if (unref(props).description || !!slots.description) {
-              _push2(`<p${ssrRenderAttr("id", `${unref(ariaId)}-description`)} data-slot="description" class="${ssrRenderClass(ui.value.description({ class: unref(props).ui?.description }))}"${_scopeId}>`);
+              _push2(`<p${ssrRenderAttr("id", `${unref(ariaId)}-description`)} data-slot="description" class="${ssrRenderClass(ui.value.description({ class: (_e = unref(props).ui) == null ? void 0 : _e.description }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "description", {
                 description: unref(props).description
               }, () => {
@@ -196,16 +207,16 @@ const _sfc_main = {
             } else {
               _push2(`<!---->`);
             }
-            _push2(`</div><div class="${ssrRenderClass([(unref(props).label || !!slots.label || unref(props).description || !!slots.description) && ui.value.container({ class: unref(props).ui?.container })])}"${_scopeId}>`);
+            _push2(`</div><div class="${ssrRenderClass([(unref(props).label || !!slots.label || unref(props).description || !!slots.description) && ui.value.container({ class: (_f = unref(props).ui) == null ? void 0 : _f.container })])}"${_scopeId}>`);
             ssrRenderSlot(_ctx.$slots, "default", { error: error.value }, null, _push2, _parent2, _scopeId);
             if (unref(props).error !== false && (typeof error.value === "string" && error.value || !!slots.error)) {
-              _push2(`<div${ssrRenderAttr("id", `${unref(ariaId)}-error`)} data-slot="error" class="${ssrRenderClass(ui.value.error({ class: unref(props).ui?.error }))}"${_scopeId}>`);
+              _push2(`<div${ssrRenderAttr("id", `${unref(ariaId)}-error`)} data-slot="error" class="${ssrRenderClass(ui.value.error({ class: (_g = unref(props).ui) == null ? void 0 : _g.error }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "error", { error: error.value }, () => {
                 _push2(`${ssrInterpolate(error.value)}`);
               }, _push2, _parent2, _scopeId);
               _push2(`</div>`);
             } else if (unref(props).help || !!slots.help) {
-              _push2(`<div${ssrRenderAttr("id", `${unref(ariaId)}-help`)} data-slot="help" class="${ssrRenderClass(ui.value.help({ class: unref(props).ui?.help }))}"${_scopeId}>`);
+              _push2(`<div${ssrRenderAttr("id", `${unref(ariaId)}-help`)} data-slot="help" class="${ssrRenderClass(ui.value.help({ class: (_h = unref(props).ui) == null ? void 0 : _h.help }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, "help", {
                 help: unref(props).help
               }, () => {
@@ -220,17 +231,17 @@ const _sfc_main = {
             return [
               createVNode("div", {
                 "data-slot": "wrapper",
-                class: ui.value.wrapper({ class: unref(props).ui?.wrapper })
+                class: ui.value.wrapper({ class: (_i = unref(props).ui) == null ? void 0 : _i.wrapper })
               }, [
                 unref(props).label || !!slots.label ? (openBlock(), createBlock("div", {
                   key: 0,
                   "data-slot": "labelWrapper",
-                  class: ui.value.labelWrapper({ class: unref(props).ui?.labelWrapper })
+                  class: ui.value.labelWrapper({ class: (_j = unref(props).ui) == null ? void 0 : _j.labelWrapper })
                 }, [
                   createVNode(unref(Label_default), {
                     for: id.value,
                     "data-slot": "label",
-                    class: ui.value.label({ class: unref(props).ui?.label })
+                    class: ui.value.label({ class: (_k = unref(props).ui) == null ? void 0 : _k.label })
                   }, {
                     default: withCtx(() => [
                       renderSlot(_ctx.$slots, "label", {
@@ -245,7 +256,7 @@ const _sfc_main = {
                     key: 0,
                     id: `${unref(ariaId)}-hint`,
                     "data-slot": "hint",
-                    class: ui.value.hint({ class: unref(props).ui?.hint })
+                    class: ui.value.hint({ class: (_l = unref(props).ui) == null ? void 0 : _l.hint })
                   }, [
                     renderSlot(_ctx.$slots, "hint", {
                       hint: unref(props).hint
@@ -258,7 +269,7 @@ const _sfc_main = {
                   key: 1,
                   id: `${unref(ariaId)}-description`,
                   "data-slot": "description",
-                  class: ui.value.description({ class: unref(props).ui?.description })
+                  class: ui.value.description({ class: (_m = unref(props).ui) == null ? void 0 : _m.description })
                 }, [
                   renderSlot(_ctx.$slots, "description", {
                     description: unref(props).description
@@ -268,14 +279,14 @@ const _sfc_main = {
                 ], 10, ["id"])) : createCommentVNode("", true)
               ], 2),
               createVNode("div", {
-                class: [(unref(props).label || !!slots.label || unref(props).description || !!slots.description) && ui.value.container({ class: unref(props).ui?.container })]
+                class: [(unref(props).label || !!slots.label || unref(props).description || !!slots.description) && ui.value.container({ class: (_n = unref(props).ui) == null ? void 0 : _n.container })]
               }, [
                 renderSlot(_ctx.$slots, "default", { error: error.value }),
                 unref(props).error !== false && (typeof error.value === "string" && error.value || !!slots.error) ? (openBlock(), createBlock("div", {
                   key: 0,
                   id: `${unref(ariaId)}-error`,
                   "data-slot": "error",
-                  class: ui.value.error({ class: unref(props).ui?.error })
+                  class: ui.value.error({ class: (_o = unref(props).ui) == null ? void 0 : _o.error })
                 }, [
                   renderSlot(_ctx.$slots, "error", { error: error.value }, () => [
                     createTextVNode(toDisplayString(error.value), 1)
@@ -284,7 +295,7 @@ const _sfc_main = {
                   key: 1,
                   id: `${unref(ariaId)}-help`,
                   "data-slot": "help",
-                  class: ui.value.help({ class: unref(props).ui?.help })
+                  class: ui.value.help({ class: (_p = unref(props).ui) == null ? void 0 : _p.help })
                 }, [
                   renderSlot(_ctx.$slots, "help", {
                     help: unref(props).help

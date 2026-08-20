@@ -191,7 +191,7 @@ const reminders = defineTask({
             return {
               from: `${useCleanString(agentName)}@ascendpod.com`,
               to: lead.email,
-              replyTo: campaign.userId.email || "michaeldreesen90@gmail.com",
+              replyTo: campaign.userId.email || "whiteravendev90@gmail.com",
               subject: campaign.subject,
               text: personalizedText
             };

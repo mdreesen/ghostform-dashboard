@@ -208,11 +208,14 @@ const _sfc_main = {
         pointerDownOutside
       };
     });
-    const ui = computed(() => tv({ extend: theme, ...appConfig.ui?.drawer || {} })({
-      direction: props.direction,
-      inset: props.inset,
-      snapPoints: props.snapPoints && props.snapPoints.length > 0
-    }));
+    const ui = computed(() => {
+      var _a;
+      return tv({ extend: theme, ...((_a = appConfig.ui) == null ? void 0 : _a.drawer) || {} })({
+        direction: props.direction,
+        inset: props.inset,
+        snapPoints: props.snapPoints && props.snapPoints.length > 0
+      });
+    });
     return (_ctx, _push, _parent, _attrs) => {
       ssrRenderVNode(_push, createVNode(resolveDynamicComponent(unref(props).nested ? unref(DrawerRootNested) : unref(DrawerRoot)), mergeProps(unref(rootProps), _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
@@ -241,25 +244,27 @@ const _sfc_main = {
                 if (_push3) {
                   _push3(ssrRenderComponent(unref(FieldGroupReset), null, {
                     default: withCtx((_3, _push4, _parent4, _scopeId3) => {
+                      var _a, _b, _c, _d;
                       if (_push4) {
                         if (unref(props).overlay) {
                           _push4(ssrRenderComponent(unref(DrawerOverlay), {
                             "data-slot": "overlay",
-                            class: ui.value.overlay({ class: unref(props).ui?.overlay })
+                            class: ui.value.overlay({ class: (_a = unref(props).ui) == null ? void 0 : _a.overlay })
                           }, null, _parent4, _scopeId3));
                         } else {
                           _push4(`<!---->`);
                         }
                         _push4(ssrRenderComponent(unref(DrawerContent), mergeProps({
                           "data-slot": "content",
-                          class: ui.value.content({ class: [!slots.default && unref(props).class, unref(props).ui?.content] })
+                          class: ui.value.content({ class: [!slots.default && unref(props).class, (_b = unref(props).ui) == null ? void 0 : _b.content] })
                         }, contentProps.value, toHandlers(contentEvents.value)), {
                           default: withCtx((_4, _push5, _parent5, _scopeId4) => {
+                            var _a2, _b2;
                             if (_push5) {
                               if (unref(props).handle) {
                                 _push5(ssrRenderComponent(unref(DrawerHandle), {
                                   "data-slot": "handle",
-                                  class: ui.value.handle({ class: unref(props).ui?.handle })
+                                  class: ui.value.handle({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.handle })
                                 }, null, _parent5, _scopeId4));
                               } else {
                                 _push5(`<!---->`);
@@ -339,16 +344,18 @@ const _sfc_main = {
                                 _push5(`<!---->`);
                               }
                               ssrRenderSlot(_ctx.$slots, "content", {}, () => {
-                                _push5(`<div data-slot="container" class="${ssrRenderClass(ui.value.container({ class: unref(props).ui?.container }))}"${_scopeId4}>`);
+                                var _a3, _b3, _c2, _d2;
+                                _push5(`<div data-slot="container" class="${ssrRenderClass(ui.value.container({ class: (_a3 = unref(props).ui) == null ? void 0 : _a3.container }))}"${_scopeId4}>`);
                                 if (!!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions) {
-                                  _push5(`<div data-slot="header" class="${ssrRenderClass(ui.value.header({ class: unref(props).ui?.header }))}"${_scopeId4}>`);
+                                  _push5(`<div data-slot="header" class="${ssrRenderClass(ui.value.header({ class: (_b3 = unref(props).ui) == null ? void 0 : _b3.header }))}"${_scopeId4}>`);
                                   ssrRenderSlot(_ctx.$slots, "header", {}, () => {
+                                    var _a4, _b4, _c3, _d3;
                                     if (unref(props).title || !!slots.title || unref(props).description || !!slots.description) {
-                                      _push5(`<div data-slot="wrapper" class="${ssrRenderClass(ui.value.wrapper({ class: unref(props).ui?.wrapper }))}"${_scopeId4}>`);
+                                      _push5(`<div data-slot="wrapper" class="${ssrRenderClass(ui.value.wrapper({ class: (_a4 = unref(props).ui) == null ? void 0 : _a4.wrapper }))}"${_scopeId4}>`);
                                       if (unref(props).title || !!slots.title) {
                                         _push5(ssrRenderComponent(unref(DrawerTitle), {
                                           "data-slot": "title",
-                                          class: ui.value.title({ class: unref(props).ui?.title })
+                                          class: ui.value.title({ class: (_b4 = unref(props).ui) == null ? void 0 : _b4.title })
                                         }, {
                                           default: withCtx((_5, _push6, _parent6, _scopeId5) => {
                                             if (_push6) {
@@ -371,7 +378,7 @@ const _sfc_main = {
                                       if (unref(props).description || !!slots.description) {
                                         _push5(ssrRenderComponent(unref(DrawerDescription), {
                                           "data-slot": "description",
-                                          class: ui.value.description({ class: unref(props).ui?.description })
+                                          class: ui.value.description({ class: (_c3 = unref(props).ui) == null ? void 0 : _c3.description })
                                         }, {
                                           default: withCtx((_5, _push6, _parent6, _scopeId5) => {
                                             if (_push6) {
@@ -396,13 +403,14 @@ const _sfc_main = {
                                       _push5(`<!---->`);
                                     }
                                     if (!!slots.actions || unref(props).close || !!slots.close) {
-                                      _push5(`<div data-slot="actions" class="${ssrRenderClass(ui.value.actions({ class: unref(props).ui?.actions }))}"${_scopeId4}>`);
+                                      _push5(`<div data-slot="actions" class="${ssrRenderClass(ui.value.actions({ class: (_d3 = unref(props).ui) == null ? void 0 : _d3.actions }))}"${_scopeId4}>`);
                                       ssrRenderSlot(_ctx.$slots, "actions", {}, null, _push5, _parent5, _scopeId4);
                                       if (unref(props).close || !!slots.close) {
                                         _push5(ssrRenderComponent(unref(DrawerClose), { "as-child": "" }, {
                                           default: withCtx((_5, _push6, _parent6, _scopeId5) => {
                                             if (_push6) {
                                               ssrRenderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
+                                                var _a5;
                                                 if (unref(props).close) {
                                                   _push6(ssrRenderComponent(_sfc_main$8, mergeProps({
                                                     icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
@@ -411,7 +419,7 @@ const _sfc_main = {
                                                     "aria-label": unref(t)("drawer.close")
                                                   }, typeof unref(props).close === "object" ? unref(props).close : {}, {
                                                     "data-slot": "close",
-                                                    class: ui.value.close({ class: unref(props).ui?.close })
+                                                    class: ui.value.close({ class: (_a5 = unref(props).ui) == null ? void 0 : _a5.close })
                                                   }), null, _parent6, _scopeId5));
                                                 } else {
                                                   _push6(`<!---->`);
@@ -419,18 +427,21 @@ const _sfc_main = {
                                               }, _push6, _parent6, _scopeId5);
                                             } else {
                                               return [
-                                                renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                                                  unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
-                                                    key: 0,
-                                                    icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
-                                                    color: "neutral",
-                                                    variant: "ghost",
-                                                    "aria-label": unref(t)("drawer.close")
-                                                  }, typeof unref(props).close === "object" ? unref(props).close : {}, {
-                                                    "data-slot": "close",
-                                                    class: ui.value.close({ class: unref(props).ui?.close })
-                                                  }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
-                                                ])
+                                                renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
+                                                  var _a5;
+                                                  return [
+                                                    unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                                      key: 0,
+                                                      icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
+                                                      color: "neutral",
+                                                      variant: "ghost",
+                                                      "aria-label": unref(t)("drawer.close")
+                                                    }, typeof unref(props).close === "object" ? unref(props).close : {}, {
+                                                      "data-slot": "close",
+                                                      class: ui.value.close({ class: (_a5 = unref(props).ui) == null ? void 0 : _a5.close })
+                                                    }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
+                                                  ];
+                                                })
                                               ];
                                             }
                                           }),
@@ -449,14 +460,14 @@ const _sfc_main = {
                                   _push5(`<!---->`);
                                 }
                                 if (!!slots.body) {
-                                  _push5(`<div data-slot="body" class="${ssrRenderClass(ui.value.body({ class: unref(props).ui?.body }))}"${_scopeId4}>`);
+                                  _push5(`<div data-slot="body" class="${ssrRenderClass(ui.value.body({ class: (_c2 = unref(props).ui) == null ? void 0 : _c2.body }))}"${_scopeId4}>`);
                                   ssrRenderSlot(_ctx.$slots, "body", {}, null, _push5, _parent5, _scopeId4);
                                   _push5(`</div>`);
                                 } else {
                                   _push5(`<!---->`);
                                 }
                                 if (!!slots.footer) {
-                                  _push5(`<div data-slot="footer" class="${ssrRenderClass(ui.value.footer({ class: unref(props).ui?.footer }))}"${_scopeId4}>`);
+                                  _push5(`<div data-slot="footer" class="${ssrRenderClass(ui.value.footer({ class: (_d2 = unref(props).ui) == null ? void 0 : _d2.footer }))}"${_scopeId4}>`);
                                   ssrRenderSlot(_ctx.$slots, "footer", {}, null, _push5, _parent5, _scopeId4);
                                   _push5(`</div>`);
                                 } else {
@@ -469,7 +480,7 @@ const _sfc_main = {
                                 unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
                                   key: 0,
                                   "data-slot": "handle",
-                                  class: ui.value.handle({ class: unref(props).ui?.handle })
+                                  class: ui.value.handle({ class: (_b2 = unref(props).ui) == null ? void 0 : _b2.handle })
                                 }, null, 8, ["class"])) : createCommentVNode("", true),
                                 !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
                                   default: withCtx(() => [
@@ -492,92 +503,101 @@ const _sfc_main = {
                                   ]),
                                   _: 3
                                 })) : createCommentVNode("", true),
-                                renderSlot(_ctx.$slots, "content", {}, () => [
-                                  createVNode("div", {
-                                    "data-slot": "container",
-                                    class: ui.value.container({ class: unref(props).ui?.container })
-                                  }, [
-                                    !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
-                                      key: 0,
-                                      "data-slot": "header",
-                                      class: ui.value.header({ class: unref(props).ui?.header })
+                                renderSlot(_ctx.$slots, "content", {}, () => {
+                                  var _a3, _b3, _c2, _d2;
+                                  return [
+                                    createVNode("div", {
+                                      "data-slot": "container",
+                                      class: ui.value.container({ class: (_a3 = unref(props).ui) == null ? void 0 : _a3.container })
                                     }, [
-                                      renderSlot(_ctx.$slots, "header", {}, () => [
-                                        unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
-                                          key: 0,
-                                          "data-slot": "wrapper",
-                                          class: ui.value.wrapper({ class: unref(props).ui?.wrapper })
-                                        }, [
-                                          unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
-                                            key: 0,
-                                            "data-slot": "title",
-                                            class: ui.value.title({ class: unref(props).ui?.title })
-                                          }, {
-                                            default: withCtx(() => [
-                                              renderSlot(_ctx.$slots, "title", {}, () => [
-                                                createTextVNode(toDisplayString(unref(props).title), 1)
-                                              ])
-                                            ]),
-                                            _: 3
-                                          }, 8, ["class"])) : createCommentVNode("", true),
-                                          unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
-                                            key: 1,
-                                            "data-slot": "description",
-                                            class: ui.value.description({ class: unref(props).ui?.description })
-                                          }, {
-                                            default: withCtx(() => [
-                                              renderSlot(_ctx.$slots, "description", {}, () => [
-                                                createTextVNode(toDisplayString(unref(props).description), 1)
-                                              ])
-                                            ]),
-                                            _: 3
-                                          }, 8, ["class"])) : createCommentVNode("", true)
-                                        ], 2)) : createCommentVNode("", true),
-                                        !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
-                                          key: 1,
-                                          "data-slot": "actions",
-                                          class: ui.value.actions({ class: unref(props).ui?.actions })
-                                        }, [
-                                          renderSlot(_ctx.$slots, "actions"),
-                                          unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
-                                            key: 0,
-                                            "as-child": ""
-                                          }, {
-                                            default: withCtx(() => [
-                                              renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                                                unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
-                                                  key: 0,
-                                                  icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
-                                                  color: "neutral",
-                                                  variant: "ghost",
-                                                  "aria-label": unref(t)("drawer.close")
-                                                }, typeof unref(props).close === "object" ? unref(props).close : {}, {
-                                                  "data-slot": "close",
-                                                  class: ui.value.close({ class: unref(props).ui?.close })
-                                                }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
-                                              ])
-                                            ]),
-                                            _: 3
-                                          })) : createCommentVNode("", true)
-                                        ], 2)) : createCommentVNode("", true)
-                                      ])
-                                    ], 2)) : createCommentVNode("", true),
-                                    !!slots.body ? (openBlock(), createBlock("div", {
-                                      key: 1,
-                                      "data-slot": "body",
-                                      class: ui.value.body({ class: unref(props).ui?.body })
-                                    }, [
-                                      renderSlot(_ctx.$slots, "body")
-                                    ], 2)) : createCommentVNode("", true),
-                                    !!slots.footer ? (openBlock(), createBlock("div", {
-                                      key: 2,
-                                      "data-slot": "footer",
-                                      class: ui.value.footer({ class: unref(props).ui?.footer })
-                                    }, [
-                                      renderSlot(_ctx.$slots, "footer")
-                                    ], 2)) : createCommentVNode("", true)
-                                  ], 2)
-                                ])
+                                      !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
+                                        key: 0,
+                                        "data-slot": "header",
+                                        class: ui.value.header({ class: (_b3 = unref(props).ui) == null ? void 0 : _b3.header })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "header", {}, () => {
+                                          var _a4, _b4, _c3, _d3;
+                                          return [
+                                            unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
+                                              key: 0,
+                                              "data-slot": "wrapper",
+                                              class: ui.value.wrapper({ class: (_a4 = unref(props).ui) == null ? void 0 : _a4.wrapper })
+                                            }, [
+                                              unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
+                                                key: 0,
+                                                "data-slot": "title",
+                                                class: ui.value.title({ class: (_b4 = unref(props).ui) == null ? void 0 : _b4.title })
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "title", {}, () => [
+                                                    createTextVNode(toDisplayString(unref(props).title), 1)
+                                                  ])
+                                                ]),
+                                                _: 3
+                                              }, 8, ["class"])) : createCommentVNode("", true),
+                                              unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
+                                                key: 1,
+                                                "data-slot": "description",
+                                                class: ui.value.description({ class: (_c3 = unref(props).ui) == null ? void 0 : _c3.description })
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "description", {}, () => [
+                                                    createTextVNode(toDisplayString(unref(props).description), 1)
+                                                  ])
+                                                ]),
+                                                _: 3
+                                              }, 8, ["class"])) : createCommentVNode("", true)
+                                            ], 2)) : createCommentVNode("", true),
+                                            !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
+                                              key: 1,
+                                              "data-slot": "actions",
+                                              class: ui.value.actions({ class: (_d3 = unref(props).ui) == null ? void 0 : _d3.actions })
+                                            }, [
+                                              renderSlot(_ctx.$slots, "actions"),
+                                              unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
+                                                key: 0,
+                                                "as-child": ""
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
+                                                    var _a5;
+                                                    return [
+                                                      unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                                        key: 0,
+                                                        icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
+                                                        color: "neutral",
+                                                        variant: "ghost",
+                                                        "aria-label": unref(t)("drawer.close")
+                                                      }, typeof unref(props).close === "object" ? unref(props).close : {}, {
+                                                        "data-slot": "close",
+                                                        class: ui.value.close({ class: (_a5 = unref(props).ui) == null ? void 0 : _a5.close })
+                                                      }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
+                                                    ];
+                                                  })
+                                                ]),
+                                                _: 3
+                                              })) : createCommentVNode("", true)
+                                            ], 2)) : createCommentVNode("", true)
+                                          ];
+                                        })
+                                      ], 2)) : createCommentVNode("", true),
+                                      !!slots.body ? (openBlock(), createBlock("div", {
+                                        key: 1,
+                                        "data-slot": "body",
+                                        class: ui.value.body({ class: (_c2 = unref(props).ui) == null ? void 0 : _c2.body })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "body")
+                                      ], 2)) : createCommentVNode("", true),
+                                      !!slots.footer ? (openBlock(), createBlock("div", {
+                                        key: 2,
+                                        "data-slot": "footer",
+                                        class: ui.value.footer({ class: (_d2 = unref(props).ui) == null ? void 0 : _d2.footer })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "footer")
+                                      ], 2)) : createCommentVNode("", true)
+                                    ], 2)
+                                  ];
+                                })
                               ];
                             }
                           }),
@@ -588,126 +608,138 @@ const _sfc_main = {
                           unref(props).overlay ? (openBlock(), createBlock(unref(DrawerOverlay), {
                             key: 0,
                             "data-slot": "overlay",
-                            class: ui.value.overlay({ class: unref(props).ui?.overlay })
+                            class: ui.value.overlay({ class: (_c = unref(props).ui) == null ? void 0 : _c.overlay })
                           }, null, 8, ["class"])) : createCommentVNode("", true),
                           createVNode(unref(DrawerContent), mergeProps({
                             "data-slot": "content",
-                            class: ui.value.content({ class: [!slots.default && unref(props).class, unref(props).ui?.content] })
+                            class: ui.value.content({ class: [!slots.default && unref(props).class, (_d = unref(props).ui) == null ? void 0 : _d.content] })
                           }, contentProps.value, toHandlers(contentEvents.value)), {
-                            default: withCtx(() => [
-                              unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
-                                key: 0,
-                                "data-slot": "handle",
-                                class: ui.value.handle({ class: unref(props).ui?.handle })
-                              }, null, 8, ["class"])) : createCommentVNode("", true),
-                              !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
-                                default: withCtx(() => [
-                                  !unref(props).title && !slots.title ? (openBlock(), createBlock(unref(DrawerTitle), { key: 0 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerTitle), { key: 1 }, {
-                                    default: withCtx(() => [
-                                      renderSlot(_ctx.$slots, "title", {}, () => [
-                                        createTextVNode(toDisplayString(unref(props).title), 1)
-                                      ])
-                                    ]),
-                                    _: 3
-                                  })) : createCommentVNode("", true),
-                                  !unref(props).description && !slots.description ? (openBlock(), createBlock(unref(DrawerDescription), { key: 2 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerDescription), { key: 3 }, {
-                                    default: withCtx(() => [
-                                      renderSlot(_ctx.$slots, "description", {}, () => [
-                                        createTextVNode(toDisplayString(unref(props).description), 1)
-                                      ])
-                                    ]),
-                                    _: 3
-                                  })) : createCommentVNode("", true)
-                                ]),
-                                _: 3
-                              })) : createCommentVNode("", true),
-                              renderSlot(_ctx.$slots, "content", {}, () => [
-                                createVNode("div", {
-                                  "data-slot": "container",
-                                  class: ui.value.container({ class: unref(props).ui?.container })
-                                }, [
-                                  !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
-                                    key: 0,
-                                    "data-slot": "header",
-                                    class: ui.value.header({ class: unref(props).ui?.header })
-                                  }, [
-                                    renderSlot(_ctx.$slots, "header", {}, () => [
-                                      unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
+                            default: withCtx(() => {
+                              var _a2;
+                              return [
+                                unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
+                                  key: 0,
+                                  "data-slot": "handle",
+                                  class: ui.value.handle({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.handle })
+                                }, null, 8, ["class"])) : createCommentVNode("", true),
+                                !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
+                                  default: withCtx(() => [
+                                    !unref(props).title && !slots.title ? (openBlock(), createBlock(unref(DrawerTitle), { key: 0 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerTitle), { key: 1 }, {
+                                      default: withCtx(() => [
+                                        renderSlot(_ctx.$slots, "title", {}, () => [
+                                          createTextVNode(toDisplayString(unref(props).title), 1)
+                                        ])
+                                      ]),
+                                      _: 3
+                                    })) : createCommentVNode("", true),
+                                    !unref(props).description && !slots.description ? (openBlock(), createBlock(unref(DrawerDescription), { key: 2 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerDescription), { key: 3 }, {
+                                      default: withCtx(() => [
+                                        renderSlot(_ctx.$slots, "description", {}, () => [
+                                          createTextVNode(toDisplayString(unref(props).description), 1)
+                                        ])
+                                      ]),
+                                      _: 3
+                                    })) : createCommentVNode("", true)
+                                  ]),
+                                  _: 3
+                                })) : createCommentVNode("", true),
+                                renderSlot(_ctx.$slots, "content", {}, () => {
+                                  var _a3, _b2, _c2, _d2;
+                                  return [
+                                    createVNode("div", {
+                                      "data-slot": "container",
+                                      class: ui.value.container({ class: (_a3 = unref(props).ui) == null ? void 0 : _a3.container })
+                                    }, [
+                                      !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
                                         key: 0,
-                                        "data-slot": "wrapper",
-                                        class: ui.value.wrapper({ class: unref(props).ui?.wrapper })
+                                        "data-slot": "header",
+                                        class: ui.value.header({ class: (_b2 = unref(props).ui) == null ? void 0 : _b2.header })
                                       }, [
-                                        unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
-                                          key: 0,
-                                          "data-slot": "title",
-                                          class: ui.value.title({ class: unref(props).ui?.title })
-                                        }, {
-                                          default: withCtx(() => [
-                                            renderSlot(_ctx.$slots, "title", {}, () => [
-                                              createTextVNode(toDisplayString(unref(props).title), 1)
-                                            ])
-                                          ]),
-                                          _: 3
-                                        }, 8, ["class"])) : createCommentVNode("", true),
-                                        unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
-                                          key: 1,
-                                          "data-slot": "description",
-                                          class: ui.value.description({ class: unref(props).ui?.description })
-                                        }, {
-                                          default: withCtx(() => [
-                                            renderSlot(_ctx.$slots, "description", {}, () => [
-                                              createTextVNode(toDisplayString(unref(props).description), 1)
-                                            ])
-                                          ]),
-                                          _: 3
-                                        }, 8, ["class"])) : createCommentVNode("", true)
-                                      ], 2)) : createCommentVNode("", true),
-                                      !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
-                                        key: 1,
-                                        "data-slot": "actions",
-                                        class: ui.value.actions({ class: unref(props).ui?.actions })
-                                      }, [
-                                        renderSlot(_ctx.$slots, "actions"),
-                                        unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
-                                          key: 0,
-                                          "as-child": ""
-                                        }, {
-                                          default: withCtx(() => [
-                                            renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                                              unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                        renderSlot(_ctx.$slots, "header", {}, () => {
+                                          var _a4, _b3, _c3, _d3;
+                                          return [
+                                            unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
+                                              key: 0,
+                                              "data-slot": "wrapper",
+                                              class: ui.value.wrapper({ class: (_a4 = unref(props).ui) == null ? void 0 : _a4.wrapper })
+                                            }, [
+                                              unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
                                                 key: 0,
-                                                icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
-                                                color: "neutral",
-                                                variant: "ghost",
-                                                "aria-label": unref(t)("drawer.close")
-                                              }, typeof unref(props).close === "object" ? unref(props).close : {}, {
-                                                "data-slot": "close",
-                                                class: ui.value.close({ class: unref(props).ui?.close })
-                                              }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
-                                            ])
-                                          ]),
-                                          _: 3
-                                        })) : createCommentVNode("", true)
+                                                "data-slot": "title",
+                                                class: ui.value.title({ class: (_b3 = unref(props).ui) == null ? void 0 : _b3.title })
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "title", {}, () => [
+                                                    createTextVNode(toDisplayString(unref(props).title), 1)
+                                                  ])
+                                                ]),
+                                                _: 3
+                                              }, 8, ["class"])) : createCommentVNode("", true),
+                                              unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
+                                                key: 1,
+                                                "data-slot": "description",
+                                                class: ui.value.description({ class: (_c3 = unref(props).ui) == null ? void 0 : _c3.description })
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "description", {}, () => [
+                                                    createTextVNode(toDisplayString(unref(props).description), 1)
+                                                  ])
+                                                ]),
+                                                _: 3
+                                              }, 8, ["class"])) : createCommentVNode("", true)
+                                            ], 2)) : createCommentVNode("", true),
+                                            !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
+                                              key: 1,
+                                              "data-slot": "actions",
+                                              class: ui.value.actions({ class: (_d3 = unref(props).ui) == null ? void 0 : _d3.actions })
+                                            }, [
+                                              renderSlot(_ctx.$slots, "actions"),
+                                              unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
+                                                key: 0,
+                                                "as-child": ""
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
+                                                    var _a5;
+                                                    return [
+                                                      unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                                        key: 0,
+                                                        icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
+                                                        color: "neutral",
+                                                        variant: "ghost",
+                                                        "aria-label": unref(t)("drawer.close")
+                                                      }, typeof unref(props).close === "object" ? unref(props).close : {}, {
+                                                        "data-slot": "close",
+                                                        class: ui.value.close({ class: (_a5 = unref(props).ui) == null ? void 0 : _a5.close })
+                                                      }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
+                                                    ];
+                                                  })
+                                                ]),
+                                                _: 3
+                                              })) : createCommentVNode("", true)
+                                            ], 2)) : createCommentVNode("", true)
+                                          ];
+                                        })
+                                      ], 2)) : createCommentVNode("", true),
+                                      !!slots.body ? (openBlock(), createBlock("div", {
+                                        key: 1,
+                                        "data-slot": "body",
+                                        class: ui.value.body({ class: (_c2 = unref(props).ui) == null ? void 0 : _c2.body })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "body")
+                                      ], 2)) : createCommentVNode("", true),
+                                      !!slots.footer ? (openBlock(), createBlock("div", {
+                                        key: 2,
+                                        "data-slot": "footer",
+                                        class: ui.value.footer({ class: (_d2 = unref(props).ui) == null ? void 0 : _d2.footer })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "footer")
                                       ], 2)) : createCommentVNode("", true)
-                                    ])
-                                  ], 2)) : createCommentVNode("", true),
-                                  !!slots.body ? (openBlock(), createBlock("div", {
-                                    key: 1,
-                                    "data-slot": "body",
-                                    class: ui.value.body({ class: unref(props).ui?.body })
-                                  }, [
-                                    renderSlot(_ctx.$slots, "body")
-                                  ], 2)) : createCommentVNode("", true),
-                                  !!slots.footer ? (openBlock(), createBlock("div", {
-                                    key: 2,
-                                    "data-slot": "footer",
-                                    class: ui.value.footer({ class: unref(props).ui?.footer })
-                                  }, [
-                                    renderSlot(_ctx.$slots, "footer")
-                                  ], 2)) : createCommentVNode("", true)
-                                ], 2)
-                              ])
-                            ]),
+                                    ], 2)
+                                  ];
+                                })
+                              ];
+                            }),
                             _: 3
                           }, 16, ["class"])
                         ];
@@ -718,133 +750,148 @@ const _sfc_main = {
                 } else {
                   return [
                     createVNode(unref(FieldGroupReset), null, {
-                      default: withCtx(() => [
-                        unref(props).overlay ? (openBlock(), createBlock(unref(DrawerOverlay), {
-                          key: 0,
-                          "data-slot": "overlay",
-                          class: ui.value.overlay({ class: unref(props).ui?.overlay })
-                        }, null, 8, ["class"])) : createCommentVNode("", true),
-                        createVNode(unref(DrawerContent), mergeProps({
-                          "data-slot": "content",
-                          class: ui.value.content({ class: [!slots.default && unref(props).class, unref(props).ui?.content] })
-                        }, contentProps.value, toHandlers(contentEvents.value)), {
-                          default: withCtx(() => [
-                            unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
-                              key: 0,
-                              "data-slot": "handle",
-                              class: ui.value.handle({ class: unref(props).ui?.handle })
-                            }, null, 8, ["class"])) : createCommentVNode("", true),
-                            !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
-                              default: withCtx(() => [
-                                !unref(props).title && !slots.title ? (openBlock(), createBlock(unref(DrawerTitle), { key: 0 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerTitle), { key: 1 }, {
+                      default: withCtx(() => {
+                        var _a, _b;
+                        return [
+                          unref(props).overlay ? (openBlock(), createBlock(unref(DrawerOverlay), {
+                            key: 0,
+                            "data-slot": "overlay",
+                            class: ui.value.overlay({ class: (_a = unref(props).ui) == null ? void 0 : _a.overlay })
+                          }, null, 8, ["class"])) : createCommentVNode("", true),
+                          createVNode(unref(DrawerContent), mergeProps({
+                            "data-slot": "content",
+                            class: ui.value.content({ class: [!slots.default && unref(props).class, (_b = unref(props).ui) == null ? void 0 : _b.content] })
+                          }, contentProps.value, toHandlers(contentEvents.value)), {
+                            default: withCtx(() => {
+                              var _a2;
+                              return [
+                                unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
+                                  key: 0,
+                                  "data-slot": "handle",
+                                  class: ui.value.handle({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.handle })
+                                }, null, 8, ["class"])) : createCommentVNode("", true),
+                                !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
                                   default: withCtx(() => [
-                                    renderSlot(_ctx.$slots, "title", {}, () => [
-                                      createTextVNode(toDisplayString(unref(props).title), 1)
-                                    ])
+                                    !unref(props).title && !slots.title ? (openBlock(), createBlock(unref(DrawerTitle), { key: 0 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerTitle), { key: 1 }, {
+                                      default: withCtx(() => [
+                                        renderSlot(_ctx.$slots, "title", {}, () => [
+                                          createTextVNode(toDisplayString(unref(props).title), 1)
+                                        ])
+                                      ]),
+                                      _: 3
+                                    })) : createCommentVNode("", true),
+                                    !unref(props).description && !slots.description ? (openBlock(), createBlock(unref(DrawerDescription), { key: 2 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerDescription), { key: 3 }, {
+                                      default: withCtx(() => [
+                                        renderSlot(_ctx.$slots, "description", {}, () => [
+                                          createTextVNode(toDisplayString(unref(props).description), 1)
+                                        ])
+                                      ]),
+                                      _: 3
+                                    })) : createCommentVNode("", true)
                                   ]),
                                   _: 3
                                 })) : createCommentVNode("", true),
-                                !unref(props).description && !slots.description ? (openBlock(), createBlock(unref(DrawerDescription), { key: 2 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerDescription), { key: 3 }, {
-                                  default: withCtx(() => [
-                                    renderSlot(_ctx.$slots, "description", {}, () => [
-                                      createTextVNode(toDisplayString(unref(props).description), 1)
-                                    ])
-                                  ]),
-                                  _: 3
-                                })) : createCommentVNode("", true)
-                              ]),
-                              _: 3
-                            })) : createCommentVNode("", true),
-                            renderSlot(_ctx.$slots, "content", {}, () => [
-                              createVNode("div", {
-                                "data-slot": "container",
-                                class: ui.value.container({ class: unref(props).ui?.container })
-                              }, [
-                                !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
-                                  key: 0,
-                                  "data-slot": "header",
-                                  class: ui.value.header({ class: unref(props).ui?.header })
-                                }, [
-                                  renderSlot(_ctx.$slots, "header", {}, () => [
-                                    unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
-                                      key: 0,
-                                      "data-slot": "wrapper",
-                                      class: ui.value.wrapper({ class: unref(props).ui?.wrapper })
+                                renderSlot(_ctx.$slots, "content", {}, () => {
+                                  var _a3, _b2, _c, _d;
+                                  return [
+                                    createVNode("div", {
+                                      "data-slot": "container",
+                                      class: ui.value.container({ class: (_a3 = unref(props).ui) == null ? void 0 : _a3.container })
                                     }, [
-                                      unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
+                                      !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
                                         key: 0,
-                                        "data-slot": "title",
-                                        class: ui.value.title({ class: unref(props).ui?.title })
-                                      }, {
-                                        default: withCtx(() => [
-                                          renderSlot(_ctx.$slots, "title", {}, () => [
-                                            createTextVNode(toDisplayString(unref(props).title), 1)
-                                          ])
-                                        ]),
-                                        _: 3
-                                      }, 8, ["class"])) : createCommentVNode("", true),
-                                      unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
-                                        key: 1,
-                                        "data-slot": "description",
-                                        class: ui.value.description({ class: unref(props).ui?.description })
-                                      }, {
-                                        default: withCtx(() => [
-                                          renderSlot(_ctx.$slots, "description", {}, () => [
-                                            createTextVNode(toDisplayString(unref(props).description), 1)
-                                          ])
-                                        ]),
-                                        _: 3
-                                      }, 8, ["class"])) : createCommentVNode("", true)
-                                    ], 2)) : createCommentVNode("", true),
-                                    !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
-                                      key: 1,
-                                      "data-slot": "actions",
-                                      class: ui.value.actions({ class: unref(props).ui?.actions })
-                                    }, [
-                                      renderSlot(_ctx.$slots, "actions"),
-                                      unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
-                                        key: 0,
-                                        "as-child": ""
-                                      }, {
-                                        default: withCtx(() => [
-                                          renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                                            unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                        "data-slot": "header",
+                                        class: ui.value.header({ class: (_b2 = unref(props).ui) == null ? void 0 : _b2.header })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "header", {}, () => {
+                                          var _a4, _b3, _c2, _d2;
+                                          return [
+                                            unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
                                               key: 0,
-                                              icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
-                                              color: "neutral",
-                                              variant: "ghost",
-                                              "aria-label": unref(t)("drawer.close")
-                                            }, typeof unref(props).close === "object" ? unref(props).close : {}, {
-                                              "data-slot": "close",
-                                              class: ui.value.close({ class: unref(props).ui?.close })
-                                            }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
-                                          ])
-                                        ]),
-                                        _: 3
-                                      })) : createCommentVNode("", true)
-                                    ], 2)) : createCommentVNode("", true)
-                                  ])
-                                ], 2)) : createCommentVNode("", true),
-                                !!slots.body ? (openBlock(), createBlock("div", {
-                                  key: 1,
-                                  "data-slot": "body",
-                                  class: ui.value.body({ class: unref(props).ui?.body })
-                                }, [
-                                  renderSlot(_ctx.$slots, "body")
-                                ], 2)) : createCommentVNode("", true),
-                                !!slots.footer ? (openBlock(), createBlock("div", {
-                                  key: 2,
-                                  "data-slot": "footer",
-                                  class: ui.value.footer({ class: unref(props).ui?.footer })
-                                }, [
-                                  renderSlot(_ctx.$slots, "footer")
-                                ], 2)) : createCommentVNode("", true)
-                              ], 2)
-                            ])
-                          ]),
-                          _: 3
-                        }, 16, ["class"])
-                      ]),
+                                              "data-slot": "wrapper",
+                                              class: ui.value.wrapper({ class: (_a4 = unref(props).ui) == null ? void 0 : _a4.wrapper })
+                                            }, [
+                                              unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
+                                                key: 0,
+                                                "data-slot": "title",
+                                                class: ui.value.title({ class: (_b3 = unref(props).ui) == null ? void 0 : _b3.title })
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "title", {}, () => [
+                                                    createTextVNode(toDisplayString(unref(props).title), 1)
+                                                  ])
+                                                ]),
+                                                _: 3
+                                              }, 8, ["class"])) : createCommentVNode("", true),
+                                              unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
+                                                key: 1,
+                                                "data-slot": "description",
+                                                class: ui.value.description({ class: (_c2 = unref(props).ui) == null ? void 0 : _c2.description })
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "description", {}, () => [
+                                                    createTextVNode(toDisplayString(unref(props).description), 1)
+                                                  ])
+                                                ]),
+                                                _: 3
+                                              }, 8, ["class"])) : createCommentVNode("", true)
+                                            ], 2)) : createCommentVNode("", true),
+                                            !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
+                                              key: 1,
+                                              "data-slot": "actions",
+                                              class: ui.value.actions({ class: (_d2 = unref(props).ui) == null ? void 0 : _d2.actions })
+                                            }, [
+                                              renderSlot(_ctx.$slots, "actions"),
+                                              unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
+                                                key: 0,
+                                                "as-child": ""
+                                              }, {
+                                                default: withCtx(() => [
+                                                  renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
+                                                    var _a5;
+                                                    return [
+                                                      unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                                        key: 0,
+                                                        icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
+                                                        color: "neutral",
+                                                        variant: "ghost",
+                                                        "aria-label": unref(t)("drawer.close")
+                                                      }, typeof unref(props).close === "object" ? unref(props).close : {}, {
+                                                        "data-slot": "close",
+                                                        class: ui.value.close({ class: (_a5 = unref(props).ui) == null ? void 0 : _a5.close })
+                                                      }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
+                                                    ];
+                                                  })
+                                                ]),
+                                                _: 3
+                                              })) : createCommentVNode("", true)
+                                            ], 2)) : createCommentVNode("", true)
+                                          ];
+                                        })
+                                      ], 2)) : createCommentVNode("", true),
+                                      !!slots.body ? (openBlock(), createBlock("div", {
+                                        key: 1,
+                                        "data-slot": "body",
+                                        class: ui.value.body({ class: (_c = unref(props).ui) == null ? void 0 : _c.body })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "body")
+                                      ], 2)) : createCommentVNode("", true),
+                                      !!slots.footer ? (openBlock(), createBlock("div", {
+                                        key: 2,
+                                        "data-slot": "footer",
+                                        class: ui.value.footer({ class: (_d = unref(props).ui) == null ? void 0 : _d.footer })
+                                      }, [
+                                        renderSlot(_ctx.$slots, "footer")
+                                      ], 2)) : createCommentVNode("", true)
+                                    ], 2)
+                                  ];
+                                })
+                              ];
+                            }),
+                            _: 3
+                          }, 16, ["class"])
+                        ];
+                      }),
                       _: 3
                     })
                   ];
@@ -867,133 +914,148 @@ const _sfc_main = {
               createVNode(unref(DrawerPortal), unref(portalProps), {
                 default: withCtx(() => [
                   createVNode(unref(FieldGroupReset), null, {
-                    default: withCtx(() => [
-                      unref(props).overlay ? (openBlock(), createBlock(unref(DrawerOverlay), {
-                        key: 0,
-                        "data-slot": "overlay",
-                        class: ui.value.overlay({ class: unref(props).ui?.overlay })
-                      }, null, 8, ["class"])) : createCommentVNode("", true),
-                      createVNode(unref(DrawerContent), mergeProps({
-                        "data-slot": "content",
-                        class: ui.value.content({ class: [!slots.default && unref(props).class, unref(props).ui?.content] })
-                      }, contentProps.value, toHandlers(contentEvents.value)), {
-                        default: withCtx(() => [
-                          unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
-                            key: 0,
-                            "data-slot": "handle",
-                            class: ui.value.handle({ class: unref(props).ui?.handle })
-                          }, null, 8, ["class"])) : createCommentVNode("", true),
-                          !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
-                            default: withCtx(() => [
-                              !unref(props).title && !slots.title ? (openBlock(), createBlock(unref(DrawerTitle), { key: 0 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerTitle), { key: 1 }, {
+                    default: withCtx(() => {
+                      var _a, _b;
+                      return [
+                        unref(props).overlay ? (openBlock(), createBlock(unref(DrawerOverlay), {
+                          key: 0,
+                          "data-slot": "overlay",
+                          class: ui.value.overlay({ class: (_a = unref(props).ui) == null ? void 0 : _a.overlay })
+                        }, null, 8, ["class"])) : createCommentVNode("", true),
+                        createVNode(unref(DrawerContent), mergeProps({
+                          "data-slot": "content",
+                          class: ui.value.content({ class: [!slots.default && unref(props).class, (_b = unref(props).ui) == null ? void 0 : _b.content] })
+                        }, contentProps.value, toHandlers(contentEvents.value)), {
+                          default: withCtx(() => {
+                            var _a2;
+                            return [
+                              unref(props).handle ? (openBlock(), createBlock(unref(DrawerHandle), {
+                                key: 0,
+                                "data-slot": "handle",
+                                class: ui.value.handle({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.handle })
+                              }, null, 8, ["class"])) : createCommentVNode("", true),
+                              !unref(props).title && !slots.title || !unref(props).description && !slots.description || !!slots.content ? (openBlock(), createBlock(unref(VisuallyHidden_default), { key: 1 }, {
                                 default: withCtx(() => [
-                                  renderSlot(_ctx.$slots, "title", {}, () => [
-                                    createTextVNode(toDisplayString(unref(props).title), 1)
-                                  ])
+                                  !unref(props).title && !slots.title ? (openBlock(), createBlock(unref(DrawerTitle), { key: 0 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerTitle), { key: 1 }, {
+                                    default: withCtx(() => [
+                                      renderSlot(_ctx.$slots, "title", {}, () => [
+                                        createTextVNode(toDisplayString(unref(props).title), 1)
+                                      ])
+                                    ]),
+                                    _: 3
+                                  })) : createCommentVNode("", true),
+                                  !unref(props).description && !slots.description ? (openBlock(), createBlock(unref(DrawerDescription), { key: 2 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerDescription), { key: 3 }, {
+                                    default: withCtx(() => [
+                                      renderSlot(_ctx.$slots, "description", {}, () => [
+                                        createTextVNode(toDisplayString(unref(props).description), 1)
+                                      ])
+                                    ]),
+                                    _: 3
+                                  })) : createCommentVNode("", true)
                                 ]),
                                 _: 3
                               })) : createCommentVNode("", true),
-                              !unref(props).description && !slots.description ? (openBlock(), createBlock(unref(DrawerDescription), { key: 2 })) : !!slots.content ? (openBlock(), createBlock(unref(DrawerDescription), { key: 3 }, {
-                                default: withCtx(() => [
-                                  renderSlot(_ctx.$slots, "description", {}, () => [
-                                    createTextVNode(toDisplayString(unref(props).description), 1)
-                                  ])
-                                ]),
-                                _: 3
-                              })) : createCommentVNode("", true)
-                            ]),
-                            _: 3
-                          })) : createCommentVNode("", true),
-                          renderSlot(_ctx.$slots, "content", {}, () => [
-                            createVNode("div", {
-                              "data-slot": "container",
-                              class: ui.value.container({ class: unref(props).ui?.container })
-                            }, [
-                              !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
-                                key: 0,
-                                "data-slot": "header",
-                                class: ui.value.header({ class: unref(props).ui?.header })
-                              }, [
-                                renderSlot(_ctx.$slots, "header", {}, () => [
-                                  unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
-                                    key: 0,
-                                    "data-slot": "wrapper",
-                                    class: ui.value.wrapper({ class: unref(props).ui?.wrapper })
+                              renderSlot(_ctx.$slots, "content", {}, () => {
+                                var _a3, _b2, _c, _d;
+                                return [
+                                  createVNode("div", {
+                                    "data-slot": "container",
+                                    class: ui.value.container({ class: (_a3 = unref(props).ui) == null ? void 0 : _a3.container })
                                   }, [
-                                    unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
+                                    !!slots.header || (unref(props).title || !!slots.title) || (unref(props).description || !!slots.description) || (unref(props).close || !!slots.close) || !!slots.actions ? (openBlock(), createBlock("div", {
                                       key: 0,
-                                      "data-slot": "title",
-                                      class: ui.value.title({ class: unref(props).ui?.title })
-                                    }, {
-                                      default: withCtx(() => [
-                                        renderSlot(_ctx.$slots, "title", {}, () => [
-                                          createTextVNode(toDisplayString(unref(props).title), 1)
-                                        ])
-                                      ]),
-                                      _: 3
-                                    }, 8, ["class"])) : createCommentVNode("", true),
-                                    unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
-                                      key: 1,
-                                      "data-slot": "description",
-                                      class: ui.value.description({ class: unref(props).ui?.description })
-                                    }, {
-                                      default: withCtx(() => [
-                                        renderSlot(_ctx.$slots, "description", {}, () => [
-                                          createTextVNode(toDisplayString(unref(props).description), 1)
-                                        ])
-                                      ]),
-                                      _: 3
-                                    }, 8, ["class"])) : createCommentVNode("", true)
-                                  ], 2)) : createCommentVNode("", true),
-                                  !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
-                                    key: 1,
-                                    "data-slot": "actions",
-                                    class: ui.value.actions({ class: unref(props).ui?.actions })
-                                  }, [
-                                    renderSlot(_ctx.$slots, "actions"),
-                                    unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
-                                      key: 0,
-                                      "as-child": ""
-                                    }, {
-                                      default: withCtx(() => [
-                                        renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => [
-                                          unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                      "data-slot": "header",
+                                      class: ui.value.header({ class: (_b2 = unref(props).ui) == null ? void 0 : _b2.header })
+                                    }, [
+                                      renderSlot(_ctx.$slots, "header", {}, () => {
+                                        var _a4, _b3, _c2, _d2;
+                                        return [
+                                          unref(props).title || !!slots.title || unref(props).description || !!slots.description ? (openBlock(), createBlock("div", {
                                             key: 0,
-                                            icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
-                                            color: "neutral",
-                                            variant: "ghost",
-                                            "aria-label": unref(t)("drawer.close")
-                                          }, typeof unref(props).close === "object" ? unref(props).close : {}, {
-                                            "data-slot": "close",
-                                            class: ui.value.close({ class: unref(props).ui?.close })
-                                          }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
-                                        ])
-                                      ]),
-                                      _: 3
-                                    })) : createCommentVNode("", true)
-                                  ], 2)) : createCommentVNode("", true)
-                                ])
-                              ], 2)) : createCommentVNode("", true),
-                              !!slots.body ? (openBlock(), createBlock("div", {
-                                key: 1,
-                                "data-slot": "body",
-                                class: ui.value.body({ class: unref(props).ui?.body })
-                              }, [
-                                renderSlot(_ctx.$slots, "body")
-                              ], 2)) : createCommentVNode("", true),
-                              !!slots.footer ? (openBlock(), createBlock("div", {
-                                key: 2,
-                                "data-slot": "footer",
-                                class: ui.value.footer({ class: unref(props).ui?.footer })
-                              }, [
-                                renderSlot(_ctx.$slots, "footer")
-                              ], 2)) : createCommentVNode("", true)
-                            ], 2)
-                          ])
-                        ]),
-                        _: 3
-                      }, 16, ["class"])
-                    ]),
+                                            "data-slot": "wrapper",
+                                            class: ui.value.wrapper({ class: (_a4 = unref(props).ui) == null ? void 0 : _a4.wrapper })
+                                          }, [
+                                            unref(props).title || !!slots.title ? (openBlock(), createBlock(unref(DrawerTitle), {
+                                              key: 0,
+                                              "data-slot": "title",
+                                              class: ui.value.title({ class: (_b3 = unref(props).ui) == null ? void 0 : _b3.title })
+                                            }, {
+                                              default: withCtx(() => [
+                                                renderSlot(_ctx.$slots, "title", {}, () => [
+                                                  createTextVNode(toDisplayString(unref(props).title), 1)
+                                                ])
+                                              ]),
+                                              _: 3
+                                            }, 8, ["class"])) : createCommentVNode("", true),
+                                            unref(props).description || !!slots.description ? (openBlock(), createBlock(unref(DrawerDescription), {
+                                              key: 1,
+                                              "data-slot": "description",
+                                              class: ui.value.description({ class: (_c2 = unref(props).ui) == null ? void 0 : _c2.description })
+                                            }, {
+                                              default: withCtx(() => [
+                                                renderSlot(_ctx.$slots, "description", {}, () => [
+                                                  createTextVNode(toDisplayString(unref(props).description), 1)
+                                                ])
+                                              ]),
+                                              _: 3
+                                            }, 8, ["class"])) : createCommentVNode("", true)
+                                          ], 2)) : createCommentVNode("", true),
+                                          !!slots.actions || unref(props).close || !!slots.close ? (openBlock(), createBlock("div", {
+                                            key: 1,
+                                            "data-slot": "actions",
+                                            class: ui.value.actions({ class: (_d2 = unref(props).ui) == null ? void 0 : _d2.actions })
+                                          }, [
+                                            renderSlot(_ctx.$slots, "actions"),
+                                            unref(props).close || !!slots.close ? (openBlock(), createBlock(unref(DrawerClose), {
+                                              key: 0,
+                                              "as-child": ""
+                                            }, {
+                                              default: withCtx(() => [
+                                                renderSlot(_ctx.$slots, "close", { ui: ui.value }, () => {
+                                                  var _a5;
+                                                  return [
+                                                    unref(props).close ? (openBlock(), createBlock(_sfc_main$8, mergeProps({
+                                                      key: 0,
+                                                      icon: unref(props).closeIcon || unref(appConfig).ui.icons.close,
+                                                      color: "neutral",
+                                                      variant: "ghost",
+                                                      "aria-label": unref(t)("drawer.close")
+                                                    }, typeof unref(props).close === "object" ? unref(props).close : {}, {
+                                                      "data-slot": "close",
+                                                      class: ui.value.close({ class: (_a5 = unref(props).ui) == null ? void 0 : _a5.close })
+                                                    }), null, 16, ["icon", "aria-label", "class"])) : createCommentVNode("", true)
+                                                  ];
+                                                })
+                                              ]),
+                                              _: 3
+                                            })) : createCommentVNode("", true)
+                                          ], 2)) : createCommentVNode("", true)
+                                        ];
+                                      })
+                                    ], 2)) : createCommentVNode("", true),
+                                    !!slots.body ? (openBlock(), createBlock("div", {
+                                      key: 1,
+                                      "data-slot": "body",
+                                      class: ui.value.body({ class: (_c = unref(props).ui) == null ? void 0 : _c.body })
+                                    }, [
+                                      renderSlot(_ctx.$slots, "body")
+                                    ], 2)) : createCommentVNode("", true),
+                                    !!slots.footer ? (openBlock(), createBlock("div", {
+                                      key: 2,
+                                      "data-slot": "footer",
+                                      class: ui.value.footer({ class: (_d = unref(props).ui) == null ? void 0 : _d.footer })
+                                    }, [
+                                      renderSlot(_ctx.$slots, "footer")
+                                    ], 2)) : createCommentVNode("", true)
+                                  ], 2)
+                                ];
+                              })
+                            ];
+                          }),
+                          _: 3
+                        }, 16, ["class"])
+                      ];
+                    }),
                     _: 3
                   })
                 ]),

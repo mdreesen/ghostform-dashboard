@@ -61,4 +61,3 @@ export { useScrollspy } from '../node_modules/@nuxt/ui/dist/runtime/composables/
 export { useTour } from '../node_modules/@nuxt/ui/dist/runtime/composables/useTour';
 export { useToast } from '../node_modules/nuxt-notify/dist/runtime/composables/useToast';
 export { usePWA, useTransparentPwaIcon, useMaskablePwaIcon, useFaviconPwaIcon, useApplePwaIcon, useAppleSplashScreenPwaIcon } from '../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index';
-export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
