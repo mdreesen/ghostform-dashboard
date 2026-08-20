@@ -213,67 +213,67 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         </main>
       </div>
 
-              <!-- Voice profile: drives how AI writes their social posts -->
-        <div id="voice" class="mb-10 pb-10 border-b border-[#DDD6C9]">
-          <p class="gf-eyebrow mb-3">Your voice</p>
-          <p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]">
-            This is what makes your social posts sound like you instead of like
-            every other agent. The samples box matters most — paste a couple of
-            posts you've actually written.
-          </p>
+      <!-- Voice profile: drives how AI writes their social posts -->
+      <div id="voice" class="mb-10 pb-10 border-b border-[#DDD6C9]">
+        <p class="gf-eyebrow mb-3">Your voice</p>
+        <p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]">
+          This is what makes your social posts sound like you instead of like
+          every other agent. The samples box matters most — paste a couple of
+          posts you've actually written.
+        </p>
 
-          <div class="grid sm:grid-cols-2 gap-6 mb-6">
-            <div>
-              <label class="gf-eyebrow block mb-3">How you come across</label>
-              <select v-model="voice.tone"
-                class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]">
-                <option value="warm">Warm and neighbourly</option>
-                <option value="straight">Plain and direct</option>
-                <option value="playful">Light and a bit funny</option>
-                <option value="polished">Composed and professional</option>
-              </select>
-            </div>
-            <div>
-              <label class="gf-eyebrow block mb-3">Emoji</label>
-              <select v-model="voice.emoji"
-                class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]">
-                <option value="none">None</option>
-                <option value="some">A few</option>
-                <option value="lots">Plenty</option>
-              </select>
-            </div>
+        <div class="grid sm:grid-cols-2 gap-6 mb-6">
+          <div>
+            <label class="gf-eyebrow block mb-3">How you come across</label>
+            <select v-model="voice.tone"
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]">
+              <option value="warm">Warm and neighbourly</option>
+              <option value="straight">Plain and direct</option>
+              <option value="playful">Light and a bit funny</option>
+              <option value="polished">Composed and professional</option>
+            </select>
           </div>
-
-          <div class="space-y-6">
-            <div>
-              <label class="gf-eyebrow block mb-3">A bit about you</label>
-              <input v-model="voice.about" placeholder="Grew up here, two kids, spend every free weekend on the lake"
-                class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
-            </div>
-            <div>
-              <label class="gf-eyebrow block mb-3">What you want to be known for</label>
-              <input v-model="voice.focus" placeholder="First-time buyers, and knowing every back road in the valley"
-                class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
-            </div>
-            <div>
-              <label class="gf-eyebrow block mb-3">Words to avoid</label>
-              <input v-model="voice.avoid" placeholder="dream home, don't miss out, hustle"
-                class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
-            </div>
-            <div>
-              <label class="gf-eyebrow block mb-3">Paste a couple of your real posts</label>
-              <textarea v-model="voice.samples" rows="7"
-                placeholder="Paste two or three posts you've written before. This teaches it your rhythm better than anything else here."
-                class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]" />
-            </div>
+          <div>
+            <label class="gf-eyebrow block mb-3">Emoji</label>
+            <select v-model="voice.emoji"
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]">
+              <option value="none">None</option>
+              <option value="some">A few</option>
+              <option value="lots">Plenty</option>
+            </select>
           </div>
-
-          <button :disabled="savingVoice"
-            class="mt-7 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
-            @click="saveVoice">
-            {{ savingVoice ? 'Saving…' : 'Save my voice' }}
-          </button>
         </div>
+
+        <div class="space-y-6">
+          <div>
+            <label class="gf-eyebrow block mb-3">A bit about you</label>
+            <input v-model="voice.about" placeholder="Grew up here, two kids, spend every free weekend on the lake"
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+          </div>
+          <div>
+            <label class="gf-eyebrow block mb-3">What you want to be known for</label>
+            <input v-model="voice.focus" placeholder="First-time buyers, and knowing every back road in the valley"
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+          </div>
+          <div>
+            <label class="gf-eyebrow block mb-3">Words to avoid</label>
+            <input v-model="voice.avoid" placeholder="dream home, don't miss out, hustle"
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+          </div>
+          <div>
+            <label class="gf-eyebrow block mb-3">Paste a couple of your real posts</label>
+            <textarea v-model="voice.samples" rows="7"
+              placeholder="Paste two or three posts you've written before. This teaches it your rhythm better than anything else here."
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]" />
+          </div>
+        </div>
+
+        <button :disabled="savingVoice"
+          class="mt-7 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
+          @click="saveVoice">
+          {{ savingVoice ? 'Saving…' : 'Save my voice' }}
+        </button>
+      </div>
 
       <!-- Action Button Example -->
       <div class="flex flex-col mt-4 pt-8 border-t border-gray-700 text-gray-400">
@@ -285,12 +285,6 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
       <!-- Action Button Example -->
       <div class="flex flex-col gap-8 mt-10 pt-8 border-t border-gray-700">
-        <button @click="logout"
-          class="px-6 py-3 bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition duration-300">
-          Sign Out
-        </button>
-
-        <div class="mb-10 pb-10 border-b border-[#DDD6C9]">
           <p class="gf-eyebrow mb-3">Getting started</p>
           <p class="text-[14px] text-[#8A847C] leading-relaxed mb-5 max-w-[52ch]">
             Run the two-minute walkthrough again if you want a refresher on where
@@ -301,8 +295,16 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
             @click="replayTour">
             Replay the tour
           </button>
-        </div>
+      </div>
 
+      <div class="flex flex-col gap-8 mt-10 pt-8 border-t border-gray-700">
+        <button @click="logout"
+          class="px-6 py-3 bg-red-600 rounded-lg font-semibold hover:bg-red-700 transition duration-300">
+          Sign Out
+        </button>
+      </div>
+
+      <div class="flex flex-col gap-8 mt-10 pt-8 border-t border-gray-700">
         <baseDeleteProfile />
       </div>
 
