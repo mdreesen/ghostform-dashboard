@@ -3009,16 +3009,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"394ff-LmtNmG1mevqFrySD71YQWgPwjyQ\"",
-    "mtime": "2026-08-20T14:13:34.853Z",
-    "size": 234751,
+    "etag": "\"39502-l8GaHmuioipsSTNxUZbe/tTupS4\"",
+    "mtime": "2026-08-20T14:58:33.756Z",
+    "size": 234754,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"d1deb-7zliCBSiWv93PfweXWUt19HT5wo\"",
-    "mtime": "2026-08-20T14:13:34.854Z",
-    "size": 859627,
+    "etag": "\"d1dfa-p0J6g7Z0dS+SI4GEqv958gBDM4I\"",
+    "mtime": "2026-08-20T14:58:33.757Z",
+    "size": 859642,
     "path": "index.mjs.map"
   }
 };
@@ -3885,7 +3885,7 @@ function welcomeHtml(firstName, domain) {
         <!-- Personal sign-off -->
         <tr><td style="padding-top:30px;border-top:1px solid ${p.hair};margin-top:30px;">
           <p style="margin:24px 0 0;font-size:14px;line-height:1.7;color:${p.gray};">
-            I built GhostForm myself here in Kalispell, and I read every reply to this
+            I built GhostForm myself in Kalispell Montana, and I read every reply to this
             address. If something's confusing or missing, tell me \u2014 I'd rather hear it
             than have you quietly stop using it.
           </p>

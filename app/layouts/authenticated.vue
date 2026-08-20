@@ -8,12 +8,7 @@ await useFetch('/api/briefing', { key: 'briefing', lazy: true });
 
 const { data: user } = useNuxtData('user');
 
-const authenticated = computed(() => {
-    if (user) return true;
-    else {
-        return navigateTo(`/login`);
-    }
-});
+const authenticated = computed(() => user ? true : navigateTo(`/login`));
 </script>
 
 <template>
@@ -21,13 +16,10 @@ const authenticated = computed(() => {
         <template v-if="authenticated">
             <baseNavBar />
 
-            <!-- Guided tour: auto-runs once for new accounts; replayable from
-                 the profile page via window.dispatchEvent(new Event('gf:tour')) -->
             <ClientOnly>
               <baseTour :auto="!user?.tour_completed" />
             </ClientOnly>
-            <!-- gf-stage establishes the perspective context that .gf-depth
-                 blocks animate within as they scroll into view -->
+
             <div class="gf-stage pt-24 pb-28 px-6 sm:px-10 lg:px-12">
                 <slot />
             </div>

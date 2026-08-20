@@ -7994,7 +7994,7 @@ function welcomeHtml(firstName, domain) {
         <!-- Personal sign-off -->
         <tr><td style="padding-top:30px;border-top:1px solid ${p.hair};margin-top:30px;">
           <p style="margin:24px 0 0;font-size:14px;line-height:1.7;color:${p.gray};">
-            I built GhostForm myself here in Kalispell, and I read every reply to this
+            I built GhostForm myself in Kalispell Montana, and I read every reply to this
             address. If something's confusing or missing, tell me \u2014 I'd rather hear it
             than have you quietly stop using it.
           </p>
