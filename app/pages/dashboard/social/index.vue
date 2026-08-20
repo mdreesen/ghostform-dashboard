@@ -269,10 +269,36 @@ async function share(post: any) {
       </div>
     </section>
 
-    <!-- 02 Queue -->
+    <!-- 02 Image -->
     <section class="gf-depth mb-20">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">02 — Ready</span>
+        <span class="gf-eyebrow">02 — Image</span>
+        <span class="font-display text-[25px] font-semibold tracking-tight">Make something to post with it</span>
+      </div>
+
+      <p class="text-[14.5px] text-[#8A847C] leading-relaxed max-w-[62ch] mb-9">
+        For listings and sold posts, use your own photos — nothing beats the real house.
+        These are for the posts you can't photograph: market notes, advice, open house
+        announcements.
+      </p>
+
+      <ClientOnly>
+        <appSocialCard
+          :agent-name="user?.name"
+          :company="user?.company"
+          :region="user?.region"
+          :brand-color="user?.brand_color"
+          :headshot-url="user?.headshot_url"
+          :topic="topic"
+          :saved-style="user?.cardStyle"
+        />
+      </ClientOnly>
+    </section>
+
+    <!-- 03 Queue -->
+    <section class="gf-depth mb-20">
+      <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+        <span class="gf-eyebrow">03 — Ready</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Approved and waiting</span>
         <span class="text-[13px] text-[#A9A39A] tabular-nums">{{ queue?.approved?.length ?? 0 }}</span>
       </div>
@@ -314,10 +340,10 @@ async function share(post: any) {
       </div>
     </section>
 
-    <!-- 03 History -->
+    <!-- 04 History -->
     <section v-if="queue?.posted?.length" class="gf-depth">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">03 — History</span>
+        <span class="gf-eyebrow">04 — History</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Already posted</span>
       </div>
       <div class="space-y-3">

@@ -1,4 +1,4 @@
-import { a as defineEventHandler, b as createError, i as readBody, s as schemaImport, l as generateLeadDraft } from '../../../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError, j as readBody, s as schemaImport, m as generateLeadDraft } from '../../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
 import 'mongoose';
 import 'openai';

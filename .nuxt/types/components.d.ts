@@ -19,6 +19,7 @@ interface _GlobalComponents {
   AppDailyBriefing: typeof import("../../app/components/app/DailyBriefing.vue")['default']
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppLeadMessageComposer: typeof import("../../app/components/app/LeadMessageComposer.vue")['default']
+  AppSocialCard: typeof import("../../app/components/app/SocialCard.vue")['default']
   AppReminderEmail: typeof import("../../app/components/app/appReminderEmail.vue")['default']
   AppPricing: typeof import("../../app/components/app/pricing.vue")['default']
   BaseButtonDelete: typeof import("../../app/components/base/Button/Delete.vue")['default']
@@ -36,6 +37,7 @@ interface _GlobalComponents {
   BaseHeaderAuth: typeof import("../../app/components/base/Header/Auth.vue")['default']
   BaseHeaderBase: typeof import("../../app/components/base/Header/Base.vue")['default']
   BaseHeaderSection: typeof import("../../app/components/base/Header/Section.vue")['default']
+  BaseHeadshotUpload: typeof import("../../app/components/base/HeadshotUpload.vue")['default']
   BaseLabel: typeof import("../../app/components/base/Label.vue")['default']
   BaseMessage: typeof import("../../app/components/base/Message.vue")['default']
   BaseNavBar: typeof import("../../app/components/base/NavBar.vue")['default']
@@ -235,6 +237,7 @@ interface _GlobalComponents {
   LazyAppDailyBriefing: LazyComponent<typeof import("../../app/components/app/DailyBriefing.vue")['default']>
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppLeadMessageComposer: LazyComponent<typeof import("../../app/components/app/LeadMessageComposer.vue")['default']>
+  LazyAppSocialCard: LazyComponent<typeof import("../../app/components/app/SocialCard.vue")['default']>
   LazyAppReminderEmail: LazyComponent<typeof import("../../app/components/app/appReminderEmail.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/pricing.vue")['default']>
   LazyBaseButtonDelete: LazyComponent<typeof import("../../app/components/base/Button/Delete.vue")['default']>
@@ -252,6 +255,7 @@ interface _GlobalComponents {
   LazyBaseHeaderAuth: LazyComponent<typeof import("../../app/components/base/Header/Auth.vue")['default']>
   LazyBaseHeaderBase: LazyComponent<typeof import("../../app/components/base/Header/Base.vue")['default']>
   LazyBaseHeaderSection: LazyComponent<typeof import("../../app/components/base/Header/Section.vue")['default']>
+  LazyBaseHeadshotUpload: LazyComponent<typeof import("../../app/components/base/HeadshotUpload.vue")['default']>
   LazyBaseLabel: LazyComponent<typeof import("../../app/components/base/Label.vue")['default']>
   LazyBaseMessage: LazyComponent<typeof import("../../app/components/base/Message.vue")['default']>
   LazyBaseNavBar: LazyComponent<typeof import("../../app/components/base/NavBar.vue")['default']>

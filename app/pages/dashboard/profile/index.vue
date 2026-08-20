@@ -213,6 +213,20 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         </main>
       </div>
 
+      <!-- Headshot: used on campaign emails and social cards. Uploading here
+           (rather than pasting a URL) keeps the image same-origin, which is
+           what stops the social-card canvas from being tainted on export. -->
+      <div id="photo" class="mb-10 pb-10 border-b border-[#DDD6C9]">
+        <p class="gf-eyebrow mb-3">Your photo</p>
+        <p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]">
+          Appears on your campaign emails and on any social cards you make.
+          We'll crop it to a square for you.
+        </p>
+        <ClientOnly>
+          <baseHeadshotUpload :current="(data as any)?.headshot_url" />
+        </ClientOnly>
+      </div>
+
       <!-- Voice profile: drives how AI writes their social posts -->
       <div id="voice" class="mb-10 pb-10 border-b border-[#DDD6C9]">
         <p class="gf-eyebrow mb-3">Your voice</p>

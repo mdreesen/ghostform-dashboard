@@ -1,4 +1,4 @@
-import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModelImport, e as setUserSession, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, r as readValidatedBody, c as connectDB, U as UserModelImport, f as setUserSession, b as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import 'mongoose';

@@ -1,4 +1,4 @@
-import { a as defineEventHandler, b as createError, g as buildDailyBriefing, n as narrateBriefing } from '../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError, h as buildDailyBriefing, n as narrateBriefing } from '../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../_/loggedInUser.mjs';
 import 'mongoose';
 import 'openai';

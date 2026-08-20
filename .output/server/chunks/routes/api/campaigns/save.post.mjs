@@ -1,4 +1,4 @@
-import { a as defineEventHandler, i as readBody, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, j as readBody, b as createError } from '../../../nitro/nitro.mjs';
 import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'mongoose';

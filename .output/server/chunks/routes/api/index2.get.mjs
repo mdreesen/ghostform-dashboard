@@ -1,4 +1,4 @@
-import { a as defineEventHandler, h as requirePaidUser } from '../../nitro/nitro.mjs';
+import { a as defineEventHandler, i as requirePaidUser } from '../../nitro/nitro.mjs';
 import { C as CampaignModelImport } from '../../_/Campaign.mjs';
 import 'mongoose';
 import 'openai';

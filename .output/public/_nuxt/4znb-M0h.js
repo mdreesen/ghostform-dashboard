@@ -1,1 +1,0 @@
-import{e as t,c as n,t as s,o as a}from"./CgJTuRAf.js";const o={class:"text-4xl font-semibold mb-12 text-center"},r=t({__name:"Base",props:{text:{type:String,required:!0,default:"Header"}},setup(e){return(c,_)=>(a(),n("h2",o,s(e.text),1))}}),m=Object.assign(r,{__name:"BaseHeaderBase"});export{m as _};

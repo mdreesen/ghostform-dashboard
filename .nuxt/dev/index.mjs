@@ -1,5 +1,5 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getResponseStatus, useSession, getQuery as getQuery$1, readBody, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, readValidatedBody, getHeader, readRawBody, getResponseStatusText } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getResponseStatus, useSession, getQuery as getQuery$1, readBody, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, setHeader, readValidatedBody, getHeader, readRawBody, getResponseStatusText } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import crypto$1 from 'node:crypto';
@@ -3546,6 +3546,28 @@ const userSchema = new Schema({
   // Whether the realtor has finished (or skipped) the guided tour.
   tour_completed: { type: Boolean, default: false },
   // ============================================================
+  // Branding — used by outgoing emails AND the social card
+  // generator. These belong to the REALTOR: a lead should never
+  // see software branding they don't recognise.
+  // ============================================================
+  headshot_url: { type: String, default: "" },
+  brand_color: { type: String, default: "#B5563A" },
+  title_line: { type: String, default: "" },
+  website: { type: String, default: "" },
+  // Saved social-card look, so every card an agent makes matches the last one.
+  // Consistency across a feed is the actual point of these graphics.
+  cardStyle: {
+    theme: { type: String, default: "light" },
+    // light | dark | accent | custom
+    bg: { type: String, default: "#F7F4EF" },
+    fg: { type: String, default: "#1F1B16" },
+    accent: { type: String, default: "#B5563A" },
+    showAvatar: { type: Boolean, default: true },
+    showBar: { type: Boolean, default: true },
+    ratio: { type: String, default: "square" }
+    // square | story | landscape
+  },
+  // ============================================================
   // Social voice profile — captured once, then used to make every
   // generated post sound like this specific realtor rather than
   // generic real-estate filler. Without it, AI posts all read the
@@ -4525,6 +4547,7 @@ const _DGH2dc = lazyEventHandler(() => {
   return useBase(opts.baseURL, ipxHandler);
 });
 
+const _lazy_FaiDIZ = () => Promise.resolve().then(function () { return _id__get$3; });
 const _lazy_QAyDq3 = () => Promise.resolve().then(function () { return delete_delete$1; });
 const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_post$1; });
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
@@ -4558,6 +4581,9 @@ const _lazy_PGwJYq = () => Promise.resolve().then(function () { return status_po
 const _lazy_UPg2Ir = () => Promise.resolve().then(function () { return subscribe_post$1; });
 const _lazy_pjRUBv = () => Promise.resolve().then(function () { return webhook_post$1; });
 const _lazy_JDeNrs = () => Promise.resolve().then(function () { return testReminder_get$1; });
+const _lazy_zchBPt = () => Promise.resolve().then(function () { return cardStyle_post$1; });
+const _lazy_wZagNx = () => Promise.resolve().then(function () { return headshot_delete$1; });
+const _lazy_HddarY = () => Promise.resolve().then(function () { return headshot_post$1; });
 const _lazy_V0fc_M = () => Promise.resolve().then(function () { return index_get$1; });
 const _lazy_24ztMZ = () => Promise.resolve().then(function () { return index_put$1; });
 const _lazy_q1wdXI = () => Promise.resolve().then(function () { return tour_post$1; });
@@ -4566,6 +4592,7 @@ const _lazy_mqdDEE = () => Promise.resolve().then(function () { return renderer;
 
 const handlers = [
   { route: '', handler: _3ugwHv, lazy: false, middleware: true, method: undefined },
+  { route: '/api/assets/headshot/:id', handler: _lazy_FaiDIZ, lazy: true, middleware: false, method: "get" },
   { route: '/api/authentication/delete', handler: _lazy_QAyDq3, lazy: true, middleware: false, method: "delete" },
   { route: '/api/authentication/forgot', handler: _lazy_M0BQ9P, lazy: true, middleware: false, method: "post" },
   { route: '/api/authentication/login', handler: _lazy_M4ndqB, lazy: true, middleware: false, method: "post" },
@@ -4599,6 +4626,9 @@ const handlers = [
   { route: '/api/stripe/subscribe', handler: _lazy_UPg2Ir, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/webhook', handler: _lazy_pjRUBv, lazy: true, middleware: false, method: "post" },
   { route: '/api/test-reminder', handler: _lazy_JDeNrs, lazy: true, middleware: false, method: "get" },
+  { route: '/api/user/card-style', handler: _lazy_zchBPt, lazy: true, middleware: false, method: "post" },
+  { route: '/api/user/headshot', handler: _lazy_wZagNx, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/user/headshot', handler: _lazy_HddarY, lazy: true, middleware: false, method: "post" },
   { route: '/api/user', handler: _lazy_V0fc_M, lazy: true, middleware: false, method: "get" },
   { route: '/api/user', handler: _lazy_24ztMZ, lazy: true, middleware: false, method: "put" },
   { route: '/api/user/tour', handler: _lazy_q1wdXI, lazy: true, middleware: false, method: "post" },
@@ -5129,13 +5159,58 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: styles
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$7 = UserModelImport;
+const assetSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+  kind: {
+    type: String,
+    enum: ["headshot", "logo"],
+    default: "headshot",
+    index: true
+  },
+  mime: { type: String, default: "image/jpeg" },
+  /** Raw base64 (no data: prefix) */
+  data: { type: String, required: true },
+  bytes: { type: Number, default: 0 },
+  width: { type: Number, default: 0 },
+  height: { type: Number, default: 0 }
+}, { timestamps: true });
+assetSchema.index({ userId: 1, kind: 1 }, { unique: true });
+const AssetModel = mongoose.models.Asset || mongoose.model("Asset", assetSchema);
+
+const Asset$2 = AssetModel;
+const _id__get$2 = defineEventHandler(async (event) => {
+  var _a;
+  const id = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!id) throw createError({ statusCode: 400, message: "Missing id." });
+  await connectDB();
+  const asset = await Asset$2.findOne({ userId: id, kind: "headshot" }).lean();
+  if (!(asset == null ? void 0 : asset.data)) {
+    throw createError({ statusCode: 404, message: "No headshot." });
+  }
+  const buffer = Buffer.from(asset.data, "base64");
+  setHeader(event, "Content-Type", asset.mime || "image/jpeg");
+  setHeader(event, "Content-Length", buffer.length);
+  setHeader(event, "Cache-Control", "public, max-age=31536000, immutable");
+  return buffer;
+});
+
+const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _id__get$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const User$a = UserModelImport;
 const loggedInUser = defineEventHandler(async (event) => {
   await connectDB();
   const { user } = await requireUserSession(event);
   const userEmail = user == null ? void 0 : user.email;
   try {
-    const findUser = await User$7.findOne({ email: userEmail });
+    const findUser = await User$a.findOne({ email: userEmail });
     if (!findUser) {
       throw createError({ statusCode: 401, statusMessage: "Unauthorized" });
     }
@@ -5203,13 +5278,13 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: delete_delete
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$6 = UserModelImport;
-const bodySchema$f = z.object({
+const User$9 = UserModelImport;
+const bodySchema$h = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$f.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$h.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5221,7 +5296,7 @@ const forgot_post = defineEventHandler(async (event) => {
     await connectDB();
     if (question !== "7") throw createError({ statusCode: 401, statusMessage: "Try again" });
     else {
-      const userFound = await User$6.findOne({ email });
+      const userFound = await User$9.findOne({ email });
       if (!userFound) throw createError({ statusCode: 401, statusMessage: "Wrong credentials" });
       const resend = new Resend(`${process.env.RESEND_KEY}`);
       await resend.emails.send({
@@ -5231,7 +5306,7 @@ const forgot_post = defineEventHandler(async (event) => {
         // Subject line
         html: htmlBody
       });
-      await User$6.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
+      await User$9.findOneAndUpdate({ email: email.toLowerCase().trim() }, { resetPasswordToken: token });
     }
   } catch (error) {
     console.log(error);
@@ -5247,17 +5322,17 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: forgot_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$5 = UserModelImport;
-const bodySchema$e = z.object({
+const User$8 = UserModelImport;
+const bodySchema$g = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$e.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$g.parse);
   try {
     await connectDB();
-    const user = await User$5.findOne({ email });
+    const user = await User$8.findOne({ email });
     const passwordMatches = bcrypt.compare(password, (_a = user == null ? void 0 : user.password) != null ? _a : "");
     if (await passwordMatches) {
       await setUserSession(event, {
@@ -5307,19 +5382,19 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: login_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$4 = UserModelImport;
-const bodySchema$d = z.object({
+const User$7 = UserModelImport;
+const bodySchema$f = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$d.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$f.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Try again" });
-    await User$4.findOneAndUpdate({ resetPasswordToken: token }, {
+    await User$7.findOneAndUpdate({ resetPasswordToken: token }, {
       password: hashedPassword
     });
   } catch (error) {
@@ -5336,8 +5411,8 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: reset
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const User$3 = UserModelImport;
-const bodySchema$c = z.object({
+const User$6 = UserModelImport;
+const bodySchema$e = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5346,10 +5421,10 @@ const bodySchema$c = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$c.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$e.parse);
   try {
     await connectDB();
-    const user = await User$3.findOne({ email });
+    const user = await User$6.findOne({ email });
     const hashedPassword = await bcrypt.hash(password, 10);
     const hashedEmail = await bcrypt.hash(email, 15);
     const hashedCompany = await bcrypt.hash(company, 15);
@@ -5358,7 +5433,7 @@ const signup_post = defineEventHandler(async (event) => {
     if (!password && !confirm_password) throw createError({ statusCode: 401, statusMessage: "Please insert password.", data: { errorMessage: "The requested item could not be found." } });
     if (password !== confirm_password) throw createError({ statusCode: 401, statusMessage: "Passwords do not match.", data: { errorMessage: "The requested item could not be found." } });
     if (user) throw createError({ statusCode: 401, statusMessage: "User already registered.", data: { errorMessage: "The requested item could not be found." } });
-    const registerUser = new User$3({
+    const registerUser = new User$6({
       company: company.toLowerCase(),
       company_hashed: hashedCompany.trim(),
       category: category.toLowerCase(),
@@ -5407,12 +5482,12 @@ const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$b = z.object({
+const bodySchema$d = z.object({
   _id: z.string()
 });
 const index_delete$2 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$b.parse);
+    const body = await readValidatedBody(event, bodySchema$d.parse);
     await Campaign$4.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5492,7 +5567,7 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const bodySchema$a = z.object({
+const bodySchema$c = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5501,7 +5576,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$a.parse);
+  const body = await readValidatedBody(event, bodySchema$c.parse);
   try {
     await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
@@ -5519,14 +5594,14 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$9 = z.object({
+const bodySchema$b = z.object({
   _id: z.string(),
   varyWording: z.boolean()
 });
 const vary_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, varyWording } = await readValidatedBody(event, bodySchema$9.parse);
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$b.parse);
   const res = await Campaign.updateOne(
     { _id, userId: user._id },
     { $set: { varyWording } }
@@ -5607,14 +5682,14 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$5 = HomeModel;
-const bodySchema$8 = z.object({
+const bodySchema$a = z.object({
   name: z.string().nullable(),
   address: z.string().nullable(),
   owner: z.string().nullable(),
   notes: z.string().nullable()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$8.parse);
+  const body = await readValidatedBody(event, bodySchema$a.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -5755,7 +5830,7 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$7 = z.object({
+const bodySchema$9 = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -5778,7 +5853,7 @@ const bodySchema$7 = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$7.parse);
+  const body = await readValidatedBody(event, bodySchema$9.parse);
   try {
     const existing = await Lead$2.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
@@ -5847,7 +5922,7 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 
 const LeadModel$1 = schemaImport;
 const resend$1 = new Resend(process.env.RESEND_KEY);
-const bodySchema$6 = z.object({
+const bodySchema$8 = z.object({
   // The (possibly realtor-edited) message body to send.
   message: z.string().min(1),
   // Optional custom subject; defaults to a friendly follow-up line.
@@ -5860,7 +5935,7 @@ const sendMessage_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session expired." });
   }
-  const { message, subject } = await readValidatedBody(event, bodySchema$6.parse);
+  const { message, subject } = await readValidatedBody(event, bodySchema$8.parse);
   const lead = await LeadModel$1.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
@@ -5900,7 +5975,7 @@ const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$1 = schemaImport;
-const bodySchema$5 = z.object({
+const bodySchema$7 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -5921,7 +5996,7 @@ const bodySchema$5 = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$5.parse);
+  const body = await readValidatedBody(event, bodySchema$7.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$1.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -6020,7 +6095,7 @@ const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: _id__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const bodySchema$4 = z.object({
+const bodySchema$6 = z.object({
   platform: z.enum(["facebook", "instagram", "x"]),
   topic: z.string().default("personal"),
   details: z.string().optional(),
@@ -6029,7 +6104,7 @@ const bodySchema$4 = z.object({
 const generate_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$4.parse);
+  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$6.parse);
   const { posts, source } = await generateSocialPosts(
     platform,
     topic,
@@ -6102,7 +6177,7 @@ const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost$1 = SocialPostModel;
-const bodySchema$3 = z.object({
+const bodySchema$5 = z.object({
   platform: z.enum(["facebook", "instagram", "x"]),
   topic: z.string().default("general"),
   body: z.string().min(1),
@@ -6113,7 +6188,7 @@ const bodySchema$3 = z.object({
 const save_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const data = await readValidatedBody(event, bodySchema$3.parse);
+  const data = await readValidatedBody(event, bodySchema$5.parse);
   const created = await SocialPost$1.create({ userId: user._id, ...data });
   return { success: true, _id: String(created._id) };
 });
@@ -6124,7 +6199,7 @@ const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost = SocialPostModel;
-const bodySchema$2 = z.object({
+const bodySchema$4 = z.object({
   _id: z.string(),
   status: z.enum(["draft", "approved", "posted", "discarded"]),
   body: z.string().optional()
@@ -6132,7 +6207,7 @@ const bodySchema$2 = z.object({
 const status_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, status, body } = await readValidatedBody(event, bodySchema$2.parse);
+  const { _id, status, body } = await readValidatedBody(event, bodySchema$4.parse);
   const update = { status };
   if (typeof body === "string" && body.trim()) update.body = body.trim();
   if (status === "posted") update.postedAt = /* @__PURE__ */ new Date();
@@ -6335,6 +6410,98 @@ const testReminder_get = defineEventHandler(async (event) => {
 const testReminder_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: testReminder_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const User$5 = UserModelImport;
+const hex = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
+const bodySchema$3 = z.object({
+  theme: z.enum(["light", "dark", "accent", "custom"]).optional(),
+  bg: hex.optional(),
+  fg: hex.optional(),
+  accent: hex.optional(),
+  showAvatar: z.boolean().optional(),
+  showBar: z.boolean().optional(),
+  ratio: z.enum(["square", "story", "landscape"]).optional()
+});
+const cardStyle_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const style = await readValidatedBody(event, bodySchema$3.parse);
+  await User$5.updateOne(
+    { _id: user._id },
+    { $set: Object.fromEntries(Object.entries(style).map(([k, v]) => [`cardStyle.${k}`, v])) }
+  );
+  return { success: true };
+});
+
+const cardStyle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: cardStyle_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Asset$1 = AssetModel;
+const User$4 = UserModelImport;
+const headshot_delete = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  await Asset$1.deleteOne({ userId: user._id, kind: "headshot" });
+  await User$4.updateOne({ _id: user._id }, { $set: { headshot_url: "" } });
+  return { success: true };
+});
+
+const headshot_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: headshot_delete
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Asset = AssetModel;
+const User$3 = UserModelImport;
+const MAX_BASE64 = 4e5;
+const bodySchema$2 = z.object({
+  // data URL from the client-side canvas compressor
+  image: z.string().min(50),
+  width: z.number().optional(),
+  height: z.number().optional()
+});
+const headshot_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { image, width, height } = await readValidatedBody(event, bodySchema$2.parse);
+  const match = /^data:(image\/(?:jpeg|png|webp));base64,(.+)$/.exec(image);
+  if (!match) {
+    throw createError({
+      statusCode: 400,
+      message: "Unsupported image. Use a JPEG, PNG or WebP."
+    });
+  }
+  const [, mime, data] = match;
+  if (data.length > MAX_BASE64) {
+    throw createError({
+      statusCode: 413,
+      message: "That image is too large even after compression. Try a smaller one."
+    });
+  }
+  await Asset.findOneAndUpdate(
+    { userId: user._id, kind: "headshot" },
+    {
+      userId: user._id,
+      kind: "headshot",
+      mime,
+      data,
+      bytes: Math.round(data.length * 0.75),
+      width: width != null ? width : 0,
+      height: height != null ? height : 0
+    },
+    { upsert: true, new: true }
+  );
+  const url = `/api/assets/headshot/${String(user._id)}?v=${Date.now()}`;
+  await User$3.updateOne({ _id: user._id }, { $set: { headshot_url: url } });
+  return { success: true, url };
+});
+
+const headshot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: headshot_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const index_get = defineEventHandler(async (event) => {

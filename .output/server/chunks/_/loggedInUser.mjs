@@ -1,4 +1,4 @@
-import { a as defineEventHandler, c as connectDB, q as requireUserSession, U as UserModelImport, b as createError } from '../nitro/nitro.mjs';
+import { a as defineEventHandler, c as connectDB, t as requireUserSession, U as UserModelImport, b as createError } from '../nitro/nitro.mjs';
 
 const User = UserModelImport;
 const loggedInUser = defineEventHandler(async (event) => {

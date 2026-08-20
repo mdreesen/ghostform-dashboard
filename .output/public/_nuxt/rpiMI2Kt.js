@@ -1,0 +1,1 @@
+import{e as o,q as s,u as a,c as n,a as r,K as c,o as l}from"./0YTe4SWV.js";const u={class:"bg-[#F7F4EF] text-zinc-100 selection:bg-[#B5563A]/30 font-sans"},p=o({__name:"default",setup(i){const e=s();return a({meta:[{property:"og:title",content:`GhostForm - ${e.meta.title}`}]}),(t,m)=>(l(),n("main",u,[r("div",null,[c(t.$slots,"default")])]))}});export{p as default};

@@ -1,5 +1,5 @@
 import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { computed, toValue, unref, mergeProps, createVNode, resolveDynamicComponent, ref, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, defineComponent, provide, useModel, createTextVNode, createCommentVNode, mergeModels, getCurrentScope, onScopeDispose, getCurrentInstance, toHandlerKey, camelize as camelize$1, toRef as toRef$1, inject, shallowRef, h, Teleport, customRef, hasInjectionContext, effectScope, cloneVNode, createElementBlock, nextTick, toRefs, useSlots, isRef, Comment, resolveComponent, reactive, onServerPrefetch, watchEffect, markRaw, Fragment, useAttrs, shallowReadonly, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, isReadonly, isShallow, isReactive } from 'vue';
-import { F as serialize, G as defu, H as hasProtocol, I as isScriptProtocol, J as joinURL, K as klona, L as isEqual, M as parseQuery, N as hash, O as withQuery, P as sanitizeStatusCode, Q as parseURL, x as encodePath, R as decodePath, S as appendResponseHeader, T as defuFn, V as withTrailingSlash, W as withoutTrailingSlash, X as withLeadingSlash, b as createError$1, $ as $fetch, Y as baseURL, Z as createHooks, _ as encodeParam } from '../nitro/nitro.mjs';
+import { G as serialize, H as defu, I as hasProtocol, J as isScriptProtocol, K as joinURL, L as klona, M as isEqual, N as parseQuery, O as hash, P as withQuery, Q as sanitizeStatusCode, R as parseURL, y as encodePath, S as decodePath, T as appendResponseHeader, V as defuFn, W as withTrailingSlash, X as withoutTrailingSlash, Y as withLeadingSlash, b as createError$1, $ as $fetch, Z as baseURL, _ as createHooks, a0 as encodeParam } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { Icon, getIcon, loadIcon as loadIcon$1, addIcon, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
 import { debounce } from 'perfect-debounce';
@@ -866,13 +866,13 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-CSJxPMYs.mjs')
+    component: () => import('./index-DOnj2YWJ.mjs')
   },
   {
     name: "dashboard-social",
     path: "/dashboard/social",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-BNtqThje.mjs')
+    component: () => import('./index-rpNUmlcf.mjs')
   },
   {
     name: "dashboard",
@@ -11173,7 +11173,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-D2Zhjkaa.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-CYgvS47R.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-D6BhmMrf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-Flt6bszS.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-Cp8Rb9d4.mjs').then((m) => m.default || m))

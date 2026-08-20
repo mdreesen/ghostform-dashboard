@@ -43,6 +43,28 @@ const userSchema = new Schema({
   tour_completed: { type: Boolean, default: false },
 
   // ============================================================
+  // Branding — used by outgoing emails AND the social card
+  // generator. These belong to the REALTOR: a lead should never
+  // see software branding they don't recognise.
+  // ============================================================
+  headshot_url: { type: String, default: '' },
+  brand_color: { type: String, default: '#B5563A' },
+  title_line: { type: String, default: '' },
+  website: { type: String, default: '' },
+
+  // Saved social-card look, so every card an agent makes matches the last one.
+  // Consistency across a feed is the actual point of these graphics.
+  cardStyle: {
+    theme: { type: String, default: 'light' },      // light | dark | accent | custom
+    bg: { type: String, default: '#F7F4EF' },
+    fg: { type: String, default: '#1F1B16' },
+    accent: { type: String, default: '#B5563A' },
+    showAvatar: { type: Boolean, default: true },
+    showBar: { type: Boolean, default: true },
+    ratio: { type: String, default: 'square' }      // square | story | landscape
+  },
+
+  // ============================================================
   // Social voice profile — captured once, then used to make every
   // generated post sound like this specific realtor rather than
   // generic real-estate filler. Without it, AI posts all read the

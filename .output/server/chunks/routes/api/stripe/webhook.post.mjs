@@ -1,4 +1,4 @@
-import { a as defineEventHandler, c as connectDB, j as getHeader, t as readRawBody, b as createError, U as UserModelImport } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, c as connectDB, k as getHeader, u as readRawBody, b as createError, U as UserModelImport } from '../../../nitro/nitro.mjs';
 import Stripe from 'stripe';
 import 'mongoose';
 import 'openai';
