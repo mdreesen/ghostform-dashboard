@@ -4,6 +4,7 @@ import { Resend } from 'resend';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
 import { u as useCleanString } from '../../../../_/useCleanString.mjs';
 import 'mongoose';
+import 'openai';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

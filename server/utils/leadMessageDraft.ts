@@ -1,19 +1,4 @@
-/**
- * ============================================================================
- * AI MESSAGE DRAFT ENGINE
- * ============================================================================
- * Generates a short, SMS-style outreach message personalized to a specific
- * lead, grounded ONLY in that lead's real data (name, budget, timeline, what
- * they're looking for, how long since contact).
- *
- * Like the briefing narration layer, this works with ZERO AI dependency: a
- * deterministic template always produces a usable draft. If ANTHROPIC_API_KEY
- * or OPENAI_API_KEY is set, we upgrade to an LLM-written version; on any
- * failure we fall back to the template. The realtor always gets something.
- *
- * Auto-imported by Nitro (server/utils).
- * ============================================================================
- */
+import { useOpenAi } from '~/utils/ai/openAi/useOpenAi';
 
 export interface DraftInput {
   name?: string
@@ -101,75 +86,15 @@ function buildPrompt(lead: DraftInput, channel: DraftChannel): string {
     channelRule,
     `Sound like a real person, not a marketing blast. No markdown, no emojis. Return only the message text.`
   ].join('\n')
-}
+};
 
-async function draftWithAnthropic(
-  lead: DraftInput,
-  channel: DraftChannel,
-  apiKey: string
-): Promise<string | null> {
-  try {
-    const res = await $fetch<any>('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
-      body: {
-        model: 'claude-3-5-haiku-latest',
-        max_tokens: 250,
-        messages: [{ role: 'user', content: buildPrompt(lead, channel) }]
-      }
-    })
-    const text = res?.content?.find((b: any) => b.type === 'text')?.text
-    return typeof text === 'string' && text.trim() ? text.trim() : null
-  } catch (err) {
-    console.error('Anthropic draft failed, using template:', err)
-    return null
-  }
-}
-
-async function draftWithOpenAI(
-  lead: DraftInput,
-  channel: DraftChannel,
-  apiKey: string
-): Promise<string | null> {
-  try {
-    const res = await $fetch<any>('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'content-type': 'application/json'
-      },
-      body: {
-        model: 'gpt-4o-mini',
-        max_tokens: 250,
-        messages: [{ role: 'user', content: buildPrompt(lead, channel) }]
-      }
-    })
-    const text = res?.choices?.[0]?.message?.content
-    return typeof text === 'string' && text.trim() ? text.trim() : null
-  } catch (err) {
-    console.error('OpenAI draft failed, using template:', err)
-    return null
-  }
-}
-
-/**
- * Produce a draft for a lead. Returns { message, source } so the UI can show
- * whether it was AI-written or the template.
- */
 export async function generateLeadDraft(
   lead: DraftInput,
   channel: DraftChannel = 'sms'
 ): Promise<{ message: string; source: 'ai' | 'template' }> {
-  const anthropicKey = process.env.ANTHROPIC_API_KEY
-  const openaiKey = process.env.OPENAI_API_KEY
 
   let aiText: string | null = null
-  if (anthropicKey) aiText = await draftWithAnthropic(lead, channel, anthropicKey)
-  else if (openaiKey) aiText = await draftWithOpenAI(lead, channel, openaiKey)
+  aiText = await useOpenAi([{ role: 'user', content: buildPrompt(lead, channel) }])
 
   if (aiText) return { message: aiText, source: 'ai' }
   return { message: templateDraft(lead, channel), source: 'template' }

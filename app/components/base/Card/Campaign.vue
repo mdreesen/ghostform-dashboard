@@ -11,6 +11,7 @@ const toast = useToast();
 
 const loading = ref(false);
 const toggling = ref(false);
+const togglingVary = ref(false);
 const emit = defineEmits<{ close: [boolean] }>();
 const open = ref(false);
 
@@ -45,6 +46,25 @@ const useToggle = async () => {
         toast.error('Could not update campaign.');
     } finally {
         toggling.value = false
+    }
+}
+
+// Treat a missing flag (older campaigns) as ON, matching the send logic.
+const varying = computed(() => props.data?.varyWording !== false);
+
+const useVaryToggle = async () => {
+    togglingVary.value = true
+    try {
+        await $fetch('/api/campaigns/vary', {
+            method: 'POST',
+            body: { _id: props.data._id, varyWording: !varying.value }
+        })
+        await refreshNuxtData('campaigns');
+        toast.success(varying.value ? 'Wording will stay exactly as written' : 'Wording will vary each send');
+    } catch (error) {
+        toast.error('Could not update.');
+    } finally {
+        togglingVary.value = false
     }
 }
 
@@ -93,6 +113,17 @@ const useDelete = async () => {
             <p class="text-md font-bold tabular-nums">{{ data?.subject }}</p>
 
             <div class="flex flex-col gap-3">
+                <p class="text-[12px] text-[#8A847C] leading-relaxed -mt-2">
+                    {{ varying
+                        ? 'Reworded slightly each send so it doesn’t read as automated.'
+                        : 'Sent word-for-word as you wrote it, every time.' }}
+                    <button
+                        :disabled="togglingVary"
+                        class="text-[#B5563A] hover:underline disabled:opacity-40"
+                        @click="useVaryToggle"
+                    >{{ varying ? 'Send it verbatim instead' : 'Let it vary' }}</button>
+                </p>
+
                 <UButton
                     :label="isActive ? 'Pause Campaign' : 'Resume Campaign'"
                     :loading="toggling"

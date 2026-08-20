@@ -7,6 +7,7 @@ import { u as useToast } from './useToast-LG3isBA-.mjs';
 import { _ as _export_sfc } from './_plugin-vue_export-helper-1tPrXgE0.mjs';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

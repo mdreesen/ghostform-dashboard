@@ -3,6 +3,7 @@ import { defineComponent, withAsyncContext, mergeProps, withCtx, createVNode, to
 import { ssrRenderAttrs, ssrRenderComponent, ssrRenderList, ssrRenderClass, ssrInterpolate, ssrRenderAttr } from 'vue/server-renderer';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

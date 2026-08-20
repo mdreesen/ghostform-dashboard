@@ -2,6 +2,7 @@ declare global {
   const H3Error: typeof import('../../node_modules/h3').H3Error
   const H3Event: typeof import('../../node_modules/h3').H3Event
   const HUMAN_DAY: typeof import('../../server/utils/dailyBriefing').HUMAN_DAY
+  const TOPICS: typeof import('../../server/utils/socialDraft').TOPICS
   const __buildAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').buildAssetsURL
   const __publicAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').publicAssetsURL
   const appendCorsHeaders: typeof import('../../node_modules/h3').appendCorsHeaders
@@ -98,6 +99,7 @@ declare global {
   const fromPlainHandler: typeof import('../../node_modules/h3').fromPlainHandler
   const fromWebHandler: typeof import('../../node_modules/h3').fromWebHandler
   const generateLeadDraft: typeof import('../../server/utils/leadMessageDraft').generateLeadDraft
+  const generateSocialPosts: typeof import('../../server/utils/socialDraft').generateSocialPosts
   const getAtprotoClientMetadata: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto').getAtprotoClientMetadata
   const getCookie: typeof import('../../node_modules/h3').getCookie
   const getHeader: typeof import('../../node_modules/h3').getHeader
@@ -353,6 +355,9 @@ declare global {
   // @ts-ignore
   export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
   import('../../server/utils/leadMessageDraft')
+  // @ts-ignore
+  export type { Platform, VoiceProfile, DraftContext, GeneratedPost } from '../../server/utils/socialDraft'
+  import('../../server/utils/socialDraft')
 }
 export { H3Event, H3Error, appendCorsHeaders, appendCorsPreflightHeaders, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callNodeListener, clearResponseHeaders, clearSession, createApp, createAppEventHandler, createError, createEvent, createEventStream, createRouter, defaultContentType, defineEventHandler, defineLazyEventHandler, defineNodeListener, defineNodeMiddleware, defineRequestMiddleware, defineResponseMiddleware, defineWebSocket, defineWebSocketHandler, deleteCookie, dynamicEventHandler, eventHandler, fetchWithEvent, fromNodeMiddleware, fromPlainHandler, fromWebHandler, getCookie, getHeader, getHeaders, getMethod, getProxyRequestHeaders, getQuery, getRequestFingerprint, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestPath, getRequestProtocol, getRequestURL, getRequestWebStream, getResponseHeader, getResponseHeaders, getResponseStatus, getResponseStatusText, getRouterParam, getRouterParams, getSession, getValidatedQuery, getValidatedRouterParams, handleCacheHeaders, handleCors, isCorsOriginAllowed, isError, isEvent, isEventHandler, isMethod, isPreflightRequest, isStream, isWebResponse, lazyEventHandler, parseCookies, promisifyNodeListener, proxyRequest, readBody, readFormData, readMultipartFormData, readRawBody, readValidatedBody, removeResponseHeader, sanitizeStatusCode, sanitizeStatusMessage, sealSession, send, sendError, sendIterable, sendNoContent, sendProxy, sendRedirect, sendStream, sendWebResponse, serveStatic, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, setResponseStatus, splitCookiesString, toEventHandler, toNodeListener, toPlainHandler, toWebHandler, toWebRequest, unsealSession, updateSession, useBase, useSession, writeEarlyHints } from 'h3';
 export { useNitroApp } from 'nitropack/runtime/internal/app';
@@ -425,4 +430,5 @@ export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/se
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';
+export { TOPICS, generateSocialPosts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/socialDraft';
 export { sendWelcomeEmail } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/welcomeEmail';

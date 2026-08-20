@@ -1,5 +1,6 @@
 import { a as defineEventHandler, h as requirePaidUser } from '../../../nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

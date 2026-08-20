@@ -31,6 +31,9 @@ declare module "nitropack/types" {
     '/api/campaigns/toggle': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/toggle.post').default>>>>
     }
+    '/api/campaigns/vary': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/vary.post').default>>>>
+    }
     '/api/charts/lead': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/charts/lead.get').default>>>>
     }

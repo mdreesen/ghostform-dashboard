@@ -5,6 +5,7 @@ import { ssrRenderAttrs, ssrGetDirectiveProps, ssrInterpolate, ssrRenderComponen
 import { u as useToast } from './useToast-LG3isBA-.mjs';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

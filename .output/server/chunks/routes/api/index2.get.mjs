@@ -1,6 +1,7 @@
 import { a as defineEventHandler, h as requirePaidUser } from '../../nitro/nitro.mjs';
 import { C as CampaignModelImport } from '../../_/Campaign.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

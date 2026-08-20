@@ -2,6 +2,7 @@ import process from 'node:process';globalThis._importMeta_={url:import.meta.url,
 import 'node:https';
 export { a0 as default } from './chunks/nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:crypto';
 import 'node:events';

@@ -3,6 +3,7 @@ import { Resend } from 'resend';
 import { C as CampaignModelImport } from './Campaign.mjs';
 import { u as useCleanString } from './useCleanString.mjs';
 import 'mongoose';
+import 'openai';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

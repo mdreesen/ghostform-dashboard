@@ -1,6 +1,7 @@
 import { a as defineEventHandler, c as connectDB, j as getHeader, t as readRawBody, b as createError, U as UserModelImport } from '../../../nitro/nitro.mjs';
 import Stripe from 'stripe';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

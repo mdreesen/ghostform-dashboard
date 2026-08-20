@@ -2,6 +2,7 @@ import { a as defineEventHandler, r as readValidatedBody, c as connectDB, b as c
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

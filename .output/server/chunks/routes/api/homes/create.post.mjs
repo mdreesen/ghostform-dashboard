@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { H as HomeModel } from '../../../_/Home.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

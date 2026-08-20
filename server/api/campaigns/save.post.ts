@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth } = body
+  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording } = body
 
   // 2. Comprehensive input parameter presence checks
   if (!targetStatus || !subject || !messageBody || dayOfWeek === undefined || !timesPerMonth) {
@@ -36,6 +36,9 @@ export default defineEventHandler(async (event) => {
       messageBody,
       dayOfWeek: Number(dayOfWeek),
       timesPerMonth: Number(timesPerMonth),
+      // Default ON: repeated identical copy reads as a robot and hurts
+      // deliverability. Realtors can opt out per campaign.
+      varyWording: varyWording !== false,
       lastFiredAt: null // Explicitly initialize as empty queue window ready to fire
     })
 

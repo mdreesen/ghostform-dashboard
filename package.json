@@ -34,6 +34,7 @@
     "nuxt-notify": "^1.1.4",
     "nuxt-qrcode": "^0.4.10",
     "nuxt-vitalizer": "^2.0.0",
+    "openai": "^7.5.0",
     "pinia": "^3.0.4",
     "reka-ui": "^2.6.1",
     "resend": "^6.12.3",

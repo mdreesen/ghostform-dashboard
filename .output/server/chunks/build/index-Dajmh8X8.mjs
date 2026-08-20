@@ -25,6 +25,7 @@ import 'devalue';
 import 'unhead/plugins';
 import 'unhead/utils';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

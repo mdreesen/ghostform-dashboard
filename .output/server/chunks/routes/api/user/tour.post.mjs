@@ -1,6 +1,7 @@
 import { a as defineEventHandler, b as createError, U as UserModelImport } from '../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

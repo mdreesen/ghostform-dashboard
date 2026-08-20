@@ -23,6 +23,9 @@ const TOKEN_AGENT = '{' + '{agent}' + '}';
 
 const form = ref({
   title: '',
+  // On by default — identical copy every week reads as automated and
+  // scores badly with spam filters.
+  varyWording: true,
   targetStatus: 'new',
   subject: '',
   messageBody: '',
@@ -134,6 +137,17 @@ const saveCampaignTemplate = async () => {
           <p class="text-[12px] text-[#A9A39A] leading-relaxed pt-1">
             Emails go out in the morning on the day you pick.
           </p>
+
+          <label class="flex items-start gap-3 pt-2 cursor-pointer">
+            <input v-model="form.varyWording" type="checkbox" class="mt-1 accent-[#B5563A]" />
+            <span>
+              <span class="block text-[13px] font-medium">Reword it slightly each time</span>
+              <span class="block text-[12px] text-[#A9A39A] leading-relaxed mt-0.5">
+                Keeps the same meaning, but says it a bit differently each send — so
+                people on a long sequence don't get the identical email every week.
+              </span>
+            </span>
+          </label>
         </div>
 
         <!-- What it says -->

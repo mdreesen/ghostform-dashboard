@@ -1,6 +1,7 @@
 import { a as defineEventHandler, r as readValidatedBody, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

@@ -4,6 +4,7 @@ import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { H as HomeModel } from '../../../_/Home.mjs';
 import Stripe from 'stripe';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

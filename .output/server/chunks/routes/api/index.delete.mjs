@@ -2,6 +2,7 @@ import { a as defineEventHandler, r as readValidatedBody, b as createError } fro
 import { z } from 'zod';
 import { C as CampaignModelImport } from '../../_/Campaign.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

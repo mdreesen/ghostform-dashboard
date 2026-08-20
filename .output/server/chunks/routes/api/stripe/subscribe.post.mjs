@@ -1,6 +1,7 @@
 import { a as defineEventHandler, i as readBody } from '../../../nitro/nitro.mjs';
 import Stripe from 'stripe';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

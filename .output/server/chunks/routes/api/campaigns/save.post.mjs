@@ -2,6 +2,7 @@ import { a as defineEventHandler, i as readBody, b as createError } from '../../
 import { C as CampaignModelImport } from '../../../_/Campaign.mjs';
 import { l as loggedInUser } from '../../../_/loggedInUser.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';
@@ -25,7 +26,7 @@ const save_post = defineEventHandler(async (event) => {
       message: "Session trace missing or expired."
     });
   }
-  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth } = body;
+  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording } = body;
   if (!targetStatus || !subject || !messageBody || dayOfWeek === void 0 || !timesPerMonth) {
     throw createError({
       statusCode: 400,
@@ -41,6 +42,9 @@ const save_post = defineEventHandler(async (event) => {
       messageBody,
       dayOfWeek: Number(dayOfWeek),
       timesPerMonth: Number(timesPerMonth),
+      // Default ON: repeated identical copy reads as a robot and hurts
+      // deliverability. Realtors can opt out per campaign.
+      varyWording: varyWording !== false,
       lastFiredAt: null
       // Explicitly initialize as empty queue window ready to fire
     });

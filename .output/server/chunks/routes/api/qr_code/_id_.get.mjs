@@ -1,5 +1,6 @@
 import { a as defineEventHandler, m as getRouterParam, o as setResponseHeader, b as createError } from '../../../nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

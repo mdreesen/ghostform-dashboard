@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { nanoid } from 'nanoid';
 import { Resend } from 'resend';
 import 'mongoose';
+import 'openai';
 import 'node:http';
 import 'node:https';
 import 'node:crypto';

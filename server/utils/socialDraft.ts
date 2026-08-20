@@ -1,16 +1,4 @@
-/**
- * ============================================================================
- * SOCIAL POST DRAFTING
- * ============================================================================
- * Generates post drafts in the realtor's own voice, for a chosen platform and
- * topic. Same shape as the lead-message drafter: works with ZERO AI key via
- * deterministic templates, upgrades to an LLM when one is configured.
- *
- * The whole point is that posts sound like THIS agent. Generic "Just listed! 🏡"
- * output gets ignored, and worse, makes the agent look like everyone else. The
- * voice profile is what prevents that.
- * ============================================================================
- */
+import { useOpenAi } from '~/utils/ai/openAi/useOpenAi';
 
 export type Platform = 'facebook' | 'instagram' | 'x'
 
@@ -164,46 +152,6 @@ function buildPrompt(
   return lines.filter(Boolean).join('\n')
 }
 
-async function withAnthropic(prompt: string, key: string): Promise<string | null> {
-  try {
-    const res = await $fetch<any>('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json'
-      },
-      body: {
-        model: 'claude-3-5-haiku-latest',
-        max_tokens: 700,
-        messages: [{ role: 'user', content: prompt }]
-      }
-    })
-    return res?.content?.find((b: any) => b.type === 'text')?.text ?? null
-  } catch (err) {
-    console.error('[social] Anthropic failed:', err)
-    return null
-  }
-}
-
-async function withOpenAI(prompt: string, key: string): Promise<string | null> {
-  try {
-    const res = await $fetch<any>('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'content-type': 'application/json' },
-      body: {
-        model: 'gpt-4o-mini',
-        max_tokens: 700,
-        messages: [{ role: 'user', content: prompt }]
-      }
-    })
-    return res?.choices?.[0]?.message?.content ?? null
-  } catch (err) {
-    console.error('[social] OpenAI failed:', err)
-    return null
-  }
-}
-
 function parseJson(raw: string): GeneratedPost | null {
   try {
     const cleaned = raw.replace(/```json|```/g, '').trim()
@@ -275,7 +223,8 @@ export async function generateSocialPosts(
   ctx: DraftContext,
   opts: { count?: number; details?: string } = {}
 ): Promise<{ posts: GeneratedPost[]; source: 'ai' | 'template' }> {
-  const count = Math.min(Math.max(opts.count ?? 3, 1), 5)
+  const count = Math.min(Math.max(opts.count ?? 3, 1), 5);
+
   const anthropicKey = process.env.ANTHROPIC_API_KEY
   const openaiKey = process.env.OPENAI_API_KEY
 
@@ -290,9 +239,7 @@ export async function generateSocialPosts(
         ? prompt
         : `${prompt}\n\nWrite a DIFFERENT post from the one you'd write first — a different angle or opening entirely.`
 
-      const raw = anthropicKey
-        ? await withAnthropic(variation, anthropicKey)
-        : await withOpenAI(variation, openaiKey!)
+      const raw = await useOpenAi([{ role: 'user', content: variation }])
 
       const parsed = raw ? parseJson(raw) : null
       if (parsed) results.push(parsed)

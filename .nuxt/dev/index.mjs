@@ -14,6 +14,7 @@ import { nanoid } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node
 import bcrypt from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import { Cron } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/mongoose/index.js';
+import OpenAI from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/openai/index.mjs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL, parseQuery, parsePath, encodePath } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -2886,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3005,22 +3006,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"37dbe-I19GpHjM1t+vkQCBIIiO65ijE6s\"",
-    "mtime": "2026-08-20T03:12:51.772Z",
-    "size": 228798,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"cbe19-24ibpB/SpDi3ThhqHKCOn8V25bE\"",
-    "mtime": "2026-08-20T03:12:51.774Z",
-    "size": 835097,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3243,7 +3229,25 @@ function publicAssetsURL(...path) {
 	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
-function buildPrompt$1(briefing) {
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+async function useOpenAi(messages) {
+  var _a, _b, _c;
+  try {
+    const res = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages
+    });
+    const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
+    return typeof text === "string" && text.trim() ? text.trim() : null;
+  } catch (err) {
+    console.error("OpenAI failed", err);
+    return null;
+  }
+}
+
+function buildPrompt$2(briefing) {
   const { totals, leads } = briefing;
   const sample = leads.slice(0, 5).map((l) => {
     const first = (l.name || "A lead").split(" ")[0];
@@ -3260,58 +3264,10 @@ ${sample.join("\n")}` : `No leads need attention today.`,
     `Write an encouraging, concrete summary. No greeting, no sign-off, no markdown. Max 2 sentences.`
   ].join("\n");
 }
-async function narrateWithAnthropic(briefing, apiKey) {
-  var _a, _b;
-  try {
-    const res = await $fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json"
-      },
-      body: {
-        model: "claude-3-5-haiku-latest",
-        max_tokens: 150,
-        messages: [{ role: "user", content: buildPrompt$1(briefing) }]
-      }
-    });
-    const text = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
-    return typeof text === "string" && text.trim() ? text.trim() : null;
-  } catch (err) {
-    console.error("Anthropic narration failed, using deterministic headline:", err);
-    return null;
-  }
-}
-async function narrateWithOpenAI(briefing, apiKey) {
-  var _a, _b, _c;
-  try {
-    const res = await $fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "content-type": "application/json"
-      },
-      body: {
-        model: "gpt-4o-mini",
-        max_tokens: 150,
-        messages: [{ role: "user", content: buildPrompt$1(briefing) }]
-      }
-    });
-    const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
-    return typeof text === "string" && text.trim() ? text.trim() : null;
-  } catch (err) {
-    console.error("OpenAI narration failed, using deterministic headline:", err);
-    return null;
-  }
-}
 async function narrateBriefing(briefing) {
+  var _a;
   if (briefing.totals.total === 0) return null;
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  const openaiKey = process.env.OPENAI_API_KEY;
-  if (anthropicKey) return narrateWithAnthropic(briefing, anthropicKey);
-  if (openaiKey) return narrateWithOpenAI(briefing, openaiKey);
-  return null;
+  return (_a = useOpenAi([{ role: "user", content: buildPrompt$2(briefing) }])) != null ? _a : null;
 }
 
 const leadSchema = new Schema({
@@ -3508,7 +3464,7 @@ Do you have a few minutes this week? Just reply here and we'll find a time.
 Best,
 ${lead.agentName || ""}`;
 }
-function buildPrompt(lead, channel) {
+function buildPrompt$1(lead, channel) {
   const facts = [];
   facts.push(`Lead first name: ${firstName(lead.name)}`);
   if (money(lead.budget)) facts.push(`Budget: ${money(lead.budget)}`);
@@ -3528,57 +3484,9 @@ function buildPrompt(lead, channel) {
     `Sound like a real person, not a marketing blast. No markdown, no emojis. Return only the message text.`
   ].join("\n");
 }
-async function draftWithAnthropic(lead, channel, apiKey) {
-  var _a, _b;
-  try {
-    const res = await $fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json"
-      },
-      body: {
-        model: "claude-3-5-haiku-latest",
-        max_tokens: 250,
-        messages: [{ role: "user", content: buildPrompt(lead, channel) }]
-      }
-    });
-    const text = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
-    return typeof text === "string" && text.trim() ? text.trim() : null;
-  } catch (err) {
-    console.error("Anthropic draft failed, using template:", err);
-    return null;
-  }
-}
-async function draftWithOpenAI(lead, channel, apiKey) {
-  var _a, _b, _c;
-  try {
-    const res = await $fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "content-type": "application/json"
-      },
-      body: {
-        model: "gpt-4o-mini",
-        max_tokens: 250,
-        messages: [{ role: "user", content: buildPrompt(lead, channel) }]
-      }
-    });
-    const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
-    return typeof text === "string" && text.trim() ? text.trim() : null;
-  } catch (err) {
-    console.error("OpenAI draft failed, using template:", err);
-    return null;
-  }
-}
 async function generateLeadDraft(lead, channel = "sms") {
-  const anthropicKey = process.env.ANTHROPIC_API_KEY;
-  const openaiKey = process.env.OPENAI_API_KEY;
   let aiText = null;
-  if (anthropicKey) aiText = await draftWithAnthropic(lead, channel, anthropicKey);
-  else if (openaiKey) aiText = await draftWithOpenAI(lead, channel, openaiKey);
+  aiText = await useOpenAi([{ role: "user", content: buildPrompt$1(lead, channel) }]);
   if (aiText) return { message: aiText, source: "ai" };
   return { message: templateDraft(lead, channel), source: "template" };
 }
@@ -3682,6 +3590,177 @@ async function requirePaidUser(event) {
     });
   }
   return dbUser;
+}
+
+const TOPICS = {
+  open_house: {
+    label: "Open house this weekend",
+    brief: "Invite people to an upcoming open house. Give a reason to show up beyond the address."
+  },
+  just_listed: {
+    label: "New listing",
+    brief: "Announce a new listing. Lead with what makes the home feel like a home, not a spec sheet."
+  },
+  just_sold: {
+    label: "Just sold / closed",
+    brief: "Celebrate a closing. Centre the clients, not the agent. No bragging about volume."
+  },
+  market_note: {
+    label: "Local market note",
+    brief: "Share one useful observation about the local market. Practical, not doom or hype."
+  },
+  tip: {
+    label: "Advice for buyers or sellers",
+    brief: "One genuinely useful tip. Specific enough that it could only come from someone who does this work."
+  },
+  personal: {
+    label: "Something personal / local",
+    brief: "A human post about life in the area. Builds familiarity. Real estate stays in the background."
+  },
+  testimonial: {
+    label: "Client thank-you",
+    brief: "Thank a client warmly and specifically, without naming private details."
+  }
+};
+const PLATFORM_RULES = {
+  facebook: "Facebook: conversational, 2-4 short paragraphs, can be up to ~120 words. Line breaks between thoughts. Ends with a question or an easy invitation to reply. Hashtags are unusual here \u2014 use none or one.",
+  instagram: 'Instagram: written to sit under a photo. First line must work as a hook on its own, since the rest is hidden behind "more". 40-80 words. Hashtags go at the end, on their own line.',
+  x: 'X: under 260 characters, single thought, no fluff. No "thread" language. At most one hashtag, often none.'
+};
+function toneLine(tone) {
+  switch (tone) {
+    case "straight":
+      return "Plain and direct. No exclamation marks. Short sentences.";
+    case "playful":
+      return "Light and a bit funny. Never goofy or cringe.";
+    case "polished":
+      return "Composed and professional, but still human. No corporate stiffness.";
+    default:
+      return "Warm and neighbourly. Sounds like a person, not a brand.";
+  }
+}
+function emojiLine(level) {
+  if (level === "none") return "Use NO emoji at all.";
+  if (level === "lots") return "Emoji are welcome \u2014 a few, placed naturally.";
+  return "At most one emoji, and only if it genuinely adds something.";
+}
+function hashtagLine(level, platform) {
+  if (level === "none") return "No hashtags.";
+  if (level === "many") {
+    return platform === "instagram" ? "Include 8-12 relevant hashtags on their own line at the end." : "Include 2-3 hashtags at the end.";
+  }
+  return platform === "instagram" ? "Include 3-5 relevant hashtags on their own line at the end." : "Include at most 1 hashtag, or none.";
+}
+function buildPrompt(platform, topicKey, ctx, details) {
+  var _a;
+  const v = ctx.voice || {};
+  const topic = TOPICS[topicKey] || TOPICS.personal;
+  const lines = [
+    `You are ghostwriting a social media post for a real estate agent. It must sound like THEM, not like a marketing template.`,
+    ``,
+    `AGENT`,
+    `- Name: ${ctx.agentName || "the agent"}`,
+    ctx.company ? `- Brokerage: ${ctx.company}` : "",
+    ctx.region ? `- Area they serve: ${ctx.region}` : "",
+    v.about ? `- About them: ${v.about}` : "",
+    v.focus ? `- What they want to be known for: ${v.focus}` : "",
+    ``,
+    `VOICE`,
+    `- ${toneLine(v.tone)}`,
+    `- ${emojiLine(v.emoji)}`,
+    `- ${hashtagLine(v.hashtags, platform)}`,
+    v.phrases ? `- Words and phrases they actually use: ${v.phrases}` : "",
+    v.avoid ? `- NEVER use these words or phrases: ${v.avoid}` : "",
+    ``
+  ];
+  if ((_a = v.samples) == null ? void 0 : _a.trim()) {
+    lines.push(
+      `THEIR REAL POSTS (match this rhythm and vocabulary closely \u2014 this is the strongest signal you have):`,
+      v.samples.trim(),
+      ``
+    );
+  }
+  lines.push(
+    `POST TO WRITE`,
+    `- Topic: ${topic == null ? void 0 : topic.label}`,
+    `- Goal: ${topic == null ? void 0 : topic.brief}`,
+    details ? `- Specific details to use: ${details}` : "",
+    ``,
+    `PLATFORM`,
+    `- ${PLATFORM_RULES[platform]}`,
+    ``,
+    `RULES`,
+    `- Do NOT invent facts: no addresses, prices, square footage, dates, or statistics that weren't given to you.`,
+    `- No fair-housing risk: never reference or imply a preferred race, religion, family status, nationality, disability, or "good schools"/"safe neighbourhood" as a proxy for those.`,
+    `- Avoid realtor clich\xE9s: "Just Listed!!", "Your dream home awaits", "Don't miss out", "DM me".`,
+    `- No fake urgency or guarantees about the market.`,
+    ``,
+    `Return ONLY JSON, no markdown fence:`,
+    `{"body": "the post text", "hashtags": "space-separated hashtags or empty string", "imageIdea": "one short line describing the photo to pair with it"}`
+  );
+  return lines.filter(Boolean).join("\n");
+}
+function parseJson(raw) {
+  try {
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+    if (start === -1 || end === -1) return null;
+    const parsed = JSON.parse(cleaned.slice(start, end + 1));
+    if (!(parsed == null ? void 0 : parsed.body)) return null;
+    return {
+      body: String(parsed.body).trim(),
+      hashtags: String(parsed.hashtags || "").trim(),
+      imageIdea: String(parsed.imageIdea || "").trim()
+    };
+  } catch {
+    return null;
+  }
+}
+function templatePost(platform, topicKey, ctx, details) {
+  var _a;
+  const area = ctx.region || "the area";
+  const detail = details == null ? void 0 : details.trim();
+  const bodies = {
+    open_house: `Open house this weekend${detail ? ` \u2014 ${detail}` : ` in ${area}`}. Come by, have a look around, ask me anything. No pressure, no sign-in sheet you'll regret.`,
+    just_listed: `New listing${detail ? `: ${detail}` : ` in ${area}`}. Happy to walk you through it or send over the details \u2014 just say the word.`,
+    just_sold: `Keys handed over this week.${detail ? ` ${detail}` : ""} Always a good day when it all comes together for people who deserve it.`,
+    market_note: `A quick note on the ${area} market${detail ? `: ${detail}` : "."} Happy to talk through what it means for your situation specifically.`,
+    tip: detail || `One thing I'd tell anyone buying in ${area}: get your financing sorted before you fall in love with a house. It changes what you can move on.`,
+    personal: detail || `One of the things I like about working in ${area} is that you run into people you know everywhere you go.`,
+    testimonial: `Grateful for the folks who trusted me with this one.${detail ? ` ${detail}` : ""} It genuinely doesn't get old.`
+  };
+  let body = bodies[topicKey] || bodies.personal;
+  if (platform === "x" && body.length > 255) body = body.slice(0, 252) + "\u2026";
+  const tags = ((_a = ctx.voice) == null ? void 0 : _a.hashtags) === "none" ? "" : platform === "instagram" ? `#${area.replace(/[^a-zA-Z]/g, "")}RealEstate #MontanaHomes #LocalRealtor` : "";
+  return {
+    body,
+    hashtags: tags,
+    imageIdea: topicKey === "personal" ? "A real photo from your day \u2014 not a stock image." : "A bright, straight-on photo of the home or street."
+  };
+}
+async function generateSocialPosts(platform, topicKey, ctx, opts = {}) {
+  var _a;
+  const count = Math.min(Math.max((_a = opts.count) != null ? _a : 3, 1), 5);
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (anthropicKey || openaiKey) {
+    const prompt = buildPrompt(platform, topicKey, ctx, opts.details);
+    const results = [];
+    for (let i = 0; i < count; i++) {
+      const variation = i === 0 ? prompt : `${prompt}
+
+Write a DIFFERENT post from the one you'd write first \u2014 a different angle or opening entirely.`;
+      const raw = await useOpenAi([{ role: "user", content: variation }]);
+      const parsed = raw ? parseJson(raw) : null;
+      if (parsed) results.push(parsed);
+    }
+    if (results.length) return { posts: results, source: "ai" };
+  }
+  return {
+    posts: [templatePost(platform, topicKey, ctx, opts.details)],
+    source: "template"
+  };
 }
 
 const PALETTE = {
@@ -4456,6 +4535,7 @@ const _lazy_0YaBRe = () => Promise.resolve().then(function () { return index_del
 const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$b; });
 const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$3; });
 const _lazy_6dQdG0 = () => Promise.resolve().then(function () { return toggle_post$1; });
+const _lazy_vknMpb = () => Promise.resolve().then(function () { return vary_post$1; });
 const _lazy_oJWXNf = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; });
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
@@ -4496,6 +4576,7 @@ const handlers = [
   { route: '/api/campaigns', handler: _lazy_Df3_bo, lazy: true, middleware: false, method: "get" },
   { route: '/api/campaigns/save', handler: _lazy_uu0vQv, lazy: true, middleware: false, method: "post" },
   { route: '/api/campaigns/toggle', handler: _lazy_6dQdG0, lazy: true, middleware: false, method: "post" },
+  { route: '/api/campaigns/vary', handler: _lazy_vknMpb, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_oJWXNf, lazy: true, middleware: false, method: "get" },
   { route: '/api/cron', handler: _lazy_kQloHj, lazy: true, middleware: false, method: undefined },
   { route: '/api/homes/create', handler: _lazy_6aFyol, lazy: true, middleware: false, method: "post" },
@@ -5085,7 +5166,7 @@ const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 
 const UserDoc$1 = UserModelImport;
 const Lead$7 = schemaImport;
-const Campaign$4 = CampaignModelImport;
+const Campaign$5 = CampaignModelImport;
 const Home$1 = HomeModel;
 const stripe$2 = new Stripe(process.env.STRIPE_SECRET_KEY);
 const delete_delete = defineEventHandler(async (event) => {
@@ -5104,7 +5185,7 @@ const delete_delete = defineEventHandler(async (event) => {
     }
     await Promise.all([
       Lead$7.deleteMany({ userId: user._id }),
-      Campaign$4.deleteMany({ userId: user._id }),
+      Campaign$5.deleteMany({ userId: user._id }),
       Home$1.deleteMany({ userId: user._id })
     ]);
     await UserDoc$1.deleteOne({ _id: user._id });
@@ -5123,12 +5204,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$e = z.object({
+const bodySchema$f = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$e.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$f.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5167,13 +5248,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$5 = UserModelImport;
-const bodySchema$d = z.object({
+const bodySchema$e = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$d.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$e.parse);
   try {
     await connectDB();
     const user = await User$5.findOne({ email });
@@ -5227,13 +5308,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$4 = UserModelImport;
-const bodySchema$c = z.object({
+const bodySchema$d = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$c.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$d.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -5256,7 +5337,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$3 = UserModelImport;
-const bodySchema$b = z.object({
+const bodySchema$c = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5265,7 +5346,7 @@ const bodySchema$b = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$b.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$c.parse);
   try {
     await connectDB();
     const user = await User$3.findOne({ email });
@@ -5325,14 +5406,14 @@ const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$c
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Campaign$3 = CampaignModelImport;
-const bodySchema$a = z.object({
+const Campaign$4 = CampaignModelImport;
+const bodySchema$b = z.object({
   _id: z.string()
 });
 const index_delete$2 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$a.parse);
-    await Campaign$3.deleteOne({ _id: body._id });
+    const body = await readValidatedBody(event, bodySchema$b.parse);
+    await Campaign$4.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
     throw createError({
@@ -5347,10 +5428,10 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: index_delete$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Campaign$2 = CampaignModelImport;
+const Campaign$3 = CampaignModelImport;
 const index_get$a = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
-  const data = await Campaign$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const data = await Campaign$3.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
@@ -5359,7 +5440,7 @@ const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Campaign$1 = CampaignModelImport;
+const Campaign$2 = CampaignModelImport;
 const save_post$2 = defineEventHandler(async (event) => {
   const body = await readBody(event);
   const user = await loggedInUser(event);
@@ -5369,7 +5450,7 @@ const save_post$2 = defineEventHandler(async (event) => {
       message: "Session trace missing or expired."
     });
   }
-  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth } = body;
+  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording } = body;
   if (!targetStatus || !subject || !messageBody || dayOfWeek === void 0 || !timesPerMonth) {
     throw createError({
       statusCode: 400,
@@ -5377,7 +5458,7 @@ const save_post$2 = defineEventHandler(async (event) => {
     });
   }
   try {
-    const campaign = await Campaign$1.create({
+    const campaign = await Campaign$2.create({
       userId: user._id,
       title: title || `${targetStatus.toUpperCase()} Automated Loop`,
       targetStatus,
@@ -5385,6 +5466,9 @@ const save_post$2 = defineEventHandler(async (event) => {
       messageBody,
       dayOfWeek: Number(dayOfWeek),
       timesPerMonth: Number(timesPerMonth),
+      // Default ON: repeated identical copy reads as a robot and hurts
+      // deliverability. Realtors can opt out per campaign.
+      varyWording: varyWording !== false,
       lastFiredAt: null
       // Explicitly initialize as empty queue window ready to fire
     });
@@ -5407,8 +5491,8 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: save_post$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Campaign = CampaignModelImport;
-const bodySchema$9 = z.object({
+const Campaign$1 = CampaignModelImport;
+const bodySchema$a = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5417,9 +5501,9 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$9.parse);
+  const body = await readValidatedBody(event, bodySchema$a.parse);
   try {
-    await Campaign.updateOne(
+    await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
       { $set: { active: body.active } }
     );
@@ -5432,6 +5516,30 @@ const toggle_post = defineEventHandler(async (event) => {
 const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: toggle_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Campaign = CampaignModelImport;
+const bodySchema$9 = z.object({
+  _id: z.string(),
+  varyWording: z.boolean()
+});
+const vary_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$9.parse);
+  const res = await Campaign.updateOne(
+    { _id, userId: user._id },
+    { $set: { varyWording } }
+  );
+  if (res.matchedCount === 0) {
+    throw createError({ statusCode: 404, message: "Campaign not found." });
+  }
+  return { success: true, varyWording };
+});
+
+const vary_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: vary_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function month(date2) {

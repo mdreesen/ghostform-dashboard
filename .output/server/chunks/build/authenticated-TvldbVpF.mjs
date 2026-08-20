@@ -6,6 +6,7 @@ import { _ as __nuxt_component_1 } from './Navigate-B_PGVHvu.mjs';
 import { _ as _export_sfc } from './_plugin-vue_export-helper-1tPrXgE0.mjs';
 import '../nitro/nitro.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';

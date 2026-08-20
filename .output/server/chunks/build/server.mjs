@@ -13,6 +13,7 @@ import { createTV, cnMerge } from 'tailwind-variants';
 import { getIconCSS } from '@iconify/utils/lib/css/icon';
 import { u as useHead$1, h as headSymbol, a as useSeoMeta$1 } from '../routes/renderer.mjs';
 import 'mongoose';
+import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';
@@ -841,7 +842,7 @@ const _routes = [
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-BOm2ygst.mjs')
+    component: () => import('./index-MlgzXyMw.mjs')
   },
   {
     name: "dashboard-forms",
@@ -865,7 +866,7 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-OUEpfjwf.mjs')
+    component: () => import('./index-wbMumjX2.mjs')
   },
   {
     name: "dashboard-social",
