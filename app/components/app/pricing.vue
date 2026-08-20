@@ -24,7 +24,7 @@ const tiers = [
       '25 AI-written messages a month'
     ],
     cta: 'Start free trial',
-    stripe: `https://buy.stripe.com/9B6fZj0fNazkerT6dZ3wQ00?client_reference_id=${user.value?._id}`,
+    stripe: `https://buy.stripe.com/8x2aEZe6D6j40B3cCn3wQ02?client_reference_id=${user?.value?._id}`,
     highlighted: true
   },
   {
@@ -43,7 +43,7 @@ const tiers = [
       { text: 'Same-day help from the developer', upgrade: true }
     ],
     cta: 'Start free trial',
-    stripe: `https://buy.stripe.com/7sY5kFe6Dazk5Vn7i33wQ01?client_reference_id=${user.value?._id}`,
+    stripe: `https://buy.stripe.com/aFaeVffaHcHs1F759V3wQ03?client_reference_id=${user?.value?._id}`,
     highlighted: false
   },
 ];

@@ -59,11 +59,10 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
   },
   setup(__props) {
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       _push(`<a${ssrRenderAttrs(mergeProps({
         href: `${__props.message_type}:${__props.communication_type}`,
         class: "text-[#B5563A] hover:text-[#8f4229] underline font-medium"
-      }, _attrs))}><span>${(_a = __props.label) != null ? _a : ""}</span></a>`);
+      }, _attrs))}><span>${__props.label ?? ""}</span></a>`);
     };
   }
 });
@@ -109,14 +108,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       /* nuxt-injected */
     )), __temp = await __temp, __restore(), __temp);
     const lead = ref(data.value);
-    useHead({ title: () => {
-      var _a;
-      return `GhostForm | ${((_a = lead.value) == null ? void 0 : _a.name) || "Lead"}`;
-    } });
+    useHead({ title: () => `GhostForm | ${lead.value?.name || "Lead"}` });
     const marking = ref(false);
     const lastContact = computed(() => {
-      var _a;
-      const raw = (_a = lead.value) == null ? void 0 : _a.lastContactedAt;
+      const raw = lead.value?.lastContactedAt;
       if (!raw) return "Never contacted";
       const days = Math.floor((Date.now() - new Date(raw).getTime()) / 864e5);
       if (days <= 0) return "Contacted today";
@@ -129,7 +124,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       return [
         { label: "Est. value", value: money(l.price) },
         { label: "Budget", value: money(l.budget) },
-        { label: "Square footage", value: l.sqft ? `${l.sqft} ft\xB2` : null },
+        { label: "Square footage", value: l.sqft ? `${l.sqft} ft²` : null },
         { label: "Bedrooms", value: l.bedrooms || null },
         { label: "Bathrooms", value: l.bathrooms || null },
         { label: "Intent", value: l.buy_sell_both || null },
@@ -139,7 +134,6 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       ].filter((f) => f.value);
     });
     return (_ctx, _push, _parent, _attrs) => {
-      var _a, _b, _c, _d, _e, _f, _g, _h;
       const _component_NuxtLink = __nuxt_component_0$1;
       const _component_ClientOnly = __nuxt_component_1$1;
       const _component_baseButtonNavigate = __nuxt_component_1;
@@ -154,35 +148,35 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         }, {
           default: withCtx((_, _push2, _parent2, _scopeId) => {
             if (_push2) {
-              _push2(` \u2190 All leads `);
+              _push2(` ← All leads `);
             } else {
               return [
-                createTextVNode(" \u2190 All leads ")
+                createTextVNode(" ← All leads ")
               ];
             }
           }),
           _: 1
         }, _parent));
-        _push(`<div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"><div class="gf-rise" style="${ssrRenderStyle({ "--d": ".1s" })}"><h1 class="gf-display text-[clamp(34px,4.4vw,54px)] mb-3">${ssrInterpolate(((_a = unref(lead)) == null ? void 0 : _a.name) || "Unnamed lead")}</h1><div class="flex flex-wrap items-center gap-3 text-[13px] text-[#8A847C]"><span class="inline-flex items-center gap-2"><span class="w-[7px] h-[7px] bg-[#B5563A]"></span><span class="uppercase tracking-[0.14em] text-[10.5px]">${ssrInterpolate((_b = unref(lead)) == null ? void 0 : _b.status)}</span></span><span class="text-[#DDD6C9]">\xB7</span><span>${ssrInterpolate(unref(lastContact))}</span></div></div><div class="flex gap-2.5 gf-rise shrink-0" style="${ssrRenderStyle({ "--d": ".18s" })}">`);
+        _push(`<div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"><div class="gf-rise" style="${ssrRenderStyle({ "--d": ".1s" })}"><h1 class="gf-display text-[clamp(34px,4.4vw,54px)] mb-3">${ssrInterpolate(unref(lead)?.name || "Unnamed lead")}</h1><div class="flex flex-wrap items-center gap-3 text-[13px] text-[#8A847C]"><span class="inline-flex items-center gap-2"><span class="w-[7px] h-[7px] bg-[#B5563A]"></span><span class="uppercase tracking-[0.14em] text-[10.5px]">${ssrInterpolate(unref(lead)?.status)}</span></span><span class="text-[#DDD6C9]">·</span><span>${ssrInterpolate(unref(lastContact))}</span></div></div><div class="flex gap-2.5 gf-rise shrink-0" style="${ssrRenderStyle({ "--d": ".18s" })}">`);
         _push(ssrRenderComponent(_component_ClientOnly, null, {}, _parent));
-        _push(`<button${ssrIncludeBooleanAttr(unref(marking)) ? " disabled" : ""} class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors disabled:opacity-40">${ssrInterpolate(unref(marking) ? "Saving\u2026" : "Contacted")}</button>`);
+        _push(`<button${ssrIncludeBooleanAttr(unref(marking)) ? " disabled" : ""} class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors disabled:opacity-40">${ssrInterpolate(unref(marking) ? "Saving…" : "Contacted")}</button>`);
         _push(ssrRenderComponent(_component_baseButtonNavigate, {
           text: "Edit",
           path: `/dashboard/leads/${unref(route).params.id}/edit`
         }, null, _parent));
-        _push(`</div></div></header><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">01 \u2014 Contact</span><span class="font-display text-[25px] font-semibold tracking-tight">How to reach them</span></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9]"><div class="bg-[#F7F4EF] p-7"><p class="gf-eyebrow mb-3">Email</p>`);
+        _push(`</div></div></header><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">01 — Contact</span><span class="font-display text-[25px] font-semibold tracking-tight">How to reach them</span></div><div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9]"><div class="bg-[#F7F4EF] p-7"><p class="gf-eyebrow mb-3">Email</p>`);
         _push(ssrRenderComponent(_component_baseMessage, {
-          label: (_c = unref(lead)) == null ? void 0 : _c.email,
+          label: unref(lead)?.email,
           message_type: "mailto",
           communication_type: "email"
         }, null, _parent));
         _push(`</div><div class="bg-[#F7F4EF] p-7"><p class="gf-eyebrow mb-3">Phone</p>`);
         _push(ssrRenderComponent(_component_baseMessage, {
-          label: (_d = unref(lead)) == null ? void 0 : _d.phone,
+          label: unref(lead)?.phone,
           message_type: "sms",
           communication_type: "phone"
         }, null, _parent));
-        _push(`</div><div class="bg-[#F7F4EF] p-7"><p class="gf-eyebrow mb-3">Prefers</p><p class="text-[15px]">${ssrInterpolate(((_e = unref(lead)) == null ? void 0 : _e.best_communication_method) || "Not specified")}</p></div></div></section><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">02 \u2014 Submission</span><span class="font-display text-[25px] font-semibold tracking-tight">What they told you</span></div><div class="grid grid-cols-1 lg:grid-cols-12 gap-10"><div class="lg:col-span-7">`);
+        _push(`</div><div class="bg-[#F7F4EF] p-7"><p class="gf-eyebrow mb-3">Prefers</p><p class="text-[15px]">${ssrInterpolate(unref(lead)?.best_communication_method || "Not specified")}</p></div></div></section><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">02 — Submission</span><span class="font-display text-[25px] font-semibold tracking-tight">What they told you</span></div><div class="grid grid-cols-1 lg:grid-cols-12 gap-10"><div class="lg:col-span-7">`);
         if (unref(facts).length) {
           _push(`<div><!--[-->`);
           ssrRenderList(unref(facts), (f) => {
@@ -192,16 +186,16 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         } else {
           _push(`<p class="text-[14px] text-[#8A847C] py-6"> They didn&#39;t fill in any details beyond their contact info. </p>`);
         }
-        if ((_f = unref(lead)) == null ? void 0 : _f.address) {
+        if (unref(lead)?.address) {
           _push(`<div class="mt-8"><p class="gf-eyebrow mb-3">Address</p>`);
           _push(ssrRenderComponent(_component_baseMaps, {
-            address: (_g = unref(lead)) == null ? void 0 : _g.address
+            address: unref(lead)?.address
           }, null, _parent));
           _push(`</div>`);
         } else {
           _push(`<!---->`);
         }
-        _push(`</div><div class="lg:col-span-5"><p class="gf-eyebrow mb-3">Notes</p><div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7"><p class="text-[14.5px] leading-relaxed">${ssrInterpolate(((_h = unref(lead)) == null ? void 0 : _h.notes) || "No notes yet.")}</p></div></div></div></section>`);
+        _push(`</div><div class="lg:col-span-5"><p class="gf-eyebrow mb-3">Notes</p><div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7"><p class="text-[14.5px] leading-relaxed">${ssrInterpolate(unref(lead)?.notes || "No notes yet.")}</p></div></div></div></section>`);
         _push(ssrRenderComponent(_component_ClientOnly, null, {}, _parent));
         _push(`</div>`);
       } else {

@@ -4,21 +4,12 @@ import { L as useRuntimeConfig } from './server.mjs';
 const toasts = ref([]);
 const useToast = () => {
   const config = useRuntimeConfig();
-  const globalMaxToasts = computed(() => {
-    var _a, _b;
-    return (_b = (_a = config.public.notify) == null ? void 0 : _a.maxToasts) != null ? _b : 5;
-  });
+  const globalMaxToasts = computed(() => config.public.notify?.maxToasts ?? 5);
   const defaultDuration = computed(
-    () => {
-      var _a, _b;
-      return (_b = (_a = config.public.notify) == null ? void 0 : _a.duration) != null ? _b : 5e3;
-    }
+    () => config.public.notify?.duration ?? 5e3
   );
   const showIcon = computed(
-    () => {
-      var _a;
-      return ((_a = config.public.notify) == null ? void 0 : _a.showIcon) !== void 0 ? config.public.notify.showIcon : true;
-    }
+    () => config.public.notify?.showIcon !== void 0 ? config.public.notify.showIcon : true
   );
   const add = (options) => {
     const id = `toast-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
