@@ -39,7 +39,7 @@ async function handler() {
 
         <header class="mb-10">
           <div class="flex items-center gap-3 mb-6">
-            <h1 class="text-2xl font-bold tracking-tight">Initialize Account</h1>
+            <h1 class="text-2xl font-bold tracking-tight text-[#1F1B16]">Initialize Account</h1>
           </div>
           <p class="text-[#8A847C] text-sm italic-none">Join the network of high-velocity intelligence.</p>
         </header>
@@ -48,19 +48,18 @@ async function handler() {
 
 
           <form @submit.prevent="handler" class="space-y-6">
-            <div class="space-y-4">
+            <div v-motion="{ ...inputVarient() }" class="space-y-4">
               <div>
-                <label class="text-[10px] font-bold uppercase tracking-widest text-[#8A847C] ml-1 mb-2 block">company
-                  Name</label>
+                <baseLabel text="Company Name" />
                 <input v-model="credentials.company" type="text" placeholder="e.g. Company name" required
                   class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
               </div>
 
               <div>
-                <label class="text-[10px] font-bold uppercase tracking-widest text-[#8A847C] ml-1 mb-2 block">Primary
-                  Category</label>
+                <span class="text-[10px] text-[#8A847C] font-bold uppercase tracking-widest ml-1 mb-2 block">Primary
+                  Category</span>
                 <select v-model="credentials.category"
-                  class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis">
+                  class="w-full bg-white/60 text-[#8A847C] border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis">
                   <option value="realtor">Realtor</option>
                   <!-- <option value="construction">Construction</option> -->
                 </select>

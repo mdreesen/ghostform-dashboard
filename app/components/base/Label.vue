@@ -8,5 +8,5 @@ const props = defineProps({
 </script>
 
 <template>
-    <label for="text" class="block text-sm font-medium mb-1">{{ props.text }}</label>
+    <label for="text" class="block text-sm font-medium mb-1 text-[#8A847C]">{{ props.text }}</label>
 </template>

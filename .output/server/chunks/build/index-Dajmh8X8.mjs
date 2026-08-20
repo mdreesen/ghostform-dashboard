@@ -53,10 +53,9 @@ function getSize(size, pixelSize = DEFAULT_PIXEL_SIZE) {
   };
 }
 function getRadius(radius, defRadius = DEFAULT_RADIUS) {
-  var _a, _b, _c;
-  const pixelRadius = typeof radius === "number" ? radius : (_a = radius == null ? void 0 : radius.pixel) != null ? _a : defRadius;
-  const outer = typeof radius === "number" ? radius : (_b = radius == null ? void 0 : radius.marker) != null ? _b : defRadius;
-  const inner = typeof radius === "number" ? radius : (_c = radius == null ? void 0 : radius.inner) != null ? _c : outer;
+  const pixelRadius = typeof radius === "number" ? radius : radius?.pixel ?? defRadius;
+  const outer = typeof radius === "number" ? radius : radius?.marker ?? defRadius;
+  const inner = typeof radius === "number" ? radius : radius?.inner ?? outer;
   return {
     pixelRadius,
     markerRadius: {
@@ -66,9 +65,9 @@ function getRadius(radius, defRadius = DEFAULT_RADIUS) {
   };
 }
 function getVariant(variant, defVariant = "default") {
-  const pixelVariant = typeof variant === "string" ? variant : (variant == null ? void 0 : variant.pixel) || defVariant;
-  const outer = typeof variant === "string" ? variant : (variant == null ? void 0 : variant.marker) || defVariant;
-  const inner = typeof variant === "string" ? variant : (variant == null ? void 0 : variant.inner) || outer;
+  const pixelVariant = typeof variant === "string" ? variant : variant?.pixel || defVariant;
+  const outer = typeof variant === "string" ? variant : variant?.marker || defVariant;
+  const inner = typeof variant === "string" ? variant : variant?.inner || outer;
   return {
     pixelVariant,
     markerVariant: {
@@ -109,7 +108,6 @@ const DEFAULT_RADIUS = 0.5;
 const DEFAULT_PADDING = 0.1;
 const DEFAULT_PIXEL_SIZE = 20;
 function renderDotPixel(result, border, size, color, radius = DEFAULT_RADIUS, padding = DEFAULT_PADDING) {
-  var _a;
   let svg = "";
   const clampedRadius = limitInput(radius);
   const clampedPadding = limitInput(padding);
@@ -118,7 +116,7 @@ function renderDotPixel(result, border, size, color, radius = DEFAULT_RADIUS, pa
   const actualRadius = clampedRadius * actualSize / 2;
   for (let row = 0; row < result.size; row++) {
     for (let col = 0; col < result.size; col++) {
-      if (!renderUtils(result.size, border).isMarker(row, col) && ((_a = result.data[row]) == null ? void 0 : _a[col])) {
+      if (!renderUtils(result.size, border).isMarker(row, col) && result.data[row]?.[col]) {
         const x = col * size + actualPadding;
         const y = row * size + actualPadding;
         svg += createDotPixel(x, y, actualSize, actualRadius, color, clampedPadding);
@@ -186,11 +184,10 @@ function renderCircleMarkerInner(x, y, size, color, radius = DEFAULT_RADIUS) {
   return createDotPixel(x, y, _size, clampedRadius * _size / 2, color);
 }
 function renderDefaultPixel(result, border, size, color) {
-  var _a;
   const pixelPaths = [];
   for (let row = 0; row < result.size; row++) {
     for (let col = 0; col < result.size; col++) {
-      if (!renderUtils(result.size, border).isMarker(row, col) && ((_a = result.data[row]) == null ? void 0 : _a[col])) {
+      if (!renderUtils(result.size, border).isMarker(row, col) && result.data[row]?.[col]) {
         const x = col * size;
         const y = row * size;
         pixelPaths.push(`M${x},${y}h${size}v${size}h-${size}z`);
@@ -208,12 +205,11 @@ function renderDefaultMarkerInner(x, y, size, color) {
   return `<rect x="${x}" y="${y}" width="${3 * size}" height="${3 * size}" fill="${color}"/>`;
 }
 function renderPixelatedPixel(result, border, size, foregroundColor) {
-  var _a;
   const notchSize = size / 4;
   const paths = [];
   for (let row = 0; row < result.size; row++) {
     for (let col = 0; col < result.size; col++) {
-      if (!renderUtils(result.size, border).isMarker(row, col) && ((_a = result.data[row]) == null ? void 0 : _a[col])) {
+      if (!renderUtils(result.size, border).isMarker(row, col) && result.data[row]?.[col]) {
         const x = col * size;
         const y = row * size;
         paths.push(`M${x},${y}h${size}v${size}h-${size}z`);
@@ -262,14 +258,13 @@ function addNotches(data, row, col, x, y, size, notchSize) {
   return notches;
 }
 function renderRoundedPixel(result, border, size, color, radius = DEFAULT_RADIUS) {
-  var _a, _b;
   const paths = [];
   const visited = Array(result.size).fill(null).map(() => Array(result.size).fill(false));
   const clampedRadius = limitInput(radius);
   const actualRadius = clampedRadius * size / 2;
   for (let row = 0; row < result.size; row++) {
     for (let col = 0; col < result.size; col++) {
-      if (!renderUtils(result.size, border).isMarker(row, col) && ((_a = result.data[row]) == null ? void 0 : _a[col]) && !((_b = visited[row]) == null ? void 0 : _b[col])) {
+      if (!renderUtils(result.size, border).isMarker(row, col) && result.data[row]?.[col] && !visited[row]?.[col]) {
         paths.push(tracePath(result.data, visited, row, col, size, actualRadius));
       }
     }
@@ -380,8 +375,8 @@ function renderMarkers(result, border = 1, size, color, variant, radius, padding
     const oy = row * size;
     const ix = ox + 2 * size;
     const iy = oy + 2 * size;
-    svg += markerOuterVariants(variant.outer, ox, oy, size, color, radius == null ? void 0 : radius.outer, padding);
-    svg += markerInnerVariants(variant.inner, ix, iy, size, color, radius == null ? void 0 : radius.inner, padding);
+    svg += markerOuterVariants(variant.outer, ox, oy, size, color, radius?.outer, padding);
+    svg += markerInnerVariants(variant.inner, ix, iy, size, color, radius?.inner, padding);
   });
   return svg;
 }
@@ -604,8 +599,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       if (__props.data.length > 0) {
         _push(`<div class="text-center pt-2"><span>What home is this for?</span><select id="status-select" class="w-full border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-[#F7F4EF] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B5563A]"><option disabled value=""${ssrIncludeBooleanAttr(Array.isArray(unref(address)) ? ssrLooseContain(unref(address), "") : ssrLooseEqual(unref(address), "")) ? " selected" : ""}>Choose home</option><!--[-->`);
         ssrRenderList(__props.data, (item, index) => {
-          var _a;
-          _push(`<option${ssrRenderAttr("value", item.address)}${ssrIncludeBooleanAttr(Array.isArray(unref(address)) ? ssrLooseContain(unref(address), item.address) : ssrLooseEqual(unref(address), item.address)) ? " selected" : ""}>${ssrInterpolate((_a = item.name) != null ? _a : item == null ? void 0 : item.address)}</option>`);
+          _push(`<option${ssrRenderAttr("value", item.address)}${ssrIncludeBooleanAttr(Array.isArray(unref(address)) ? ssrLooseContain(unref(address), item.address) : ssrLooseEqual(unref(address), item.address)) ? " selected" : ""}>${ssrInterpolate(item.name ?? item?.address)}</option>`);
         });
         _push(`<!--]--></select>`);
         if (unref(address)) {
@@ -703,8 +697,8 @@ function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalen
   if (useName) params.set("company_name", useName);
   if (useEmail) params.set("company_email", useEmail);
   if (useCalendar) params.set("calendar", useCalendar);
-  params.set("background_color", stripHash(void 0 ) || "0f0b0b");
-  params.set("font_color", stripHash(void 0 ) || "FFFFFF");
+  params.set("background_color", stripHash(options?.backgroundColor) || "0f0b0b");
+  params.set("font_color", stripHash(options?.fontColor) || "FFFFFF");
   return `${base}?${params.toString()}`;
 }
 const _sfc_main = /* @__PURE__ */ defineComponent({
@@ -717,22 +711,19 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     });
     const { data: user } = useNuxtData("user");
     const { data: home } = useNuxtData("homes");
-    const buildUrl = (source) => {
-      var _a, _b, _c, _d, _e;
-      return ghostFormUrl(
-        (_a = user.value) == null ? void 0 : _a.category,
-        source,
-        (_b = user.value) == null ? void 0 : _b._id,
-        (_c = user.value) == null ? void 0 : _c.company_hashed,
-        (_d = user.value) == null ? void 0 : _d.email_hashed,
-        (_e = user.value) == null ? void 0 : _e.calendar_link
-      );
-    };
+    const buildUrl = (source) => ghostFormUrl(
+      user.value?.category,
+      source,
+      user.value?._id,
+      user.value?.company_hashed,
+      user.value?.email_hashed,
+      user.value?.calendar_link
+    );
     const formFunnels = computed(() => [
       {
         id: "open-house",
         label: "Open House Sign-In",
-        description: "For the table by the door. Guests scan the QR code and sign in on their own phone \u2014 no clipboard, no handwriting to decipher later.",
+        description: "For the table by the door. Guests scan the QR code and sign in on their own phone — no clipboard, no handwriting to decipher later.",
         badge: "QR code",
         source: "open_house",
         icon: "M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
@@ -742,7 +733,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       {
         id: "house-on-market",
         label: "Listing Enquiry",
-        description: "For a specific listing \u2014 put it on the sign, the flyer, or the listing page. Interested buyers leave their details and what they\u2019re looking for.",
+        description: "For a specific listing — put it on the sign, the flyer, or the listing page. Interested buyers leave their details and what they’re looking for.",
         badge: "Public",
         source: "on_market",
         icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
@@ -762,14 +753,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     return (_ctx, _push, _parent, _attrs) => {
       const _component_baseButtonNavigate = __nuxt_component_1$1;
       const _component_baseCardForm = __nuxt_component_1;
-      _push(`<div${ssrRenderAttrs(mergeProps({ class: "max-w-[1100px] mx-auto" }, _attrs))}><header class="mb-20 pt-4"><p class="gf-eyebrow mb-5 gf-rise" style="${ssrRenderStyle({ "--d": ".05s" })}">Capture</p><div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"><div><h1 class="gf-display text-[clamp(34px,4.6vw,58px)] max-w-[16ch] mb-4 gf-rise" style="${ssrRenderStyle({ "--d": ".12s" })}"> Three ways to collect a lead. </h1><p class="text-[15.5px] text-[#8A847C] leading-relaxed max-w-[48ch] gf-rise" style="${ssrRenderStyle({ "--d": ".2s" })}"> Each one asks a different set of questions. Print the QR code, share the link, or use the quick entry form yourself \u2014 every lead lands in the same place. </p></div><div class="gf-rise shrink-0" style="${ssrRenderStyle({ "--d": ".28s" })}">`);
+      _push(`<div${ssrRenderAttrs(mergeProps({ class: "max-w-[1100px] mx-auto" }, _attrs))}><header class="mb-20 pt-4"><p class="gf-eyebrow mb-5 gf-rise" style="${ssrRenderStyle({ "--d": ".05s" })}">Capture</p><div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6"><div><h1 class="gf-display text-[clamp(34px,4.6vw,58px)] max-w-[16ch] mb-4 gf-rise" style="${ssrRenderStyle({ "--d": ".12s" })}"> Three ways to collect a lead. </h1><p class="text-[15.5px] text-[#8A847C] leading-relaxed max-w-[48ch] gf-rise" style="${ssrRenderStyle({ "--d": ".2s" })}"> Each one asks a different set of questions. Print the QR code, share the link, or use the quick entry form yourself — every lead lands in the same place. </p></div><div class="gf-rise shrink-0" style="${ssrRenderStyle({ "--d": ".28s" })}">`);
       _push(ssrRenderComponent(_component_baseButtonNavigate, {
         text: "+ Create Lead",
         path: "/dashboard/leads/create"
       }, null, _parent));
       _push(`</div></div></header><!--[-->`);
       ssrRenderList(unref(formFunnels), (item, i) => {
-        _push(`<section class="gf-depth mb-16" style="${ssrRenderStyle(`--d:${0.05 * i}s`)}"><div class="flex flex-wrap items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">${ssrInterpolate(String(i + 1).padStart(2, "0"))} \u2014 Form</span><span class="font-display text-[25px] font-semibold tracking-tight">${ssrInterpolate(item.label)}</span><span class="text-[10.5px] uppercase tracking-[0.14em] text-[#A9A39A]">${ssrInterpolate(item.badge)}</span></div><p class="text-[14.5px] text-[#8A847C] leading-relaxed max-w-[62ch] mb-8">${ssrInterpolate(item.description)}</p><div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7">`);
+        _push(`<section class="gf-depth mb-16" style="${ssrRenderStyle(`--d:${0.05 * i}s`)}"><div class="flex flex-wrap items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">${ssrInterpolate(String(i + 1).padStart(2, "0"))} — Form</span><span class="font-display text-[25px] font-semibold tracking-tight">${ssrInterpolate(item.label)}</span><span class="text-[10.5px] uppercase tracking-[0.14em] text-[#A9A39A]">${ssrInterpolate(item.badge)}</span></div><p class="text-[14.5px] text-[#8A847C] leading-relaxed max-w-[62ch] mb-8">${ssrInterpolate(item.description)}</p><div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7">`);
         _push(ssrRenderComponent(_component_baseCardForm, {
           label: item.label,
           description: item.description,
