@@ -43,6 +43,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
   __name: "edit",
   __ssrInlineRender: true,
   async setup(__props) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r;
     let __temp, __restore;
     const route = useRoute();
     const { data, pending: pending_data } = ([__temp, __restore] = withAsyncContext(() => useFetch(
@@ -75,7 +76,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       seeing_an_agent: ""
     });
     if (data.value) {
-      input.source = data.value.source ?? "", input.name = data.value.name ?? "", input.age = data.value.age ?? 0, input.email = data.value.email ?? "", input.phone = data.value.phone ?? "", input.date = data.value.date ?? "", input.status = data.value.status ?? "", input.best_communication_method = data.value.best_communication_method ?? "", input.address = data.value.address ?? "", input.want_to_move = data.value.want_to_move ?? "", input.buy_sell_both = data.value.buy_sell_both ?? "", input.price = data.value.price ?? 0, input.sqft = data.value.sqft ?? 0, input.bedrooms = data.value.bedrooms ?? 0, input.bathrooms = data.value.bathrooms ?? 0, input.budget = data.value.budget ?? 0, input.notes = data.value.notes ?? "", input.seeing_an_agent = data.value.seeing_an_agent ?? "";
+      input.source = (_a = data.value.source) != null ? _a : "", input.name = (_b = data.value.name) != null ? _b : "", input.age = (_c = data.value.age) != null ? _c : 0, input.email = (_d = data.value.email) != null ? _d : "", input.phone = (_e = data.value.phone) != null ? _e : "", input.date = (_f = data.value.date) != null ? _f : "", input.status = (_g = data.value.status) != null ? _g : "", input.best_communication_method = (_h = data.value.best_communication_method) != null ? _h : "", input.address = (_i = data.value.address) != null ? _i : "", input.want_to_move = (_j = data.value.want_to_move) != null ? _j : "", input.buy_sell_both = (_k = data.value.buy_sell_both) != null ? _k : "", input.price = (_l = data.value.price) != null ? _l : 0, input.sqft = (_m = data.value.sqft) != null ? _m : 0, input.bedrooms = (_n = data.value.bedrooms) != null ? _n : 0, input.bathrooms = (_o = data.value.bathrooms) != null ? _o : 0, input.budget = (_p = data.value.budget) != null ? _p : 0, input.notes = (_q = data.value.notes) != null ? _q : "", input.seeing_an_agent = (_r = data.value.seeing_an_agent) != null ? _r : "";
     }
     async function delete_log() {
       isLoading.value = true;
@@ -93,6 +94,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       });
     }
     return (_ctx, _push, _parent, _attrs) => {
+      var _a2;
       const _component_baseHeaderBase = __nuxt_component_0;
       const _component_baseLabel = __nuxt_component_0$1;
       const _component_baseButtonSubmit = __nuxt_component_3;
@@ -101,7 +103,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (!unref(pending_data)) {
         _push(`<div${ssrRenderAttrs(_attrs)}>`);
         _push(ssrRenderComponent(_component_baseHeaderBase, {
-          text: `Edit ${unref(lead)?.name}`
+          text: `Edit ${(_a2 = unref(lead)) == null ? void 0 : _a2.name}`
         }, null, _parent));
         _push(`<form class="space-y-6"><div${ssrRenderAttrs(ssrGetDirectiveProps(_ctx, _directive_motion, { ...("inputVarient" in _ctx ? _ctx.inputVarient : unref(inputVarient))() }))}>`);
         _push(ssrRenderComponent(_component_baseLabel, { text: "Status" }, null, _parent));

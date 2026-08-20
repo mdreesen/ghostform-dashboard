@@ -1,7 +1,7 @@
 function pointerDownOutside(e, options = {}) {
   const originalEvent = e.detail.originalEvent;
   const target = originalEvent.target;
-  if (!target?.isConnected) {
+  if (!(target == null ? void 0 : target.isConnected)) {
     e.preventDefault();
     return;
   }

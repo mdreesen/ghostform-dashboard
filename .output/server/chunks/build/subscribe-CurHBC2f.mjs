@@ -43,6 +43,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
     }
   },
   setup(__props) {
+    var _a, _b;
     const { data: user } = useNuxtData("user");
     const tiers = [
       {
@@ -55,12 +56,12 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           "Captures leads with no cell signal",
           "Tells you who to call each morning",
           "Instant alert the moment a lead comes in",
-          "All three forms — open house, listing, quick entry",
+          "All three forms \u2014 open house, listing, quick entry",
           "1 automated follow-up campaign",
           "25 AI-written messages a month"
         ],
         cta: "Start free trial",
-        stripe: `https://buy.stripe.com/9B6fZj0fNazkerT6dZ3wQ00?client_reference_id=${user.value?._id}`,
+        stripe: `https://buy.stripe.com/9B6fZj0fNazkerT6dZ3wQ00?client_reference_id=${(_a = user.value) == null ? void 0 : _a._id}`,
         highlighted: true
       },
       {
@@ -79,14 +80,14 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
           { text: "Same-day help from the developer", upgrade: true }
         ],
         cta: "Start free trial",
-        stripe: `https://buy.stripe.com/7sY5kFe6Dazk5Vn7i33wQ01?client_reference_id=${user.value?._id}`,
+        stripe: `https://buy.stripe.com/7sY5kFe6Dazk5Vn7i33wQ01?client_reference_id=${(_b = user.value) == null ? void 0 : _b._id}`,
         highlighted: false
       }
     ];
     const asFeature = (f) => typeof f === "string" ? { text: f, upgrade: false } : f;
     return (_ctx, _push, _parent, _attrs) => {
       const _component_NuxtLink = __nuxt_component_0$1;
-      _push(`<section${ssrRenderAttrs(mergeProps({ id: "pricing" }, _attrs))}><div class="max-w-4xl mx-auto text-center mb-20"><h2 class="gf-display text-4xl sm:text-5xl mb-4"> Choose your plan </h2><p class="text-[#8A847C] text-base leading-relaxed max-w-[42ch] mx-auto"> One saved deal pays for the year. Free for 30 days — no card to start. </p></div><div class="max-w-4xl mx-auto flex flex-wrap gap-8 items-stretch justify-center"><!--[-->`);
+      _push(`<section${ssrRenderAttrs(mergeProps({ id: "pricing" }, _attrs))}><div class="max-w-4xl mx-auto text-center mb-20"><h2 class="gf-display text-4xl sm:text-5xl mb-4"> Choose your plan </h2><p class="text-[#8A847C] text-base leading-relaxed max-w-[42ch] mx-auto"> One saved deal pays for the year. Free for 30 days \u2014 no card to start. </p></div><div class="max-w-4xl mx-auto flex flex-wrap gap-8 items-stretch justify-center"><!--[-->`);
       ssrRenderList(tiers, (tier) => {
         _push(`<div class="${ssrRenderClass([
           "relative p-8 transition-all duration-500 border max-w-sm w-full flex flex-col",
