@@ -783,9 +783,7 @@ function getRouteRules(arg) {
     return {};
   }
 }
-const __nuxt_page_meta$b = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$b = { layout: "authenticated" };
 const __nuxt_page_meta$a = {
   layout: "authenticated"
 };
@@ -797,9 +795,7 @@ const __nuxt_page_meta$8 = {
 };
 const __nuxt_page_meta$7 = { layout: "authenticated" };
 const __nuxt_page_meta$6 = { layout: "authenticated" };
-const __nuxt_page_meta$5 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$5 = { layout: "authenticated" };
 const __nuxt_page_meta$4 = {
   layout: "authenticated"
 };
@@ -818,7 +814,7 @@ const _routes = [
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
     meta: __nuxt_page_meta$b || {},
-    component: () => import('./create-C6WLll5u.mjs')
+    component: () => import('./create-DDfCY1xU.mjs')
   },
   {
     name: "dashboard-leads-create",
@@ -842,19 +838,19 @@ const _routes = [
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-BzuCM-g9.mjs')
+    component: () => import('./index-BRzfPx0p.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-C5RzfKV7.mjs')
+    component: () => import('./index-CeYALSHW.mjs')
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./index-C-LMPpcO.mjs')
+    component: () => import('./index-VUBROKLN.mjs')
   },
   {
     name: "dashboard-leads",
@@ -11173,7 +11169,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-CYgvS47R.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-wZr29SZW.mjs').then((m) => m.default || m)),
   default: defineAsyncComponent(() => import('./default-D6BhmMrf.mjs').then((m) => m.default || m)),
   form: defineAsyncComponent(() => import('./form-Flt6bszS.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-Cp8Rb9d4.mjs').then((m) => m.default || m))

@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,22 +3006,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"3b523-qoPi/R6J60n5DyT7c5+zy5TEWH0\"",
-    "mtime": "2026-08-21T17:13:49.895Z",
-    "size": 242979,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"d7deb-NhtwcCpNCOMBJPtY9A3oPSYS/Ug\"",
-    "mtime": "2026-08-21T17:13:49.896Z",
-    "size": 884203,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -4577,7 +4562,9 @@ const _lazy_vknMpb = () => Promise.resolve().then(function () { return vary_post
 const _lazy_oJWXNf = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; });
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
+const _lazy_tq6B3q = () => Promise.resolve().then(function () { return delete_post$1; });
 const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$9; });
+const _lazy__fdLCf = () => Promise.resolve().then(function () { return update_post$1; });
 const _lazy_0rvesM = () => Promise.resolve().then(function () { return contacted_post$1; });
 const _lazy_yBxanF = () => Promise.resolve().then(function () { return draft_post$1; });
 const _lazy_qc34eq = () => Promise.resolve().then(function () { return index_delete$3; });
@@ -4623,7 +4610,9 @@ const handlers = [
   { route: '/api/charts/lead', handler: _lazy_oJWXNf, lazy: true, middleware: false, method: "get" },
   { route: '/api/cron', handler: _lazy_kQloHj, lazy: true, middleware: false, method: undefined },
   { route: '/api/homes/create', handler: _lazy_6aFyol, lazy: true, middleware: false, method: "post" },
+  { route: '/api/homes/delete', handler: _lazy_tq6B3q, lazy: true, middleware: false, method: "post" },
   { route: '/api/homes', handler: _lazy_TuGNAE, lazy: true, middleware: false, method: "get" },
+  { route: '/api/homes/update', handler: _lazy__fdLCf, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/contacted', handler: _lazy_0rvesM, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/draft', handler: _lazy_yBxanF, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id', handler: _lazy_qc34eq, lazy: true, middleware: false, method: "delete" },
@@ -5252,14 +5241,22 @@ const homeSchema = new Schema({
   name: { type: String, required: false },
   address: { type: String, required: true },
   owner: { type: String, required: false },
-  notes: { type: String, required: false }
+  notes: { type: String, required: false },
+  // Lets a realtor keep sold listings for reference without them cluttering
+  // the form dropdown.
+  status: {
+    type: String,
+    enum: ["active", "pending", "sold"],
+    default: "active",
+    index: true
+  }
 }, { timestamps: true });
 const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 
 const UserDoc$1 = UserModelImport;
 const Lead$7 = schemaImport;
 const Campaign$5 = CampaignModelImport;
-const Home$1 = HomeModel;
+const Home$3 = HomeModel;
 const stripe$2 = new Stripe(process.env.STRIPE_SECRET_KEY);
 const delete_delete = defineEventHandler(async (event) => {
   try {
@@ -5278,7 +5275,7 @@ const delete_delete = defineEventHandler(async (event) => {
     await Promise.all([
       Lead$7.deleteMany({ userId: user._id }),
       Campaign$5.deleteMany({ userId: user._id }),
-      Home$1.deleteMany({ userId: user._id })
+      Home$3.deleteMany({ userId: user._id })
     ]);
     await UserDoc$1.deleteOne({ _id: user._id });
   } catch (error) {
@@ -5296,12 +5293,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$9 = UserModelImport;
-const bodySchema$i = z.object({
+const bodySchema$k = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$i.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$k.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5340,13 +5337,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$8 = UserModelImport;
-const bodySchema$h = z.object({
+const bodySchema$j = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$h.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$j.parse);
   try {
     await connectDB();
     const user = await User$8.findOne({ email });
@@ -5400,13 +5397,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$7 = UserModelImport;
-const bodySchema$g = z.object({
+const bodySchema$i = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$g.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$i.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -5429,7 +5426,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$f = z.object({
+const bodySchema$h = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5438,7 +5435,7 @@ const bodySchema$f = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$f.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$h.parse);
   try {
     await connectDB();
     const user = await User$6.findOne({ email });
@@ -5499,12 +5496,12 @@ const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$e = z.object({
+const bodySchema$g = z.object({
   _id: z.string()
 });
 const index_delete$4 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$e.parse);
+    const body = await readValidatedBody(event, bodySchema$g.parse);
     await Campaign$4.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5584,7 +5581,7 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const bodySchema$d = z.object({
+const bodySchema$f = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5593,7 +5590,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$d.parse);
+  const body = await readValidatedBody(event, bodySchema$f.parse);
   try {
     await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
@@ -5611,14 +5608,14 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$c = z.object({
+const bodySchema$e = z.object({
   _id: z.string(),
   varyWording: z.boolean()
 });
 const vary_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, varyWording } = await readValidatedBody(event, bodySchema$c.parse);
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$e.parse);
   const res = await Campaign.updateOne(
     { _id, userId: user._id },
     { $set: { varyWording } }
@@ -5699,17 +5696,21 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$5 = HomeModel;
-const bodySchema$b = z.object({
-  name: z.string().nullable(),
-  address: z.string().nullable(),
-  owner: z.string().nullable(),
-  notes: z.string().nullable()
+const bodySchema$d = z.object({
+  name: z.string().nullish(),
+  // The address is the only field that genuinely matters — it's what gets
+  // attached to a captured lead so the realtor knows which listing it came from.
+  address: z.string().min(1, "An address is required."),
+  owner: z.string().nullish(),
+  notes: z.string().nullish(),
+  status: z.enum(["active", "pending", "sold"]).optional()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$b.parse);
+  const body = await readValidatedBody(event, bodySchema$d.parse);
   const user = await loggedInUser(event);
   try {
-    await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
+    const created = await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
+    return { success: true, _id: String(created._id) };
   } catch (error) {
     console.error("Something went wrong", error);
     throw createError({
@@ -5724,16 +5725,59 @@ const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: create_post$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Home = HomeModel;
+const Home$2 = HomeModel;
+const bodySchema$c = z.object({ _id: z.string() });
+const delete_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { _id } = await readValidatedBody(event, bodySchema$c.parse);
+  const res = await Home$2.deleteOne({ _id, userId: user._id });
+  if (res.deletedCount === 0) {
+    throw createError({ statusCode: 404, message: "Property not found." });
+  }
+  return { success: true };
+});
+
+const delete_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: delete_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Home$1 = HomeModel;
 const index_get$8 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const data = await Home.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const data = await Home$1.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
 const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: index_get$8
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Home = HomeModel;
+const bodySchema$b = z.object({
+  _id: z.string(),
+  name: z.string().nullish(),
+  address: z.string().min(1),
+  owner: z.string().nullish(),
+  notes: z.string().nullish(),
+  status: z.enum(["active", "pending", "sold"]).optional()
+});
+const update_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { _id, ...fields } = await readValidatedBody(event, bodySchema$b.parse);
+  const res = await Home.updateOne({ _id, userId: user._id }, { $set: fields });
+  if (res.matchedCount === 0) {
+    throw createError({ statusCode: 404, message: "Property not found." });
+  }
+  return { success: true };
+});
+
+const update_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: update_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$4 = schemaImport;

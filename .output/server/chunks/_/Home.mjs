@@ -10,7 +10,15 @@ const homeSchema = new Schema({
   name: { type: String, required: false },
   address: { type: String, required: true },
   owner: { type: String, required: false },
-  notes: { type: String, required: false }
+  notes: { type: String, required: false },
+  // Lets a realtor keep sold listings for reference without them cluttering
+  // the form dropdown.
+  status: {
+    type: String,
+    enum: ["active", "pending", "sold"],
+    default: "active",
+    index: true
+  }
 }, { timestamps: true });
 const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 

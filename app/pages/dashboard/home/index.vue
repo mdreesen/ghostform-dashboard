@@ -1,180 +1,221 @@
-<script setup>
-import { ref, computed, onMounted } from 'vue';
+<script setup lang="ts">
+definePageMeta({ layout: 'authenticated' });
 
-definePageMeta({
-    layout: 'authenticated',
+useHead({
+  title: 'GhostForm | Properties',
+  meta: [{ name: 'description', content: 'The listings you can attach to a capture form.' }],
 });
 
-const { data: home } = useNuxtData('homes');
+const { data: homes, refresh } = await useFetch<any[]>('/api/homes', { key: 'homes', lazy: true });
 
-const homes = ref(home.value ?? [])
-const isLoading = ref(true)
-const searchQuery = ref('')
-const statusFilter = ref('all');
+const toast = useToast();
+const search = ref('');
+const statusFilter = ref<'all' | 'active' | 'pending' | 'sold'>('all');
+const busyId = ref<string | null>(null);
 
+const list = computed(() => homes.value ?? []);
 
-// --- 1. FETCH HOMES FROM MONGOOSE ON MOUNT ---
-onMounted(async () => {
-  try {
-    const response = home.value;
-    if (response && response.success) {
-      homes.value = response.homes || response.data || []
-    }
-  } catch (err) {
-    console.error('❌ Failed to pull realtor home listings:', err)
-  } finally {
-    isLoading.value = false
-  }
-})
-
-// --- 2. LIVE SEARCH & FILTER COMPUTED PIPELINE ---
-const filteredHomes = computed(() => {
-  return homes.value.filter(home => {
-    // Search match across Title, City, Zip, or Full Address strings
-    const matchString = `${home.title} ${home.addressDetails?.fullAddress} ${home.addressDetails?.zipCode}`.toLowerCase()
-    const matchesSearch = matchString.includes(searchQuery.value.toLowerCase())
-    
-    // Status filter breakdown match (Active, Pending, Sold)
-    const matchesStatus = statusFilter.value === 'all' || home.status === statusFilter.value
-    
-    return matchesSearch && matchesStatus
+const filtered = computed(() =>
+  list.value.filter((h: any) => {
+    const hay = `${h.name ?? ''} ${h.address ?? ''} ${h.owner ?? ''}`.toLowerCase();
+    const matchesSearch = hay.includes(search.value.toLowerCase().trim());
+    const status = h.status || 'active';
+    const matchesStatus = statusFilter.value === 'all' || status === statusFilter.value;
+    return matchesSearch && matchesStatus;
   })
-})
+);
 
-// Quick helper to format pricing data with commas
-function formatCurrency(value) {
-  if (!value) return '$0'
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(value)
+const activeCount = computed(() =>
+  list.value.filter((h: any) => (h.status || 'active') === 'active').length
+);
+
+const STATUS_LABEL: Record<string, string> = {
+  active: 'Active', pending: 'Pending', sold: 'Sold'
+};
+
+async function setStatus(home: any, status: string) {
+  busyId.value = home._id;
+  try {
+    await $fetch('/api/homes/update', {
+      method: 'POST',
+      body: { _id: home._id, address: home.address, name: home.name, owner: home.owner, notes: home.notes, status }
+    });
+    await refresh();
+    await refreshNuxtData('homes');
+  } catch {
+    toast.error('Could not update that property.');
+  } finally {
+    busyId.value = null;
+  }
+}
+
+async function remove(home: any) {
+  if (!confirm(`Remove ${home.name || home.address}? This won't affect leads already captured for it.`)) return;
+  busyId.value = home._id;
+  try {
+    await $fetch('/api/homes/delete', { method: 'POST', body: { _id: home._id } });
+    await refresh();
+    await refreshNuxtData('homes');
+    toast.success('Property removed.');
+  } catch {
+    toast.error('Could not remove that property.');
+  } finally {
+    busyId.value = null;
+  }
 }
 </script>
 
 <template>
-  <div>
-    <div class="max-w-6xl mx-auto space-y-6">
-      
-      <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-gray-100 pb-5">
-        <div class="space-y-0.5">
-          <h1 class="text-xl font-semibold tracking-tight text-[#1F1B16]">Property Model Inventory</h1>
-          <p class="text-xs text-gray-400 font-medium">Manage and refer to your standardized real estate models for dynamic content repurposing.</p>
-        </div>
-        <button 
-          @click="$router.push('/realtor/inventory/create')"
-          class="inline-flex items-center justify-center px-4 py-2.5 bg-gray-900 hover:bg-gray-800 text-[#1F1B16] font-extrabold text-xs uppercase tracking-wider shadow-xs transition-all active:scale-[0.99] gap-2 self-start md:self-auto"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-          </svg>
-          Add New Home
-        </button>
-      </header>
+  <div class="max-w-[1100px] mx-auto">
 
-      <div class="flex flex-col sm:flex-row gap-3 items-center justify-between bg-white p-3 border border-gray-100 shadow-xs">
-        <div class="relative w-full sm:max-w-xs">
-          <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-            </svg>
-          </span>
-          <input 
-            type="text" 
-            v-model="searchQuery"
-            placeholder="Search matching listings..." 
-            class="w-full pl-10 pr-4 py-2 bg-transparent border border-gray-100 text-xs font-medium text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-900 transition-colors"
-          />
+    <!-- Head -->
+    <header class="mb-16 pt-4">
+      <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">Properties</p>
+
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <h1 class="gf-display text-[clamp(34px,4.6vw,58px)] max-w-[16ch] mb-4 gf-rise" style="--d:.12s">
+            The listings you're working.
+          </h1>
+          <p class="text-[15.5px] text-[#8A847C] leading-relaxed max-w-[50ch] gf-rise" style="--d:.2s">
+            <template v-if="list.length">
+              {{ activeCount }} active. Add one here and it appears in the property
+              picker on your forms, so every lead is tagged to the right listing.
+            </template>
+            <template v-else>
+              Add a listing here and you'll be able to attach it to an open house
+              QR code — so you know which property each lead came from.
+            </template>
+          </p>
         </div>
 
-        <div class="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-          <div class="flex items-center gap-1.5 bg-gray-50 p-1 border border-gray-100 text-[11px] font-bold">
-            <button @click="statusFilter = 'all'" :class="statusFilter === 'all' ? 'bg-white text-[#1F1B16] shadow-xs' : 'text-gray-400'" class="px-2.5 py-1 rounded-lg transition-all">All</button>
-            <button @click="statusFilter = 'active'" :class="statusFilter === 'active' ? 'bg-white text-[#1F1B16] shadow-xs' : 'text-gray-400'" class="px-2.5 py-1 rounded-lg transition-all">Active</button>
-            <button @click="statusFilter = 'sold'" :class="statusFilter === 'sold' ? 'bg-white text-[#1F1B16] shadow-xs' : 'text-gray-400'" class="px-2.5 py-1 rounded-lg transition-all">Sold</button>
-          </div>
-          <span class="text-[10px] font-mono font-semibold uppercase text-gray-400 bg-gray-50 border border-gray-100 px-2 py-1 rounded-lg">
-            Total: {{ filteredHomes.length }}
-          </span>
+        <div class="gf-rise shrink-0" style="--d:.28s">
+          <baseButtonNavigate text="+ Add a property" path="/dashboard/home/create" />
         </div>
       </div>
+    </header>
 
-      <div v-if="isLoading" class="py-32 text-center space-y-3">
-        <div class="w-8 h-8 border-[3px] border-gray-100 border-t-gray-900 rounded-full animate-spin mx-auto"></div>
-        <p class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Hydrating property vault components...</p>
-      </div>
+    <!-- Filters -->
+    <section v-if="list.length" class="gf-depth mb-10">
+      <div class="flex flex-col sm:flex-row gap-4 sm:items-center justify-between">
+        <input
+          v-model="search"
+          placeholder="Search by address, nickname or owner…"
+          class="w-full sm:max-w-xs bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors"
+        />
 
-      <div v-else-if="filteredHomes.length === 0" class="py-24 text-center border border-dashed border-gray-200 bg-white space-y-4">
-        <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center mx-auto text-gray-400 border border-gray-100">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v14.25A2.25 2.25 0 005.25 19.5h13.5A2.25 2.25 0 0021 17.25V6.75A2.25 2.25 0 0018.75 4.5H5.25M10.5 6h3m-3 3h3m-3 3h3m-3 3h3M4.5 19.5h15" />
-          </svg>
+        <div class="flex gap-2">
+          <button
+            v-for="s in (['all','active','pending','sold'] as const)"
+            :key="s"
+            class="px-4 py-2.5 text-[11px] uppercase tracking-[0.1em] border transition-colors"
+            :class="statusFilter === s
+              ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]'
+              : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+            @click="statusFilter = s"
+          >
+            {{ s === 'all' ? 'All' : STATUS_LABEL[s] }}
+          </button>
         </div>
-        <div class="space-y-1">
-          <h3 class="text-xs font-semibold text-gray-700 uppercase tracking-wide">No Properties Found</h3>
-          <p class="text-[11px] text-gray-400 max-w-70 mx-auto leading-normal">Adjust your lookup values or populate your array map with a brand-new inventory entry card.</p>
-        </div>
       </div>
+    </section>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div 
-          v-for="home in filteredHomes" 
+    <!-- List -->
+    <section class="gf-depth">
+      <div v-if="filtered.length">
+        <div
+          v-for="home in filtered"
           :key="home._id"
-          class="bg-white border border-gray-100 p-5 shadow-xs flex flex-col justify-between group hover:border-gray-300 transition-all hover:shadow-md"
+          class="gf-home-row group border-t border-[#DDD6C9] last:border-b py-7"
         >
-          <div class="space-y-4">
-            <div class="flex items-start justify-between gap-2">
-              <div class="space-y-0.5 max-w-[70%]">
-                <h3 class="font-extrabold text-sm text-[#1F1B16] group-hover:text-[#B5563A] transition-colors truncate" :title="home.title">
-                  {{ home.title || 'Unnamed Listing' }}
-                </h3>
-                <p class="text-[10px] font-mono text-gray-400">ID: #{{ home._id.substring(18) }}</p>
-              </div>
-              <span 
-                :class="home.status === 'sold' ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600 border-emerald-100'"
-                class="text-[9px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-md border"
+          <div class="min-w-0">
+            <div class="flex flex-wrap items-baseline gap-3 mb-1.5">
+              <p class="font-display text-[21px] font-semibold tracking-tight">
+                {{ home.name || home.address }}
+              </p>
+              <span
+                class="text-[10.5px] uppercase tracking-[0.14em]"
+                :class="(home.status || 'active') === 'sold' ? 'text-[#A9A39A]' : 'text-[#5A6349]'"
               >
-                {{ home.status || 'Active' }}
+                {{ STATUS_LABEL[home.status || 'active'] }}
               </span>
             </div>
 
-            <div class="p-3.5 bg-gray-50/80 space-y-3 border border-gray-50">
-              <div class="text-xs flex gap-2.5 items-start">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5 text-gray-400 mt-0.5 shrink-0">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                </svg>
-                <div class="space-y-0.5">
-                  <p class="text-[9px] font-semibold uppercase tracking-wider text-gray-400 leading-none">Mapbox Verified Address</p>
-                  <p class="font-bold text-gray-700 leading-snug">{{ home.addressDetails?.fullAddress || 'Address field unmapped.' }}</p>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100 text-[11px] font-medium text-gray-400">
-                <div>City: <span class="text-gray-700 font-bold">{{ home.addressDetails?.city || 'N/A' }}</span></div>
-                <div>Zip Code: <span class="text-gray-700 font-mono font-bold">{{ home.addressDetails?.zipCode || 'N/A' }}</span></div>
-              </div>
-            </div>
+            <p v-if="home.name" class="text-[14px] text-[#8A847C]">{{ home.address }}</p>
+            <p v-if="home.owner" class="text-[13px] text-[#A9A39A] mt-1">Owner: {{ home.owner }}</p>
+            <p v-if="home.notes" class="text-[13.5px] text-[#8A847C] mt-2.5 leading-relaxed max-w-[60ch]">
+              {{ home.notes }}
+            </p>
           </div>
 
-          <div class="mt-5 pt-3 border-t border-gray-50 flex items-center justify-between gap-4">
-            <span class="text-base font-semibold tracking-tight text-[#1F1B16]">
-              {{ formatCurrency(home.price) }}
-            </span>
-            <div class="flex items-center gap-1.5">
-              <button 
-                @click="$router.push(`/realtor/inventory/edit/${home._id}`)"
-                class="px-3 py-2 border border-gray-200 hover:border-gray-900 text-gray-600 hover:text-[#1F1B16] text-[10px] font-semibold uppercase tracking-wider transition-colors"
-              >
-                Modify
-              </button>
-              <button 
-                @click="$router.push(`/realtor/campaigns/create?homeId=${home._id}`)"
-                class="px-3 py-2 bg-gray-900 hover:bg-gray-800 text-[#1F1B16] text-[10px] font-semibold uppercase tracking-wider transition-colors"
-              >
-                Launch Lead Run
-              </button>
-            </div>
+          <div class="gf-home-actions flex flex-wrap gap-2.5">
+            <select
+              :value="home.status || 'active'"
+              :disabled="busyId === home._id"
+              class="flex-1 sm:flex-initial bg-[#F7F4EF] border border-[#DDD6C9] px-3 py-2.5 text-[11px] uppercase tracking-[0.1em] text-[#8A847C] focus:outline-none focus:border-[#B5563A] disabled:opacity-40"
+              @change="setStatus(home, ($event.target as HTMLSelectElement).value)"
+            >
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+              <option value="sold">Sold</option>
+            </select>
+
+            <NuxtLink
+              to="/dashboard/forms"
+              class="flex-1 sm:flex-initial text-center px-4 py-2.5 border border-[#B5563A] text-[#B5563A] text-[11px] uppercase tracking-[0.1em] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors whitespace-nowrap"
+            >
+              Make a QR code
+            </NuxtLink>
+
+            <button
+              :disabled="busyId === home._id"
+              class="px-4 py-2.5 border border-[#DDD6C9] text-[#A9A39A] text-[11px] uppercase tracking-[0.1em] hover:border-[#B5563A] hover:text-[#B5563A] transition-colors disabled:opacity-40 whitespace-nowrap"
+              @click="remove(home)"
+            >
+              Remove
+            </button>
           </div>
         </div>
       </div>
 
-    </div>
+      <!-- Nothing matches the filter -->
+      <div v-else-if="list.length" class="border-t border-b border-[#DDD6C9] py-14 text-center">
+        <p class="text-[14px] text-[#8A847C]">Nothing matches that search.</p>
+      </div>
+
+      <!-- No properties at all -->
+      <div v-else class="border-t border-b border-[#DDD6C9] py-16 text-center">
+        <p class="text-[14px] text-[#8A847C] mb-6 max-w-[44ch] mx-auto leading-relaxed">
+          No properties yet. You don't need one to collect leads — but adding a
+          listing lets you tag each lead to the house they walked through.
+        </p>
+        <baseButtonNavigate text="+ Add your first property" path="/dashboard/home/create" />
+      </div>
+    </section>
+
   </div>
 </template>
+
+<style scoped>
+/* Mobile: content stacked above a full-width action row.
+   The previous inline `grid-template-columns: 1fr auto` had no breakpoint, so
+   on a phone the action column took most of the width and squeezed the address
+   into one word per line. */
+.gf-home-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.gf-home-actions { width: 100%; }
+
+@media (min-width: 640px) {
+  .gf-home-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    gap: 1.5rem;
+  }
+  .gf-home-actions { width: auto; justify-content: flex-end; }
+}
+</style>

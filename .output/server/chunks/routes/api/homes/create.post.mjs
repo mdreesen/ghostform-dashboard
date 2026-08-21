@@ -19,16 +19,20 @@ import 'ipx';
 
 const Lead = HomeModel;
 const bodySchema = z.object({
-  name: z.string().nullable(),
-  address: z.string().nullable(),
-  owner: z.string().nullable(),
-  notes: z.string().nullable()
+  name: z.string().nullish(),
+  // The address is the only field that genuinely matters — it's what gets
+  // attached to a captured lead so the realtor knows which listing it came from.
+  address: z.string().min(1, "An address is required."),
+  owner: z.string().nullish(),
+  notes: z.string().nullish(),
+  status: z.enum(["active", "pending", "sold"]).optional()
 });
 const create_post = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema.parse);
   const user = await loggedInUser(event);
   try {
-    await Lead.create({ userId: user == null ? void 0 : user._id, ...body });
+    const created = await Lead.create({ userId: user == null ? void 0 : user._id, ...body });
+    return { success: true, _id: String(created._id) };
   } catch (error) {
     console.error("Something went wrong", error);
     throw createError({

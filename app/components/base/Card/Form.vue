@@ -2,6 +2,7 @@
 import type { Home } from '~/types/home';
 const address = ref('');
 
+
 const props = defineProps({
     label: {
         type: String,
@@ -39,6 +40,22 @@ const props = defineProps({
     },
 });
 
+/**
+ * Final link, with the selected property attached.
+ *
+ * NOTE: this previously appended the raw address as `&${address}` — a value
+ * with no parameter name and no encoding, producing a malformed query string
+ * like `...&348 Whitefish Stage Rd`. The capture form never received it.
+ * It's now a properly named, encoded `address` param.
+ */
+const finalUrl = computed(() => {
+    if (!props.qr_code_url) return '';
+    if (!address.value) return props.qr_code_url;
+    const sep = props.qr_code_url.includes('?') ? '&' : '?';
+    return `${props.qr_code_url}${sep}address=${encodeURIComponent(address.value)}`;
+});
+
+
 </script>
 
 <template>
@@ -71,19 +88,37 @@ const props = defineProps({
                 {{ description }}
             </p>
 
-            <div class="text-center pt-2" v-if="data.length > 0">
-                <span>What home is this for?</span>
-                <select id="status-select" v-model="address"
-                    class="w-full border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-[#F7F4EF] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B5563A]">
-                    <option disabled value="">Choose home</option>
+            <div class="pt-4" v-if="data.length > 0">
+                <label :for="`home-${label}`" class="gf-eyebrow block mb-3">Which property</label>
+                <select
+                    :id="`home-${label}`"
+                    v-model="address"
+                    class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] text-[#1F1B16] focus:outline-none focus:border-[#B5563A] transition-colors cursor-pointer"
+                >
+                    <option disabled value="">Choose a property…</option>
                     <option v-for="(item, index) in data" :value="item.address" :key="index">
                         {{ item.name ?? item?.address }}
                     </option>
                 </select>
 
-                <div v-if="address" class="pt-10">
-                    <baseHeaderSection :text="`Chosen Address<br>${address}`" />
-                </div>
+                <p v-if="address" class="text-[12.5px] text-[#8A847C] mt-2.5">
+                    Leads from will be tagged to {{ address }}.
+                </p>
+                <p v-else class="text-[12.5px] text-[#A9A39A] mt-2.5">
+                    Pick one so you know which listing each lead came from.
+                </p>
+            </div>
+
+            <!-- No properties yet: point them at where to add one rather than
+                 silently rendering nothing. -->
+            <div v-else class="pt-4">
+                <p class="text-[12.5px] text-[#A9A39A] leading-relaxed">
+                    No properties added yet.
+                    <NuxtLink to="/dashboard/home/create" class="text-[#B5563A] hover:underline">
+                        Add one
+                    </NuxtLink>
+                    to tag leads to a specific listing — or use this form as-is.
+                </p>
             </div>
         </div>
     </div>
@@ -98,15 +133,15 @@ const props = defineProps({
             <template #body>
                 <div class="flex justify-center gap-4">
                     <baseQrCode class="relative top-[50%] max-w-150"
-                        :value="`${qr_code_url}${address ? `&${address}` : ''}`" />
+                        :value="finalUrl" />
                 </div>
             </template>
         </UModal>
 
         <!-- STANDALONE DEEP LINK ANCHOR BUTTON -->
-        <NuxtLink :to="qr_code_url" target="_blank"
-            class="flex-1 md:flex-initial inline-flex items-center justify-center px-4 py-2 w-full border border-[#DDD6C9] hover:border-[#A9A39A] hover:bg-slate-800/40 text-[#8A847C] hover:text-[#1F1B16] text-[11px] font-semibold uppercase tracking-wider transition-all">
-            Launch Portal
+        <NuxtLink :to="finalUrl" target="_blank"
+            class="flex-1 md:flex-initial inline-flex items-center justify-center px-4 py-2 w-full border border-[#DDD6C9] hover:border-[#A9A39A] hover:bg-[#EFEAE0] text-[#8A847C] hover:text-[#1F1B16] text-[11px] font-semibold uppercase tracking-wider transition-all">
+            Open Portal
         </NuxtLink>
     </div>
 </template>

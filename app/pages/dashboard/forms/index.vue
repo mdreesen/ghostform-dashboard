@@ -11,6 +11,12 @@ useHead({
 const { data: user } = useNuxtData<any>('user');
 const { data: home } = useNuxtData<any>('homes');
 
+// Only active listings belong in the picker — attaching a new open house QR
+// code to a sold house would mis-tag every lead it captures.
+const activeHomes = computed(() =>
+  (home.value ?? []).filter((h: any) => (h.status || 'active') !== 'sold')
+);
+
 const buildUrl = (source: string) =>
   ghostFormUrl(
     user.value?.category,
@@ -31,7 +37,7 @@ const formFunnels = computed(() => [
     source: 'open_house',
     icon: 'M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     form_url: buildUrl('open_house'),
-    data_home: home.value
+    data_home: activeHomes.value
   },
   {
     id: 'house-on-market',
@@ -42,7 +48,7 @@ const formFunnels = computed(() => [
     source: 'on_market',
     icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
     form_url: buildUrl('on_market'),
-    data_home: home.value
+    data_home: activeHomes.value
   },
   {
     id: 'data-entry',

@@ -8,10 +8,13 @@ import type { Home } from '~/types/home';
 const Lead = HomeModel as Model<Home>;
 
 const bodySchema = z.object({
-  name: z.string().nullable(),
-  address: z.string().nullable(),
-  owner: z.string().nullable(),
-  notes: z.string().nullable(),
+  name: z.string().nullish(),
+  // The address is the only field that genuinely matters — it's what gets
+  // attached to a captured lead so the realtor knows which listing it came from.
+  address: z.string().min(1, 'An address is required.'),
+  owner: z.string().nullish(),
+  notes: z.string().nullish(),
+  status: z.enum(['active', 'pending', 'sold']).optional(),
 })
 
 export default defineEventHandler(async (event) => {
@@ -19,7 +22,8 @@ export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
 
   try {
-    await Lead.create({ userId: user?._id, ...body });
+    const created = await Lead.create({ userId: user?._id, ...body });
+    return { success: true, _id: String(created._id) };
   } catch (error: any) {
     console.error('Something went wrong', error)
     throw createError({
