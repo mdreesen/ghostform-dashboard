@@ -63,7 +63,8 @@ const schema = z.object({
   phone: z.string().min(10, 'Contact telemetry sequence incomplete'),
   company: z.string().min(2, 'Professional affiliation required'),
   region: z.string().min(2, 'Operational area baseline required'),
-  calendar_link: z.string().nullable()
+  calendar_link: z.string().nullable(),
+  cold_lead_after_days: z.string().nullable()
 })
 
 type Schema = z.infer<typeof schema>
@@ -73,8 +74,9 @@ const state = reactive<Schema>({
   email: data.value?.email,
   phone: data.value?.phone,
   company: data.value?.company,
-  region: data.value.region,
-  calendar_link: data.value.calendar_link
+  region: data.value?.region,
+  calendar_link: data.value?.calendar_link,
+  cold_lead_after_days: data.value?.cold_lead_after_days
 });
 
 const isEditing = ref(false)
@@ -192,6 +194,15 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                         {{ state.calendar_link || '—' }}
                       </span>
                     </UFormField>
+
+                    <UFormField label="Iced Lead Days" name="cold_lead_after_days">
+                      <UInput v-if="isEditing" v-model="state.cold_lead_after_days" :disabled="!isEditing" variant="none"
+                        class="truncate" />
+                      <span v-else class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
+                        :title="state.cold_lead_after_days.toString()">
+                        {{ state.cold_lead_after_days || '—' }}
+                      </span>
+                    </UFormField>
                   </div>
 
                   <div v-if="isEditing" class="flex justify-end gap-3 pt-6 border-t border-[#DDD6C9] mt-8">
@@ -299,16 +310,16 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
       <!-- Action Button Example -->
       <div class="flex flex-col gap-8 mt-10 pt-8 border-t border-gray-700">
-          <p class="gf-eyebrow mb-3">Getting started</p>
-          <p class="text-[14px] text-[#8A847C] leading-relaxed mb-5 max-w-[52ch]">
-            Run the two-minute walkthrough again if you want a refresher on where
-            everything lives.
-          </p>
-          <button
-            class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors"
-            @click="replayTour">
-            Replay the tour
-          </button>
+        <p class="gf-eyebrow mb-3">Getting started</p>
+        <p class="text-[14px] text-[#8A847C] leading-relaxed mb-5 max-w-[52ch]">
+          Run the two-minute walkthrough again if you want a refresher on where
+          everything lives.
+        </p>
+        <button
+          class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors"
+          @click="replayTour">
+          Replay the tour
+        </button>
       </div>
 
       <div class="flex flex-col gap-8 mt-10 pt-8 border-t border-gray-700">

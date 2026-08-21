@@ -38,7 +38,7 @@ const userSchema = new Schema({
   timezone: { type: String, default: 'America/Denver' },
   // How many days of silence before a lead is considered "cold" and
   // resurfaced in the daily briefing. Per-realtor tunable.
-  coldLeadAfterDays: { type: Number, default: 14 },
+  cold_lead_after_days: { type: Number, default: 14 },
   // Whether the realtor has finished (or skipped) the guided tour.
   tour_completed: { type: Boolean, default: false },
 

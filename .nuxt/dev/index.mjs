@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,7 +3006,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3b523-qoPi/R6J60n5DyT7c5+zy5TEWH0\"",
+    "mtime": "2026-08-21T17:13:49.895Z",
+    "size": 242979,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"d7deb-NhtwcCpNCOMBJPtY9A3oPSYS/Ug\"",
+    "mtime": "2026-08-21T17:13:49.896Z",
+    "size": 884203,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3351,7 +3366,7 @@ const HUMAN_DAY = (n) => n <= 0 ? "today" : n === 1 ? "1 day ago" : `${n} days a
 async function buildDailyBriefing(userId, opts = {}) {
   var _a, _b;
   const now = (_a = opts.now) != null ? _a : /* @__PURE__ */ new Date();
-  const coldAfter = (_b = opts.coldLeadAfterDays) != null ? _b : 14;
+  const coldAfter = (_b = opts.cold_lead_after_days) != null ? _b : 14;
   const leads = await LeadModel$6.find({
     userId,
     status: { $nin: ["closed", "archive"] }
@@ -3542,7 +3557,7 @@ const userSchema = new Schema({
   timezone: { type: String, default: "America/Denver" },
   // How many days of silence before a lead is considered "cold" and
   // resurfaced in the daily briefing. Per-realtor tunable.
-  coldLeadAfterDays: { type: Number, default: 14 },
+  cold_lead_after_days: { type: Number, default: 14 },
   // Whether the realtor has finished (or skipped) the guided tour.
   tour_completed: { type: Boolean, default: false },
   // ============================================================
@@ -5471,7 +5486,7 @@ const index_get$c = defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
   const briefing = await buildDailyBriefing(String(user._id), {
-    coldLeadAfterDays: (_a = user.coldLeadAfterDays) != null ? _a : 14
+    cold_lead_after_days: (_a = user.cold_lead_after_days) != null ? _a : 14
   });
   const narrated = await narrateBriefing(briefing);
   if (narrated) briefing.headline = narrated;
@@ -6553,17 +6568,20 @@ const bodySchema$1 = z.object({
   phone: z.string().nullable(),
   email: z.string().nullable(),
   region: z.string().nullable(),
-  calendar_link: z.string().nullable()
+  calendar_link: z.string().nullable(),
+  cold_lead_after_days: z.string().nullable()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { name, company, phone, email, region, calendar_link } = await readValidatedBody(event, bodySchema$1.parse);
+  const { name, company, phone, email, region, calendar_link, cold_lead_after_days } = await readValidatedBody(event, bodySchema$1.parse);
+  console.log(typeof cold_lead_after_days);
   const obj = {
     name,
     company,
     phone,
     email,
     region,
-    calendar_link
+    calendar_link,
+    cold_lead_after_days: Number(cold_lead_after_days)
   };
   try {
     const user = await loggedInUser(event);

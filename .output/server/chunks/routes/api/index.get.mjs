@@ -22,7 +22,7 @@ const index_get = defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
   const briefing = await buildDailyBriefing(String(user._id), {
-    coldLeadAfterDays: (_a = user.coldLeadAfterDays) != null ? _a : 14
+    cold_lead_after_days: (_a = user.cold_lead_after_days) != null ? _a : 14
   });
   const narrated = await narrateBriefing(briefing);
   if (narrated) briefing.headline = narrated;

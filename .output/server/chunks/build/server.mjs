@@ -866,7 +866,7 @@ const _routes = [
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-BDyrz_k4.mjs')
+    component: () => import('./index-LUV85mVK.mjs')
   },
   {
     name: "dashboard-social",

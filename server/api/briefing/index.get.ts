@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const briefing = await buildDailyBriefing(String(user._id), {
-    coldLeadAfterDays: (user as any).coldLeadAfterDays ?? 14
+    cold_lead_after_days: (user as any).cold_lead_after_days ?? 14
   })
 
   // Try to upgrade the headline with AI narration; keep deterministic on any miss.

@@ -19,7 +19,7 @@ const LeadModel = LeadModelImport as Model<any>
  *                   somehow still open, OR follow-ups the realtor set that are
  *                   now due.
  *   3. COLD       — leads that were contacted once but have gone quiet for
- *                   longer than the realtor's coldLeadAfterDays threshold.
+ *                   longer than the realtor's cold_lead_after_days threshold.
  *
  * Each lead is given a numeric priorityScore so the UI can rank within/across
  * buckets. Higher = more urgent.
@@ -83,15 +83,15 @@ const HUMAN_DAY = (n: number) =>
  * Build the briefing for a single realtor.
  *
  * @param userId  the realtor's Mongo _id
- * @param opts.coldLeadAfterDays  silence threshold before a lead is "cold"
+ * @param opts.cold_lead_after_days  silence threshold before a lead is "cold"
  * @param opts.now  injectable clock for testing (defaults to real now)
  */
 export async function buildDailyBriefing(
   userId: string,
-  opts: { coldLeadAfterDays?: number; now?: Date } = {}
+  opts: { cold_lead_after_days?: number; now?: Date } = {}
 ): Promise<DailyBriefing> {
   const now = opts.now ?? new Date()
-  const coldAfter = opts.coldLeadAfterDays ?? 14
+  const coldAfter = opts.cold_lead_after_days ?? 14
 
   // Pull only fields we need, lean for speed. Statuses that are effectively
   // "done" (closed, archive) are excluded from active follow-up nudges —
