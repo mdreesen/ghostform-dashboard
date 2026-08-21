@@ -401,7 +401,7 @@ const previewAspect = computed(() => {
           </div>
           <div>
             <label class="block text-[11px] text-[#A9A39A] mb-2">Address or detail</label>
-            <textarea v-model="fields.sub" rows="2" placeholder="348 Whitefish Stage Rd&#10;Kalispell, MT" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] resize-none focus:outline-none focus:border-[#B5563A]" />
+            <textarea v-model="fields.sub" rows="2" placeholder="123 Whitefish Stage Rd&#10;City, State" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] resize-none focus:outline-none focus:border-[#B5563A]" />
           </div>
         </template>
 

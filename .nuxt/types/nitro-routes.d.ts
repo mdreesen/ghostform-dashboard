@@ -82,6 +82,7 @@ declare module "nitropack/types" {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/generate.post').default>>>>
     }
     '/api/social': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/index.get').default>>>>
     }
     '/api/social/save': {

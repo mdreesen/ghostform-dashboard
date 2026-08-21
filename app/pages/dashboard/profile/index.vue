@@ -261,7 +261,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
         <div class="space-y-6">
           <div>
             <label class="gf-eyebrow block mb-3">A bit about you</label>
-            <input v-model="voice.about" placeholder="Grew up here, two kids, spend every free weekend on the lake"
+            <textarea v-model="voice.about" placeholder="Grew up here, two kids, spend every free weekend on the lake"
               class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
           </div>
           <div>

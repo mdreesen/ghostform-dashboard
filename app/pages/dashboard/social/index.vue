@@ -9,6 +9,7 @@ useHead({
 type Platform = 'facebook' | 'instagram' | 'x';
 
 const { data: user } = useNuxtData<any>('user');
+const { fetch: refreshSession } = useUserSession();
 const toast = useToast();
 
 const platform = ref<Platform>('facebook');
@@ -19,6 +20,8 @@ const drafts = ref<any[]>([]);
 const source = ref<'ai' | 'template' | null>(null);
 const savingId = ref<string | null>(null);
 const copiedIdx = ref<number | null>(null);
+const open = ref(false);
+const loading = ref(false);
 
 const { data: queue, refresh: refreshQueue } = await useFetch<any>('/api/social', {
   key: 'social', lazy: true
@@ -134,7 +137,27 @@ async function share(post: any) {
     post.platform === 'instagram' ? 'https://www.instagram.com/' : 'https://www.facebook.com/',
     '_blank'
   );
-}
+};
+
+const useDelete = async (post) => {
+  loading.value = true
+
+  try {
+    await $fetch('/api/social', {
+      method: 'DELETE',
+      body: post
+    })
+    await refreshSession();
+    await refreshNuxtData('social');
+    toast.success('Deleted social');
+    open.value = false;
+
+  } catch (error) {
+    toast.error('Failed to delete');
+  } finally {
+    loading.value = false
+  }
+};
 </script>
 
 <template>
@@ -154,7 +177,8 @@ async function share(post: any) {
 
     <!-- Voice nudge -->
     <section v-if="!voiceSet" class="gf-depth mb-16">
-      <div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7 flex flex-col sm:flex-row sm:items-center gap-5 justify-between">
+      <div
+        class="bg-[#EFEAE0] border border-[#DDD6C9] p-7 flex flex-col sm:flex-row sm:items-center gap-5 justify-between">
         <div>
           <p class="font-display text-[18px] font-semibold mb-1.5">Tell it how you talk first</p>
           <p class="text-[14px] text-[#8A847C] leading-relaxed max-w-[52ch]">
@@ -162,10 +186,8 @@ async function share(post: any) {
             posts that sound like every other agent's feed.
           </p>
         </div>
-        <NuxtLink
-          to="/dashboard/profile#voice"
-          class="shrink-0 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors text-center"
-        >
+        <NuxtLink to="/dashboard/profile#voice"
+          class="shrink-0 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors text-center">
           Set up my voice
         </NuxtLink>
       </div>
@@ -182,15 +204,10 @@ async function share(post: any) {
         <div>
           <label class="gf-eyebrow block mb-3">Where it's going</label>
           <div class="flex gap-2">
-            <button
-              v-for="p in platforms"
-              :key="p.value"
-              class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors"
-              :class="platform === p.value
+            <button v-for="p in platforms" :key="p.value"
+              class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors" :class="platform === p.value
                 ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]'
-                : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
-              @click="platform = p.value"
-            >
+                : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'" @click="platform = p.value">
               {{ p.label }}
             </button>
           </div>
@@ -198,29 +215,22 @@ async function share(post: any) {
 
         <div>
           <label class="gf-eyebrow block mb-3">Topic</label>
-          <select
-            v-model="topic"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors"
-          >
+          <select v-model="topic"
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors">
             <option v-for="t in topics" :key="t.value" :value="t.value">{{ t.label }}</option>
           </select>
         </div>
 
         <div>
           <label class="gf-eyebrow block mb-3">Anything specific? (optional)</label>
-          <input
-            v-model="details"
-            placeholder="Saturday 11–1, the cabin on Whitefish Stage"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors"
-          />
+          <input v-model="details" placeholder="Saturday 11–1, the cabin on Whitefish Stage"
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors" />
         </div>
       </div>
 
-      <button
-        :disabled="generating"
+      <button :disabled="generating"
         class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
-        @click="generate"
-      >
+        @click="generate">
         {{ generating ? 'Writing…' : 'Write me 3 posts' }}
       </button>
 
@@ -230,16 +240,9 @@ async function share(post: any) {
           Written from a template — add an AI key for posts tailored to your voice.
         </p>
 
-        <div
-          v-for="(d, i) in drafts"
-          :key="i"
-          class="border border-[#DDD6C9] bg-[#EFEAE0] p-6"
-        >
-          <textarea
-            v-model="d.edited"
-            :rows="platform === 'x' ? 3 : 6"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]"
-          />
+        <div v-for="(d, i) in drafts" :key="i" class="border border-[#DDD6C9] bg-[#EFEAE0] p-6">
+          <textarea v-model="d.edited" :rows="platform === 'x' ? 3 : 6"
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]" />
 
           <div class="flex flex-wrap items-center justify-between gap-4 mt-3">
             <div class="text-[12px] text-[#A9A39A] space-y-1">
@@ -253,14 +256,12 @@ async function share(post: any) {
             <div class="flex gap-2.5">
               <button
                 class="px-5 py-2.5 border border-[#DDD6C9] text-[11px] uppercase tracking-[0.1em] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors"
-                @click="copy(d, i)"
-              >
+                @click="copy(d, i)">
                 {{ copiedIdx === i ? 'Copied' : 'Copy' }}
               </button>
               <button
                 class="px-5 py-2.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830] transition-colors"
-                @click="approve(d)"
-              >
+                @click="approve(d)">
                 Keep it
               </button>
             </div>
@@ -283,15 +284,9 @@ async function share(post: any) {
       </p>
 
       <ClientOnly>
-        <appSocialCard
-          :agent-name="user?.name"
-          :company="user?.company"
-          :region="user?.region"
-          :brand-color="user?.brand_color"
-          :headshot-url="user?.headshot_url"
-          :topic="topic"
-          :saved-style="user?.cardStyle"
-        />
+        <appSocialCard :agent-name="user?.name" :company="user?.company" :region="user?.region"
+          :brand-color="user?.brand_color" :headshot-url="user?.headshot_url" :topic="topic"
+          :saved-style="user?.cardStyle" />
       </ClientOnly>
     </section>
 
@@ -304,11 +299,8 @@ async function share(post: any) {
       </div>
 
       <div v-if="queue?.approved?.length" class="space-y-4">
-        <div
-          v-for="post in queue.approved"
-          :key="post._id"
-          class="border border-[#DDD6C9] p-6 flex flex-col lg:flex-row lg:items-start gap-6 justify-between"
-        >
+        <div v-for="post in queue.approved" :key="post._id"
+          class="border border-[#DDD6C9] p-6 flex flex-col lg:flex-row lg:items-start gap-6 justify-between">
           <div class="min-w-0 flex-1">
             <p class="gf-eyebrow mb-2.5">{{ post.platform }}</p>
             <p class="text-[15px] leading-relaxed whitespace-pre-line">{{ post.body }}</p>
@@ -318,17 +310,23 @@ async function share(post: any) {
           <div class="flex gap-2.5 shrink-0">
             <button
               class="px-5 py-2.5 border border-[#DDD6C9] text-[11px] uppercase tracking-[0.1em] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors"
-              @click="share(post)"
-            >
+              @click="share(post)">
               {{ post.platform === 'x' ? 'Open in X' : 'Copy & open' }}
             </button>
-            <button
-              :disabled="savingId === post._id"
+            <button :disabled="savingId === post._id"
               class="px-5 py-2.5 border border-[#5A6349] text-[11px] uppercase tracking-[0.1em] text-[#5A6349] hover:bg-[#5A6349] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
-              @click="setStatus(post, 'posted')"
-            >
+              @click="setStatus(post, 'posted')">
               Posted
             </button>
+
+            <UModal :title="`Delete`" v-model:open="open">
+              <UButton label="Delete Campaign" color="error" variant="subtle" class="px-5 py-2.5 border border-[#DDD6C9] text-[11px] uppercase tracking-[0.1em] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors" />
+
+              <template #body>
+                <div class="pb-6">Are you sure?</div>
+                <baseButtonDelete label="Delete" @click="useDelete(post)" />
+              </template>
+            </UModal>
           </div>
         </div>
       </div>
@@ -347,11 +345,8 @@ async function share(post: any) {
         <span class="font-display text-[25px] font-semibold tracking-tight">Already posted</span>
       </div>
       <div class="space-y-3">
-        <div
-          v-for="post in queue.posted"
-          :key="post._id"
-          class="border-t border-[#DDD6C9] pt-4 flex items-start gap-5 justify-between"
-        >
+        <div v-for="post in queue.posted" :key="post._id"
+          class="border-t border-[#DDD6C9] pt-4 flex items-start gap-5 justify-between">
           <p class="text-[14px] text-[#8A847C] leading-relaxed line-clamp-2 flex-1">{{ post.body }}</p>
           <span class="text-[11px] uppercase tracking-[0.14em] text-[#A9A39A] shrink-0">
             {{ post.platform }}
