@@ -36,8 +36,8 @@ export function ghostFormUrl(
     if (useName) params.set('company_name', useName);
     if (useEmail) params.set('company_email', useEmail);
     if (useCalendar) params.set('calendar', useCalendar);
-    params.set('background_color', stripHash(options?.backgroundColor) || '0f0b0b');
-    params.set('font_color', stripHash(options?.fontColor) || 'FFFFFF');
+    params.set('background_color', stripHash(options?.backgroundColor) || 'F7F4EF');
+    params.set('font_color', stripHash(options?.fontColor) || '1F1B16');
 
     return `${base}?${params.toString()}`;
 }
