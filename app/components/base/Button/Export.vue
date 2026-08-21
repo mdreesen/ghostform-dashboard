@@ -13,7 +13,7 @@ const props = defineProps({
 const isExporting = ref(false);
 const currentFormat = ref('XLSX');
 
-const items = ref<DropdownMenuItem[][]>([
+const items: DropdownMenuItem[][] = [
   [
     {
       label: 'Formatted Spreadsheet (.xlsx)',
@@ -32,7 +32,7 @@ const items = ref<DropdownMenuItem[][]>([
       }
     }
   ]
-])
+]
 
 // File pipeline router synchronization function
 const executeExport = async () => {
@@ -41,31 +41,38 @@ const executeExport = async () => {
   try {
     switch (true) {
       case currentFormat.value.includes('CSV'):
-        return useCSV(props.data);
+        useCSV(props.data);
+        isExporting.value = false;
+        break;
+
       default:
-        return exportLeadsToXLSX(props.data);
+        exportLeadsToXLSX(props.data);
+        isExporting.value = false;
+        break;
 
     };
   } catch (error) {
     console.error('Data pipeline extraction phase aborted.')
+    isExporting.value = false;
   }
 }
 </script>
 
 <template>
-  <div
-    class="inline-flex items-center overflow-hidden bg-[#F7F4EF] border border-[#DDD6C9]">
+  <div>
+    <div class="inline-flex items-center overflow-hidden bg-[#F7F4EF] border border-[#DDD6C9]">
 
-    <UButton :loading="isExporting" color="neutral" variant="ghost" icon="i-heroicons-arrow-down-tray"
-      class="rounded-none px-4 py-2.5 text-xs font-semibold tracking-wider uppercase text-[#1F1B16] hover:bg-[#EFEAE0]"
-      @click="executeExport">
-      Export {{ currentFormat }}
-    </UButton>
+      <UButton :loading="isExporting" color="neutral" variant="ghost" icon="i-heroicons-arrow-down-tray"
+        class="rounded-none px-4 py-2.5 text-xs font-semibold tracking-wider uppercase text-[#1F1B16] hover:bg-[#EFEAE0]"
+        @click="executeExport">
+        Export {{ currentFormat }}
+      </UButton>
 
-    <UDropdownMenu :items="items" :content="{ align: 'end', side: 'bottom', sideOffset: 8 }">
-      <UButton color="neutral" variant="ghost" icon="i-heroicons-chevron-down"
-        class="rounded-none border-l border-[#DDD6C9] px-2.5 py-2.5 text-[#1F1B16] hover:bg-[#EFEAE0]" />
-    </UDropdownMenu>
+      <UDropdownMenu :items="items" :content="{ align: 'end', side: 'bottom', sideOffset: 8 }">
+        <UButton color="neutral" variant="ghost" icon="i-heroicons-chevron-down"
+          class="rounded-none border-l border-[#DDD6C9] px-2.5 py-2.5 text-[#1F1B16] hover:bg-[#EFEAE0]" />
+      </UDropdownMenu>
 
+    </div>
   </div>
 </template>
