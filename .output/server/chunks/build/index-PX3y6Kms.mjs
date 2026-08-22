@@ -85,8 +85,9 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       { value: "x", label: "X" }
     ];
     const voiceSet = computed(() => {
-      const v = user.value?.voice;
-      return Boolean(v?.about || v?.samples || v?.focus);
+      var _a;
+      const v = (_a = user.value) == null ? void 0 : _a.voice;
+      return Boolean((v == null ? void 0 : v.about) || (v == null ? void 0 : v.samples) || (v == null ? void 0 : v.focus));
     });
     const useDelete = async (post) => {
       loading.value = true;
@@ -106,6 +107,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
     };
     return (_ctx, _push, _parent, _attrs) => {
+      var _a, _b, _c, _d, _e, _f, _g;
       const _component_NuxtLink = __nuxt_component_0$1;
       const _component_ClientOnly = __nuxt_component_1$1;
       const _component_UModal = _sfc_main$1;
@@ -133,7 +135,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`<section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">01 — Write</span><span class="font-display text-[25px] font-semibold tracking-tight">What&#39;s this about?</span></div><div class="grid lg:grid-cols-3 gap-6 mb-8"><div><label class="gf-eyebrow block mb-3">Where it&#39;s going</label><div class="flex gap-2"><!--[-->`);
+      _push(`<section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">01 \u2014 Write</span><span class="font-display text-[25px] font-semibold tracking-tight">What&#39;s this about?</span></div><div class="grid lg:grid-cols-3 gap-6 mb-8"><div><label class="gf-eyebrow block mb-3">Where it&#39;s going</label><div class="flex gap-2"><!--[-->`);
       ssrRenderList(platforms, (p) => {
         _push(`<button class="${ssrRenderClass([unref(platform) === p.value ? "bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]" : "border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]", "flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors"])}">${ssrInterpolate(p.label)}</button>`);
       });
@@ -141,16 +143,17 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       ssrRenderList(topics, (t) => {
         _push(`<option${ssrRenderAttr("value", t.value)}${ssrIncludeBooleanAttr(Array.isArray(unref(topic)) ? ssrLooseContain(unref(topic), t.value) : ssrLooseEqual(unref(topic), t.value)) ? " selected" : ""}>${ssrInterpolate(t.label)}</option>`);
       });
-      _push(`<!--]--></select></div><div><label class="gf-eyebrow block mb-3">Anything specific? (optional)</label><input${ssrRenderAttr("value", unref(details))} placeholder="Saturday 11–1, the cabin on Whitefish Stage" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors"></div></div><button${ssrIncludeBooleanAttr(unref(generating)) ? " disabled" : ""} class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40">${ssrInterpolate(unref(generating) ? "Writing…" : "Write me 3 posts")}</button>`);
+      _push(`<!--]--></select></div><div><label class="gf-eyebrow block mb-3">Anything specific? (optional)</label><input${ssrRenderAttr("value", unref(details))} placeholder="Saturday 11\u20131, the cabin on Whitefish Stage" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors"></div></div><button${ssrIncludeBooleanAttr(unref(generating)) ? " disabled" : ""} class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40">${ssrInterpolate(unref(generating) ? "Writing\u2026" : "Write me 3 posts")}</button>`);
       if (unref(drafts).length) {
         _push(`<div class="mt-10 space-y-5">`);
         if (unref(source) === "template") {
-          _push(`<p class="text-[12.5px] text-[#A9A39A]"> Written from a template — add an AI key for posts tailored to your voice. </p>`);
+          _push(`<p class="text-[12.5px] text-[#A9A39A]"> Written from a template \u2014 add an AI key for posts tailored to your voice. </p>`);
         } else {
           _push(`<!---->`);
         }
         _push(`<!--[-->`);
         ssrRenderList(unref(drafts), (d, i) => {
+          var _a2, _b2, _c2, _d2;
           _push(`<div class="border border-[#DDD6C9] bg-[#EFEAE0] p-6"><textarea${ssrRenderAttr("rows", unref(platform) === "x" ? 3 : 6)} class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]">${ssrInterpolate(d.edited)}</textarea><div class="flex flex-wrap items-center justify-between gap-4 mt-3"><div class="text-[12px] text-[#A9A39A] space-y-1">`);
           if (d.hashtags) {
             _push(`<p>${ssrInterpolate(d.hashtags)}</p>`);
@@ -163,7 +166,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
             _push(`<!---->`);
           }
           if (unref(platform) === "x") {
-            _push(`<p class="${ssrRenderClass((d.edited?.length ?? 0) > 260 ? "text-[#B5563A]" : "")}">${ssrInterpolate(d.edited?.length ?? 0)} / 260 characters </p>`);
+            _push(`<p class="${ssrRenderClass(((_b2 = (_a2 = d.edited) == null ? void 0 : _a2.length) != null ? _b2 : 0) > 260 ? "text-[#B5563A]" : "")}">${ssrInterpolate((_d2 = (_c2 = d.edited) == null ? void 0 : _c2.length) != null ? _d2 : 0)} / 260 characters </p>`);
           } else {
             _push(`<!---->`);
           }
@@ -173,10 +176,10 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       } else {
         _push(`<!---->`);
       }
-      _push(`</section><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">02 — Image</span><span class="font-display text-[25px] font-semibold tracking-tight">Make something to post with it</span></div><p class="text-[14.5px] text-[#8A847C] leading-relaxed max-w-[62ch] mb-9"> For listings and sold posts, use your own photos — nothing beats the real house. These are for the posts you can&#39;t photograph: market notes, advice, open house announcements. </p>`);
+      _push(`</section><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">02 \u2014 Image</span><span class="font-display text-[25px] font-semibold tracking-tight">Make something to post with it</span></div><p class="text-[14.5px] text-[#8A847C] leading-relaxed max-w-[62ch] mb-9"> For listings and sold posts, use your own photos \u2014 nothing beats the real house. These are for the posts you can&#39;t photograph: market notes, advice, open house announcements. </p>`);
       _push(ssrRenderComponent(_component_ClientOnly, null, {}, _parent));
-      _push(`</section><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">03 — Ready</span><span class="font-display text-[25px] font-semibold tracking-tight">Approved and waiting</span><span class="text-[13px] text-[#A9A39A] tabular-nums">${ssrInterpolate(unref(queue)?.approved?.length ?? 0)}</span></div>`);
-      if (unref(queue)?.approved?.length) {
+      _push(`</section><section class="gf-depth mb-20"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">03 \u2014 Ready</span><span class="font-display text-[25px] font-semibold tracking-tight">Approved and waiting</span><span class="text-[13px] text-[#A9A39A] tabular-nums">${ssrInterpolate((_c = (_b = (_a = unref(queue)) == null ? void 0 : _a.approved) == null ? void 0 : _b.length) != null ? _c : 0)}</span></div>`);
+      if ((_e = (_d = unref(queue)) == null ? void 0 : _d.approved) == null ? void 0 : _e.length) {
         _push(`<div class="space-y-4"><!--[-->`);
         ssrRenderList(unref(queue).approved, (post) => {
           _push(`<div class="border border-[#DDD6C9] p-6 flex flex-col lg:flex-row lg:items-start gap-6 justify-between"><div class="min-w-0 flex-1"><p class="gf-eyebrow mb-2.5">${ssrInterpolate(post.platform)}</p><p class="text-[15px] leading-relaxed whitespace-pre-line">${ssrInterpolate(post.body)}</p>`);
@@ -236,8 +239,8 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         _push(`<div class="border-t border-b border-[#DDD6C9] py-14 text-center"><p class="text-[14px] text-[#8A847C]"> Nothing queued yet. Write a few above and keep the ones you like. </p></div>`);
       }
       _push(`</section>`);
-      if (unref(queue)?.posted?.length) {
-        _push(`<section class="gf-depth"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">04 — History</span><span class="font-display text-[25px] font-semibold tracking-tight">Already posted</span></div><div class="space-y-3"><!--[-->`);
+      if ((_g = (_f = unref(queue)) == null ? void 0 : _f.posted) == null ? void 0 : _g.length) {
+        _push(`<section class="gf-depth"><div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><span class="gf-eyebrow">04 \u2014 History</span><span class="font-display text-[25px] font-semibold tracking-tight">Already posted</span></div><div class="space-y-3"><!--[-->`);
         ssrRenderList(unref(queue).posted, (post) => {
           _push(`<div class="border-t border-[#DDD6C9] pt-4 flex items-start gap-5 justify-between"><p class="text-[14px] text-[#8A847C] leading-relaxed line-clamp-2 flex-1">${ssrInterpolate(post.body)}</p><span class="text-[11px] uppercase tracking-[0.14em] text-[#A9A39A] shrink-0">${ssrInterpolate(post.platform)}</span></div>`);
         });

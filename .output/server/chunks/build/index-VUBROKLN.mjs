@@ -55,10 +55,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
     const search = ref("");
     const statusFilter = ref("all");
     const busyId = ref(null);
-    const list = computed(() => homes.value ?? []);
+    const list = computed(() => {
+      var _a;
+      return (_a = homes.value) != null ? _a : [];
+    });
     const filtered = computed(
       () => list.value.filter((h) => {
-        const hay = `${h.name ?? ""} ${h.address ?? ""} ${h.owner ?? ""}`.toLowerCase();
+        var _a, _b, _c;
+        const hay = `${(_a = h.name) != null ? _a : ""} ${(_b = h.address) != null ? _b : ""} ${(_c = h.owner) != null ? _c : ""}`.toLowerCase();
         const matchesSearch = hay.includes(search.value.toLowerCase().trim());
         const status = h.status || "active";
         const matchesStatus = statusFilter.value === "all" || status === statusFilter.value;
@@ -80,7 +84,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       if (unref(list).length) {
         _push(`<!--[-->${ssrInterpolate(unref(activeCount))} active. Add one here and it appears in the property picker on your forms, so every lead is tagged to the right listing. <!--]-->`);
       } else {
-        _push(`<!--[--> Add a listing here and you&#39;ll be able to attach it to an open house QR code — so you know which property each lead came from. <!--]-->`);
+        _push(`<!--[--> Add a listing here and you&#39;ll be able to attach it to an open house QR code \u2014 so you know which property each lead came from. <!--]-->`);
       }
       _push(`</p></div><div class="gf-rise shrink-0" style="${ssrRenderStyle({ "--d": ".28s" })}" data-v-a4c77a3d>`);
       _push(ssrRenderComponent(_component_baseButtonNavigate, {
@@ -89,7 +93,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }, null, _parent));
       _push(`</div></div></header>`);
       if (unref(list).length) {
-        _push(`<section class="gf-depth mb-10" data-v-a4c77a3d><div class="flex flex-col sm:flex-row gap-4 sm:items-center justify-between" data-v-a4c77a3d><input${ssrRenderAttr("value", unref(search))} placeholder="Search by address, nickname or owner…" class="w-full sm:max-w-xs bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors" data-v-a4c77a3d><div class="flex gap-2" data-v-a4c77a3d><!--[-->`);
+        _push(`<section class="gf-depth mb-10" data-v-a4c77a3d><div class="flex flex-col sm:flex-row gap-4 sm:items-center justify-between" data-v-a4c77a3d><input${ssrRenderAttr("value", unref(search))} placeholder="Search by address, nickname or owner\u2026" class="w-full sm:max-w-xs bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors" data-v-a4c77a3d><div class="flex gap-2" data-v-a4c77a3d><!--[-->`);
         ssrRenderList(["all", "active", "pending", "sold"], (s) => {
           _push(`<button class="${ssrRenderClass([unref(statusFilter) === s ? "bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]" : "border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]", "px-4 py-2.5 text-[11px] uppercase tracking-[0.1em] border transition-colors"])}" data-v-a4c77a3d>${ssrInterpolate(s === "all" ? "All" : STATUS_LABEL[s])}</button>`);
         });
@@ -139,7 +143,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       } else if (unref(list).length) {
         _push(`<div class="border-t border-b border-[#DDD6C9] py-14 text-center" data-v-a4c77a3d><p class="text-[14px] text-[#8A847C]" data-v-a4c77a3d>Nothing matches that search.</p></div>`);
       } else {
-        _push(`<div class="border-t border-b border-[#DDD6C9] py-16 text-center" data-v-a4c77a3d><p class="text-[14px] text-[#8A847C] mb-6 max-w-[44ch] mx-auto leading-relaxed" data-v-a4c77a3d> No properties yet. You don&#39;t need one to collect leads — but adding a listing lets you tag each lead to the house they walked through. </p>`);
+        _push(`<div class="border-t border-b border-[#DDD6C9] py-16 text-center" data-v-a4c77a3d><p class="text-[14px] text-[#8A847C] mb-6 max-w-[44ch] mx-auto leading-relaxed" data-v-a4c77a3d> No properties yet. You don&#39;t need one to collect leads \u2014 but adding a listing lets you tag each lead to the house they walked through. </p>`);
         _push(ssrRenderComponent(_component_baseButtonNavigate, {
           text: "+ Add your first property",
           path: "/dashboard/home/create"

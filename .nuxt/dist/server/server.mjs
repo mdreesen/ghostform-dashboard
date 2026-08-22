@@ -448,9 +448,7 @@ function getRouteRules(arg) {
     return {};
   }
 }
-const __nuxt_page_meta$b = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$b = { layout: "authenticated" };
 const __nuxt_page_meta$a = {
   layout: "authenticated"
 };
@@ -462,9 +460,7 @@ const __nuxt_page_meta$8 = {
 };
 const __nuxt_page_meta$7 = { layout: "authenticated" };
 const __nuxt_page_meta$6 = { layout: "authenticated" };
-const __nuxt_page_meta$5 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$5 = { layout: "authenticated" };
 const __nuxt_page_meta$4 = {
   layout: "authenticated"
 };
@@ -483,13 +479,13 @@ const _routes = [
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
     meta: __nuxt_page_meta$b || {},
-    component: () => import("./_nuxt/create-BRGa768C.js")
+    component: () => import("./_nuxt/create-DDfCY1xU.js")
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
     meta: __nuxt_page_meta$a || {},
-    component: () => import("./_nuxt/index-BYT6lftS.js")
+    component: () => import("./_nuxt/index-WK1LPYtz.js")
   },
   {
     name: "dashboard-leads-id-details",
@@ -501,43 +497,43 @@ const _routes = [
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import("./_nuxt/edit-BQggIyQ5.js")
+    component: () => import("./_nuxt/edit-Dw-hD4p4.js")
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import("./_nuxt/index-MlgzXyMw.js")
+    component: () => import("./_nuxt/index-BRzfPx0p.js")
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import("./_nuxt/index-Dajmh8X8.js")
+    component: () => import("./_nuxt/index-BiUXXeiD.js")
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import("./_nuxt/index-C-LMPpcO.js")
+    component: () => import("./_nuxt/index-VUBROKLN.js")
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import("./_nuxt/index-BrBsptDi.js")
+    component: () => import("./_nuxt/index-Ba-Kt9fC.js")
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import("./_nuxt/index-CSJxPMYs.js")
+    component: () => import("./_nuxt/index-LUV85mVK.js")
   },
   {
     name: "dashboard-social",
     path: "/dashboard/social",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import("./_nuxt/index-BNtqThje.js")
+    component: () => import("./_nuxt/index-PX3y6Kms.js")
   },
   {
     name: "dashboard",
@@ -549,13 +545,13 @@ const _routes = [
     name: "forgotpassword",
     path: "/forgotpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/forgotpassword-Ldt68KdG.js")
+    component: () => import("./_nuxt/forgotpassword-QpKfXXEq.js")
   },
   {
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/login-DNDTPHoZ.js")
+    component: () => import("./_nuxt/login-CQrQIBRM.js")
   },
   {
     name: "privacy-policy",
@@ -566,7 +562,7 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/signup-CcEuaD_u.js")
+    component: () => import("./_nuxt/signup-zQAqrsV8.js")
   },
   {
     name: "subscribe",
@@ -578,13 +574,13 @@ const _routes = [
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/resetpassword-smjc6EMf.js")
+    component: () => import("./_nuxt/resetpassword-D_4oSr9p.js")
   },
   {
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/index-C-bx-WBu.js")
+    component: () => import("./_nuxt/index-DCR4ofQt.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -10865,7 +10861,7 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import("./_nuxt/authenticated-D2Zhjkaa.js").then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import("./_nuxt/authenticated-wZr29SZW.js").then((m) => m.default || m)),
   default: defineAsyncComponent(() => import("./_nuxt/default-D6BhmMrf.js").then((m) => m.default || m)),
   form: defineAsyncComponent(() => import("./_nuxt/form-Flt6bszS.js").then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import("./_nuxt/payment-Cp8Rb9d4.js").then((m) => m.default || m))
@@ -11296,7 +11292,7 @@ let entry;
 }
 const entry_default = ((ssrContext) => entry(ssrContext));
 export {
-  tryOnBeforeUnmount as $,
+  formBusInjectionKey as $,
   useComponentIcons as A,
   tv as B,
   isArrayOfArray as C,
@@ -11309,13 +11305,13 @@ export {
   getDisplayValue as J,
   useNuxtData as K,
   useRuntimeConfig as L,
-  useEmitAsProps as M,
-  useLocale as N,
-  createReusableTemplate as O,
+  createSharedComposable as M,
+  reactiveOmit as N,
+  useEmitAsProps as O,
   Primitive as P,
-  createSharedComposable as Q,
-  reactiveOmit as R,
-  usePrimitiveElement as S,
+  usePrimitiveElement as Q,
+  useLocale as R,
+  createReusableTemplate as S,
   Teleport_default as T,
   _sfc_main$9 as U,
   VisuallyHidden_default as V,
@@ -11325,24 +11321,24 @@ export {
   refAutoReset as Z,
   __nuxt_component_0$1 as _,
   useRoute as a,
-  onKeyStroke as a0,
-  createGlobalState as a1,
-  AUTOFOCUS_ON_UNMOUNT as a2,
-  focus as a3,
-  AUTOFOCUS_ON_MOUNT as a4,
-  focusFirst as a5,
-  getTabbableCandidates as a6,
-  EVENT_OPTIONS as a7,
-  getTabbableEdges as a8,
-  formBusInjectionKey as a9,
-  formStateInjectionKey as aa,
-  formErrorsInjectionKey as ab,
-  formInputsInjectionKey as ac,
-  formLoadingInjectionKey as ad,
-  formOptionsInjectionKey as ae,
-  useEventBus as af,
-  inputIdInjectionKey as ag,
-  formFieldInjectionKey as ah,
+  formStateInjectionKey as a0,
+  formErrorsInjectionKey as a1,
+  formInputsInjectionKey as a2,
+  formLoadingInjectionKey as a3,
+  formOptionsInjectionKey as a4,
+  useEventBus as a5,
+  inputIdInjectionKey as a6,
+  formFieldInjectionKey as a7,
+  tryOnBeforeUnmount as a8,
+  onKeyStroke as a9,
+  createGlobalState as aa,
+  AUTOFOCUS_ON_UNMOUNT as ab,
+  focus as ac,
+  AUTOFOCUS_ON_MOUNT as ad,
+  focusFirst as ae,
+  getTabbableCandidates as af,
+  EVENT_OPTIONS as ag,
+  getTabbableEdges as ah,
   useMotion as ai,
   NuxtIcon as aj,
   useFetch as b,

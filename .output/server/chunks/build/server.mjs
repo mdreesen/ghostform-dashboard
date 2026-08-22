@@ -1831,7 +1831,7 @@ const lazyGlobalComponents = [
   ["DottedMap", DottedMap],
   ["Icon", LazyIcon]
 ];
-const components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8 = /* @__PURE__ */ defineNuxtPlugin({
+const components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4 = /* @__PURE__ */ defineNuxtPlugin({
   name: "nuxt:global-components",
   setup(nuxtApp) {
     for (const [name, component] of lazyGlobalComponents) {
@@ -1840,7 +1840,7 @@ const components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8 = /* @__PURE
     }
   }
 });
-const pwa_icons_plugin_OtOZ6CGly_Vz5_PCGGLA9qHLz2Y5_d5czYAX7q_3Lug = /* @__PURE__ */ defineNuxtPlugin(() => {
+const pwa_icons_plugin_C24GcIKjcI2zsa8A86om0L2LZjx1chWtzYxD11T7Txg = /* @__PURE__ */ defineNuxtPlugin(() => {
   return {
     provide: {
       pwaIcons: {
@@ -4793,8 +4793,8 @@ const plugins = [
   session_server_fi7D7q_WjeXZl2Hh05GOWPuIxZQWSnpY3ifY_sSGHJo,
   revive_payload_server_MVtmlZaQpj6ApFmshWfUWl5PehCebzaBf2NuRMiIbms,
   plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8,
-  components_plugin_4kY4pyzJIYX99vmMAAIorFf3CnAaptHitJgf7JxiED8,
-  pwa_icons_plugin_OtOZ6CGly_Vz5_PCGGLA9qHLz2Y5_d5czYAX7q_3Lug,
+  components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
+  pwa_icons_plugin_C24GcIKjcI2zsa8A86om0L2LZjx1chWtzYxD11T7Txg,
   plugin_PkzIodqHrECZiqJYWG6YoAUH8WdazzfetYETfN19XBg,
   colors_E7kSti5pGZ28QhUUurq6gGRU3l65WuXO_KJC3GQgzFo,
   plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A,

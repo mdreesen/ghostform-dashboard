@@ -22,9 +22,12 @@ const useBodyLockStackCount = createSharedComposable(() => {
 function useBodyScrollLock(initialState) {
   const id = Math.random().toString(36).substring(2, 7);
   const map = useBodyLockStackCount();
-  map.value.set(id, initialState ?? false);
+  map.value.set(id, initialState != null ? initialState : false);
   const locked = computed({
-    get: () => map.value.get(id) ?? false,
+    get: () => {
+      var _a;
+      return (_a = map.value.get(id)) != null ? _a : false;
+    },
     set: (value) => map.value.set(id, value)
   });
   tryOnBeforeUnmount();
@@ -35,7 +38,7 @@ function useHideOthers(target) {
   watch(() => unrefElement(target), (el) => {
     let isInsideClosedPopover = false;
     try {
-      isInsideClosedPopover = !!el?.closest("[popover]:not(:popover-open)");
+      isInsideClosedPopover = !!(el == null ? void 0 : el.closest("[popover]:not(:popover-open)"));
     } catch {
     }
     if (el && !isInsideClosedPopover) undo = hideOthers(el);
@@ -44,15 +47,17 @@ function useHideOthers(target) {
 }
 let count = 0;
 function useId(deterministicId, prefix = "reka") {
+  var _a;
   let id;
   const configProviderContext = injectConfigProviderContext({ useId: void 0 });
   if (configProviderContext.useId) id = configProviderContext.useId();
-  else if ("useId" in vue) id = vue.useId?.();
+  else if ("useId" in vue) id = (_a = vue.useId) == null ? void 0 : _a.call(vue);
   else id = `${++count}`;
   return prefix ? `${prefix}-${id}` : id;
 }
 function usePointerDownOutside(onPointerDownOutside, element, enabled = true) {
-  element?.value?.ownerDocument ?? globalThis?.document;
+  var _a, _b;
+  (_b = (_a = element == null ? void 0 : element.value) == null ? void 0 : _a.ownerDocument) != null ? _b : globalThis == null ? void 0 : globalThis.document;
   const isPointerInsideDOMTree = ref(false);
   ref(() => {
   });
@@ -65,7 +70,8 @@ function usePointerDownOutside(onPointerDownOutside, element, enabled = true) {
   } };
 }
 function useFocusOutside(onFocusOutside, element, enabled = true) {
-  element?.value?.ownerDocument ?? globalThis?.document;
+  var _a, _b;
+  (_b = (_a = element == null ? void 0 : element.value) == null ? void 0 : _a.ownerDocument) != null ? _b : globalThis == null ? void 0 : globalThis.document;
   const isFocusInsideDOMTree = ref(false);
   watchEffect((cleanupFn) => {
     return;
@@ -120,7 +126,10 @@ var DismissableLayer_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ 
     const props = __props;
     const emits = __emit;
     const { forwardRef, currentElement: layerElement } = useForwardExpose();
-    const ownerDocument = computed(() => layerElement.value?.ownerDocument ?? globalThis.document);
+    const ownerDocument = computed(() => {
+      var _a, _b;
+      return (_b = (_a = layerElement.value) == null ? void 0 : _a.ownerDocument) != null ? _b : globalThis.document;
+    });
     const layers = computed(() => context.layersRoot);
     const index = computed(() => {
       return layerElement.value ? Array.from(layers.value).indexOf(layerElement.value) : -1;
@@ -135,7 +144,7 @@ var DismissableLayer_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ 
       return index.value >= highestLayerWithOutsidePointerEventsDisabledIndex;
     });
     const pointerDownOutside = usePointerDownOutside(async (event) => {
-      const isPointerDownOnBranch = [...context.branches].some((branch) => branch?.contains(event.target));
+      const isPointerDownOnBranch = [...context.branches].some((branch) => branch == null ? void 0 : branch.contains(event.target));
       if (!props.present || !isPointerEventsEnabled.value || isPointerDownOnBranch) return;
       emits("pointerDownOutside", event);
       emits("interactOutside", event);
@@ -143,7 +152,7 @@ var DismissableLayer_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ 
       if (!event.defaultPrevented) emits("dismiss");
     }, layerElement);
     const focusOutside = useFocusOutside((event) => {
-      const isFocusInBranch = [...context.branches].some((branch) => branch?.contains(event.target));
+      const isFocusInBranch = [...context.branches].some((branch) => branch == null ? void 0 : branch.contains(event.target));
       if (!props.present || isFocusInBranch) return;
       emits("focusOutside", event);
       emits("interactOutside", event);
@@ -222,13 +231,14 @@ function createFocusScopesStack() {
   return {
     add(focusScope) {
       const activeFocusScope = stack.value[0];
-      if (focusScope !== activeFocusScope) activeFocusScope?.pause();
+      if (focusScope !== activeFocusScope) activeFocusScope == null ? void 0 : activeFocusScope.pause();
       stack.value = arrayRemove(stack.value, focusScope);
       stack.value.unshift(focusScope);
     },
     remove(focusScope) {
+      var _a;
       stack.value = arrayRemove(stack.value, focusScope);
-      stack.value[0]?.resume();
+      (_a = stack.value[0]) == null ? void 0 : _a.resume();
     }
   };
 }
@@ -312,7 +322,7 @@ var FocusScope_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ def
         container.dispatchEvent(unmountEvent);
         container.setAttribute("data-focus-scope-unmounting", "");
         setTimeout(() => {
-          if (!unmountEvent.defaultPrevented) focus(previouslyFocusedElement ?? (void 0).body, { select: true });
+          if (!unmountEvent.defaultPrevented) focus(previouslyFocusedElement != null ? previouslyFocusedElement : (void 0).body, { select: true });
           container.removeEventListener(AUTOFOCUS_ON_UNMOUNT, unmountEventHandler);
           focusScopesStack.remove(focusScope);
           container.removeAttribute("data-focus-scope-unmounting");
