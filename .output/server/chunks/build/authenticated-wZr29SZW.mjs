@@ -58,7 +58,6 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
       open.value = false;
     });
     return (_ctx, _push, _parent, _attrs) => {
-      var _a, _b, _c;
       const _component_NuxtLink = __nuxt_component_0$1;
       _push(`<header${ssrRenderAttrs(mergeProps({
         class: ["fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500 backdrop-blur-md", unref(stuck) ? "border-[#DDD6C9] bg-[#F7F4EF]/85" : "border-transparent bg-[#F7F4EF]/70"]
@@ -108,8 +107,8 @@ const _sfc_main$2 = /* @__PURE__ */ defineComponent({
         }, _parent));
       });
       _push(`<!--]-->`);
-      if ((_a = unref(user)) == null ? void 0 : _a.headshot_url) {
-        _push(`<img${ssrRenderAttr("src", (_b = unref(user)) == null ? void 0 : _b.headshot_url)}${ssrRenderAttr("alt", (_c = unref(user)) == null ? void 0 : _c.name)} class="w-11 h-11 rounded-full object-cover shrink-0">`);
+      if (unref(user)?.headshot_url) {
+        _push(`<img${ssrRenderAttr("src", unref(user)?.headshot_url)}${ssrRenderAttr("alt", unref(user)?.name)} class="w-11 h-11 rounded-full object-cover shrink-0">`);
       } else {
         _push(`<!---->`);
       }

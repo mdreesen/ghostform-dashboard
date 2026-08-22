@@ -66,7 +66,7 @@ function useArrowNavigation(e, currentElement, parentElement, options = {}) {
     });
   } else if (home) item = allCollectionItems.at(0) || null;
   else if (end) item = allCollectionItems.at(-1) || null;
-  if (focus) item == null ? void 0 : item.focus();
+  if (focus) item?.focus();
   return item;
 }
 function findNextFocusableElement(elements, currentElement, options, iterations = !elements.includes(currentElement) ? elements.length + 1 : elements.length) {
@@ -91,7 +91,7 @@ function useComposing(onEnd) {
   function handleCompositionEnd(event) {
     nextTick(() => {
       isComposing.value = false;
-      onEnd == null ? void 0 : onEnd(event);
+      onEnd?.(event);
     });
   }
   return {
@@ -539,7 +539,7 @@ var MenuContentImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ *
       const el = useArrowNavigation(event, highlightedElement.value || getActiveElement(), contentElement.value, {
         loop: loop.value,
         arrowKeyOptions: "vertical",
-        dir: rootContext == null ? void 0 : rootContext.dir.value,
+        dir: rootContext?.dir.value,
         focus: false,
         attributeName: "[data-reka-collection-item]:not([data-disabled])"
       });
@@ -564,19 +564,16 @@ var MenuContentImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ *
       menuContext.onContentChange(el);
     });
     function isPointerMovingToSubmenu(event) {
-      var _a, _b;
-      const isMovingTowards = pointerDirRef.value === ((_a = pointerGraceIntentRef.value) == null ? void 0 : _a.side);
-      return isMovingTowards && isPointerInGraceArea(event, (_b = pointerGraceIntentRef.value) == null ? void 0 : _b.area);
+      const isMovingTowards = pointerDirRef.value === pointerGraceIntentRef.value?.side;
+      return isMovingTowards && isPointerInGraceArea(event, pointerGraceIntentRef.value?.area);
     }
     async function handleMountAutoFocus(event) {
-      var _a;
       emits("openAutoFocus", event);
       if (event.defaultPrevented) return;
       event.preventDefault();
-      (_a = contentElement.value) == null ? void 0 : _a.focus({ preventScroll: true });
+      contentElement.value?.focus({ preventScroll: true });
     }
     function handleKeyDown(event) {
-      var _a, _b;
       if (event.defaultPrevented) return;
       const target = event.target;
       const isKeyDownInside = target.closest("[data-reka-menu-content]") === event.currentTarget;
@@ -586,13 +583,13 @@ var MenuContentImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ *
       const el = useArrowNavigation(event, getActiveElement(), contentElement.value, {
         loop: loop.value,
         arrowKeyOptions: "vertical",
-        dir: rootContext == null ? void 0 : rootContext.dir.value,
+        dir: rootContext?.dir.value,
         focus: true,
         attributeName: "[data-reka-collection-item]:not([data-disabled])"
       });
-      if (el) return el == null ? void 0 : el.focus();
+      if (el) return el?.focus();
       if (event.code === "Space") return;
-      const collectionItems = (_b = (_a = rovingFocusGroupRef.value) == null ? void 0 : _a.getItems()) != null ? _b : [];
+      const collectionItems = rovingFocusGroupRef.value?.getItems() ?? [];
       if (isKeyDownInside) {
         if (event.key === "Tab" && rootContext.modal.value) event.preventDefault();
         if (!isModifierKey && isCharacterKey && !isKeyDownInTextField) handleTypeaheadSearch(event.key, collectionItems);
@@ -605,18 +602,16 @@ var MenuContentImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ *
       focusFirst$1(candidateNodes);
     }
     function handleBlur(event) {
-      var _a, _b;
-      if (!((_b = (_a = event == null ? void 0 : event.currentTarget) == null ? void 0 : _a.contains) == null ? void 0 : _b.call(_a, event.target))) {
+      if (!event?.currentTarget?.contains?.(event.target)) {
         (void 0).clearTimeout(timerRef.value);
         searchRef.value = "";
       }
     }
     function handlePointerMove(event) {
-      var _a;
       if (!isMouseEvent(event)) return;
       const target = event.target;
       const pointerXHasChanged = lastPointerXRef.value !== event.clientX;
-      if (((_a = event == null ? void 0 : event.currentTarget) == null ? void 0 : _a.contains(target)) && pointerXHasChanged) {
+      if (event?.currentTarget?.contains(target) && pointerXHasChanged) {
         const newDir = event.clientX > lastPointerXRef.value ? "right" : "left";
         pointerDirRef.value = newDir;
         lastPointerXRef.value = event.clientX;
@@ -632,10 +627,9 @@ var MenuContentImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ *
         else return false;
       },
       onItemLeave: (event) => {
-        var _a, _b;
         if (isPointerMovingToSubmenu(event)) return true;
-        const isInputFocused = ["INPUT", "TEXTAREA"].includes(((_a = getActiveElement()) == null ? void 0 : _a.tagName) || "");
-        if (!isInputFocused) (_b = contentElement.value) == null ? void 0 : _b.focus();
+        const isInputFocused = ["INPUT", "TEXTAREA"].includes(getActiveElement()?.tagName || "");
+        if (!isInputFocused) contentElement.value?.focus();
         currentItemId.value = null;
         return false;
       },
@@ -780,7 +774,6 @@ var MenuItemImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ d
     const isFocused = ref(false);
     const isHighlighted = computed(() => isFocused.value || currentElement.value != null && contentContext.highlightedElement.value === currentElement.value);
     async function handlePointerMove(event) {
-      var _a;
       if (event.defaultPrevented || !isMouseEvent(event)) return;
       if (props.disabled) contentContext.onItemLeave(event);
       else {
@@ -788,7 +781,7 @@ var MenuItemImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ d
         if (!defaultPrevented) {
           const item = event.currentTarget;
           contentContext.highlightedElement.value = item;
-          const isInputFocused = ["INPUT", "TEXTAREA"].includes(((_a = getActiveElement()) == null ? void 0 : _a.tagName) || "");
+          const isInputFocused = ["INPUT", "TEXTAREA"].includes(getActiveElement()?.tagName || "");
           if (!isInputFocused) item.focus({ preventScroll: true });
         }
       }
@@ -891,17 +884,15 @@ var MenuItem_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ defin
           isPointerDownRef.value = true;
         }),
         onPointerup: _cache[1] || (_cache[1] = async (event) => {
-          var _a;
           await nextTick();
           if (event.defaultPrevented) return;
-          if (!isPointerDownRef.value) (_a = event.currentTarget) == null ? void 0 : _a.click();
+          if (!isPointerDownRef.value) event.currentTarget?.click();
         }),
         onKeydown: _cache[2] || (_cache[2] = async (event) => {
-          var _a;
           const isTypingAhead = unref(contentContext).searchRef.value !== "";
           if (_ctx.disabled || isTypingAhead && event.key === " ") return;
           if (unref(SELECTION_KEYS).includes(event.key)) {
-            (_a = event.currentTarget) == null ? void 0 : _a.click();
+            event.currentTarget?.click();
             event.preventDefault();
           }
         })
@@ -1533,7 +1524,7 @@ var MenuRadioItem_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
     const forwarded = useForwardProps$1(delegatedProps);
     const { value } = toRefs(props);
     const radioGroupContext = injectMenuRadioGroupContext();
-    const modelValue = computed(() => radioGroupContext.modelValue.value === (value == null ? void 0 : value.value));
+    const modelValue = computed(() => radioGroupContext.modelValue.value === value?.value);
     provideMenuItemIndicatorContext({ modelValue });
     return (_ctx, _cache) => {
       return openBlock(), createBlock(MenuItem_default, mergeProps({ role: "menuitemradio" }, unref(forwarded), {
@@ -1597,7 +1588,7 @@ var MenuSub_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ define
     const trigger = ref();
     const content = ref();
     watchEffect((cleanupFn) => {
-      if ((parentMenuContext == null ? void 0 : parentMenuContext.open.value) === false) open.value = false;
+      if (parentMenuContext?.open.value === false) open.value = false;
       cleanupFn(() => open.value = false);
     });
     provideMenuContext({
@@ -1734,7 +1725,7 @@ var MenuSubContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
     const menuSubContext = injectMenuSubContext();
     const parentContentContext = injectMenuContentContext();
     const { forwardRef, currentElement: subContentElement } = useForwardExpose();
-    menuSubContext.contentId || (menuSubContext.contentId = useId(void 0, "reka-menu-sub-content"));
+    menuSubContext.contentId ||= useId(void 0, "reka-menu-sub-content");
     return (_ctx, _cache) => {
       return openBlock(), createBlock(unref(Presence_default), { present: _ctx.forceMount || unref(menuContext).open.value }, {
         default: withCtx(() => [createVNode(MenuContentImpl_default, mergeProps(unref(forwarded), {
@@ -1747,15 +1738,13 @@ var MenuSubContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
           "disable-outside-scroll": false,
           "trap-focus": false,
           onOpenAutoFocus: _cache[0] || (_cache[0] = withModifiers((event) => {
-            var _a;
-            if (unref(rootContext).isUsingKeyboardRef.value) (_a = unref(subContentElement)) == null ? void 0 : _a.focus();
+            if (unref(rootContext).isUsingKeyboardRef.value) unref(subContentElement)?.focus();
           }, ["prevent"])),
           onCloseAutoFocus: _cache[1] || (_cache[1] = withModifiers(() => {
           }, ["prevent"])),
           onFocusOutside: _cache[2] || (_cache[2] = (event) => {
-            var _a;
             if (event.defaultPrevented) return;
-            const isMovingToParentContent = (_a = unref(parentContentContext).filterElement.value) == null ? void 0 : _a.contains(event.target);
+            const isMovingToParentContent = unref(parentContentContext).filterElement.value?.contains(event.target);
             if (event.target !== unref(menuSubContext).trigger.value && !isMovingToParentContent) unref(menuContext).onOpenChange(false);
           }),
           onEscapeKeyDown: _cache[3] || (_cache[3] = (event) => {
@@ -1763,16 +1752,15 @@ var MenuSubContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
             event.preventDefault();
           }),
           onKeydown: _cache[4] || (_cache[4] = (event) => {
-            var _a, _b, _c;
-            const isKeyDownInside = (_a = event.currentTarget) == null ? void 0 : _a.contains(event.target);
+            const isKeyDownInside = event.currentTarget?.contains(event.target);
             const isCloseKey = unref(SUB_CLOSE_KEYS)[unref(rootContext).dir.value].includes(event.key);
             if (isKeyDownInside && isCloseKey) {
               unref(menuContext).onOpenChange(false);
               if (unref(parentContentContext).filterElement.value) {
                 unref(parentContentContext).filterElement.value.focus();
                 unref(parentContentContext).highlightedElement.value = unref(menuSubContext).trigger.value;
-                (_b = unref(menuSubContext).trigger.value) == null ? void 0 : _b.scrollIntoView({ block: "nearest" });
-              } else (_c = unref(menuSubContext).trigger.value) == null ? void 0 : _c.focus();
+                unref(menuSubContext).trigger.value?.scrollIntoView({ block: "nearest" });
+              } else unref(menuSubContext).trigger.value?.focus();
               event.preventDefault();
             }
           })
@@ -1817,15 +1805,14 @@ var MenuSubTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
     const subContext = injectMenuSubContext();
     const contentContext = injectMenuContentContext();
     watch(menuContext.open, (open) => {
-      var _a;
       if (open) contentContext.activeSubmenuContext.value = {
         onOpenChange: menuContext.onOpenChange,
         trigger: subContext.trigger
       };
-      else if (((_a = contentContext.activeSubmenuContext.value) == null ? void 0 : _a.trigger.value) === subContext.trigger.value) contentContext.activeSubmenuContext.value = void 0;
+      else if (contentContext.activeSubmenuContext.value?.trigger.value === subContext.trigger.value) contentContext.activeSubmenuContext.value = void 0;
     });
     const openTimerRef = ref(null);
-    subContext.triggerId || (subContext.triggerId = useId(void 0, "reka-menu-sub-trigger"));
+    subContext.triggerId ||= useId(void 0, "reka-menu-sub-trigger");
     function clearOpenTimer() {
       if (openTimerRef.value) (void 0).clearTimeout(openTimerRef.value);
       openTimerRef.value = null;
@@ -1843,12 +1830,11 @@ var MenuSubTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
       }
     }
     async function handlePointerLeave(event) {
-      var _a, _b;
       if (!isMouseEvent(event)) return;
       clearOpenTimer();
-      const contentRect = (_a = menuContext.content.value) == null ? void 0 : _a.getBoundingClientRect();
-      if (contentRect == null ? void 0 : contentRect.width) {
-        const side = (_b = menuContext.content.value) == null ? void 0 : _b.dataset.side;
+      const contentRect = menuContext.content.value?.getBoundingClientRect();
+      if (contentRect?.width) {
+        const side = menuContext.content.value?.dataset.side;
         const rightSide = side === "right";
         const bleed = rightSide ? -5 : 5;
         const contentNearEdge = contentRect[rightSide ? "left" : "right"];
@@ -1887,13 +1873,12 @@ var MenuSubTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
       }
     }
     async function handleKeyDown(event) {
-      var _a;
       const isTypingAhead = contentContext.searchRef.value !== "";
       if (props.disabled || isTypingAhead && event.key === " ") return;
       if (SUB_OPEN_KEYS[rootContext.dir.value].includes(event.key)) {
         menuContext.onOpenChange(true);
         await nextTick();
-        (_a = menuContext.content.value) == null ? void 0 : _a.focus();
+        menuContext.content.value?.focus();
         event.preventDefault();
       }
     }
@@ -1902,9 +1887,8 @@ var MenuSubTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
         default: withCtx(() => [createVNode(MenuItemImpl_default, mergeProps(props, {
           id: unref(subContext).triggerId,
           ref: (vnode) => {
-            var _a;
             if (!vnode) return void 0;
-            (_a = unref(subContext)) == null ? void 0 : _a.onTriggerChange(vnode == null ? void 0 : vnode.$el);
+            unref(subContext)?.onTriggerChange(vnode?.$el);
             return void 0;
           },
           "aria-haspopup": "menu",
@@ -1912,9 +1896,8 @@ var MenuSubTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */
           "aria-controls": unref(subContext).contentId,
           "data-state": unref(getOpenState)(unref(menuContext).open.value),
           onClick: _cache[0] || (_cache[0] = async (event) => {
-            var _a;
             if (props.disabled || event.defaultPrevented) return;
-            (_a = event.currentTarget) == null ? void 0 : _a.focus();
+            event.currentTarget?.focus();
             if (!unref(menuContext).open.value) unref(menuContext).onOpenChange(true);
           }),
           onPointermove: handlePointerMove,
@@ -2196,18 +2179,16 @@ var DropdownMenuContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE
     function handleCloseAutoFocus(event) {
       if (event.defaultPrevented) return;
       if (!hasInteractedOutsideRef.value) setTimeout(() => {
-        var _a;
-        (_a = rootContext.triggerElement.value) == null ? void 0 : _a.focus();
+        rootContext.triggerElement.value?.focus();
       }, 0);
       hasInteractedOutsideRef.value = false;
       event.preventDefault();
     }
-    rootContext.contentId || (rootContext.contentId = useId(void 0, "reka-dropdown-menu-content"));
+    rootContext.contentId ||= useId(void 0, "reka-dropdown-menu-content");
     return (_ctx, _cache) => {
-      var _a;
       return openBlock(), createBlock(unref(MenuContent_default), mergeProps(unref(forwarded), {
         id: unref(rootContext).contentId,
-        "aria-labelledby": (_a = unref(rootContext)) == null ? void 0 : _a.triggerId,
+        "aria-labelledby": unref(rootContext)?.triggerId,
         style: {
           "--reka-dropdown-menu-content-transform-origin": "var(--reka-popper-transform-origin)",
           "--reka-dropdown-menu-content-available-width": "var(--reka-popper-available-width)",
@@ -2217,13 +2198,12 @@ var DropdownMenuContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE
         },
         onCloseAutoFocus: handleCloseAutoFocus,
         onInteractOutside: _cache[0] || (_cache[0] = (event) => {
-          var _a2;
           if (event.defaultPrevented) return;
           const originalEvent = event.detail.originalEvent;
           const ctrlLeftClick = originalEvent.button === 0 && originalEvent.ctrlKey === true;
           const isRightClick = originalEvent.button === 2 || ctrlLeftClick;
           if (!unref(rootContext).modal.value || isRightClick) hasInteractedOutsideRef.value = true;
-          if ((_a2 = unref(rootContext).triggerElement.value) == null ? void 0 : _a2.contains(event.target)) event.preventDefault();
+          if (unref(rootContext).triggerElement.value?.contains(event.target)) event.preventDefault();
         })
       }), {
         default: withCtx(() => [renderSlot(_ctx.$slots, "default")]),
@@ -2270,15 +2250,12 @@ var DropdownMenuFilter_vue_vue_type_script_setup_true_lang_default = /* @__PURE_
     const contentContext = injectMenuContentContext();
     injectMenuSubContext(null);
     watch(modelValue, (v) => {
-      contentContext.searchRef.value = v != null ? v : "";
+      contentContext.searchRef.value = v ?? "";
     }, { immediate: true });
     const { primitiveElement } = usePrimitiveElement();
     const disabled = computed(() => props.disabled || false);
     const activedescendant = ref();
-    watchSyncEffect(() => {
-      var _a;
-      return activedescendant.value = (_a = contentContext.highlightedElement.value) == null ? void 0 : _a.id;
-    });
+    watchSyncEffect(() => activedescendant.value = contentContext.highlightedElement.value?.id);
     const { isComposing, handleCompositionStart, handleCompositionEnd } = useComposing((event) => {
       const el = event.target;
       if (el) {
@@ -2608,12 +2585,11 @@ var DropdownMenuSub_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ *
   },
   emits: ["update:open"],
   setup(__props, { emit: __emit }) {
-    var _a;
     const props = __props;
     const emit = __emit;
     const open = useVModel(props, "open", emit, {
       passive: props.open === void 0,
-      defaultValue: (_a = props.defaultOpen) != null ? _a : false
+      defaultValue: props.defaultOpen ?? false
     });
     useForwardExpose();
     return (_ctx, _cache) => {
@@ -2798,7 +2774,7 @@ var DropdownMenuTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE
     const props = __props;
     const rootContext = injectDropdownMenuRootContext();
     const { forwardRef } = useForwardExpose();
-    rootContext.triggerId || (rootContext.triggerId = useId(void 0, "reka-dropdown-menu-trigger"));
+    rootContext.triggerId ||= useId(void 0, "reka-dropdown-menu-trigger");
     return (_ctx, _cache) => {
       return openBlock(), createBlock(unref(MenuAnchor_default), { "as-child": "" }, {
         default: withCtx(() => [createVNode(unref(Primitive), {
@@ -2814,9 +2790,8 @@ var DropdownMenuTrigger_vue_vue_type_script_setup_true_lang_default = /* @__PURE
           disabled: _ctx.disabled,
           "data-state": unref(rootContext).open.value ? "open" : "closed",
           onClick: _cache[0] || (_cache[0] = async (event) => {
-            var _a;
             if (!_ctx.disabled && event.button === 0 && event.ctrlKey === false) {
-              (_a = unref(rootContext)) == null ? void 0 : _a.onOpenToggle();
+              unref(rootContext)?.onOpenToggle();
               await nextTick();
               if (unref(rootContext).open.value) event.preventDefault();
             }
@@ -2914,11 +2889,10 @@ function useFilter() {
   function filterGroups(groups, searchTerm, options) {
     if (!searchTerm) return groups;
     return groups.map((group) => {
-      var _a;
       const result = [];
       for (const item of group) {
         if (item === void 0 || item === null) continue;
-        if ((_a = options.isStructural) == null ? void 0 : _a.call(options, item)) {
+        if (options.isStructural?.(item)) {
           result.push({ item, score: -1 });
           continue;
         }
@@ -2929,10 +2903,7 @@ function useFilter() {
       }
       result.sort((a, b) => a.score - b.score);
       return result.map(({ item }) => item);
-    }).filter((group) => group.some((item) => {
-      var _a;
-      return !((_a = options.isStructural) == null ? void 0 : _a.call(options, item));
-    }));
+    }).filter((group) => group.some((item) => !options.isStructural?.(item)));
   }
   return { score, scoreItem, filter, filterGroups };
 }
@@ -2940,25 +2911,25 @@ const kbdKeysMap = {
   meta: "",
   ctrl: "",
   alt: "",
-  win: "\u229E",
-  command: "\u2318",
-  shift: "\u21E7",
-  control: "\u2303",
-  option: "\u2325",
-  enter: "\u21B5",
-  delete: "\u2326",
-  backspace: "\u232B",
+  win: "⊞",
+  command: "⌘",
+  shift: "⇧",
+  control: "⌃",
+  option: "⌥",
+  enter: "↵",
+  delete: "⌦",
+  backspace: "⌫",
   escape: "Esc",
-  tab: "\u21E5",
-  capslock: "\u21EA",
-  arrowup: "\u2191",
-  arrowright: "\u2192",
-  arrowdown: "\u2193",
-  arrowleft: "\u2190",
-  pageup: "\u21DE",
-  pagedown: "\u21DF",
-  home: "\u2196",
-  end: "\u2198"
+  tab: "⇥",
+  capslock: "⇪",
+  arrowup: "↑",
+  arrowright: "→",
+  arrowdown: "↓",
+  arrowleft: "←",
+  pageup: "⇞",
+  pagedown: "⇟",
+  home: "↖",
+  end: "↘"
 };
 const _useKbd = () => {
   const macOS = computed(() => false);
@@ -3171,15 +3142,11 @@ const _sfc_main$4 = {
     const props = useComponentProps("kbd", _props);
     const { getKbdKey } = useKbd();
     const appConfig = useAppConfig();
-    const ui = computed(() => {
-      var _a;
-      return tv({ extend: theme$1, ...((_a = appConfig.ui) == null ? void 0 : _a.kbd) || {} });
-    });
+    const ui = computed(() => tv({ extend: theme$1, ...appConfig.ui?.kbd || {} }));
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: unref(props).as,
-        class: ui.value({ class: [(_a = unref(props).ui) == null ? void 0 : _a.base, unref(props).class], color: unref(props).color, variant: unref(props).variant, size: unref(props).size })
+        class: ui.value({ class: [unref(props).ui?.base, unref(props).class], color: unref(props).color, variant: unref(props).variant, size: unref(props).size })
       }, _attrs), {
         default: withCtx((_, _push2, _parent2, _scopeId) => {
           if (_push2) {
@@ -3256,10 +3223,7 @@ const _sfc_main$3 = {
     const { filterGroups } = useFilter();
     const _searchTerm = ref("");
     const searchTerm = computed({
-      get: () => {
-        var _a;
-        return (_a = props.searchTerm) != null ? _a : _searchTerm.value;
-      },
+      get: () => props.searchTerm ?? _searchTerm.value,
       set: (value) => {
         _searchTerm.value = value;
         emits("update:searchTerm", value);
@@ -3272,8 +3236,7 @@ const _sfc_main$3 = {
     const [DefineItemTemplate, ReuseItemTemplate] = createReusableTemplate();
     const childrenIcon = computed(() => dir.value === "rtl" ? appConfig.ui.icons.chevronLeft : appConfig.ui.icons.chevronRight);
     const groups = computed(() => {
-      var _a;
-      if (!((_a = props.items) == null ? void 0 : _a.length)) return [];
+      if (!props.items?.length) return [];
       return isArrayOfArray(props.items) ? props.items : [props.items];
     });
     const isStructuralItem = (item) => !!item.type && ["label", "separator"].includes(item.type);
@@ -3298,39 +3261,37 @@ const _sfc_main$3 = {
               index,
               ui: __props.ui
             }, () => {
-              var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
               ssrRenderSlot(_ctx.$slots, item.slot ? `${item.slot}-leading` : "item-leading", {
                 item,
                 active,
                 index,
                 ui: __props.ui
               }, () => {
-                var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
                 if (item.loading) {
                   _push2(ssrRenderComponent(_sfc_main$e, {
                     name: __props.loadingIcon || unref(appConfig).ui.icons.loading,
                     "data-slot": "itemLeadingIcon",
-                    class: __props.ui.itemLeadingIcon({ class: [(_a2 = __props.uiOverride) == null ? void 0 : _a2.itemLeadingIcon, (_b2 = item.ui) == null ? void 0 : _b2.itemLeadingIcon], color: item == null ? void 0 : item.color, loading: true })
+                    class: __props.ui.itemLeadingIcon({ class: [__props.uiOverride?.itemLeadingIcon, item.ui?.itemLeadingIcon], color: item?.color, loading: true })
                   }, null, _parent2, _scopeId));
                 } else if (item.icon) {
                   _push2(ssrRenderComponent(_sfc_main$e, {
                     name: item.icon,
                     "data-slot": "itemLeadingIcon",
-                    class: __props.ui.itemLeadingIcon({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.itemLeadingIcon, (_d2 = item.ui) == null ? void 0 : _d2.itemLeadingIcon], color: item == null ? void 0 : item.color, active })
+                    class: __props.ui.itemLeadingIcon({ class: [__props.uiOverride?.itemLeadingIcon, item.ui?.itemLeadingIcon], color: item?.color, active })
                   }, null, _parent2, _scopeId));
                 } else if (item.avatar) {
                   _push2(ssrRenderComponent(_sfc_main$b, mergeProps({
-                    size: ((_e2 = item.ui) == null ? void 0 : _e2.itemLeadingAvatarSize) || ((_f2 = __props.uiOverride) == null ? void 0 : _f2.itemLeadingAvatarSize) || __props.ui.itemLeadingAvatarSize()
+                    size: item.ui?.itemLeadingAvatarSize || __props.uiOverride?.itemLeadingAvatarSize || __props.ui.itemLeadingAvatarSize()
                   }, item.avatar, {
                     "data-slot": "itemLeadingAvatar",
-                    class: __props.ui.itemLeadingAvatar({ class: [(_g2 = __props.uiOverride) == null ? void 0 : _g2.itemLeadingAvatar, (_h2 = item.ui) == null ? void 0 : _h2.itemLeadingAvatar], active })
+                    class: __props.ui.itemLeadingAvatar({ class: [__props.uiOverride?.itemLeadingAvatar, item.ui?.itemLeadingAvatar], active })
                   }), null, _parent2, _scopeId));
                 } else {
                   _push2(`<!---->`);
                 }
               }, _push2, _parent2, _scopeId);
               if (unref(get)(item, props.labelKey) || !!slots[item.slot ? `${item.slot}-label` : "item-label"] || (unref(get)(item, props.descriptionKey) || !!slots[item.slot ? `${item.slot}-description` : "item-description"])) {
-                _push2(`<span data-slot="itemWrapper" class="${ssrRenderClass(__props.ui.itemWrapper({ class: [(_a = __props.uiOverride) == null ? void 0 : _a.itemWrapper, (_b = item.ui) == null ? void 0 : _b.itemWrapper] }))}"${_scopeId}><span data-slot="itemLabel" class="${ssrRenderClass(__props.ui.itemLabel({ class: [(_c = __props.uiOverride) == null ? void 0 : _c.itemLabel, (_d = item.ui) == null ? void 0 : _d.itemLabel], active }))}"${_scopeId}>`);
+                _push2(`<span data-slot="itemWrapper" class="${ssrRenderClass(__props.ui.itemWrapper({ class: [__props.uiOverride?.itemWrapper, item.ui?.itemWrapper] }))}"${_scopeId}><span data-slot="itemLabel" class="${ssrRenderClass(__props.ui.itemLabel({ class: [__props.uiOverride?.itemLabel, item.ui?.itemLabel], active }))}"${_scopeId}>`);
                 ssrRenderSlot(_ctx.$slots, item.slot ? `${item.slot}-label` : "item-label", {
                   item,
                   active,
@@ -3342,14 +3303,14 @@ const _sfc_main$3 = {
                   _push2(ssrRenderComponent(_sfc_main$e, {
                     name: typeof __props.externalIcon === "string" ? __props.externalIcon : unref(appConfig).ui.icons.external,
                     "data-slot": "itemLabelExternalIcon",
-                    class: __props.ui.itemLabelExternalIcon({ class: [(_e = __props.uiOverride) == null ? void 0 : _e.itemLabelExternalIcon, (_f = item.ui) == null ? void 0 : _f.itemLabelExternalIcon], color: item == null ? void 0 : item.color, active })
+                    class: __props.ui.itemLabelExternalIcon({ class: [__props.uiOverride?.itemLabelExternalIcon, item.ui?.itemLabelExternalIcon], color: item?.color, active })
                   }, null, _parent2, _scopeId));
                 } else {
                   _push2(`<!---->`);
                 }
                 _push2(`</span>`);
                 if (unref(get)(item, props.descriptionKey) || !!slots[item.slot ? `${item.slot}-description` : "item-description"]) {
-                  _push2(`<span data-slot="itemDescription" class="${ssrRenderClass(__props.ui.itemDescription({ class: [(_g = __props.uiOverride) == null ? void 0 : _g.itemDescription, (_h = item.ui) == null ? void 0 : _h.itemDescription] }))}"${_scopeId}>`);
+                  _push2(`<span data-slot="itemDescription" class="${ssrRenderClass(__props.ui.itemDescription({ class: [__props.uiOverride?.itemDescription, item.ui?.itemDescription] }))}"${_scopeId}>`);
                   ssrRenderSlot(_ctx.$slots, item.slot ? `${item.slot}-description` : "item-description", {
                     item,
                     active,
@@ -3365,27 +3326,25 @@ const _sfc_main$3 = {
               } else {
                 _push2(`<!---->`);
               }
-              _push2(`<span data-slot="itemTrailing" class="${ssrRenderClass(__props.ui.itemTrailing({ class: [(_i = __props.uiOverride) == null ? void 0 : _i.itemTrailing, (_j = item.ui) == null ? void 0 : _j.itemTrailing] }))}"${_scopeId}>`);
+              _push2(`<span data-slot="itemTrailing" class="${ssrRenderClass(__props.ui.itemTrailing({ class: [__props.uiOverride?.itemTrailing, item.ui?.itemTrailing] }))}"${_scopeId}>`);
               ssrRenderSlot(_ctx.$slots, item.slot ? `${item.slot}-trailing` : "item-trailing", {
                 item,
                 active,
                 index,
                 ui: __props.ui
               }, () => {
-                var _a2, _b2, _c2, _d2, _e2, _f2;
-                if ((_a2 = item.children) == null ? void 0 : _a2.length) {
+                if (item.children?.length) {
                   _push2(ssrRenderComponent(_sfc_main$e, {
                     name: childrenIcon.value,
                     "data-slot": "itemTrailingIcon",
-                    class: __props.ui.itemTrailingIcon({ class: [(_b2 = __props.uiOverride) == null ? void 0 : _b2.itemTrailingIcon, (_c2 = item.ui) == null ? void 0 : _c2.itemTrailingIcon], color: item == null ? void 0 : item.color, active })
+                    class: __props.ui.itemTrailingIcon({ class: [__props.uiOverride?.itemTrailingIcon, item.ui?.itemTrailingIcon], color: item?.color, active })
                   }, null, _parent2, _scopeId));
-                } else if ((_d2 = item.kbds) == null ? void 0 : _d2.length) {
-                  _push2(`<span data-slot="itemTrailingKbds" class="${ssrRenderClass(__props.ui.itemTrailingKbds({ class: [(_e2 = __props.uiOverride) == null ? void 0 : _e2.itemTrailingKbds, (_f2 = item.ui) == null ? void 0 : _f2.itemTrailingKbds] }))}"${_scopeId}><!--[-->`);
+                } else if (item.kbds?.length) {
+                  _push2(`<span data-slot="itemTrailingKbds" class="${ssrRenderClass(__props.ui.itemTrailingKbds({ class: [__props.uiOverride?.itemTrailingKbds, item.ui?.itemTrailingKbds] }))}"${_scopeId}><!--[-->`);
                   ssrRenderList(item.kbds, (kbd, kbdIndex) => {
-                    var _a3, _b3;
                     _push2(ssrRenderComponent(_sfc_main$4, mergeProps({
                       key: kbdIndex,
-                      size: ((_a3 = item.ui) == null ? void 0 : _a3.itemTrailingKbdsSize) || ((_b3 = __props.uiOverride) == null ? void 0 : _b3.itemTrailingKbdsSize) || __props.ui.itemTrailingKbdsSize()
+                      size: item.ui?.itemTrailingKbdsSize || __props.uiOverride?.itemTrailingKbdsSize || __props.ui.itemTrailingKbdsSize()
                     }, { ref_for: true }, typeof kbd === "string" ? { value: kbd } : kbd), null, _parent2, _scopeId));
                   });
                   _push2(`<!--]--></span>`);
@@ -3395,19 +3354,18 @@ const _sfc_main$3 = {
               }, _push2, _parent2, _scopeId);
               _push2(ssrRenderComponent(unref(DropdownMenu).ItemIndicator, { "as-child": "" }, {
                 default: withCtx((_, _push3, _parent3, _scopeId2) => {
-                  var _a2, _b2, _c2, _d2;
                   if (_push3) {
                     _push3(ssrRenderComponent(_sfc_main$e, {
                       name: __props.checkedIcon || unref(appConfig).ui.icons.check,
                       "data-slot": "itemTrailingIcon",
-                      class: __props.ui.itemTrailingIcon({ class: [(_a2 = __props.uiOverride) == null ? void 0 : _a2.itemTrailingIcon, (_b2 = item.ui) == null ? void 0 : _b2.itemTrailingIcon], color: item == null ? void 0 : item.color })
+                      class: __props.ui.itemTrailingIcon({ class: [__props.uiOverride?.itemTrailingIcon, item.ui?.itemTrailingIcon], color: item?.color })
                     }, null, _parent3, _scopeId2));
                   } else {
                     return [
                       createVNode(_sfc_main$e, {
                         name: __props.checkedIcon || unref(appConfig).ui.icons.check,
                         "data-slot": "itemTrailingIcon",
-                        class: __props.ui.itemTrailingIcon({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.itemTrailingIcon, (_d2 = item.ui) == null ? void 0 : _d2.itemTrailingIcon], color: item == null ? void 0 : item.color })
+                        class: __props.ui.itemTrailingIcon({ class: [__props.uiOverride?.itemTrailingIcon, item.ui?.itemTrailingIcon], color: item?.color })
                       }, null, 8, ["name", "class"])
                     ];
                   }
@@ -3422,121 +3380,108 @@ const _sfc_main$3 = {
                 item,
                 index,
                 ui: __props.ui
-              }, () => {
-                var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
-                return [
-                  renderSlot(_ctx.$slots, item.slot ? `${item.slot}-leading` : "item-leading", {
+              }, () => [
+                renderSlot(_ctx.$slots, item.slot ? `${item.slot}-leading` : "item-leading", {
+                  item,
+                  active,
+                  index,
+                  ui: __props.ui
+                }, () => [
+                  item.loading ? (openBlock(), createBlock(_sfc_main$e, {
+                    key: 0,
+                    name: __props.loadingIcon || unref(appConfig).ui.icons.loading,
+                    "data-slot": "itemLeadingIcon",
+                    class: __props.ui.itemLeadingIcon({ class: [__props.uiOverride?.itemLeadingIcon, item.ui?.itemLeadingIcon], color: item?.color, loading: true })
+                  }, null, 8, ["name", "class"])) : item.icon ? (openBlock(), createBlock(_sfc_main$e, {
+                    key: 1,
+                    name: item.icon,
+                    "data-slot": "itemLeadingIcon",
+                    class: __props.ui.itemLeadingIcon({ class: [__props.uiOverride?.itemLeadingIcon, item.ui?.itemLeadingIcon], color: item?.color, active })
+                  }, null, 8, ["name", "class"])) : item.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
+                    key: 2,
+                    size: item.ui?.itemLeadingAvatarSize || __props.uiOverride?.itemLeadingAvatarSize || __props.ui.itemLeadingAvatarSize()
+                  }, item.avatar, {
+                    "data-slot": "itemLeadingAvatar",
+                    class: __props.ui.itemLeadingAvatar({ class: [__props.uiOverride?.itemLeadingAvatar, item.ui?.itemLeadingAvatar], active })
+                  }), null, 16, ["size", "class"])) : createCommentVNode("", true)
+                ]),
+                unref(get)(item, props.labelKey) || !!slots[item.slot ? `${item.slot}-label` : "item-label"] || (unref(get)(item, props.descriptionKey) || !!slots[item.slot ? `${item.slot}-description` : "item-description"]) ? (openBlock(), createBlock("span", {
+                  key: 0,
+                  "data-slot": "itemWrapper",
+                  class: __props.ui.itemWrapper({ class: [__props.uiOverride?.itemWrapper, item.ui?.itemWrapper] })
+                }, [
+                  createVNode("span", {
+                    "data-slot": "itemLabel",
+                    class: __props.ui.itemLabel({ class: [__props.uiOverride?.itemLabel, item.ui?.itemLabel], active })
+                  }, [
+                    renderSlot(_ctx.$slots, item.slot ? `${item.slot}-label` : "item-label", {
+                      item,
+                      active,
+                      index
+                    }, () => [
+                      createTextVNode(toDisplayString(unref(get)(item, props.labelKey)), 1)
+                    ]),
+                    item.target === "_blank" && __props.externalIcon !== false ? (openBlock(), createBlock(_sfc_main$e, {
+                      key: 0,
+                      name: typeof __props.externalIcon === "string" ? __props.externalIcon : unref(appConfig).ui.icons.external,
+                      "data-slot": "itemLabelExternalIcon",
+                      class: __props.ui.itemLabelExternalIcon({ class: [__props.uiOverride?.itemLabelExternalIcon, item.ui?.itemLabelExternalIcon], color: item?.color, active })
+                    }, null, 8, ["name", "class"])) : createCommentVNode("", true)
+                  ], 2),
+                  unref(get)(item, props.descriptionKey) || !!slots[item.slot ? `${item.slot}-description` : "item-description"] ? (openBlock(), createBlock("span", {
+                    key: 0,
+                    "data-slot": "itemDescription",
+                    class: __props.ui.itemDescription({ class: [__props.uiOverride?.itemDescription, item.ui?.itemDescription] })
+                  }, [
+                    renderSlot(_ctx.$slots, item.slot ? `${item.slot}-description` : "item-description", {
+                      item,
+                      active,
+                      index
+                    }, () => [
+                      createTextVNode(toDisplayString(unref(get)(item, props.descriptionKey)), 1)
+                    ])
+                  ], 2)) : createCommentVNode("", true)
+                ], 2)) : createCommentVNode("", true),
+                createVNode("span", {
+                  "data-slot": "itemTrailing",
+                  class: __props.ui.itemTrailing({ class: [__props.uiOverride?.itemTrailing, item.ui?.itemTrailing] })
+                }, [
+                  renderSlot(_ctx.$slots, item.slot ? `${item.slot}-trailing` : "item-trailing", {
                     item,
                     active,
                     index,
                     ui: __props.ui
-                  }, () => {
-                    var _a2, _b2, _c2, _d2, _e2, _f2, _g2, _h2;
-                    return [
-                      item.loading ? (openBlock(), createBlock(_sfc_main$e, {
-                        key: 0,
-                        name: __props.loadingIcon || unref(appConfig).ui.icons.loading,
-                        "data-slot": "itemLeadingIcon",
-                        class: __props.ui.itemLeadingIcon({ class: [(_a2 = __props.uiOverride) == null ? void 0 : _a2.itemLeadingIcon, (_b2 = item.ui) == null ? void 0 : _b2.itemLeadingIcon], color: item == null ? void 0 : item.color, loading: true })
-                      }, null, 8, ["name", "class"])) : item.icon ? (openBlock(), createBlock(_sfc_main$e, {
-                        key: 1,
-                        name: item.icon,
-                        "data-slot": "itemLeadingIcon",
-                        class: __props.ui.itemLeadingIcon({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.itemLeadingIcon, (_d2 = item.ui) == null ? void 0 : _d2.itemLeadingIcon], color: item == null ? void 0 : item.color, active })
-                      }, null, 8, ["name", "class"])) : item.avatar ? (openBlock(), createBlock(_sfc_main$b, mergeProps({
-                        key: 2,
-                        size: ((_e2 = item.ui) == null ? void 0 : _e2.itemLeadingAvatarSize) || ((_f2 = __props.uiOverride) == null ? void 0 : _f2.itemLeadingAvatarSize) || __props.ui.itemLeadingAvatarSize()
-                      }, item.avatar, {
-                        "data-slot": "itemLeadingAvatar",
-                        class: __props.ui.itemLeadingAvatar({ class: [(_g2 = __props.uiOverride) == null ? void 0 : _g2.itemLeadingAvatar, (_h2 = item.ui) == null ? void 0 : _h2.itemLeadingAvatar], active })
-                      }), null, 16, ["size", "class"])) : createCommentVNode("", true)
-                    ];
-                  }),
-                  unref(get)(item, props.labelKey) || !!slots[item.slot ? `${item.slot}-label` : "item-label"] || (unref(get)(item, props.descriptionKey) || !!slots[item.slot ? `${item.slot}-description` : "item-description"]) ? (openBlock(), createBlock("span", {
-                    key: 0,
-                    "data-slot": "itemWrapper",
-                    class: __props.ui.itemWrapper({ class: [(_a = __props.uiOverride) == null ? void 0 : _a.itemWrapper, (_b = item.ui) == null ? void 0 : _b.itemWrapper] })
-                  }, [
-                    createVNode("span", {
-                      "data-slot": "itemLabel",
-                      class: __props.ui.itemLabel({ class: [(_c = __props.uiOverride) == null ? void 0 : _c.itemLabel, (_d = item.ui) == null ? void 0 : _d.itemLabel], active })
-                    }, [
-                      renderSlot(_ctx.$slots, item.slot ? `${item.slot}-label` : "item-label", {
-                        item,
-                        active,
-                        index
-                      }, () => [
-                        createTextVNode(toDisplayString(unref(get)(item, props.labelKey)), 1)
-                      ]),
-                      item.target === "_blank" && __props.externalIcon !== false ? (openBlock(), createBlock(_sfc_main$e, {
-                        key: 0,
-                        name: typeof __props.externalIcon === "string" ? __props.externalIcon : unref(appConfig).ui.icons.external,
-                        "data-slot": "itemLabelExternalIcon",
-                        class: __props.ui.itemLabelExternalIcon({ class: [(_e = __props.uiOverride) == null ? void 0 : _e.itemLabelExternalIcon, (_f = item.ui) == null ? void 0 : _f.itemLabelExternalIcon], color: item == null ? void 0 : item.color, active })
-                      }, null, 8, ["name", "class"])) : createCommentVNode("", true)
-                    ], 2),
-                    unref(get)(item, props.descriptionKey) || !!slots[item.slot ? `${item.slot}-description` : "item-description"] ? (openBlock(), createBlock("span", {
+                  }, () => [
+                    item.children?.length ? (openBlock(), createBlock(_sfc_main$e, {
                       key: 0,
-                      "data-slot": "itemDescription",
-                      class: __props.ui.itemDescription({ class: [(_g = __props.uiOverride) == null ? void 0 : _g.itemDescription, (_h = item.ui) == null ? void 0 : _h.itemDescription] })
+                      name: childrenIcon.value,
+                      "data-slot": "itemTrailingIcon",
+                      class: __props.ui.itemTrailingIcon({ class: [__props.uiOverride?.itemTrailingIcon, item.ui?.itemTrailingIcon], color: item?.color, active })
+                    }, null, 8, ["name", "class"])) : item.kbds?.length ? (openBlock(), createBlock("span", {
+                      key: 1,
+                      "data-slot": "itemTrailingKbds",
+                      class: __props.ui.itemTrailingKbds({ class: [__props.uiOverride?.itemTrailingKbds, item.ui?.itemTrailingKbds] })
                     }, [
-                      renderSlot(_ctx.$slots, item.slot ? `${item.slot}-description` : "item-description", {
-                        item,
-                        active,
-                        index
-                      }, () => [
-                        createTextVNode(toDisplayString(unref(get)(item, props.descriptionKey)), 1)
-                      ])
+                      (openBlock(true), createBlock(Fragment, null, renderList(item.kbds, (kbd, kbdIndex) => {
+                        return openBlock(), createBlock(_sfc_main$4, mergeProps({
+                          key: kbdIndex,
+                          size: item.ui?.itemTrailingKbdsSize || __props.uiOverride?.itemTrailingKbdsSize || __props.ui.itemTrailingKbdsSize()
+                        }, { ref_for: true }, typeof kbd === "string" ? { value: kbd } : kbd), null, 16, ["size"]);
+                      }), 128))
                     ], 2)) : createCommentVNode("", true)
-                  ], 2)) : createCommentVNode("", true),
-                  createVNode("span", {
-                    "data-slot": "itemTrailing",
-                    class: __props.ui.itemTrailing({ class: [(_i = __props.uiOverride) == null ? void 0 : _i.itemTrailing, (_j = item.ui) == null ? void 0 : _j.itemTrailing] })
-                  }, [
-                    renderSlot(_ctx.$slots, item.slot ? `${item.slot}-trailing` : "item-trailing", {
-                      item,
-                      active,
-                      index,
-                      ui: __props.ui
-                    }, () => {
-                      var _a2, _b2, _c2, _d2, _e2, _f2;
-                      return [
-                        ((_a2 = item.children) == null ? void 0 : _a2.length) ? (openBlock(), createBlock(_sfc_main$e, {
-                          key: 0,
-                          name: childrenIcon.value,
-                          "data-slot": "itemTrailingIcon",
-                          class: __props.ui.itemTrailingIcon({ class: [(_b2 = __props.uiOverride) == null ? void 0 : _b2.itemTrailingIcon, (_c2 = item.ui) == null ? void 0 : _c2.itemTrailingIcon], color: item == null ? void 0 : item.color, active })
-                        }, null, 8, ["name", "class"])) : ((_d2 = item.kbds) == null ? void 0 : _d2.length) ? (openBlock(), createBlock("span", {
-                          key: 1,
-                          "data-slot": "itemTrailingKbds",
-                          class: __props.ui.itemTrailingKbds({ class: [(_e2 = __props.uiOverride) == null ? void 0 : _e2.itemTrailingKbds, (_f2 = item.ui) == null ? void 0 : _f2.itemTrailingKbds] })
-                        }, [
-                          (openBlock(true), createBlock(Fragment, null, renderList(item.kbds, (kbd, kbdIndex) => {
-                            var _a3, _b3;
-                            return openBlock(), createBlock(_sfc_main$4, mergeProps({
-                              key: kbdIndex,
-                              size: ((_a3 = item.ui) == null ? void 0 : _a3.itemTrailingKbdsSize) || ((_b3 = __props.uiOverride) == null ? void 0 : _b3.itemTrailingKbdsSize) || __props.ui.itemTrailingKbdsSize()
-                            }, { ref_for: true }, typeof kbd === "string" ? { value: kbd } : kbd), null, 16, ["size"]);
-                          }), 128))
-                        ], 2)) : createCommentVNode("", true)
-                      ];
-                    }),
-                    createVNode(unref(DropdownMenu).ItemIndicator, { "as-child": "" }, {
-                      default: withCtx(() => {
-                        var _a2, _b2;
-                        return [
-                          createVNode(_sfc_main$e, {
-                            name: __props.checkedIcon || unref(appConfig).ui.icons.check,
-                            "data-slot": "itemTrailingIcon",
-                            class: __props.ui.itemTrailingIcon({ class: [(_a2 = __props.uiOverride) == null ? void 0 : _a2.itemTrailingIcon, (_b2 = item.ui) == null ? void 0 : _b2.itemTrailingIcon], color: item == null ? void 0 : item.color })
-                          }, null, 8, ["name", "class"])
-                        ];
-                      }),
-                      _: 2
-                    }, 1024)
-                  ], 2)
-                ];
-              })
+                  ]),
+                  createVNode(unref(DropdownMenu).ItemIndicator, { "as-child": "" }, {
+                    default: withCtx(() => [
+                      createVNode(_sfc_main$e, {
+                        name: __props.checkedIcon || unref(appConfig).ui.icons.check,
+                        "data-slot": "itemTrailingIcon",
+                        class: __props.ui.itemTrailingIcon({ class: [__props.uiOverride?.itemTrailingIcon, item.ui?.itemTrailingIcon], color: item?.color })
+                      }, null, 8, ["name", "class"])
+                    ]),
+                    _: 2
+                  }, 1024)
+                ], 2)
+              ])
             ];
           }
         }),
@@ -3547,14 +3492,12 @@ const _sfc_main$3 = {
           if (_push2) {
             _push2(ssrRenderComponent(unref(FieldGroupReset), null, {
               default: withCtx((_2, _push3, _parent3, _scopeId2) => {
-                var _a, _b;
                 if (_push3) {
                   ssrRenderVNode(_push3, createVNode(resolveDynamicComponent(__props.sub ? unref(DropdownMenu).SubContent : unref(DropdownMenu).Content), mergeProps({
                     "data-slot": "content",
-                    class: __props.ui.content({ class: [(_a = __props.uiOverride) == null ? void 0 : _a.content, props.class] })
+                    class: __props.ui.content({ class: [__props.uiOverride?.content, props.class] })
                   }, unref(contentProps)), {
                     default: withCtx((_3, _push4, _parent4, _scopeId3) => {
-                      var _a2, _b2, _c, _d, _e, _f, _g, _h;
                       if (_push4) {
                         if (!!__props.filter) {
                           _push4(ssrRenderComponent(unref(DropdownMenu).Filter, {
@@ -3563,7 +3506,6 @@ const _sfc_main$3 = {
                             "as-child": ""
                           }, {
                             default: withCtx((_4, _push5, _parent5, _scopeId4) => {
-                              var _a3, _b3;
                               if (_push5) {
                                 _push5(ssrRenderComponent(_sfc_main$5, mergeProps({
                                   autofocus: "",
@@ -3571,7 +3513,7 @@ const _sfc_main$3 = {
                                   size: __props.size
                                 }, inputProps.value, {
                                   "data-slot": "input",
-                                  class: __props.ui.input({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.input }),
+                                  class: __props.ui.input({ class: __props.uiOverride?.input }),
                                   onChange: () => {
                                   }
                                 }), null, _parent5, _scopeId4));
@@ -3583,7 +3525,7 @@ const _sfc_main$3 = {
                                     size: __props.size
                                   }, inputProps.value, {
                                     "data-slot": "input",
-                                    class: __props.ui.input({ class: (_b3 = __props.uiOverride) == null ? void 0 : _b3.input }),
+                                    class: __props.ui.input({ class: __props.uiOverride?.input }),
                                     onChange: withModifiers(() => {
                                     }, ["stop"])
                                   }), null, 16, ["size", "class", "onChange"])
@@ -3596,27 +3538,25 @@ const _sfc_main$3 = {
                           _push4(`<!---->`);
                         }
                         ssrRenderSlot(_ctx.$slots, "content-top", {
-                          sub: (_a2 = __props.sub) != null ? _a2 : false
+                          sub: __props.sub ?? false
                         }, null, _push4, _parent4, _scopeId3);
                         if (!searchTerm.value || hasFilteredItems.value) {
-                          _push4(`<div role="presentation" data-slot="viewport" class="${ssrRenderClass(__props.ui.viewport({ class: (_b2 = __props.uiOverride) == null ? void 0 : _b2.viewport }))}"${_scopeId3}><!--[-->`);
+                          _push4(`<div role="presentation" data-slot="viewport" class="${ssrRenderClass(__props.ui.viewport({ class: __props.uiOverride?.viewport }))}"${_scopeId3}><!--[-->`);
                           ssrRenderList(filteredGroups.value, (group, groupIndex) => {
-                            var _a3;
                             _push4(ssrRenderComponent(unref(DropdownMenu).Group, {
                               key: `group-${groupIndex}`,
                               "data-slot": "group",
-                              class: __props.ui.group({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.group })
+                              class: __props.ui.group({ class: __props.uiOverride?.group })
                             }, {
                               default: withCtx((_4, _push5, _parent5, _scopeId4) => {
                                 if (_push5) {
                                   _push5(`<!--[-->`);
                                   ssrRenderList(group, (item, index) => {
-                                    var _a4, _b3, _c2, _d2, _e2, _f2, _g2;
                                     _push5(`<!--[-->`);
                                     if (item.type === "label") {
                                       _push5(ssrRenderComponent(unref(DropdownMenu).Label, {
                                         "data-slot": "label",
-                                        class: __props.ui.label({ class: [(_a4 = __props.uiOverride) == null ? void 0 : _a4.label, (_b3 = item.ui) == null ? void 0 : _b3.label, item.class] })
+                                        class: __props.ui.label({ class: [__props.uiOverride?.label, item.ui?.label, item.class] })
                                       }, {
                                         default: withCtx((_5, _push6, _parent6, _scopeId5) => {
                                           if (_push6) {
@@ -3638,15 +3578,14 @@ const _sfc_main$3 = {
                                     } else if (item.type === "separator") {
                                       _push5(ssrRenderComponent(unref(DropdownMenu).Separator, {
                                         "data-slot": "separator",
-                                        class: __props.ui.separator({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.separator, (_d2 = item.ui) == null ? void 0 : _d2.separator, item.class] })
+                                        class: __props.ui.separator({ class: [__props.uiOverride?.separator, item.ui?.separator, item.class] })
                                       }, null, _parent5, _scopeId4));
-                                    } else if ((_e2 = item == null ? void 0 : item.children) == null ? void 0 : _e2.length) {
+                                    } else if (item?.children?.length) {
                                       _push5(ssrRenderComponent(unref(DropdownMenu).Sub, {
                                         open: item.open,
                                         "default-open": item.defaultOpen
                                       }, {
                                         default: withCtx((_5, _push6, _parent6, _scopeId5) => {
-                                          var _a5, _b4, _c3, _d3, _e3, _f3, _g3, _h2;
                                           if (_push6) {
                                             _push6(ssrRenderComponent(unref(DropdownMenu).SubTrigger, {
                                               as: "button",
@@ -3654,7 +3593,7 @@ const _sfc_main$3 = {
                                               disabled: item.disabled,
                                               "text-value": unref(get)(item, props.labelKey),
                                               "data-slot": "item",
-                                              class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color })
+                                              class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color })
                                             }, {
                                               default: withCtx((_6, _push7, _parent7, _scopeId6) => {
                                                 if (_push7) {
@@ -3675,7 +3614,7 @@ const _sfc_main$3 = {
                                             }, _parent6, _scopeId5));
                                             _push6(ssrRenderComponent(_sfc_main$3, mergeProps({
                                               sub: "",
-                                              class: (_c3 = item.ui) == null ? void 0 : _c3.content,
+                                              class: item.ui?.content,
                                               ui: __props.ui,
                                               "ui-override": __props.uiOverride,
                                               portal: __props.portal,
@@ -3691,7 +3630,7 @@ const _sfc_main$3 = {
                                               size: __props.size,
                                               filter: item.filter,
                                               "filter-fields": item.filterFields || __props.filterFields,
-                                              "ignore-filter": (_d3 = item.ignoreFilter) != null ? _d3 : __props.ignoreFilter
+                                              "ignore-filter": item.ignoreFilter ?? __props.ignoreFilter
                                             }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
                                               renderList(getProxySlots(), (_6, name) => {
                                                 return {
@@ -3716,7 +3655,7 @@ const _sfc_main$3 = {
                                                 disabled: item.disabled,
                                                 "text-value": unref(get)(item, props.labelKey),
                                                 "data-slot": "item",
-                                                class: __props.ui.item({ class: [(_e3 = __props.uiOverride) == null ? void 0 : _e3.item, (_f3 = item.ui) == null ? void 0 : _f3.item, item.class], color: item == null ? void 0 : item.color })
+                                                class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color })
                                               }, {
                                                 default: withCtx(() => [
                                                   createVNode(unref(ReuseItemTemplate), {
@@ -3728,7 +3667,7 @@ const _sfc_main$3 = {
                                               }, 1032, ["disabled", "text-value", "class"]),
                                               createVNode(_sfc_main$3, mergeProps({
                                                 sub: "",
-                                                class: (_g3 = item.ui) == null ? void 0 : _g3.content,
+                                                class: item.ui?.content,
                                                 ui: __props.ui,
                                                 "ui-override": __props.uiOverride,
                                                 portal: __props.portal,
@@ -3744,7 +3683,7 @@ const _sfc_main$3 = {
                                                 size: __props.size,
                                                 filter: item.filter,
                                                 "filter-fields": item.filterFields || __props.filterFields,
-                                                "ignore-filter": (_h2 = item.ignoreFilter) != null ? _h2 : __props.ignoreFilter
+                                                "ignore-filter": item.ignoreFilter ?? __props.ignoreFilter
                                               }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
                                                 renderList(getProxySlots(), (_6, name) => {
                                                   return {
@@ -3766,7 +3705,7 @@ const _sfc_main$3 = {
                                         disabled: item.disabled,
                                         "text-value": unref(get)(item, props.labelKey),
                                         "data-slot": "item",
-                                        class: __props.ui.item({ class: [(_f2 = __props.uiOverride) == null ? void 0 : _f2.item, (_g2 = item.ui) == null ? void 0 : _g2.item, item.class], color: item == null ? void 0 : item.color }),
+                                        class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color }),
                                         "onUpdate:modelValue": item.onUpdateChecked,
                                         onSelect: item.onSelect
                                       }, {
@@ -3798,11 +3737,10 @@ const _sfc_main$3 = {
                                               onSelect: item.onSelect
                                             }, {
                                               default: withCtx((_5, _push7, _parent7, _scopeId6) => {
-                                                var _a5, _b4, _c3, _d3;
                                                 if (_push7) {
                                                   _push7(ssrRenderComponent(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
                                                     "data-slot": "item",
-                                                    class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color, active })
+                                                    class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
                                                   }), {
                                                     default: withCtx((_6, _push8, _parent8, _scopeId7) => {
                                                       if (_push8) {
@@ -3827,7 +3765,7 @@ const _sfc_main$3 = {
                                                   return [
                                                     createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
                                                       "data-slot": "item",
-                                                      class: __props.ui.item({ class: [(_c3 = __props.uiOverride) == null ? void 0 : _c3.item, (_d3 = item.ui) == null ? void 0 : _d3.item, item.class], color: item == null ? void 0 : item.color, active })
+                                                      class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
                                                     }), {
                                                       default: withCtx(() => [
                                                         createVNode(unref(ReuseItemTemplate), {
@@ -3851,24 +3789,21 @@ const _sfc_main$3 = {
                                                 "text-value": unref(get)(item, props.labelKey),
                                                 onSelect: item.onSelect
                                               }, {
-                                                default: withCtx(() => {
-                                                  var _a5, _b4;
-                                                  return [
-                                                    createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
-                                                      "data-slot": "item",
-                                                      class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color, active })
-                                                    }), {
-                                                      default: withCtx(() => [
-                                                        createVNode(unref(ReuseItemTemplate), {
-                                                          item,
-                                                          active,
-                                                          index
-                                                        }, null, 8, ["item", "active", "index"])
-                                                      ]),
-                                                      _: 2
-                                                    }, 1040, ["class"])
-                                                  ];
-                                                }),
+                                                default: withCtx(() => [
+                                                  createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
+                                                    "data-slot": "item",
+                                                    class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
+                                                  }), {
+                                                    default: withCtx(() => [
+                                                      createVNode(unref(ReuseItemTemplate), {
+                                                        item,
+                                                        active,
+                                                        index
+                                                      }, null, 8, ["item", "active", "index"])
+                                                    ]),
+                                                    _: 2
+                                                  }, 1040, ["class"])
+                                                ]),
                                                 _: 2
                                               }, 1032, ["disabled", "text-value", "onSelect"])
                                             ];
@@ -3883,14 +3818,13 @@ const _sfc_main$3 = {
                                 } else {
                                   return [
                                     (openBlock(true), createBlock(Fragment, null, renderList(group, (item, index) => {
-                                      var _a4, _b3, _c2, _d2, _e2, _f2, _g2;
                                       return openBlock(), createBlock(Fragment, {
                                         key: `group-${groupIndex}-${index}`
                                       }, [
                                         item.type === "label" ? (openBlock(), createBlock(unref(DropdownMenu).Label, {
                                           key: 0,
                                           "data-slot": "label",
-                                          class: __props.ui.label({ class: [(_a4 = __props.uiOverride) == null ? void 0 : _a4.label, (_b3 = item.ui) == null ? void 0 : _b3.label, item.class] })
+                                          class: __props.ui.label({ class: [__props.uiOverride?.label, item.ui?.label, item.class] })
                                         }, {
                                           default: withCtx(() => [
                                             createVNode(unref(ReuseItemTemplate), {
@@ -3902,62 +3836,59 @@ const _sfc_main$3 = {
                                         }, 1032, ["class"])) : item.type === "separator" ? (openBlock(), createBlock(unref(DropdownMenu).Separator, {
                                           key: 1,
                                           "data-slot": "separator",
-                                          class: __props.ui.separator({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.separator, (_d2 = item.ui) == null ? void 0 : _d2.separator, item.class] })
-                                        }, null, 8, ["class"])) : ((_e2 = item == null ? void 0 : item.children) == null ? void 0 : _e2.length) ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
+                                          class: __props.ui.separator({ class: [__props.uiOverride?.separator, item.ui?.separator, item.class] })
+                                        }, null, 8, ["class"])) : item?.children?.length ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
                                           key: 2,
                                           open: item.open,
                                           "default-open": item.defaultOpen
                                         }, {
-                                          default: withCtx(() => {
-                                            var _a5, _b4, _c3, _d3;
-                                            return [
-                                              createVNode(unref(DropdownMenu).SubTrigger, {
-                                                as: "button",
-                                                type: "button",
-                                                disabled: item.disabled,
-                                                "text-value": unref(get)(item, props.labelKey),
-                                                "data-slot": "item",
-                                                class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color })
-                                              }, {
-                                                default: withCtx(() => [
-                                                  createVNode(unref(ReuseItemTemplate), {
-                                                    item,
-                                                    index
-                                                  }, null, 8, ["item", "index"])
-                                                ]),
-                                                _: 2
-                                              }, 1032, ["disabled", "text-value", "class"]),
-                                              createVNode(_sfc_main$3, mergeProps({
-                                                sub: "",
-                                                class: (_c3 = item.ui) == null ? void 0 : _c3.content,
-                                                ui: __props.ui,
-                                                "ui-override": __props.uiOverride,
-                                                portal: __props.portal,
-                                                items: item.children,
-                                                align: "start",
-                                                "align-offset": -4,
-                                                "side-offset": 3,
-                                                "label-key": __props.labelKey,
-                                                "description-key": __props.descriptionKey,
-                                                "checked-icon": __props.checkedIcon,
-                                                "loading-icon": __props.loadingIcon,
-                                                "external-icon": __props.externalIcon,
-                                                size: __props.size,
-                                                filter: item.filter,
-                                                "filter-fields": item.filterFields || __props.filterFields,
-                                                "ignore-filter": (_d3 = item.ignoreFilter) != null ? _d3 : __props.ignoreFilter
-                                              }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
-                                                renderList(getProxySlots(), (_5, name) => {
-                                                  return {
-                                                    name,
-                                                    fn: withCtx((slotData) => [
-                                                      renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
-                                                    ])
-                                                  };
-                                                })
-                                              ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
-                                            ];
-                                          }),
+                                          default: withCtx(() => [
+                                            createVNode(unref(DropdownMenu).SubTrigger, {
+                                              as: "button",
+                                              type: "button",
+                                              disabled: item.disabled,
+                                              "text-value": unref(get)(item, props.labelKey),
+                                              "data-slot": "item",
+                                              class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color })
+                                            }, {
+                                              default: withCtx(() => [
+                                                createVNode(unref(ReuseItemTemplate), {
+                                                  item,
+                                                  index
+                                                }, null, 8, ["item", "index"])
+                                              ]),
+                                              _: 2
+                                            }, 1032, ["disabled", "text-value", "class"]),
+                                            createVNode(_sfc_main$3, mergeProps({
+                                              sub: "",
+                                              class: item.ui?.content,
+                                              ui: __props.ui,
+                                              "ui-override": __props.uiOverride,
+                                              portal: __props.portal,
+                                              items: item.children,
+                                              align: "start",
+                                              "align-offset": -4,
+                                              "side-offset": 3,
+                                              "label-key": __props.labelKey,
+                                              "description-key": __props.descriptionKey,
+                                              "checked-icon": __props.checkedIcon,
+                                              "loading-icon": __props.loadingIcon,
+                                              "external-icon": __props.externalIcon,
+                                              size: __props.size,
+                                              filter: item.filter,
+                                              "filter-fields": item.filterFields || __props.filterFields,
+                                              "ignore-filter": item.ignoreFilter ?? __props.ignoreFilter
+                                            }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
+                                              renderList(getProxySlots(), (_5, name) => {
+                                                return {
+                                                  name,
+                                                  fn: withCtx((slotData) => [
+                                                    renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
+                                                  ])
+                                                };
+                                              })
+                                            ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
+                                          ]),
                                           _: 2
                                         }, 1032, ["open", "default-open"])) : item.type === "checkbox" ? (openBlock(), createBlock(unref(DropdownMenu).CheckboxItem, {
                                           key: 3,
@@ -3965,7 +3896,7 @@ const _sfc_main$3 = {
                                           disabled: item.disabled,
                                           "text-value": unref(get)(item, props.labelKey),
                                           "data-slot": "item",
-                                          class: __props.ui.item({ class: [(_f2 = __props.uiOverride) == null ? void 0 : _f2.item, (_g2 = item.ui) == null ? void 0 : _g2.item, item.class], color: item == null ? void 0 : item.color }),
+                                          class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color }),
                                           "onUpdate:modelValue": item.onUpdateChecked,
                                           onSelect: item.onSelect
                                         }, {
@@ -3987,24 +3918,21 @@ const _sfc_main$3 = {
                                               "text-value": unref(get)(item, props.labelKey),
                                               onSelect: item.onSelect
                                             }, {
-                                              default: withCtx(() => {
-                                                var _a5, _b4;
-                                                return [
-                                                  createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
-                                                    "data-slot": "item",
-                                                    class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color, active })
-                                                  }), {
-                                                    default: withCtx(() => [
-                                                      createVNode(unref(ReuseItemTemplate), {
-                                                        item,
-                                                        active,
-                                                        index
-                                                      }, null, 8, ["item", "active", "index"])
-                                                    ]),
-                                                    _: 2
-                                                  }, 1040, ["class"])
-                                                ];
-                                              }),
+                                              default: withCtx(() => [
+                                                createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
+                                                  "data-slot": "item",
+                                                  class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
+                                                }), {
+                                                  default: withCtx(() => [
+                                                    createVNode(unref(ReuseItemTemplate), {
+                                                      item,
+                                                      active,
+                                                      index
+                                                    }, null, 8, ["item", "active", "index"])
+                                                  ]),
+                                                  _: 2
+                                                }, 1040, ["class"])
+                                              ]),
                                               _: 2
                                             }, 1032, ["disabled", "text-value", "onSelect"])
                                           ]),
@@ -4023,7 +3951,7 @@ const _sfc_main$3 = {
                           _push4(`<!---->`);
                         }
                         if (searchTerm.value && !hasFilteredItems.value) {
-                          _push4(`<div data-slot="empty" class="${ssrRenderClass(__props.ui.empty({ class: (_c = __props.uiOverride) == null ? void 0 : _c.empty }))}"${_scopeId3}>`);
+                          _push4(`<div data-slot="empty" class="${ssrRenderClass(__props.ui.empty({ class: __props.uiOverride?.empty }))}"${_scopeId3}>`);
                           ssrRenderSlot(_ctx.$slots, "empty", { searchTerm: searchTerm.value }, () => {
                             _push4(`${ssrInterpolate(unref(t)("dropdownMenu.noMatch", { searchTerm: searchTerm.value }))}`);
                           }, _push4, _parent4, _scopeId3);
@@ -4033,7 +3961,7 @@ const _sfc_main$3 = {
                         }
                         ssrRenderSlot(_ctx.$slots, "default", {}, null, _push4, _parent4, _scopeId3);
                         ssrRenderSlot(_ctx.$slots, "content-bottom", {
-                          sub: (_d = __props.sub) != null ? _d : false
+                          sub: __props.sub ?? false
                         }, null, _push4, _parent4, _scopeId3);
                       } else {
                         return [
@@ -4043,49 +3971,44 @@ const _sfc_main$3 = {
                             "onUpdate:modelValue": ($event) => searchTerm.value = $event,
                             "as-child": ""
                           }, {
-                            default: withCtx(() => {
-                              var _a3;
-                              return [
-                                createVNode(_sfc_main$5, mergeProps({
-                                  autofocus: "",
-                                  autocomplete: "off",
-                                  size: __props.size
-                                }, inputProps.value, {
-                                  "data-slot": "input",
-                                  class: __props.ui.input({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.input }),
-                                  onChange: withModifiers(() => {
-                                  }, ["stop"])
-                                }), null, 16, ["size", "class", "onChange"])
-                              ];
-                            }),
+                            default: withCtx(() => [
+                              createVNode(_sfc_main$5, mergeProps({
+                                autofocus: "",
+                                autocomplete: "off",
+                                size: __props.size
+                              }, inputProps.value, {
+                                "data-slot": "input",
+                                class: __props.ui.input({ class: __props.uiOverride?.input }),
+                                onChange: withModifiers(() => {
+                                }, ["stop"])
+                              }), null, 16, ["size", "class", "onChange"])
+                            ]),
                             _: 1
                           }, 8, ["modelValue", "onUpdate:modelValue"])) : createCommentVNode("", true),
                           renderSlot(_ctx.$slots, "content-top", {
-                            sub: (_e = __props.sub) != null ? _e : false
+                            sub: __props.sub ?? false
                           }),
                           !searchTerm.value || hasFilteredItems.value ? (openBlock(), createBlock("div", {
                             key: 1,
                             role: "presentation",
                             "data-slot": "viewport",
-                            class: __props.ui.viewport({ class: (_f = __props.uiOverride) == null ? void 0 : _f.viewport })
+                            class: __props.ui.viewport({ class: __props.uiOverride?.viewport })
                           }, [
                             (openBlock(true), createBlock(Fragment, null, renderList(filteredGroups.value, (group, groupIndex) => {
-                              var _a3;
                               return openBlock(), createBlock(unref(DropdownMenu).Group, {
                                 key: `group-${groupIndex}`,
                                 "data-slot": "group",
-                                class: __props.ui.group({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.group })
+                                class: __props.ui.group({ class: __props.uiOverride?.group })
                               }, {
                                 default: withCtx(() => [
                                   (openBlock(true), createBlock(Fragment, null, renderList(group, (item, index) => {
-                                    var _a4, _b3, _c2, _d2, _e2, _f2, _g2;
                                     return openBlock(), createBlock(Fragment, {
                                       key: `group-${groupIndex}-${index}`
                                     }, [
                                       item.type === "label" ? (openBlock(), createBlock(unref(DropdownMenu).Label, {
                                         key: 0,
                                         "data-slot": "label",
-                                        class: __props.ui.label({ class: [(_a4 = __props.uiOverride) == null ? void 0 : _a4.label, (_b3 = item.ui) == null ? void 0 : _b3.label, item.class] })
+                                        class: __props.ui.label({ class: [__props.uiOverride?.label, item.ui?.label, item.class] })
                                       }, {
                                         default: withCtx(() => [
                                           createVNode(unref(ReuseItemTemplate), {
@@ -4097,62 +4020,59 @@ const _sfc_main$3 = {
                                       }, 1032, ["class"])) : item.type === "separator" ? (openBlock(), createBlock(unref(DropdownMenu).Separator, {
                                         key: 1,
                                         "data-slot": "separator",
-                                        class: __props.ui.separator({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.separator, (_d2 = item.ui) == null ? void 0 : _d2.separator, item.class] })
-                                      }, null, 8, ["class"])) : ((_e2 = item == null ? void 0 : item.children) == null ? void 0 : _e2.length) ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
+                                        class: __props.ui.separator({ class: [__props.uiOverride?.separator, item.ui?.separator, item.class] })
+                                      }, null, 8, ["class"])) : item?.children?.length ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
                                         key: 2,
                                         open: item.open,
                                         "default-open": item.defaultOpen
                                       }, {
-                                        default: withCtx(() => {
-                                          var _a5, _b4, _c3, _d3;
-                                          return [
-                                            createVNode(unref(DropdownMenu).SubTrigger, {
-                                              as: "button",
-                                              type: "button",
-                                              disabled: item.disabled,
-                                              "text-value": unref(get)(item, props.labelKey),
-                                              "data-slot": "item",
-                                              class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color })
-                                            }, {
-                                              default: withCtx(() => [
-                                                createVNode(unref(ReuseItemTemplate), {
-                                                  item,
-                                                  index
-                                                }, null, 8, ["item", "index"])
-                                              ]),
-                                              _: 2
-                                            }, 1032, ["disabled", "text-value", "class"]),
-                                            createVNode(_sfc_main$3, mergeProps({
-                                              sub: "",
-                                              class: (_c3 = item.ui) == null ? void 0 : _c3.content,
-                                              ui: __props.ui,
-                                              "ui-override": __props.uiOverride,
-                                              portal: __props.portal,
-                                              items: item.children,
-                                              align: "start",
-                                              "align-offset": -4,
-                                              "side-offset": 3,
-                                              "label-key": __props.labelKey,
-                                              "description-key": __props.descriptionKey,
-                                              "checked-icon": __props.checkedIcon,
-                                              "loading-icon": __props.loadingIcon,
-                                              "external-icon": __props.externalIcon,
-                                              size: __props.size,
-                                              filter: item.filter,
-                                              "filter-fields": item.filterFields || __props.filterFields,
-                                              "ignore-filter": (_d3 = item.ignoreFilter) != null ? _d3 : __props.ignoreFilter
-                                            }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
-                                              renderList(getProxySlots(), (_4, name) => {
-                                                return {
-                                                  name,
-                                                  fn: withCtx((slotData) => [
-                                                    renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
-                                                  ])
-                                                };
-                                              })
-                                            ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
-                                          ];
-                                        }),
+                                        default: withCtx(() => [
+                                          createVNode(unref(DropdownMenu).SubTrigger, {
+                                            as: "button",
+                                            type: "button",
+                                            disabled: item.disabled,
+                                            "text-value": unref(get)(item, props.labelKey),
+                                            "data-slot": "item",
+                                            class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color })
+                                          }, {
+                                            default: withCtx(() => [
+                                              createVNode(unref(ReuseItemTemplate), {
+                                                item,
+                                                index
+                                              }, null, 8, ["item", "index"])
+                                            ]),
+                                            _: 2
+                                          }, 1032, ["disabled", "text-value", "class"]),
+                                          createVNode(_sfc_main$3, mergeProps({
+                                            sub: "",
+                                            class: item.ui?.content,
+                                            ui: __props.ui,
+                                            "ui-override": __props.uiOverride,
+                                            portal: __props.portal,
+                                            items: item.children,
+                                            align: "start",
+                                            "align-offset": -4,
+                                            "side-offset": 3,
+                                            "label-key": __props.labelKey,
+                                            "description-key": __props.descriptionKey,
+                                            "checked-icon": __props.checkedIcon,
+                                            "loading-icon": __props.loadingIcon,
+                                            "external-icon": __props.externalIcon,
+                                            size: __props.size,
+                                            filter: item.filter,
+                                            "filter-fields": item.filterFields || __props.filterFields,
+                                            "ignore-filter": item.ignoreFilter ?? __props.ignoreFilter
+                                          }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
+                                            renderList(getProxySlots(), (_4, name) => {
+                                              return {
+                                                name,
+                                                fn: withCtx((slotData) => [
+                                                  renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
+                                                ])
+                                              };
+                                            })
+                                          ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
+                                        ]),
                                         _: 2
                                       }, 1032, ["open", "default-open"])) : item.type === "checkbox" ? (openBlock(), createBlock(unref(DropdownMenu).CheckboxItem, {
                                         key: 3,
@@ -4160,7 +4080,7 @@ const _sfc_main$3 = {
                                         disabled: item.disabled,
                                         "text-value": unref(get)(item, props.labelKey),
                                         "data-slot": "item",
-                                        class: __props.ui.item({ class: [(_f2 = __props.uiOverride) == null ? void 0 : _f2.item, (_g2 = item.ui) == null ? void 0 : _g2.item, item.class], color: item == null ? void 0 : item.color }),
+                                        class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color }),
                                         "onUpdate:modelValue": item.onUpdateChecked,
                                         onSelect: item.onSelect
                                       }, {
@@ -4182,24 +4102,21 @@ const _sfc_main$3 = {
                                             "text-value": unref(get)(item, props.labelKey),
                                             onSelect: item.onSelect
                                           }, {
-                                            default: withCtx(() => {
-                                              var _a5, _b4;
-                                              return [
-                                                createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
-                                                  "data-slot": "item",
-                                                  class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color, active })
-                                                }), {
-                                                  default: withCtx(() => [
-                                                    createVNode(unref(ReuseItemTemplate), {
-                                                      item,
-                                                      active,
-                                                      index
-                                                    }, null, 8, ["item", "active", "index"])
-                                                  ]),
-                                                  _: 2
-                                                }, 1040, ["class"])
-                                              ];
-                                            }),
+                                            default: withCtx(() => [
+                                              createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
+                                                "data-slot": "item",
+                                                class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
+                                              }), {
+                                                default: withCtx(() => [
+                                                  createVNode(unref(ReuseItemTemplate), {
+                                                    item,
+                                                    active,
+                                                    index
+                                                  }, null, 8, ["item", "active", "index"])
+                                                ]),
+                                                _: 2
+                                              }, 1040, ["class"])
+                                            ]),
                                             _: 2
                                           }, 1032, ["disabled", "text-value", "onSelect"])
                                         ]),
@@ -4215,7 +4132,7 @@ const _sfc_main$3 = {
                           searchTerm.value && !hasFilteredItems.value ? (openBlock(), createBlock("div", {
                             key: 2,
                             "data-slot": "empty",
-                            class: __props.ui.empty({ class: (_g = __props.uiOverride) == null ? void 0 : _g.empty })
+                            class: __props.ui.empty({ class: __props.uiOverride?.empty })
                           }, [
                             renderSlot(_ctx.$slots, "empty", { searchTerm: searchTerm.value }, () => [
                               createTextVNode(toDisplayString(unref(t)("dropdownMenu.noMatch", { searchTerm: searchTerm.value })), 1)
@@ -4223,7 +4140,7 @@ const _sfc_main$3 = {
                           ], 2)) : createCommentVNode("", true),
                           renderSlot(_ctx.$slots, "default"),
                           renderSlot(_ctx.$slots, "content-bottom", {
-                            sub: (_h = __props.sub) != null ? _h : false
+                            sub: __props.sub ?? false
                           })
                         ];
                       }
@@ -4234,201 +4151,187 @@ const _sfc_main$3 = {
                   return [
                     (openBlock(), createBlock(resolveDynamicComponent(__props.sub ? unref(DropdownMenu).SubContent : unref(DropdownMenu).Content), mergeProps({
                       "data-slot": "content",
-                      class: __props.ui.content({ class: [(_b = __props.uiOverride) == null ? void 0 : _b.content, props.class] })
+                      class: __props.ui.content({ class: [__props.uiOverride?.content, props.class] })
                     }, unref(contentProps)), {
-                      default: withCtx(() => {
-                        var _a2, _b2, _c, _d;
-                        return [
-                          !!__props.filter ? (openBlock(), createBlock(unref(DropdownMenu).Filter, {
-                            key: 0,
-                            modelValue: searchTerm.value,
-                            "onUpdate:modelValue": ($event) => searchTerm.value = $event,
-                            "as-child": ""
-                          }, {
-                            default: withCtx(() => {
-                              var _a3;
-                              return [
-                                createVNode(_sfc_main$5, mergeProps({
-                                  autofocus: "",
-                                  autocomplete: "off",
-                                  size: __props.size
-                                }, inputProps.value, {
-                                  "data-slot": "input",
-                                  class: __props.ui.input({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.input }),
-                                  onChange: withModifiers(() => {
-                                  }, ["stop"])
-                                }), null, 16, ["size", "class", "onChange"])
-                              ];
-                            }),
-                            _: 1
-                          }, 8, ["modelValue", "onUpdate:modelValue"])) : createCommentVNode("", true),
-                          renderSlot(_ctx.$slots, "content-top", {
-                            sub: (_a2 = __props.sub) != null ? _a2 : false
-                          }),
-                          !searchTerm.value || hasFilteredItems.value ? (openBlock(), createBlock("div", {
-                            key: 1,
-                            role: "presentation",
-                            "data-slot": "viewport",
-                            class: __props.ui.viewport({ class: (_b2 = __props.uiOverride) == null ? void 0 : _b2.viewport })
-                          }, [
-                            (openBlock(true), createBlock(Fragment, null, renderList(filteredGroups.value, (group, groupIndex) => {
-                              var _a3;
-                              return openBlock(), createBlock(unref(DropdownMenu).Group, {
-                                key: `group-${groupIndex}`,
-                                "data-slot": "group",
-                                class: __props.ui.group({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.group })
-                              }, {
-                                default: withCtx(() => [
-                                  (openBlock(true), createBlock(Fragment, null, renderList(group, (item, index) => {
-                                    var _a4, _b3, _c2, _d2, _e, _f, _g;
-                                    return openBlock(), createBlock(Fragment, {
-                                      key: `group-${groupIndex}-${index}`
-                                    }, [
-                                      item.type === "label" ? (openBlock(), createBlock(unref(DropdownMenu).Label, {
-                                        key: 0,
-                                        "data-slot": "label",
-                                        class: __props.ui.label({ class: [(_a4 = __props.uiOverride) == null ? void 0 : _a4.label, (_b3 = item.ui) == null ? void 0 : _b3.label, item.class] })
-                                      }, {
-                                        default: withCtx(() => [
-                                          createVNode(unref(ReuseItemTemplate), {
-                                            item,
-                                            index
-                                          }, null, 8, ["item", "index"])
-                                        ]),
-                                        _: 2
-                                      }, 1032, ["class"])) : item.type === "separator" ? (openBlock(), createBlock(unref(DropdownMenu).Separator, {
-                                        key: 1,
-                                        "data-slot": "separator",
-                                        class: __props.ui.separator({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.separator, (_d2 = item.ui) == null ? void 0 : _d2.separator, item.class] })
-                                      }, null, 8, ["class"])) : ((_e = item == null ? void 0 : item.children) == null ? void 0 : _e.length) ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
-                                        key: 2,
-                                        open: item.open,
-                                        "default-open": item.defaultOpen
-                                      }, {
-                                        default: withCtx(() => {
-                                          var _a5, _b4, _c3, _d3;
-                                          return [
-                                            createVNode(unref(DropdownMenu).SubTrigger, {
-                                              as: "button",
-                                              type: "button",
-                                              disabled: item.disabled,
-                                              "text-value": unref(get)(item, props.labelKey),
+                      default: withCtx(() => [
+                        !!__props.filter ? (openBlock(), createBlock(unref(DropdownMenu).Filter, {
+                          key: 0,
+                          modelValue: searchTerm.value,
+                          "onUpdate:modelValue": ($event) => searchTerm.value = $event,
+                          "as-child": ""
+                        }, {
+                          default: withCtx(() => [
+                            createVNode(_sfc_main$5, mergeProps({
+                              autofocus: "",
+                              autocomplete: "off",
+                              size: __props.size
+                            }, inputProps.value, {
+                              "data-slot": "input",
+                              class: __props.ui.input({ class: __props.uiOverride?.input }),
+                              onChange: withModifiers(() => {
+                              }, ["stop"])
+                            }), null, 16, ["size", "class", "onChange"])
+                          ]),
+                          _: 1
+                        }, 8, ["modelValue", "onUpdate:modelValue"])) : createCommentVNode("", true),
+                        renderSlot(_ctx.$slots, "content-top", {
+                          sub: __props.sub ?? false
+                        }),
+                        !searchTerm.value || hasFilteredItems.value ? (openBlock(), createBlock("div", {
+                          key: 1,
+                          role: "presentation",
+                          "data-slot": "viewport",
+                          class: __props.ui.viewport({ class: __props.uiOverride?.viewport })
+                        }, [
+                          (openBlock(true), createBlock(Fragment, null, renderList(filteredGroups.value, (group, groupIndex) => {
+                            return openBlock(), createBlock(unref(DropdownMenu).Group, {
+                              key: `group-${groupIndex}`,
+                              "data-slot": "group",
+                              class: __props.ui.group({ class: __props.uiOverride?.group })
+                            }, {
+                              default: withCtx(() => [
+                                (openBlock(true), createBlock(Fragment, null, renderList(group, (item, index) => {
+                                  return openBlock(), createBlock(Fragment, {
+                                    key: `group-${groupIndex}-${index}`
+                                  }, [
+                                    item.type === "label" ? (openBlock(), createBlock(unref(DropdownMenu).Label, {
+                                      key: 0,
+                                      "data-slot": "label",
+                                      class: __props.ui.label({ class: [__props.uiOverride?.label, item.ui?.label, item.class] })
+                                    }, {
+                                      default: withCtx(() => [
+                                        createVNode(unref(ReuseItemTemplate), {
+                                          item,
+                                          index
+                                        }, null, 8, ["item", "index"])
+                                      ]),
+                                      _: 2
+                                    }, 1032, ["class"])) : item.type === "separator" ? (openBlock(), createBlock(unref(DropdownMenu).Separator, {
+                                      key: 1,
+                                      "data-slot": "separator",
+                                      class: __props.ui.separator({ class: [__props.uiOverride?.separator, item.ui?.separator, item.class] })
+                                    }, null, 8, ["class"])) : item?.children?.length ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
+                                      key: 2,
+                                      open: item.open,
+                                      "default-open": item.defaultOpen
+                                    }, {
+                                      default: withCtx(() => [
+                                        createVNode(unref(DropdownMenu).SubTrigger, {
+                                          as: "button",
+                                          type: "button",
+                                          disabled: item.disabled,
+                                          "text-value": unref(get)(item, props.labelKey),
+                                          "data-slot": "item",
+                                          class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color })
+                                        }, {
+                                          default: withCtx(() => [
+                                            createVNode(unref(ReuseItemTemplate), {
+                                              item,
+                                              index
+                                            }, null, 8, ["item", "index"])
+                                          ]),
+                                          _: 2
+                                        }, 1032, ["disabled", "text-value", "class"]),
+                                        createVNode(_sfc_main$3, mergeProps({
+                                          sub: "",
+                                          class: item.ui?.content,
+                                          ui: __props.ui,
+                                          "ui-override": __props.uiOverride,
+                                          portal: __props.portal,
+                                          items: item.children,
+                                          align: "start",
+                                          "align-offset": -4,
+                                          "side-offset": 3,
+                                          "label-key": __props.labelKey,
+                                          "description-key": __props.descriptionKey,
+                                          "checked-icon": __props.checkedIcon,
+                                          "loading-icon": __props.loadingIcon,
+                                          "external-icon": __props.externalIcon,
+                                          size: __props.size,
+                                          filter: item.filter,
+                                          "filter-fields": item.filterFields || __props.filterFields,
+                                          "ignore-filter": item.ignoreFilter ?? __props.ignoreFilter
+                                        }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
+                                          renderList(getProxySlots(), (_3, name) => {
+                                            return {
+                                              name,
+                                              fn: withCtx((slotData) => [
+                                                renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
+                                              ])
+                                            };
+                                          })
+                                        ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
+                                      ]),
+                                      _: 2
+                                    }, 1032, ["open", "default-open"])) : item.type === "checkbox" ? (openBlock(), createBlock(unref(DropdownMenu).CheckboxItem, {
+                                      key: 3,
+                                      "model-value": item.checked,
+                                      disabled: item.disabled,
+                                      "text-value": unref(get)(item, props.labelKey),
+                                      "data-slot": "item",
+                                      class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color }),
+                                      "onUpdate:modelValue": item.onUpdateChecked,
+                                      onSelect: item.onSelect
+                                    }, {
+                                      default: withCtx(() => [
+                                        createVNode(unref(ReuseItemTemplate), {
+                                          item,
+                                          index
+                                        }, null, 8, ["item", "index"])
+                                      ]),
+                                      _: 2
+                                    }, 1032, ["model-value", "disabled", "text-value", "class", "onUpdate:modelValue", "onSelect"])) : (openBlock(), createBlock(_sfc_main$9, mergeProps({
+                                      key: 4,
+                                      ref_for: true
+                                    }, unref(pickLinkProps)(item), { custom: "" }), {
+                                      default: withCtx(({ active, ...slotProps }) => [
+                                        createVNode(unref(DropdownMenu).Item, {
+                                          "as-child": "",
+                                          disabled: item.disabled,
+                                          "text-value": unref(get)(item, props.labelKey),
+                                          onSelect: item.onSelect
+                                        }, {
+                                          default: withCtx(() => [
+                                            createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
                                               "data-slot": "item",
-                                              class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color })
-                                            }, {
+                                              class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
+                                            }), {
                                               default: withCtx(() => [
                                                 createVNode(unref(ReuseItemTemplate), {
                                                   item,
+                                                  active,
                                                   index
-                                                }, null, 8, ["item", "index"])
+                                                }, null, 8, ["item", "active", "index"])
                                               ]),
                                               _: 2
-                                            }, 1032, ["disabled", "text-value", "class"]),
-                                            createVNode(_sfc_main$3, mergeProps({
-                                              sub: "",
-                                              class: (_c3 = item.ui) == null ? void 0 : _c3.content,
-                                              ui: __props.ui,
-                                              "ui-override": __props.uiOverride,
-                                              portal: __props.portal,
-                                              items: item.children,
-                                              align: "start",
-                                              "align-offset": -4,
-                                              "side-offset": 3,
-                                              "label-key": __props.labelKey,
-                                              "description-key": __props.descriptionKey,
-                                              "checked-icon": __props.checkedIcon,
-                                              "loading-icon": __props.loadingIcon,
-                                              "external-icon": __props.externalIcon,
-                                              size: __props.size,
-                                              filter: item.filter,
-                                              "filter-fields": item.filterFields || __props.filterFields,
-                                              "ignore-filter": (_d3 = item.ignoreFilter) != null ? _d3 : __props.ignoreFilter
-                                            }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
-                                              renderList(getProxySlots(), (_3, name) => {
-                                                return {
-                                                  name,
-                                                  fn: withCtx((slotData) => [
-                                                    renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
-                                                  ])
-                                                };
-                                              })
-                                            ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
-                                          ];
-                                        }),
-                                        _: 2
-                                      }, 1032, ["open", "default-open"])) : item.type === "checkbox" ? (openBlock(), createBlock(unref(DropdownMenu).CheckboxItem, {
-                                        key: 3,
-                                        "model-value": item.checked,
-                                        disabled: item.disabled,
-                                        "text-value": unref(get)(item, props.labelKey),
-                                        "data-slot": "item",
-                                        class: __props.ui.item({ class: [(_f = __props.uiOverride) == null ? void 0 : _f.item, (_g = item.ui) == null ? void 0 : _g.item, item.class], color: item == null ? void 0 : item.color }),
-                                        "onUpdate:modelValue": item.onUpdateChecked,
-                                        onSelect: item.onSelect
-                                      }, {
-                                        default: withCtx(() => [
-                                          createVNode(unref(ReuseItemTemplate), {
-                                            item,
-                                            index
-                                          }, null, 8, ["item", "index"])
-                                        ]),
-                                        _: 2
-                                      }, 1032, ["model-value", "disabled", "text-value", "class", "onUpdate:modelValue", "onSelect"])) : (openBlock(), createBlock(_sfc_main$9, mergeProps({
-                                        key: 4,
-                                        ref_for: true
-                                      }, unref(pickLinkProps)(item), { custom: "" }), {
-                                        default: withCtx(({ active, ...slotProps }) => [
-                                          createVNode(unref(DropdownMenu).Item, {
-                                            "as-child": "",
-                                            disabled: item.disabled,
-                                            "text-value": unref(get)(item, props.labelKey),
-                                            onSelect: item.onSelect
-                                          }, {
-                                            default: withCtx(() => {
-                                              var _a5, _b4;
-                                              return [
-                                                createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
-                                                  "data-slot": "item",
-                                                  class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b4 = item.ui) == null ? void 0 : _b4.item, item.class], color: item == null ? void 0 : item.color, active })
-                                                }), {
-                                                  default: withCtx(() => [
-                                                    createVNode(unref(ReuseItemTemplate), {
-                                                      item,
-                                                      active,
-                                                      index
-                                                    }, null, 8, ["item", "active", "index"])
-                                                  ]),
-                                                  _: 2
-                                                }, 1040, ["class"])
-                                              ];
-                                            }),
-                                            _: 2
-                                          }, 1032, ["disabled", "text-value", "onSelect"])
-                                        ]),
-                                        _: 2
-                                      }, 1040))
-                                    ], 64);
-                                  }), 128))
-                                ]),
-                                _: 2
-                              }, 1032, ["class"]);
-                            }), 128))
-                          ], 2)) : createCommentVNode("", true),
-                          searchTerm.value && !hasFilteredItems.value ? (openBlock(), createBlock("div", {
-                            key: 2,
-                            "data-slot": "empty",
-                            class: __props.ui.empty({ class: (_c = __props.uiOverride) == null ? void 0 : _c.empty })
-                          }, [
-                            renderSlot(_ctx.$slots, "empty", { searchTerm: searchTerm.value }, () => [
-                              createTextVNode(toDisplayString(unref(t)("dropdownMenu.noMatch", { searchTerm: searchTerm.value })), 1)
-                            ])
-                          ], 2)) : createCommentVNode("", true),
-                          renderSlot(_ctx.$slots, "default"),
-                          renderSlot(_ctx.$slots, "content-bottom", {
-                            sub: (_d = __props.sub) != null ? _d : false
-                          })
-                        ];
-                      }),
+                                            }, 1040, ["class"])
+                                          ]),
+                                          _: 2
+                                        }, 1032, ["disabled", "text-value", "onSelect"])
+                                      ]),
+                                      _: 2
+                                    }, 1040))
+                                  ], 64);
+                                }), 128))
+                              ]),
+                              _: 2
+                            }, 1032, ["class"]);
+                          }), 128))
+                        ], 2)) : createCommentVNode("", true),
+                        searchTerm.value && !hasFilteredItems.value ? (openBlock(), createBlock("div", {
+                          key: 2,
+                          "data-slot": "empty",
+                          class: __props.ui.empty({ class: __props.uiOverride?.empty })
+                        }, [
+                          renderSlot(_ctx.$slots, "empty", { searchTerm: searchTerm.value }, () => [
+                            createTextVNode(toDisplayString(unref(t)("dropdownMenu.noMatch", { searchTerm: searchTerm.value })), 1)
+                          ])
+                        ], 2)) : createCommentVNode("", true),
+                        renderSlot(_ctx.$slots, "default"),
+                        renderSlot(_ctx.$slots, "content-bottom", {
+                          sub: __props.sub ?? false
+                        })
+                      ]),
                       _: 3
                     }, 16, ["class"]))
                   ];
@@ -4439,142 +4342,81 @@ const _sfc_main$3 = {
           } else {
             return [
               createVNode(unref(FieldGroupReset), null, {
-                default: withCtx(() => {
-                  var _a;
-                  return [
-                    (openBlock(), createBlock(resolveDynamicComponent(__props.sub ? unref(DropdownMenu).SubContent : unref(DropdownMenu).Content), mergeProps({
-                      "data-slot": "content",
-                      class: __props.ui.content({ class: [(_a = __props.uiOverride) == null ? void 0 : _a.content, props.class] })
-                    }, unref(contentProps)), {
-                      default: withCtx(() => {
-                        var _a2, _b, _c, _d;
-                        return [
-                          !!__props.filter ? (openBlock(), createBlock(unref(DropdownMenu).Filter, {
-                            key: 0,
-                            modelValue: searchTerm.value,
-                            "onUpdate:modelValue": ($event) => searchTerm.value = $event,
-                            "as-child": ""
+                default: withCtx(() => [
+                  (openBlock(), createBlock(resolveDynamicComponent(__props.sub ? unref(DropdownMenu).SubContent : unref(DropdownMenu).Content), mergeProps({
+                    "data-slot": "content",
+                    class: __props.ui.content({ class: [__props.uiOverride?.content, props.class] })
+                  }, unref(contentProps)), {
+                    default: withCtx(() => [
+                      !!__props.filter ? (openBlock(), createBlock(unref(DropdownMenu).Filter, {
+                        key: 0,
+                        modelValue: searchTerm.value,
+                        "onUpdate:modelValue": ($event) => searchTerm.value = $event,
+                        "as-child": ""
+                      }, {
+                        default: withCtx(() => [
+                          createVNode(_sfc_main$5, mergeProps({
+                            autofocus: "",
+                            autocomplete: "off",
+                            size: __props.size
+                          }, inputProps.value, {
+                            "data-slot": "input",
+                            class: __props.ui.input({ class: __props.uiOverride?.input }),
+                            onChange: withModifiers(() => {
+                            }, ["stop"])
+                          }), null, 16, ["size", "class", "onChange"])
+                        ]),
+                        _: 1
+                      }, 8, ["modelValue", "onUpdate:modelValue"])) : createCommentVNode("", true),
+                      renderSlot(_ctx.$slots, "content-top", {
+                        sub: __props.sub ?? false
+                      }),
+                      !searchTerm.value || hasFilteredItems.value ? (openBlock(), createBlock("div", {
+                        key: 1,
+                        role: "presentation",
+                        "data-slot": "viewport",
+                        class: __props.ui.viewport({ class: __props.uiOverride?.viewport })
+                      }, [
+                        (openBlock(true), createBlock(Fragment, null, renderList(filteredGroups.value, (group, groupIndex) => {
+                          return openBlock(), createBlock(unref(DropdownMenu).Group, {
+                            key: `group-${groupIndex}`,
+                            "data-slot": "group",
+                            class: __props.ui.group({ class: __props.uiOverride?.group })
                           }, {
-                            default: withCtx(() => {
-                              var _a3;
-                              return [
-                                createVNode(_sfc_main$5, mergeProps({
-                                  autofocus: "",
-                                  autocomplete: "off",
-                                  size: __props.size
-                                }, inputProps.value, {
-                                  "data-slot": "input",
-                                  class: __props.ui.input({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.input }),
-                                  onChange: withModifiers(() => {
-                                  }, ["stop"])
-                                }), null, 16, ["size", "class", "onChange"])
-                              ];
-                            }),
-                            _: 1
-                          }, 8, ["modelValue", "onUpdate:modelValue"])) : createCommentVNode("", true),
-                          renderSlot(_ctx.$slots, "content-top", {
-                            sub: (_a2 = __props.sub) != null ? _a2 : false
-                          }),
-                          !searchTerm.value || hasFilteredItems.value ? (openBlock(), createBlock("div", {
-                            key: 1,
-                            role: "presentation",
-                            "data-slot": "viewport",
-                            class: __props.ui.viewport({ class: (_b = __props.uiOverride) == null ? void 0 : _b.viewport })
-                          }, [
-                            (openBlock(true), createBlock(Fragment, null, renderList(filteredGroups.value, (group, groupIndex) => {
-                              var _a3;
-                              return openBlock(), createBlock(unref(DropdownMenu).Group, {
-                                key: `group-${groupIndex}`,
-                                "data-slot": "group",
-                                class: __props.ui.group({ class: (_a3 = __props.uiOverride) == null ? void 0 : _a3.group })
-                              }, {
-                                default: withCtx(() => [
-                                  (openBlock(true), createBlock(Fragment, null, renderList(group, (item, index) => {
-                                    var _a4, _b2, _c2, _d2, _e, _f, _g;
-                                    return openBlock(), createBlock(Fragment, {
-                                      key: `group-${groupIndex}-${index}`
-                                    }, [
-                                      item.type === "label" ? (openBlock(), createBlock(unref(DropdownMenu).Label, {
-                                        key: 0,
-                                        "data-slot": "label",
-                                        class: __props.ui.label({ class: [(_a4 = __props.uiOverride) == null ? void 0 : _a4.label, (_b2 = item.ui) == null ? void 0 : _b2.label, item.class] })
-                                      }, {
-                                        default: withCtx(() => [
-                                          createVNode(unref(ReuseItemTemplate), {
-                                            item,
-                                            index
-                                          }, null, 8, ["item", "index"])
-                                        ]),
-                                        _: 2
-                                      }, 1032, ["class"])) : item.type === "separator" ? (openBlock(), createBlock(unref(DropdownMenu).Separator, {
-                                        key: 1,
-                                        "data-slot": "separator",
-                                        class: __props.ui.separator({ class: [(_c2 = __props.uiOverride) == null ? void 0 : _c2.separator, (_d2 = item.ui) == null ? void 0 : _d2.separator, item.class] })
-                                      }, null, 8, ["class"])) : ((_e = item == null ? void 0 : item.children) == null ? void 0 : _e.length) ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
-                                        key: 2,
-                                        open: item.open,
-                                        "default-open": item.defaultOpen
-                                      }, {
-                                        default: withCtx(() => {
-                                          var _a5, _b3, _c3, _d3;
-                                          return [
-                                            createVNode(unref(DropdownMenu).SubTrigger, {
-                                              as: "button",
-                                              type: "button",
-                                              disabled: item.disabled,
-                                              "text-value": unref(get)(item, props.labelKey),
-                                              "data-slot": "item",
-                                              class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b3 = item.ui) == null ? void 0 : _b3.item, item.class], color: item == null ? void 0 : item.color })
-                                            }, {
-                                              default: withCtx(() => [
-                                                createVNode(unref(ReuseItemTemplate), {
-                                                  item,
-                                                  index
-                                                }, null, 8, ["item", "index"])
-                                              ]),
-                                              _: 2
-                                            }, 1032, ["disabled", "text-value", "class"]),
-                                            createVNode(_sfc_main$3, mergeProps({
-                                              sub: "",
-                                              class: (_c3 = item.ui) == null ? void 0 : _c3.content,
-                                              ui: __props.ui,
-                                              "ui-override": __props.uiOverride,
-                                              portal: __props.portal,
-                                              items: item.children,
-                                              align: "start",
-                                              "align-offset": -4,
-                                              "side-offset": 3,
-                                              "label-key": __props.labelKey,
-                                              "description-key": __props.descriptionKey,
-                                              "checked-icon": __props.checkedIcon,
-                                              "loading-icon": __props.loadingIcon,
-                                              "external-icon": __props.externalIcon,
-                                              size: __props.size,
-                                              filter: item.filter,
-                                              "filter-fields": item.filterFields || __props.filterFields,
-                                              "ignore-filter": (_d3 = item.ignoreFilter) != null ? _d3 : __props.ignoreFilter
-                                            }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
-                                              renderList(getProxySlots(), (_2, name) => {
-                                                return {
-                                                  name,
-                                                  fn: withCtx((slotData) => [
-                                                    renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
-                                                  ])
-                                                };
-                                              })
-                                            ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
-                                          ];
-                                        }),
-                                        _: 2
-                                      }, 1032, ["open", "default-open"])) : item.type === "checkbox" ? (openBlock(), createBlock(unref(DropdownMenu).CheckboxItem, {
-                                        key: 3,
-                                        "model-value": item.checked,
+                            default: withCtx(() => [
+                              (openBlock(true), createBlock(Fragment, null, renderList(group, (item, index) => {
+                                return openBlock(), createBlock(Fragment, {
+                                  key: `group-${groupIndex}-${index}`
+                                }, [
+                                  item.type === "label" ? (openBlock(), createBlock(unref(DropdownMenu).Label, {
+                                    key: 0,
+                                    "data-slot": "label",
+                                    class: __props.ui.label({ class: [__props.uiOverride?.label, item.ui?.label, item.class] })
+                                  }, {
+                                    default: withCtx(() => [
+                                      createVNode(unref(ReuseItemTemplate), {
+                                        item,
+                                        index
+                                      }, null, 8, ["item", "index"])
+                                    ]),
+                                    _: 2
+                                  }, 1032, ["class"])) : item.type === "separator" ? (openBlock(), createBlock(unref(DropdownMenu).Separator, {
+                                    key: 1,
+                                    "data-slot": "separator",
+                                    class: __props.ui.separator({ class: [__props.uiOverride?.separator, item.ui?.separator, item.class] })
+                                  }, null, 8, ["class"])) : item?.children?.length ? (openBlock(), createBlock(unref(DropdownMenu).Sub, {
+                                    key: 2,
+                                    open: item.open,
+                                    "default-open": item.defaultOpen
+                                  }, {
+                                    default: withCtx(() => [
+                                      createVNode(unref(DropdownMenu).SubTrigger, {
+                                        as: "button",
+                                        type: "button",
                                         disabled: item.disabled,
                                         "text-value": unref(get)(item, props.labelKey),
                                         "data-slot": "item",
-                                        class: __props.ui.item({ class: [(_f = __props.uiOverride) == null ? void 0 : _f.item, (_g = item.ui) == null ? void 0 : _g.item, item.class], color: item == null ? void 0 : item.color }),
-                                        "onUpdate:modelValue": item.onUpdateChecked,
-                                        onSelect: item.onSelect
+                                        class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color })
                                       }, {
                                         default: withCtx(() => [
                                           createVNode(unref(ReuseItemTemplate), {
@@ -4583,66 +4425,110 @@ const _sfc_main$3 = {
                                           }, null, 8, ["item", "index"])
                                         ]),
                                         _: 2
-                                      }, 1032, ["model-value", "disabled", "text-value", "class", "onUpdate:modelValue", "onSelect"])) : (openBlock(), createBlock(_sfc_main$9, mergeProps({
-                                        key: 4,
-                                        ref_for: true
-                                      }, unref(pickLinkProps)(item), { custom: "" }), {
-                                        default: withCtx(({ active, ...slotProps }) => [
-                                          createVNode(unref(DropdownMenu).Item, {
-                                            "as-child": "",
-                                            disabled: item.disabled,
-                                            "text-value": unref(get)(item, props.labelKey),
-                                            onSelect: item.onSelect
-                                          }, {
-                                            default: withCtx(() => {
-                                              var _a5, _b3;
-                                              return [
-                                                createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
-                                                  "data-slot": "item",
-                                                  class: __props.ui.item({ class: [(_a5 = __props.uiOverride) == null ? void 0 : _a5.item, (_b3 = item.ui) == null ? void 0 : _b3.item, item.class], color: item == null ? void 0 : item.color, active })
-                                                }), {
-                                                  default: withCtx(() => [
-                                                    createVNode(unref(ReuseItemTemplate), {
-                                                      item,
-                                                      active,
-                                                      index
-                                                    }, null, 8, ["item", "active", "index"])
-                                                  ]),
-                                                  _: 2
-                                                }, 1040, ["class"])
-                                              ];
-                                            }),
+                                      }, 1032, ["disabled", "text-value", "class"]),
+                                      createVNode(_sfc_main$3, mergeProps({
+                                        sub: "",
+                                        class: item.ui?.content,
+                                        ui: __props.ui,
+                                        "ui-override": __props.uiOverride,
+                                        portal: __props.portal,
+                                        items: item.children,
+                                        align: "start",
+                                        "align-offset": -4,
+                                        "side-offset": 3,
+                                        "label-key": __props.labelKey,
+                                        "description-key": __props.descriptionKey,
+                                        "checked-icon": __props.checkedIcon,
+                                        "loading-icon": __props.loadingIcon,
+                                        "external-icon": __props.externalIcon,
+                                        size: __props.size,
+                                        filter: item.filter,
+                                        "filter-fields": item.filterFields || __props.filterFields,
+                                        "ignore-filter": item.ignoreFilter ?? __props.ignoreFilter
+                                      }, { ref_for: true }, item.content), createSlots({ _: 2 }, [
+                                        renderList(getProxySlots(), (_2, name) => {
+                                          return {
+                                            name,
+                                            fn: withCtx((slotData) => [
+                                              renderSlot(_ctx.$slots, name, mergeProps({ ref_for: true }, slotData))
+                                            ])
+                                          };
+                                        })
+                                      ]), 1040, ["class", "ui", "ui-override", "portal", "items", "label-key", "description-key", "checked-icon", "loading-icon", "external-icon", "size", "filter", "filter-fields", "ignore-filter"])
+                                    ]),
+                                    _: 2
+                                  }, 1032, ["open", "default-open"])) : item.type === "checkbox" ? (openBlock(), createBlock(unref(DropdownMenu).CheckboxItem, {
+                                    key: 3,
+                                    "model-value": item.checked,
+                                    disabled: item.disabled,
+                                    "text-value": unref(get)(item, props.labelKey),
+                                    "data-slot": "item",
+                                    class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color }),
+                                    "onUpdate:modelValue": item.onUpdateChecked,
+                                    onSelect: item.onSelect
+                                  }, {
+                                    default: withCtx(() => [
+                                      createVNode(unref(ReuseItemTemplate), {
+                                        item,
+                                        index
+                                      }, null, 8, ["item", "index"])
+                                    ]),
+                                    _: 2
+                                  }, 1032, ["model-value", "disabled", "text-value", "class", "onUpdate:modelValue", "onSelect"])) : (openBlock(), createBlock(_sfc_main$9, mergeProps({
+                                    key: 4,
+                                    ref_for: true
+                                  }, unref(pickLinkProps)(item), { custom: "" }), {
+                                    default: withCtx(({ active, ...slotProps }) => [
+                                      createVNode(unref(DropdownMenu).Item, {
+                                        "as-child": "",
+                                        disabled: item.disabled,
+                                        "text-value": unref(get)(item, props.labelKey),
+                                        onSelect: item.onSelect
+                                      }, {
+                                        default: withCtx(() => [
+                                          createVNode(_sfc_main$a, mergeProps({ ref_for: true }, slotProps, {
+                                            "data-slot": "item",
+                                            class: __props.ui.item({ class: [__props.uiOverride?.item, item.ui?.item, item.class], color: item?.color, active })
+                                          }), {
+                                            default: withCtx(() => [
+                                              createVNode(unref(ReuseItemTemplate), {
+                                                item,
+                                                active,
+                                                index
+                                              }, null, 8, ["item", "active", "index"])
+                                            ]),
                                             _: 2
-                                          }, 1032, ["disabled", "text-value", "onSelect"])
+                                          }, 1040, ["class"])
                                         ]),
                                         _: 2
-                                      }, 1040))
-                                    ], 64);
-                                  }), 128))
-                                ]),
-                                _: 2
-                              }, 1032, ["class"]);
-                            }), 128))
-                          ], 2)) : createCommentVNode("", true),
-                          searchTerm.value && !hasFilteredItems.value ? (openBlock(), createBlock("div", {
-                            key: 2,
-                            "data-slot": "empty",
-                            class: __props.ui.empty({ class: (_c = __props.uiOverride) == null ? void 0 : _c.empty })
-                          }, [
-                            renderSlot(_ctx.$slots, "empty", { searchTerm: searchTerm.value }, () => [
-                              createTextVNode(toDisplayString(unref(t)("dropdownMenu.noMatch", { searchTerm: searchTerm.value })), 1)
-                            ])
-                          ], 2)) : createCommentVNode("", true),
-                          renderSlot(_ctx.$slots, "default"),
-                          renderSlot(_ctx.$slots, "content-bottom", {
-                            sub: (_d = __props.sub) != null ? _d : false
-                          })
-                        ];
-                      }),
-                      _: 3
-                    }, 16, ["class"]))
-                  ];
-                }),
+                                      }, 1032, ["disabled", "text-value", "onSelect"])
+                                    ]),
+                                    _: 2
+                                  }, 1040))
+                                ], 64);
+                              }), 128))
+                            ]),
+                            _: 2
+                          }, 1032, ["class"]);
+                        }), 128))
+                      ], 2)) : createCommentVNode("", true),
+                      searchTerm.value && !hasFilteredItems.value ? (openBlock(), createBlock("div", {
+                        key: 2,
+                        "data-slot": "empty",
+                        class: __props.ui.empty({ class: __props.uiOverride?.empty })
+                      }, [
+                        renderSlot(_ctx.$slots, "empty", { searchTerm: searchTerm.value }, () => [
+                          createTextVNode(toDisplayString(unref(t)("dropdownMenu.noMatch", { searchTerm: searchTerm.value })), 1)
+                        ])
+                      ], 2)) : createCommentVNode("", true),
+                      renderSlot(_ctx.$slots, "default"),
+                      renderSlot(_ctx.$slots, "content-bottom", {
+                        sub: __props.sub ?? false
+                      })
+                    ]),
+                    _: 3
+                  }, 16, ["class"]))
+                ]),
                 _: 3
               })
             ];
@@ -4908,16 +4794,12 @@ const _sfc_main$2 = {
     const contentProps = toRef(() => defu(props.content, { side: "bottom", sideOffset: 8, collisionPadding: 8 }));
     const arrowProps = toRef(() => defu(props.arrow, { rounded: true }));
     const getProxySlots = () => omit(slots, ["default"]);
-    const ui = computed(() => {
-      var _a;
-      return tv({ extend: theme, ...((_a = appConfig.ui) == null ? void 0 : _a.dropdownMenu) || {} })({
-        size: props.size
-      });
-    });
+    const ui = computed(() => tv({ extend: theme, ...appConfig.ui?.dropdownMenu || {} })({
+      size: props.size
+    }));
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(DropdownMenuRoot_default), mergeProps(unref(rootProps), _attrs), {
         default: withCtx(({ open }, _push2, _parent2, _scopeId) => {
-          var _a, _b;
           if (_push2) {
             if (!!slots.default) {
               _push2(ssrRenderComponent(unref(DropdownMenuTrigger_default), {
@@ -4942,7 +4824,7 @@ const _sfc_main$2 = {
             _push2(ssrRenderComponent(_sfc_main$3, mergeProps({
               "search-term": searchTerm.value,
               "onUpdate:searchTerm": ($event) => searchTerm.value = $event,
-              class: ui.value.content({ class: [!slots.default && unref(props).class, (_a = unref(props).ui) == null ? void 0 : _a.content] }),
+              class: ui.value.content({ class: [!slots.default && unref(props).class, unref(props).ui?.content] }),
               ui: ui.value,
               "ui-override": unref(props).ui
             }, contentProps.value, {
@@ -4959,12 +4841,11 @@ const _sfc_main$2 = {
               "ignore-filter": unref(props).ignoreFilter
             }), createSlots({
               default: withCtx((_, _push3, _parent3, _scopeId2) => {
-                var _a2, _b2;
                 if (_push3) {
                   if (!!unref(props).arrow) {
                     _push3(ssrRenderComponent(unref(DropdownMenuArrow_default), mergeProps(arrowProps.value, {
                       "data-slot": "arrow",
-                      class: ui.value.arrow({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.arrow })
+                      class: ui.value.arrow({ class: unref(props).ui?.arrow })
                     }), null, _parent3, _scopeId2));
                   } else {
                     _push3(`<!---->`);
@@ -4973,7 +4854,7 @@ const _sfc_main$2 = {
                   return [
                     !!unref(props).arrow ? (openBlock(), createBlock(unref(DropdownMenuArrow_default), mergeProps({ key: 0 }, arrowProps.value, {
                       "data-slot": "arrow",
-                      class: ui.value.arrow({ class: (_b2 = unref(props).ui) == null ? void 0 : _b2.arrow })
+                      class: ui.value.arrow({ class: unref(props).ui?.arrow })
                     }), null, 16, ["class"])) : createCommentVNode("", true)
                   ];
                 }
@@ -5011,7 +4892,7 @@ const _sfc_main$2 = {
               createVNode(_sfc_main$3, mergeProps({
                 "search-term": searchTerm.value,
                 "onUpdate:searchTerm": ($event) => searchTerm.value = $event,
-                class: ui.value.content({ class: [!slots.default && unref(props).class, (_b = unref(props).ui) == null ? void 0 : _b.content] }),
+                class: ui.value.content({ class: [!slots.default && unref(props).class, unref(props).ui?.content] }),
                 ui: ui.value,
                 "ui-override": unref(props).ui
               }, contentProps.value, {
@@ -5027,15 +4908,12 @@ const _sfc_main$2 = {
                 "filter-fields": unref(props).filterFields,
                 "ignore-filter": unref(props).ignoreFilter
               }), createSlots({
-                default: withCtx(() => {
-                  var _a2;
-                  return [
-                    !!unref(props).arrow ? (openBlock(), createBlock(unref(DropdownMenuArrow_default), mergeProps({ key: 0 }, arrowProps.value, {
-                      "data-slot": "arrow",
-                      class: ui.value.arrow({ class: (_a2 = unref(props).ui) == null ? void 0 : _a2.arrow })
-                    }), null, 16, ["class"])) : createCommentVNode("", true)
-                  ];
-                }),
+                default: withCtx(() => [
+                  !!unref(props).arrow ? (openBlock(), createBlock(unref(DropdownMenuArrow_default), mergeProps({ key: 0 }, arrowProps.value, {
+                    "data-slot": "arrow",
+                    class: ui.value.arrow({ class: unref(props).ui?.arrow })
+                  }), null, 16, ["class"])) : createCommentVNode("", true)
+                ]),
                 _: 2
               }, [
                 renderList(getProxySlots(), (_, name) => {
@@ -5064,25 +4942,22 @@ _sfc_main$2.setup = (props, ctx) => {
 const nameSpreadsheet = (format) => `GhostForm_Leads_${(/* @__PURE__ */ new Date()).toISOString().split("T")[0]}.${format}`;
 function useCSV(leads) {
   const headers = ["Name", "Email", "Phone", "Age", "Address", "Status", "Date", "buy | sell | both", "Estimated home price", "Sqft", "Bedrooms", "Bathrooms", "Budget"];
-  const rows = leads.map((lead) => {
-    var _a, _b, _c;
-    return [
-      lead == null ? void 0 : lead.name,
-      lead == null ? void 0 : lead.email,
-      lead == null ? void 0 : lead.phone,
-      lead == null ? void 0 : lead.age,
-      (_a = lead == null ? void 0 : lead.address) == null ? void 0 : _a.replace(/[,.]/g, ""),
-      lead == null ? void 0 : lead.status,
-      lead == null ? void 0 : lead.date,
-      lead == null ? void 0 : lead.buy_sell_both,
-      lead == null ? void 0 : lead.price,
-      lead == null ? void 0 : lead.sqft,
-      lead == null ? void 0 : lead.bedrooms,
-      lead == null ? void 0 : lead.bathrooms,
-      (_c = (_b = lead == null ? void 0 : lead.budget) == null ? void 0 : _b.toString()) == null ? void 0 : _c.replace(/[^0-9.-]+/g, "")
-      // Strip currency symbols for spreadsheet math
-    ];
-  });
+  const rows = leads.map((lead) => [
+    lead?.name,
+    lead?.email,
+    lead?.phone,
+    lead?.age,
+    lead?.address?.replace(/[,.]/g, ""),
+    lead?.status,
+    lead?.date,
+    lead?.buy_sell_both,
+    lead?.price,
+    lead?.sqft,
+    lead?.bedrooms,
+    lead?.bathrooms,
+    lead?.budget?.toString()?.replace(/[^0-9.-]+/g, "")
+    // Strip currency symbols for spreadsheet math
+  ]);
   const csvContent = [
     headers.join(","),
     ...rows.map((row) => row.join(","))
@@ -5335,27 +5210,14 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       meta: [{ name: "description", content: "Every lead, grouped by where they stand." }]
     });
     const { data: leads } = useNuxtData("leads");
-    const total = computed(() => {
-      var _a, _b, _c;
-      return (_c = (_b = (_a = leads.value) == null ? void 0 : _a.all) == null ? void 0 : _b.length) != null ? _c : 0;
-    });
+    const total = computed(() => leads.value?.all?.length ?? 0);
     const groups = computed(
-      () => {
-        var _a, _b;
-        return ((_b = (_a = leads.value) == null ? void 0 : _a.status) != null ? _b : []).filter((g) => {
-          var _a2, _b2;
-          return ((_b2 = (_a2 = g == null ? void 0 : g.leads) == null ? void 0 : _a2.length) != null ? _b2 : 0) > 0;
-        });
-      }
+      () => (leads.value?.status ?? []).filter((g) => (g?.leads?.length ?? 0) > 0)
     );
     const neverContacted = computed(
-      () => {
-        var _a, _b;
-        return ((_b = (_a = leads.value) == null ? void 0 : _a.all) != null ? _b : []).filter((l) => !l.lastContactedAt).length;
-      }
+      () => (leads.value?.all ?? []).filter((l) => !l.lastContactedAt).length
     );
     return (_ctx, _push, _parent, _attrs) => {
-      var _a, _b, _c, _d;
       const _component_baseButtonNavigate = __nuxt_component_1$1;
       const _component_baseButtonExport = __nuxt_component_1;
       const _component_ClientOnly = __nuxt_component_1$1$1;
@@ -5378,7 +5240,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }, null, _parent));
       _push(`</div></div></header><!--[-->`);
       ssrRenderList(unref(groups), (item, i) => {
-        _push(`<section class="gf-depth mb-24" style="${ssrRenderStyle(`--d:${0.04 * Number(i)}s`)}"><div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><div class="flex items-baseline gap-4"><span class="gf-eyebrow">${ssrInterpolate(String(Number(i) + 1).padStart(2, "0"))} \u2014 Stage</span><span class="font-display text-[25px] font-semibold tracking-tight">${ssrInterpolate(unref(capitalizeFirstLetter)(item.label))}</span><span class="text-[13px] text-[#A9A39A] tabular-nums">${ssrInterpolate(item.leads.length)}</span></div>`);
+        _push(`<section class="gf-depth mb-24" style="${ssrRenderStyle(`--d:${0.04 * Number(i)}s`)}"><div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><div class="flex items-baseline gap-4"><span class="gf-eyebrow">${ssrInterpolate(String(Number(i) + 1).padStart(2, "0"))} — Stage</span><span class="font-display text-[25px] font-semibold tracking-tight">${ssrInterpolate(unref(capitalizeFirstLetter)(item.label))}</span><span class="text-[13px] text-[#A9A39A] tabular-nums">${ssrInterpolate(item.leads.length)}</span></div>`);
         _push(ssrRenderComponent(_component_baseButtonExport, {
           data: item.leads
         }, null, _parent));
@@ -5387,7 +5249,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
         _push(`</section>`);
       });
       _push(`<!--]--><section class="gf-depth"><div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8"><div class="flex items-baseline gap-4"><span class="gf-eyebrow">Everyone</span><span class="font-display text-[25px] font-semibold tracking-tight">All leads</span><span class="text-[13px] text-[#A9A39A] tabular-nums">${ssrInterpolate(unref(total))}</span></div>`);
-      if ((_b = (_a = unref(leads)) == null ? void 0 : _a.all) == null ? void 0 : _b.length) {
+      if (unref(leads)?.all?.length) {
         _push(ssrRenderComponent(_component_baseButtonExport, {
           data: unref(leads).all
         }, null, _parent));
@@ -5396,7 +5258,7 @@ const _sfc_main = /* @__PURE__ */ defineComponent({
       }
       _push(`</div>`);
       _push(ssrRenderComponent(_component_ClientOnly, null, {}, _parent));
-      if (!((_d = (_c = unref(leads)) == null ? void 0 : _c.all) == null ? void 0 : _d.length)) {
+      if (!unref(leads)?.all?.length) {
         _push(`<div class="border-t border-b border-[#DDD6C9] py-16 text-center"><p class="text-[14px] text-[#8A847C] mb-6"> No leads yet. They&#39;ll appear here as your forms capture them. </p>`);
         _push(ssrRenderComponent(_component_baseButtonNavigate, {
           text: "+ Create your first lead",

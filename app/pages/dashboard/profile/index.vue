@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import packageJson from '../../../../package.json';
+import { formatDate } from '~/utils/date';
+import { timeZone } from '~/utils/date';
 
 const savingVoice = ref(false);
 const voice = reactive({
@@ -32,12 +36,7 @@ function replayTour() {
     try { localStorage.removeItem('ghostform:tourSeen') } catch { /* ignore */ }
     window.dispatchEvent(new Event('gf:tour'))
   }
-}
-
-import { ref } from 'vue';
-import packageJson from '../../../../package.json';
-import { formatDate } from '~/utils/date';
-import { timeZone } from '~/utils/date';
+};
 
 definePageMeta({
   layout: 'authenticated',
