@@ -59,6 +59,16 @@ const formFunnels = computed(() => [
     source: 'data_entry',
     icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586A1 1 0 0114 3.414L18.586 8A1 1 0 0119 8.586V19a2 2 0 01-2 2z',
     form_url: buildUrl('data_entry')
+  },
+    {
+    id: 'data-active',
+    label: 'Active Entry',
+    description:
+      'To gather more defined information from the lead.',
+    badge: 'Active lead',
+    source: 'data_active',
+    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586A1 1 0 0114 3.414L18.586 8A1 1 0 0119 8.586V19a2 2 0 01-2 2z',
+    form_url: buildUrl('data_active')
   }
 ]);
 </script>
