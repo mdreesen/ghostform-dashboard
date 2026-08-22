@@ -4,10 +4,7 @@ import { offset, flip, shift, limitShift, size, arrow, hide, useFloating, autoUp
 
 function useDirection(dir) {
   const context = injectConfigProviderContext({ dir: ref("ltr") });
-  return computed(() => {
-    var _a;
-    return (dir == null ? void 0 : dir.value) || ((_a = context.dir) == null ? void 0 : _a.value) || "ltr";
-  });
+  return computed(() => dir?.value || context.dir?.value || "ltr");
 }
 function useFocusGuards() {
   watchEffect((cleanupFn) => {
@@ -24,14 +21,8 @@ function useForwardPropsEmits(props, emit) {
 }
 function useSize(element) {
   const size2 = ref();
-  const width = computed(() => {
-    var _a, _b;
-    return (_b = (_a = size2.value) == null ? void 0 : _a.width) != null ? _b : 0;
-  });
-  const height = computed(() => {
-    var _a, _b;
-    return (_b = (_a = size2.value) == null ? void 0 : _a.height) != null ? _b : 0;
-  });
+  const width = computed(() => size2.value?.width ?? 0);
+  const height = computed(() => size2.value?.height ?? 0);
   return {
     width,
     height
@@ -43,19 +34,16 @@ function useTypeahead(callback) {
     search.value = search.value + key;
     {
       const currentItem = getActiveElement();
-      const itemsWithTextValue = items.map((item) => {
-        var _a, _b, _c, _d;
-        return {
-          ...item,
-          textValue: (_d = (_c = (_a = item.value) == null ? void 0 : _a.textValue) != null ? _c : (_b = item.ref.textContent) == null ? void 0 : _b.trim()) != null ? _d : ""
-        };
-      });
+      const itemsWithTextValue = items.map((item) => ({
+        ...item,
+        textValue: item.value?.textValue ?? item.ref.textContent?.trim() ?? ""
+      }));
       const currentMatch = itemsWithTextValue.find((item) => item.ref === currentItem);
       const values = itemsWithTextValue.map((item) => item.textValue);
-      const nextMatch = getNextMatch(values, search.value, currentMatch == null ? void 0 : currentMatch.textValue);
+      const nextMatch = getNextMatch(values, search.value, currentMatch?.textValue);
       const newItem = itemsWithTextValue.find((item) => item.textValue === nextMatch);
       if (newItem) newItem.ref.focus();
-      return newItem == null ? void 0 : newItem.ref;
+      return newItem?.ref;
     }
   };
   const resetTypeahead = () => {
@@ -117,8 +105,7 @@ var PopperAnchor_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ d
     const { forwardRef, currentElement } = useForwardExpose();
     const rootContext = injectPopperRootContext();
     watchPostEffect(() => {
-      var _a;
-      rootContext.onAnchorChange((_a = props.reference) != null ? _a : currentElement.value);
+      rootContext.onAnchorChange(props.reference ?? currentElement.value);
     });
     return (_ctx, _cache) => {
       return openBlock(), createBlock(unref(Primitive), {
@@ -198,9 +185,8 @@ function transformOrigin(options) {
     name: "transformOrigin",
     options,
     fn(data) {
-      var _a, _b, _c, _d, _e;
       const { placement, rects, middlewareData } = data;
-      const cannotCenterArrow = ((_a = middlewareData.arrow) == null ? void 0 : _a.centerOffset) !== 0;
+      const cannotCenterArrow = middlewareData.arrow?.centerOffset !== 0;
       const isArrowHidden = cannotCenterArrow;
       const arrowWidth = isArrowHidden ? 0 : options.arrowWidth;
       const arrowHeight = isArrowHidden ? 0 : options.arrowHeight;
@@ -215,8 +201,8 @@ function transformOrigin(options) {
         center: "50%",
         end: "100%"
       }[placedAlign];
-      const arrowXCenter = ((_c = (_b = middlewareData.arrow) == null ? void 0 : _b.x) != null ? _c : 0) + arrowWidth / 2;
-      const arrowYCenter = ((_e = (_d = middlewareData.arrow) == null ? void 0 : _d.y) != null ? _e : 0) + arrowHeight / 2;
+      const arrowXCenter = (middlewareData.arrow?.x ?? 0) + arrowWidth / 2;
+      const arrowYCenter = (middlewareData.arrow?.y ?? 0) + arrowHeight / 2;
       let x = "";
       let y = "";
       if (placedSide === "bottom") {
@@ -438,10 +424,7 @@ var PopperContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
         })
       ];
     });
-    const reference = computed(() => {
-      var _a;
-      return (_a = props.reference) != null ? _a : rootContext.anchor.value;
-    });
+    const reference = computed(() => props.reference ?? rootContext.anchor.value);
     const { floatingStyles, placement, isPositioned, middlewareData, update } = useFloating(reference, floatingRef, {
       strategy: props.positionStrategy,
       placement: desiredPlacement,
@@ -460,22 +443,15 @@ var PopperContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
       if (isPositioned.value) emits("placed");
     });
     const shouldHideArrow = computed(() => {
-      var _a;
-      const cannotCenterArrow = ((_a = middlewareData.value.arrow) == null ? void 0 : _a.centerOffset) !== 0;
+      const cannotCenterArrow = middlewareData.value.arrow?.centerOffset !== 0;
       return props.hideShiftedArrow && cannotCenterArrow;
     });
     const contentZIndex = ref("");
     watchEffect(() => {
       if (contentElement.value) contentZIndex.value = (void 0).getComputedStyle(contentElement.value).zIndex;
     });
-    const arrowX = computed(() => {
-      var _a, _b;
-      return (_b = (_a = middlewareData.value.arrow) == null ? void 0 : _a.x) != null ? _b : 0;
-    });
-    const arrowY = computed(() => {
-      var _a, _b;
-      return (_b = (_a = middlewareData.value.arrow) == null ? void 0 : _a.y) != null ? _b : 0;
-    });
+    const arrowX = computed(() => middlewareData.value.arrow?.x ?? 0);
+    const arrowY = computed(() => middlewareData.value.arrow?.y ?? 0);
     providePopperContentContext({
       placedSide,
       onArrowChange: (element) => arrow$1.value = element,
@@ -484,7 +460,6 @@ var PopperContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
       shouldHideArrow
     });
     return (_ctx, _cache) => {
-      var _a, _b, _c;
       return openBlock(), createElementBlock("div", {
         ref_key: "floatingRef",
         ref: floatingRef,
@@ -495,8 +470,8 @@ var PopperContent_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
           transform: unref(isPositioned) ? unref(floatingStyles).transform : "translate(0, -200%)",
           minWidth: "max-content",
           zIndex: contentZIndex.value,
-          ["--reka-popper-transform-origin"]: [(_a = unref(middlewareData).transformOrigin) == null ? void 0 : _a.x, (_b = unref(middlewareData).transformOrigin) == null ? void 0 : _b.y].join(" "),
-          ...((_c = unref(middlewareData).hide) == null ? void 0 : _c.referenceHidden) && {
+          ["--reka-popper-transform-origin"]: [unref(middlewareData).transformOrigin?.x, unref(middlewareData).transformOrigin?.y].join(" "),
+          ...unref(middlewareData).hide?.referenceHidden && {
             visibility: "hidden",
             pointerEvents: "none"
           }
@@ -589,16 +564,15 @@ var PopperArrow_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ de
     const contentContext = injectPopperContentContext();
     const baseSide = computed(() => OPPOSITE_SIDE[contentContext.placedSide.value]);
     return (_ctx, _cache) => {
-      var _a, _b, _c, _d;
       return openBlock(), createElementBlock("span", {
         ref: (el) => {
-          unref(contentContext).onArrowChange(el != null ? el : void 0);
+          unref(contentContext).onArrowChange(el ?? void 0);
           return void 0;
         },
         style: normalizeStyle({
           position: "absolute",
-          left: ((_a = unref(contentContext).arrowX) == null ? void 0 : _a.value) ? `${(_b = unref(contentContext).arrowX) == null ? void 0 : _b.value}px` : void 0,
-          top: ((_c = unref(contentContext).arrowY) == null ? void 0 : _c.value) ? `${(_d = unref(contentContext).arrowY) == null ? void 0 : _d.value}px` : void 0,
+          left: unref(contentContext).arrowX?.value ? `${unref(contentContext).arrowX?.value}px` : void 0,
+          top: unref(contentContext).arrowY?.value ? `${unref(contentContext).arrowY?.value}px` : void 0,
           [baseSide.value]: 0,
           transformOrigin: {
             top: "",
