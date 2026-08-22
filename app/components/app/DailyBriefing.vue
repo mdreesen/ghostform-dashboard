@@ -21,7 +21,8 @@ interface Briefing {
   headline: string
 }
 
-const { data: briefing, pending } = useNuxtData<Briefing>('briefing')
+const { data: briefing } = useNuxtData<Briefing>('briefing')
+const pending = computed(() => !briefing.value)
 const toast = useToast()
 
 const marking = ref<Set<string>>(new Set())
@@ -88,7 +89,8 @@ async function markContacted(lead: BriefingLead) {
     }
     toast.error('Could not update. Please try again.')
   } finally {
-    marking.value.delete(lead._id)
+    marking.value.delete(lead._id);
+    await refreshNuxtData('leads')
   }
 }
 </script>
