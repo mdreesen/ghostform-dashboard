@@ -2,11 +2,11 @@ import { a as defineEventHandler, r as readValidatedBody, c as connectDB, b as c
 import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import 'mongoose';
+import 'node:crypto';
 import 'openai';
 import 'resend';
 import 'node:http';
 import 'node:https';
-import 'node:crypto';
 import 'node:events';
 import 'node:buffer';
 import 'node:fs';

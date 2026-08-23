@@ -46,7 +46,7 @@ watch(() => route.path, () => { open.value = false; });
           :key="link.to"
           :to="link.to"
           :data-tour="`nav-${link.label.toLowerCase()}`"
-          class="relative pb-1 text-[11.5px] uppercase tracking-[0.14em] transition-colors duration-200"
+          class="relative pb-1 text-[9.5px] uppercase tracking-[0.14em] transition-colors duration-200"
           :class="isActive(link.to) ? 'text-[#1F1B16]' : 'text-[#A9A39A] hover:text-[#1F1B16]'"
         >
           {{ link.label }}

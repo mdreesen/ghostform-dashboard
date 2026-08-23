@@ -1,10 +1,10 @@
 import { a as defineEventHandler, b as createError } from '../../nitro/nitro.mjs';
 import { Resend } from 'resend';
 import 'mongoose';
+import 'node:crypto';
 import 'openai';
 import 'node:http';
 import 'node:https';
-import 'node:crypto';
 import 'node:events';
 import 'node:buffer';
 import 'node:fs';

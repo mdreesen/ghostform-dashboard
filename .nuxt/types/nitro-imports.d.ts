@@ -1,10 +1,13 @@
 declare global {
+  const BUYER_QUESTIONS: typeof import('../../server/utils/qualificationQuestions').BUYER_QUESTIONS
   const H3Error: typeof import('../../node_modules/h3').H3Error
   const H3Event: typeof import('../../node_modules/h3').H3Event
   const HUMAN_DAY: typeof import('../../server/utils/dailyBriefing').HUMAN_DAY
+  const SELLER_QUESTIONS: typeof import('../../server/utils/qualificationQuestions').SELLER_QUESTIONS
   const TOPICS: typeof import('../../server/utils/socialDraft').TOPICS
   const __buildAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').buildAssetsURL
   const __publicAssetsURL: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/paths').publicAssetsURL
+  const analyseLead: typeof import('../../server/utils/leadAnalysis').analyseLead
   const appendCorsHeaders: typeof import('../../node_modules/h3').appendCorsHeaders
   const appendCorsPreflightHeaders: typeof import('../../node_modules/h3').appendCorsPreflightHeaders
   const appendHeader: typeof import('../../node_modules/h3').appendHeader
@@ -14,6 +17,7 @@ declare global {
   const assertMethod: typeof import('../../node_modules/h3').assertMethod
   const buildDailyBriefing: typeof import('../../server/utils/dailyBriefing').buildDailyBriefing
   const buildHeadline: typeof import('../../server/utils/dailyBriefing').buildHeadline
+  const buildScorecard: typeof import('../../server/utils/leadAnalysis').buildScorecard
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedEventHandler
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedFunction
   const callNodeListener: typeof import('../../node_modules/h3').callNodeListener
@@ -25,6 +29,7 @@ declare global {
   const createError: typeof import('../../node_modules/h3').createError
   const createEvent: typeof import('../../node_modules/h3').createEvent
   const createEventStream: typeof import('../../node_modules/h3').createEventStream
+  const createQualifyToken: typeof import('../../server/utils/qualifyToken').createQualifyToken
   const createRouter: typeof import('../../node_modules/h3').createRouter
   const defaultContentType: typeof import('../../node_modules/h3').defaultContentType
   const defineAppConfig: typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/utils/config').defineAppConfig
@@ -145,9 +150,11 @@ declare global {
   const passwordNeedsReHash: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').passwordNeedsReHash
   const promisifyNodeListener: typeof import('../../node_modules/h3').promisifyNodeListener
   const proxyRequest: typeof import('../../node_modules/h3').proxyRequest
+  const questionsFor: typeof import('../../server/utils/qualificationQuestions').questionsFor
   const readBody: typeof import('../../node_modules/h3').readBody
   const readFormData: typeof import('../../node_modules/h3').readFormData
   const readMultipartFormData: typeof import('../../node_modules/h3').readMultipartFormData
+  const readQualifyToken: typeof import('../../server/utils/qualifyToken').readQualifyToken
   const readRawBody: typeof import('../../node_modules/h3').readRawBody
   const readValidatedBody: typeof import('../../node_modules/h3').readValidatedBody
   const removeResponseHeader: typeof import('../../node_modules/h3').removeResponseHeader
@@ -353,8 +360,14 @@ declare global {
   export type { BriefingLead, DailyBriefing } from '../../server/utils/dailyBriefing'
   import('../../server/utils/dailyBriefing')
   // @ts-ignore
+  export type { QualAnswers, Scorecard, LeadAnalysis } from '../../server/utils/leadAnalysis'
+  import('../../server/utils/leadAnalysis')
+  // @ts-ignore
   export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
   import('../../server/utils/leadMessageDraft')
+  // @ts-ignore
+  export type { QualQuestion } from '../../server/utils/qualificationQuestions'
+  import('../../server/utils/qualificationQuestions')
   // @ts-ignore
   export type { Platform, VoiceProfile, DraftContext, GeneratedPost } from '../../server/utils/socialDraft'
   import('../../server/utils/socialDraft')
@@ -428,7 +441,10 @@ export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clear
 export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
+export { buildScorecard, analyseLead } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadAnalysis';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
+export { BUYER_QUESTIONS, SELLER_QUESTIONS, questionsFor } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualificationQuestions';
+export { createQualifyToken, readQualifyToken } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualifyToken';
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';
 export { TOPICS, generateSocialPosts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/socialDraft';
 export { sendWelcomeEmail } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/welcomeEmail';

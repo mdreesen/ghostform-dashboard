@@ -55,6 +55,9 @@ declare module "nitropack/types" {
     '/api/homes/update': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/update.post').default>>>>
     }
+    '/api/leads/:id/analyse': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/analyse.post').default>>>>
+    }
     '/api/leads/:id/contacted': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/contacted.post').default>>>>
     }
@@ -72,6 +75,9 @@ declare module "nitropack/types" {
     '/api/leads/:id/send-message': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/send-message.post').default>>>>
     }
+    '/api/leads/:id/send-questionnaire': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/send-questionnaire.post').default>>>>
+    }
     '/api/leads/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/create.post').default>>>>
     }
@@ -83,6 +89,10 @@ declare module "nitropack/types" {
     }
     '/api/qr_code/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qr_code/[id].get').default>>>>
+    }
+    '/api/qualify/:token': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[token].get').default>>>>
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[token].post').default>>>>
     }
     '/api/social/generate': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/generate.post').default>>>>

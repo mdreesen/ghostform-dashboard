@@ -2,7 +2,7 @@ import process from 'node:process';globalThis._importMeta_={url:import.meta.url,
 import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getResponseStatus, useSession, getQuery as getQuery$1, readBody, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, setHeader, readValidatedBody, getHeader, readRawBody, getResponseStatusText } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
-import crypto$1 from 'node:crypto';
+import crypto$1, { timingSafeEqual, createHmac } from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
 import { Resend } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,22 +3006,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"3c343-1YH9OBVJ1T5HvhU6D4kakvJW9oA\"",
-    "mtime": "2026-08-23T00:14:14.768Z",
-    "size": 246595,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"dae73-e8QQBvXsVyL8Bim7n8/jBdTGKSI\"",
-    "mtime": "2026-08-23T00:14:14.769Z",
-    "size": 896627,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3262,7 +3247,7 @@ async function useOpenAi(messages) {
   }
 }
 
-function buildPrompt$2(briefing) {
+function buildPrompt$3(briefing) {
   const { totals, leads } = briefing;
   const sample = leads.slice(0, 5).map((l) => {
     const first = (l.name || "A lead").split(" ")[0];
@@ -3282,7 +3267,7 @@ ${sample.join("\n")}` : `No leads need attention today.`,
 async function narrateBriefing(briefing) {
   var _a;
   if (briefing.totals.total === 0) return null;
-  return (_a = useOpenAi([{ role: "user", content: buildPrompt$2(briefing) }])) != null ? _a : null;
+  return (_a = useOpenAi([{ role: "user", content: buildPrompt$3(briefing) }])) != null ? _a : null;
 }
 
 const leadSchema = new Schema({
@@ -3314,8 +3299,30 @@ const leadSchema = new Schema({
   budget: Number,
   notes: String,
   seeing_an_agent: String,
+  // ── Qualification (the deep-dive questionnaire) ──────────────
+  // Sent once a lead gets serious. Answers are keyed by question id
+  // (q_timeline, q_financing, ...) — see server/utils/qualificationQuestions.ts
+  qualification: {
+    sentAt: Date,
+    completedAt: Date,
+    intent: String,
+    // 'buy' | 'sell'
+    answers: { type: Object, default: {} }
+  },
+  // Cached analysis so the dashboard doesn't re-run (and re-bill) the model
+  // on every page view. Regenerated only when asked or on new answers.
+  analysis: {
+    readiness: Number,
+    readinessLabel: String,
+    financingRisk: String,
+    signals: [String],
+    gaps: [String],
+    read: String,
+    nextSteps: [String],
+    source: String,
+    generatedAt: Date
+  },
   ai_analysis: String,
-  data_kind: String,
   status: { type: String, default: "new" },
   date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
   reminderSent: { type: Boolean, default: false },
@@ -3350,7 +3357,7 @@ const leadSchema = new Schema({
 }, { timestamps: true });
 const schemaImport = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 
-const LeadModel$6 = schemaImport;
+const LeadModel$a = schemaImport;
 function resolveLastContact(lead) {
   if (lead.lastContactedAt) return new Date(lead.lastContactedAt);
   if (lead.contactCount && lead.contactCount > 0) {
@@ -3368,7 +3375,7 @@ async function buildDailyBriefing(userId, opts = {}) {
   var _a, _b;
   const now = (_a = opts.now) != null ? _a : /* @__PURE__ */ new Date();
   const coldAfter = (_b = opts.cold_lead_after_days) != null ? _b : 14;
-  const leads = await LeadModel$6.find({
+  const leads = await LeadModel$a.find({
     userId,
     status: { $nin: ["closed", "archive"] }
   }).select(
@@ -3446,6 +3453,263 @@ function buildHeadline(totals) {
   return `You have ${list} today.`;
 }
 
+const TIMELINE_SCORE = {
+  "within 30 days": 30,
+  "as soon as possible": 30,
+  "1\u20133 months": 24,
+  "3\u20136 months": 15,
+  "6\u201312 months": 8,
+  "just exploring": 2,
+  "just considering": 2
+};
+const FINANCING_SCORE = {
+  "paying cash": 30,
+  "fully pre-approved": 28,
+  "pre-qualified, not yet approved": 18,
+  "talked to a lender, nothing formal": 9,
+  "haven't started": 2
+};
+const norm = (v) => String(v != null ? v : "").trim().toLowerCase();
+const has = (v) => String(v != null ? v : "").trim().length > 0;
+function buildScorecard(a, intent) {
+  var _a, _b, _c, _d, _e;
+  const isSeller = norm(intent).includes("sell");
+  let score = 0;
+  const signals = [];
+  const gaps = [];
+  const t = norm(a.q_timeline);
+  const tScore = (_a = TIMELINE_SCORE[t]) != null ? _a : 0;
+  score += tScore;
+  if (tScore >= 24) signals.push(`Moving fast \u2014 said "${a.q_timeline}".`);
+  else if (tScore <= 2 && has(a.q_timeline)) signals.push("Exploratory timeline \u2014 not ready to transact yet.");
+  if (!has(a.q_timeline)) gaps.push("No timeline given.");
+  let financingRisk = "unknown";
+  if (!isSeller) {
+    const f = norm(a.q_financing);
+    const fScore = (_b = FINANCING_SCORE[f]) != null ? _b : 0;
+    score += fScore;
+    if (fScore >= 28) {
+      financingRisk = "low";
+      signals.push("Financing is sorted \u2014 cash or fully pre-approved.");
+    } else if (fScore >= 18) {
+      financingRisk = "medium";
+      signals.push("Pre-qualified only \u2014 not the same as approved.");
+    } else if (has(a.q_financing)) {
+      financingRisk = "high";
+      signals.push("Financing not started or informal \u2014 the most likely thing to stall this.");
+    } else gaps.push("Financing status unknown.");
+    if (!has(a.q_lender) && financingRisk !== "low") {
+      gaps.push("No lender named \u2014 an introduction would move this forward.");
+    }
+  } else {
+    const expected = Number(a.q_price_expectation) || 0;
+    const owed = Number(a.q_mortgage) || 0;
+    if (expected > 0) {
+      score += 18;
+      signals.push(`Has a price in mind: $${expected.toLocaleString("en-US")}.`);
+      if (owed > 0 && owed > expected * 0.9) {
+        financingRisk = "high";
+        signals.push("Owes close to (or more than) their expected price \u2014 equity may not support a sale.");
+      } else if (owed > 0) {
+        financingRisk = "low";
+        score += 6;
+      }
+    } else {
+      gaps.push("No price expectation given \u2014 that is the listing conversation.");
+    }
+    if (!has(a.q_price_basis)) gaps.push("Unclear where their price expectation comes from.");
+  }
+  const motivation = String((_d = (_c = a.q_reason) != null ? _c : a.q_motivation) != null ? _d : "");
+  if (motivation.trim().length > 40) {
+    score += 20;
+    signals.push("Gave a detailed reason for moving \u2014 usually a sign of real intent.");
+  } else if (motivation.trim().length > 0) {
+    score += 10;
+  } else {
+    gaps.push("No stated reason for moving.");
+  }
+  const longAnswers = [a.q_must_haves, a.q_deal_breakers, a.q_seen_anything, a.q_condition, a.q_improvements, a.q_flexibility].filter((v) => String(v != null ? v : "").trim().length > 25).length;
+  score += Math.min(20, longAnswers * 7);
+  if (longAnswers >= 3) signals.push("Answered the open questions thoroughly \u2014 engaged, not just curious.");
+  if (longAnswers === 0) gaps.push("Skipped most of the open-ended questions.");
+  const situation = norm(a.q_current_situation);
+  if (situation.includes("need to sell first")) {
+    signals.push("Purchase depends on selling their current home \u2014 and that is a second listing for you.");
+  }
+  if (norm(a.q_listed_before).includes("expired")) {
+    signals.push("Previously listed and expired \u2014 worth knowing why before the appointment.");
+  }
+  if (norm(a.q_buying_too).startsWith("yes")) {
+    signals.push("Buying as well as selling \u2014 two transactions.");
+  }
+  if (has(a.q_decision) && !/^(no|none|just me|myself)/i.test(String(a.q_decision).trim())) {
+    signals.push(`Someone else is involved in the decision: ${a.q_decision}.`);
+  }
+  if (has(a.q_concerns)) {
+    signals.push("Raised a concern unprompted \u2014 address it directly on the next call.");
+  }
+  score = Math.max(0, Math.min(100, score));
+  const readinessLabel = score >= 75 ? "Ready to transact" : score >= 50 ? "Getting serious" : score >= 25 ? "Early but real" : "Exploratory";
+  return {
+    readiness: score,
+    readinessLabel,
+    financingRisk,
+    timelineBand: String((_e = a.q_timeline) != null ? _e : "Not given"),
+    signals,
+    gaps
+  };
+}
+const FORBIDDEN = [
+  // 'family' about PEOPLE is a protected-class reference; 'single-family' and
+  // 'multi-family' are property types and must stay allowed.
+  /(?<!\b(single|multi)[\s-])\bfamil(y|ies|ial)\b/i,
+  /\bkids?\b/i,
+  /\bchildren\b/i,
+  /\bschool district/i,
+  /\bmarried\b/i,
+  /\bcouple\b/i,
+  // 'single' only when it's about a PERSON — "single-story" and "single-family"
+  // are standard architectural terms and must not be flagged.
+  /\bsingle\b(?![\s-]*(story|storey|level|family|wide))/i,
+  /\bethnic/i,
+  /\brace\b/i,
+  /\bracial/i,
+  /\breligio/i,
+  /\bchurch\b/i,
+  /\bnationalit/i,
+  /\bimmigran/i,
+  /\bdisab/i,
+  /\bhandicap/i,
+  /\belderly\b/i,
+  /\byoung professional/i,
+  /\bretire(d|e|ment)\b/i,
+  /\bpregnan/i,
+  /\bsafe neighborhood/i,
+  /\bgood area for\b/i
+];
+function violatesFairHousing(text) {
+  for (const re of FORBIDDEN) {
+    const m = text.match(re);
+    if (m) return m[0];
+  }
+  return null;
+}
+function buildPrompt$2(a, intent, card, name) {
+  const answered = Object.entries(a).filter(([, v]) => String(v != null ? v : "").trim().length > 0).map(([k, v]) => `${k.replace(/^q_/, "").replace(/_/g, " ")}: ${v}`).join("\n");
+  return [
+    `You are helping a real estate agent prepare for their next conversation with a lead.`,
+    `The lead completed a qualification questionnaire. Their answers are below.`,
+    ``,
+    `LEAD: ${name || "the lead"}  (${intent || "unspecified intent"})`,
+    `COMPUTED READINESS: ${card.readiness}/100 \u2014 ${card.readinessLabel}`,
+    ``,
+    `THEIR ANSWERS`,
+    answered,
+    ``,
+    `WRITE`,
+    `1. "read" \u2014 3-5 sentences on what is actually going on with this lead.`,
+    `   Point out contradictions between answers (e.g. a budget that will not`,
+    `   buy the must-haves, an urgent timeline with no financing started).`,
+    `   Reference what they actually said. Be direct and useful, not flattering.`,
+    `2. "nextSteps" \u2014 2-4 specific actions for the agent, in priority order.`,
+    `   Concrete ("introduce a lender this week"), not vague ("build rapport").`,
+    ``,
+    `HARD RULES`,
+    `- Use ONLY what is in their answers. Invent nothing \u2014 no prices, dates,`,
+    `  or facts they did not give.`,
+    `- NEVER mention or infer family status, children, marital status, age,`,
+    `  race, ethnicity, national origin, religion, or disability. Do not`,
+    `  reference schools, "family-friendly", "safe neighborhoods", or anything`,
+    `  that stands in for those. This is a legal requirement, not a preference.`,
+    `- Do not speculate about their personal circumstances beyond what the`,
+    `  answers state about the transaction.`,
+    ``,
+    `Return ONLY JSON, no markdown fence:`,
+    `{"read": "...", "nextSteps": ["...", "..."]}`
+  ].join("\n");
+}
+async function callAnthropic(prompt, key) {
+  var _a, _b, _c;
+  try {
+    const res = await $fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: {
+        model: process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001",
+        max_tokens: 800,
+        messages: [{ role: "user", content: prompt }]
+      }
+    });
+    return (_c = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text) != null ? _c : null;
+  } catch (err) {
+    if (String(err).includes("404")) {
+      console.error("[analysis] 404 from Anthropic \u2014 check ANTHROPIC_MODEL is a model this key can access.");
+    } else {
+      console.error("[analysis] Anthropic failed:", (err == null ? void 0 : err.message) || err);
+    }
+    return null;
+  }
+}
+async function callOpenAI(prompt, key) {
+  var _a, _b, _c, _d;
+  try {
+    const res = await $fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "content-type": "application/json" },
+      body: { model: "gpt-4o-mini", max_tokens: 800, messages: [{ role: "user", content: prompt }] }
+    });
+    return (_d = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content) != null ? _d : null;
+  } catch (err) {
+    console.error("[analysis] OpenAI failed:", (err == null ? void 0 : err.message) || err);
+    return null;
+  }
+}
+function parseJson$1(raw) {
+  try {
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const s = cleaned.indexOf("{"), e = cleaned.lastIndexOf("}");
+    if (s === -1 || e === -1) return null;
+    const p = JSON.parse(cleaned.slice(s, e + 1));
+    if (!(p == null ? void 0 : p.read)) return null;
+    return {
+      read: String(p.read).trim(),
+      nextSteps: Array.isArray(p.nextSteps) ? p.nextSteps.map((x) => String(x)).slice(0, 4) : []
+    };
+  } catch {
+    return null;
+  }
+}
+async function analyseLead(answers, intent, name = "") {
+  const scorecard = buildScorecard(answers, intent);
+  const base = {
+    scorecard,
+    read: null,
+    nextSteps: [],
+    source: "scorecard-only",
+    generatedAt: (/* @__PURE__ */ new Date()).toISOString()
+  };
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  const openaiKey = process.env.OPENAI_API_KEY;
+  if (!anthropicKey && !openaiKey) return base;
+  const prompt = buildPrompt$2(answers, intent, scorecard, name);
+  const raw = anthropicKey ? await callAnthropic(prompt, anthropicKey) : await callOpenAI(prompt, openaiKey);
+  if (!raw) return base;
+  const parsed = parseJson$1(raw);
+  if (!parsed) return base;
+  const combined = [parsed.read, ...parsed.nextSteps].join(" ");
+  const violation = violatesFairHousing(combined);
+  if (violation) {
+    console.error(`[analysis] Discarded AI read \u2014 protected-class language ("${violation}").`);
+    return base;
+  }
+  return {
+    ...base,
+    read: parsed.read,
+    nextSteps: parsed.nextSteps,
+    source: "ai"
+  };
+}
+
 function firstName(name) {
   if (!name) return "there";
   return name.split(" ")[0] || "there";
@@ -3505,6 +3769,206 @@ async function generateLeadDraft(lead, channel = "sms") {
   aiText = await useOpenAi([{ role: "user", content: buildPrompt$1(lead, channel) }]);
   if (aiText) return { message: aiText, source: "ai" };
   return { message: templateDraft(lead, channel), source: "template" };
+}
+
+const BUYER_QUESTIONS = [
+  {
+    id: "q_timeline",
+    label: "When would you ideally like to be in a new place?",
+    type: "choice",
+    options: ["Within 30 days", "1\u20133 months", "3\u20136 months", "6\u201312 months", "Just exploring"],
+    rationale: "The single strongest predictor of whether this closes."
+  },
+  {
+    id: "q_financing",
+    label: "Where are you at with financing?",
+    type: "choice",
+    options: [
+      "Paying cash",
+      "Fully pre-approved",
+      "Pre-qualified, not yet approved",
+      "Talked to a lender, nothing formal",
+      "Haven't started"
+    ],
+    rationale: "Financing is the most common deal-killer. Knowing this early changes everything."
+  },
+  {
+    id: "q_lender",
+    label: "Who are you working with for the loan? (if anyone)",
+    type: "text",
+    rationale: "Tells you whether to introduce a lender, and how real the pre-approval is."
+  },
+  {
+    id: "q_budget_max",
+    label: "What is the most you would be comfortable spending?",
+    type: "number",
+    rationale: "Their ceiling, not their wish price. Different number than the capture form."
+  },
+  {
+    id: "q_must_haves",
+    label: "What are your absolute must-haves?",
+    type: "long",
+    rationale: "Separates real constraints from preferences. Drives what you send them."
+  },
+  {
+    id: "q_deal_breakers",
+    label: "What would rule a house out completely?",
+    type: "long",
+    rationale: "Saves showings. Most agents never ask this and waste weekends because of it."
+  },
+  {
+    id: "q_current_situation",
+    label: "What is your current living situation?",
+    type: "choice",
+    options: [
+      "Renting \u2014 lease ends soon",
+      "Renting \u2014 flexible",
+      "Own, need to sell first",
+      "Own, do not need to sell first",
+      "Other"
+    ],
+    rationale: "A contingent sale is a completely different transaction. Also surfaces listing opportunities."
+  },
+  {
+    id: "q_areas",
+    label: "Which areas are you considering?",
+    type: "text",
+    rationale: "Grounds your search and tells you if expectations match the budget."
+  },
+  {
+    id: "q_seen_anything",
+    label: "Have you seen anything you liked so far?",
+    type: "long",
+    rationale: "Reveals how far along they are and what actually appeals to them."
+  },
+  {
+    id: "q_decision",
+    label: "Is anyone else involved in the decision?",
+    type: "text",
+    rationale: "Deals stall when the person you never met says no. Neutral phrasing \u2014 not a question about household composition."
+  },
+  {
+    id: "q_motivation",
+    label: "What is prompting the move?",
+    type: "long",
+    rationale: "Motivation strength predicts follow-through better than budget does."
+  },
+  {
+    id: "q_concerns",
+    label: "Anything worrying you about the process?",
+    type: "long",
+    rationale: "Surfaces objections early, while you can still address them."
+  }
+];
+const SELLER_QUESTIONS = [
+  {
+    id: "q_timeline",
+    label: "When would you like to have it sold?",
+    type: "choice",
+    options: ["As soon as possible", "1\u20133 months", "3\u20136 months", "6\u201312 months", "Just considering"],
+    rationale: "Urgency drives pricing strategy and how hard you push."
+  },
+  {
+    id: "q_reason",
+    label: "What is prompting the sale?",
+    type: "long",
+    rationale: "A forced move and a maybe-move need completely different handling."
+  },
+  {
+    id: "q_price_expectation",
+    label: "What do you think the home is worth?",
+    type: "number",
+    rationale: "The most important number in the conversation. Gap vs market is the whole listing appointment."
+  },
+  {
+    id: "q_price_basis",
+    label: "What is that based on?",
+    type: "text",
+    rationale: "A Zillow estimate and a recent appraisal are very different starting points."
+  },
+  {
+    id: "q_mortgage",
+    label: "Roughly how much is still owed on the property?",
+    type: "number",
+    rationale: "Determines whether the sale is even viable at their expected price."
+  },
+  {
+    id: "q_condition",
+    label: "What condition is it in? Anything that needs work?",
+    type: "long",
+    rationale: "Sets expectations on price and prep before you walk in."
+  },
+  {
+    id: "q_improvements",
+    label: "What have you updated while you have owned it?",
+    type: "long",
+    rationale: "Ammunition for pricing, and it gets sellers talking positively."
+  },
+  {
+    id: "q_listed_before",
+    label: "Has it been listed before?",
+    type: "choice",
+    options: ["No", "Yes \u2014 expired", "Yes \u2014 withdrew it", "Yes \u2014 currently listed"],
+    rationale: "A previously expired listing tells you a lot before you arrive."
+  },
+  {
+    id: "q_buying_too",
+    label: "Are you buying something else as well?",
+    type: "choice",
+    options: ["Yes, locally", "Yes, out of the area", "No", "Not sure yet"],
+    rationale: "Doubles the transaction, and changes the timing conversation."
+  },
+  {
+    id: "q_flexibility",
+    label: "How flexible are you on timing and price?",
+    type: "long",
+    rationale: "Tells you whether this is a real listing or a test of the market."
+  },
+  {
+    id: "q_decision",
+    label: "Is anyone else involved in the decision?",
+    type: "text",
+    rationale: "Same reason as the buyer set \u2014 deals stall on the person you never met."
+  },
+  {
+    id: "q_concerns",
+    label: "Anything worrying you about selling?",
+    type: "long",
+    rationale: "Objections surfaced early are objections you can still answer."
+  }
+];
+function questionsFor(intent) {
+  const i = (intent).toLowerCase();
+  if (i.includes("sell")) return SELLER_QUESTIONS;
+  return BUYER_QUESTIONS;
+}
+
+function secret() {
+  const s = process.env.QUALIFY_SECRET || process.env.NUXT_SESSION_PASSWORD;
+  if (!s) throw new Error("QUALIFY_SECRET (or NUXT_SESSION_PASSWORD) must be set to sign questionnaire links.");
+  return s;
+}
+function sign(payload) {
+  return createHmac("sha256", secret()).update(payload).digest("base64url");
+}
+function createQualifyToken(leadId, days = 30) {
+  const expiry = Date.now() + days * 864e5;
+  const payload = `${leadId}.${expiry}`;
+  return `${payload}.${sign(payload)}`;
+}
+function readQualifyToken(token) {
+  if (!token || typeof token !== "string") return null;
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+  const [leadId, expiryRaw, providedSig] = parts;
+  const payload = `${leadId}.${expiryRaw}`;
+  const expectedSig = sign(payload);
+  const a = Buffer.from(providedSig);
+  const b = Buffer.from(expectedSig);
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+  const expiry = Number(expiryRaw);
+  if (!Number.isFinite(expiry) || Date.now() > expiry) return null;
+  return { leadId };
 }
 
 var _a;
@@ -4605,6 +5069,7 @@ const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_po
 const _lazy_tq6B3q = () => Promise.resolve().then(function () { return delete_post$1; });
 const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$9; });
 const _lazy__fdLCf = () => Promise.resolve().then(function () { return update_post$1; });
+const _lazy_fhNUjB = () => Promise.resolve().then(function () { return analyse_post$1; });
 const _lazy_0rvesM = () => Promise.resolve().then(function () { return contacted_post$1; });
 const _lazy_yBxanF = () => Promise.resolve().then(function () { return draft_post$1; });
 const _lazy_qc34eq = () => Promise.resolve().then(function () { return index_delete$3; });
@@ -4612,10 +5077,13 @@ const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get
 const _lazy_f4xwzm = () => Promise.resolve().then(function () { return index_put$3; });
 const _lazy_ygINZT = () => Promise.resolve().then(function () { return schedule_post$1; });
 const _lazy_lZmAO2 = () => Promise.resolve().then(function () { return sendMessage_post$1; });
+const _lazy_IxLe3T = () => Promise.resolve().then(function () { return sendQuestionnaire_post$1; });
 const _lazy_YUWevn = () => Promise.resolve().then(function () { return create_post$1; });
 const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_0Doaks = () => Promise.resolve().then(function () { return tiers_get$1; });
 const _lazy_i191PU = () => Promise.resolve().then(function () { return _id__get$1; });
+const _lazy_rVP_UB = () => Promise.resolve().then(function () { return _token__get$1; });
+const _lazy_JYmLBo = () => Promise.resolve().then(function () { return _token__post$1; });
 const _lazy_rfaZfx = () => Promise.resolve().then(function () { return generate_post$1; });
 const _lazy_Z1oZ9j = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$3; });
@@ -4653,6 +5121,7 @@ const handlers = [
   { route: '/api/homes/delete', handler: _lazy_tq6B3q, lazy: true, middleware: false, method: "post" },
   { route: '/api/homes', handler: _lazy_TuGNAE, lazy: true, middleware: false, method: "get" },
   { route: '/api/homes/update', handler: _lazy__fdLCf, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/analyse', handler: _lazy_fhNUjB, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/contacted', handler: _lazy_0rvesM, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/draft', handler: _lazy_yBxanF, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id', handler: _lazy_qc34eq, lazy: true, middleware: false, method: "delete" },
@@ -4660,10 +5129,13 @@ const handlers = [
   { route: '/api/leads/:id', handler: _lazy_f4xwzm, lazy: true, middleware: false, method: "put" },
   { route: '/api/leads/:id/schedule', handler: _lazy_ygINZT, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/send-message', handler: _lazy_lZmAO2, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/send-questionnaire', handler: _lazy_IxLe3T, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/create', handler: _lazy_YUWevn, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads', handler: _lazy_t9F3bu, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/tiers', handler: _lazy_0Doaks, lazy: true, middleware: false, method: "get" },
   { route: '/api/qr_code/:id', handler: _lazy_i191PU, lazy: true, middleware: false, method: "get" },
+  { route: '/api/qualify/:token', handler: _lazy_rVP_UB, lazy: true, middleware: false, method: "get" },
+  { route: '/api/qualify/:token', handler: _lazy_JYmLBo, lazy: true, middleware: false, method: "post" },
   { route: '/api/social/generate', handler: _lazy_rfaZfx, lazy: true, middleware: false, method: "post" },
   { route: '/api/social', handler: _lazy_Z1oZ9j, lazy: true, middleware: false, method: "delete" },
   { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
@@ -5023,7 +5495,7 @@ Just reply straight to this email whenever you have a second.` + signoff;
   }
 }
 
-const LeadModel$5 = schemaImport;
+const LeadModel$9 = schemaImport;
 const CampaignModel$1 = CampaignModelImport;
 const resend$2 = new Resend(process.env.RESEND_KEY);
 function localWeekday(tz, now) {
@@ -5078,7 +5550,7 @@ const reminders = defineTask({
     let campaignsFired = 0;
     let campaignEmails = 0;
     try {
-      const activeQueue = await LeadModel$5.find({
+      const activeQueue = await LeadModel$9.find({
         reminderStatus: "scheduled",
         reminderScheduledAt: { $lte: now },
         email: { $ne: "", $exists: true }
@@ -5110,7 +5582,7 @@ const reminders = defineTask({
             }
           });
         }
-        await LeadModel$5.bulkWrite(individualOps, { ordered: false });
+        await LeadModel$9.bulkWrite(individualOps, { ordered: false });
       }
       const candidateCampaigns = await CampaignModel$1.find({
         active: { $ne: false },
@@ -5130,7 +5602,7 @@ const reminders = defineTask({
             continue;
           }
         }
-        const targets = await LeadModel$5.find({
+        const targets = await LeadModel$9.find({
           userId: campaign.userId._id,
           status: campaign.targetStatus,
           email: { $ne: "", $exists: true }
@@ -5150,7 +5622,7 @@ const reminders = defineTask({
           });
           await resend$2.batch.send(batchPayload);
           campaignEmails += batchPayload.length;
-          await LeadModel$5.updateMany(
+          await LeadModel$9.updateMany(
             { _id: { $in: targets.map((t) => t._id) } },
             { $set: { lastContactedAt: now }, $inc: { contactCount: 1 } }
           );
@@ -5333,12 +5805,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$9 = UserModelImport;
-const bodySchema$k = z.object({
+const bodySchema$m = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$k.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$m.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5377,13 +5849,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$8 = UserModelImport;
-const bodySchema$j = z.object({
+const bodySchema$l = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$j.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$l.parse);
   try {
     await connectDB();
     const user = await User$8.findOne({ email });
@@ -5437,13 +5909,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$7 = UserModelImport;
-const bodySchema$i = z.object({
+const bodySchema$k = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$i.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$k.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -5466,7 +5938,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$h = z.object({
+const bodySchema$j = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5475,7 +5947,7 @@ const bodySchema$h = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$h.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$j.parse);
   try {
     await connectDB();
     const user = await User$6.findOne({ email });
@@ -5536,12 +6008,12 @@ const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$g = z.object({
+const bodySchema$i = z.object({
   _id: z.string()
 });
 const index_delete$4 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$g.parse);
+    const body = await readValidatedBody(event, bodySchema$i.parse);
     await Campaign$4.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5621,7 +6093,7 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const bodySchema$f = z.object({
+const bodySchema$h = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5630,7 +6102,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$f.parse);
+  const body = await readValidatedBody(event, bodySchema$h.parse);
   try {
     await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
@@ -5648,14 +6120,14 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$e = z.object({
+const bodySchema$g = z.object({
   _id: z.string(),
   varyWording: z.boolean()
 });
 const vary_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, varyWording } = await readValidatedBody(event, bodySchema$e.parse);
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$g.parse);
   const res = await Campaign.updateOne(
     { _id, userId: user._id },
     { $set: { varyWording } }
@@ -5736,7 +6208,7 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$5 = HomeModel;
-const bodySchema$d = z.object({
+const bodySchema$f = z.object({
   name: z.string().nullish(),
   // The address is the only field that genuinely matters — it's what gets
   // attached to a captured lead so the realtor knows which listing it came from.
@@ -5746,7 +6218,7 @@ const bodySchema$d = z.object({
   status: z.enum(["active", "pending", "sold"]).optional()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$d.parse);
+  const body = await readValidatedBody(event, bodySchema$f.parse);
   const user = await loggedInUser(event);
   try {
     const created = await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -5766,11 +6238,11 @@ const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$2 = HomeModel;
-const bodySchema$c = z.object({ _id: z.string() });
+const bodySchema$e = z.object({ _id: z.string() });
 const delete_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id } = await readValidatedBody(event, bodySchema$c.parse);
+  const { _id } = await readValidatedBody(event, bodySchema$e.parse);
   const res = await Home$2.deleteOne({ _id, userId: user._id });
   if (res.deletedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
@@ -5796,7 +6268,7 @@ const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home = HomeModel;
-const bodySchema$b = z.object({
+const bodySchema$d = z.object({
   _id: z.string(),
   name: z.string().nullish(),
   address: z.string().min(1),
@@ -5807,7 +6279,7 @@ const bodySchema$b = z.object({
 const update_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, ...fields } = await readValidatedBody(event, bodySchema$b.parse);
+  const { _id, ...fields } = await readValidatedBody(event, bodySchema$d.parse);
   const res = await Home.updateOne({ _id, userId: user._id }, { $set: fields });
   if (res.matchedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
@@ -5820,7 +6292,48 @@ const update_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: update_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$4 = schemaImport;
+const LeadModel$8 = schemaImport;
+const analyse_post = defineEventHandler(async (event) => {
+  var _a, _b, _c, _d;
+  const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const lead = await LeadModel$8.findOne({ _id: leadId, userId: user._id }).lean();
+  if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
+  const answers = (_c = (_b = lead == null ? void 0 : lead.qualification) == null ? void 0 : _b.answers) != null ? _c : {};
+  const answered = Object.values(answers).filter((v) => String(v != null ? v : "").trim()).length;
+  if (answered < 4) {
+    throw createError({
+      statusCode: 400,
+      message: "Not enough information yet. Send the questionnaire first \u2014 analysis needs real answers to be worth anything."
+    });
+  }
+  const intent = ((_d = lead == null ? void 0 : lead.qualification) == null ? void 0 : _d.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
+  const result = await analyseLead(answers, intent, (lead == null ? void 0 : lead.name) || "");
+  await LeadModel$8.updateOne({ _id: leadId, userId: user._id }, {
+    $set: {
+      analysis: {
+        readiness: result.scorecard.readiness,
+        readinessLabel: result.scorecard.readinessLabel,
+        financingRisk: result.scorecard.financingRisk,
+        signals: result.scorecard.signals,
+        gaps: result.scorecard.gaps,
+        read: result.read,
+        nextSteps: result.nextSteps,
+        source: result.source,
+        generatedAt: new Date(result.generatedAt)
+      }
+    }
+  });
+  return result;
+});
+
+const analyse_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: analyse_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const LeadModel$7 = schemaImport;
 const contacted_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -5830,7 +6343,7 @@ const contacted_post = defineEventHandler(async (event) => {
   }
   try {
     const now = /* @__PURE__ */ new Date();
-    const result = await LeadModel$4.updateOne(
+    const result = await LeadModel$7.updateOne(
       { _id: leadId, userId: user._id },
       // scoped so a realtor can only touch their own leads
       {
@@ -5854,7 +6367,7 @@ const contacted_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePr
   default: contacted_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$3 = schemaImport;
+const LeadModel$6 = schemaImport;
 const draft_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -5864,7 +6377,7 @@ const draft_post = defineEventHandler(async (event) => {
   }
   const body = await readBody(event).catch(() => ({}));
   const channel = (body == null ? void 0 : body.channel) === "email" ? "email" : "sms";
-  const lead = await LeadModel$3.findOne({ _id: leadId, userId: user._id }).lean();
+  const lead = await LeadModel$6.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
   }
@@ -5931,7 +6444,7 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$a = z.object({
+const bodySchema$c = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -5954,7 +6467,7 @@ const bodySchema$a = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$a.parse);
+  const body = await readValidatedBody(event, bodySchema$c.parse);
   try {
     const existing = await Lead$2.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
@@ -5985,7 +6498,7 @@ const index_put$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_put$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$2 = schemaImport;
+const LeadModel$5 = schemaImport;
 const schedule_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -5998,13 +6511,13 @@ const schedule_post = defineEventHandler(async (event) => {
   try {
     const queryFilter = { _id: leadId, userId: user._id };
     if (!scheduledTime) {
-      await LeadModel$2.updateOne(queryFilter, {
+      await LeadModel$5.updateOne(queryFilter, {
         $set: { reminderStatus: "none" },
         $unset: { reminderScheduledAt: "" }
       });
       return { success: true, message: "Automation sequence disabled for this client." };
     }
-    await LeadModel$2.updateOne(queryFilter, {
+    await LeadModel$5.updateOne(queryFilter, {
       $set: {
         reminderStatus: "scheduled",
         reminderScheduledAt: new Date(scheduledTime)
@@ -6021,9 +6534,9 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: schedule_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$1 = schemaImport;
+const LeadModel$4 = schemaImport;
 const resend$1 = new Resend(process.env.RESEND_KEY);
-const bodySchema$9 = z.object({
+const bodySchema$b = z.object({
   // The (possibly realtor-edited) message body to send.
   message: z.string().min(1),
   // Optional custom subject; defaults to a friendly follow-up line.
@@ -6036,8 +6549,8 @@ const sendMessage_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session expired." });
   }
-  const { message, subject } = await readValidatedBody(event, bodySchema$9.parse);
-  const lead = await LeadModel$1.findOne({ _id: leadId, userId: user._id }).lean();
+  const { message, subject } = await readValidatedBody(event, bodySchema$b.parse);
+  const lead = await LeadModel$4.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
   }
@@ -6055,7 +6568,7 @@ const sendMessage_post = defineEventHandler(async (event) => {
       text: message
     });
     const now = /* @__PURE__ */ new Date();
-    await LeadModel$1.updateOne(
+    await LeadModel$4.updateOne(
       { _id: lead._id, userId: user._id },
       {
         $set: { lastContactedAt: now, reminderStatus: "none" },
@@ -6075,8 +6588,80 @@ const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
   default: sendMessage_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const LeadModel$3 = schemaImport;
+const bodySchema$a = z.object({
+  intent: z.enum(["buy", "sell"]).optional()
+});
+const sendQuestionnaire_post = defineEventHandler(async (event) => {
+  var _a;
+  const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { intent } = await readValidatedBody(event, bodySchema$a.parse);
+  const lead = await LeadModel$3.findOne({ _id: leadId, userId: user._id }).lean();
+  if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
+  if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
+  const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
+  const token = createQualifyToken(String(lead._id));
+  const captureBase = process.env.CAPTURE_URL || "https://ghostform-zeta.vercel.app";
+  const link = `${captureBase}/?source=qualify&t=${encodeURIComponent(token)}`;
+  const u = user;
+  const agentName = u.name || u.company || "Your agent";
+  const firstName = String(lead.name || "").split(" ")[0] || "there";
+  const accent = /^#[0-9A-Fa-f]{6}$/.test(u.brand_color || "") ? u.brand_color : "#B5563A";
+  const subject = resolvedIntent === "sell" ? "A few questions before we talk about listing" : "A few questions to narrow down your search";
+  const body = resolvedIntent === "sell" ? `Hi ${firstName},
+
+Before we sit down, it would help to know a bit more about the property and what you're hoping for. It takes about five minutes, and it means our conversation starts somewhere useful instead of at the beginning.` : `Hi ${firstName},
+
+To make sure I'm only sending you places worth your time, it would help to know a bit more about what you're after. It takes about five minutes and saves us both a lot of back and forth.`;
+  const html = `<!DOCTYPE html><html><body style="margin:0;background:#EFEAE0;font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 16px;"><tr><td align="center">
+    <table role="presentation" width="100%" style="max-width:520px;background:#F7F4EF;border:1px solid #DDD6C9;">
+      <tr><td style="height:4px;background:${accent};font-size:0;line-height:0;">&nbsp;</td></tr>
+      <tr><td style="padding:30px 34px 0;">
+        <p style="margin:0;font-family:Georgia,serif;font-size:17px;font-weight:600;color:#1F1B16;">${u.company || agentName}</p>
+      </td></tr>
+      <tr><td style="padding:24px 34px 0;">
+        ${body.split("\n\n").map((p) => `<p style="margin:0 0 16px;font-size:16px;line-height:1.7;color:#1F1B16;">${p.replace(/\n/g, "<br>")}</p>`).join("")}
+      </td></tr>
+      <tr><td style="padding:10px 34px 34px;">
+        <a href="${link}" style="display:inline-block;background:${accent};color:#F7F4EF;text-decoration:none;padding:14px 30px;font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;">Answer the questions</a>
+        <p style="margin:22px 0 0;font-size:13px;line-height:1.7;color:#8A847C;">\u2014 ${agentName}</p>
+      </td></tr>
+    </table>
+  </td></tr></table></body></html>`;
+  try {
+    const resend = new Resend(process.env.RESEND_KEY);
+    await resend.emails.send({
+      from: `${String(agentName).replace(/[^a-zA-Z0-9]/g, "").toLowerCase() || "noreply"}@ascendpod.com`,
+      to: [lead.email],
+      replyTo: u.email,
+      subject,
+      html,
+      text: `${body}
+
+${link}
+
+\u2014 ${agentName}`
+    });
+  } catch (error) {
+    console.error("[qualify] send failed:", error == null ? void 0 : error.message);
+    throw createError({ statusCode: 502, message: "Could not send the email. Please try again." });
+  }
+  await LeadModel$3.updateOne({ _id: lead._id, userId: user._id }, {
+    $set: { "qualification.sentAt": /* @__PURE__ */ new Date(), "qualification.intent": resolvedIntent }
+  });
+  return { success: true, link };
+});
+
+const sendQuestionnaire_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: sendQuestionnaire_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const Lead$1 = schemaImport;
-const bodySchema$8 = z.object({
+const bodySchema$9 = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -6097,7 +6682,7 @@ const bodySchema$8 = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$8.parse);
+  const body = await readValidatedBody(event, bodySchema$9.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$1.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -6194,6 +6779,99 @@ const _id__get = defineEventHandler(async (event) => {
 const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: _id__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const LeadModel$2 = schemaImport;
+const _token__get = defineEventHandler(async (event) => {
+  var _a, _b, _c;
+  setHeader(event, "Access-Control-Allow-Origin", "*");
+  setHeader(event, "Access-Control-Allow-Headers", "content-type");
+  if (event.method === "OPTIONS") return "";
+  const token = ((_a = event.context.params) == null ? void 0 : _a.token) || "";
+  const parsed = readQualifyToken(token);
+  if (!parsed) {
+    throw createError({ statusCode: 401, message: "This link is not valid or has expired." });
+  }
+  await connectDB();
+  const lead = await LeadModel$2.findById(parsed.leadId).lean();
+  if (!lead) throw createError({ statusCode: 404, message: "We could not find that record." });
+  const intent = ((_b = lead == null ? void 0 : lead.qualification) == null ? void 0 : _b.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
+  return {
+    firstName: String(lead.name || "").split(" ")[0] || "",
+    intent,
+    // Already done? The capture app shows a "thanks, already received" state
+    // rather than letting them fill it in twice.
+    completed: Boolean((_c = lead == null ? void 0 : lead.qualification) == null ? void 0 : _c.completedAt),
+    questions: questionsFor(intent).map((q) => {
+      var _a2;
+      return {
+        id: q.id,
+        label: q.label,
+        type: q.type,
+        options: (_a2 = q.options) != null ? _a2 : null
+      };
+    })
+  };
+});
+
+const _token__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _token__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const LeadModel$1 = schemaImport;
+const bodySchema$8 = z.object({
+  answers: z.record(z.string(), z.union([z.string(), z.number()]))
+});
+const _token__post = defineEventHandler(async (event) => {
+  var _a, _b;
+  setHeader(event, "Access-Control-Allow-Origin", "*");
+  setHeader(event, "Access-Control-Allow-Headers", "content-type");
+  if (event.method === "OPTIONS") return "";
+  const token = ((_a = event.context.params) == null ? void 0 : _a.token) || "";
+  const parsed = readQualifyToken(token);
+  if (!parsed) {
+    throw createError({ statusCode: 401, message: "This link is not valid or has expired." });
+  }
+  const { answers } = await readValidatedBody(event, bodySchema$8.parse);
+  await connectDB();
+  const lead = await LeadModel$1.findById(parsed.leadId);
+  if (!lead) throw createError({ statusCode: 404, message: "We could not find that record." });
+  const intent = ((_b = lead == null ? void 0 : lead.qualification) == null ? void 0 : _b.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
+  const now = /* @__PURE__ */ new Date();
+  await LeadModel$1.updateOne({ _id: lead._id }, {
+    $set: {
+      "qualification.answers": answers,
+      "qualification.completedAt": now,
+      "qualification.intent": intent
+    }
+  });
+  try {
+    const result = await analyseLead(answers, intent, lead.name || "");
+    await LeadModel$1.updateOne({ _id: lead._id }, {
+      $set: {
+        analysis: {
+          readiness: result.scorecard.readiness,
+          readinessLabel: result.scorecard.readinessLabel,
+          financingRisk: result.scorecard.financingRisk,
+          signals: result.scorecard.signals,
+          gaps: result.scorecard.gaps,
+          read: result.read,
+          nextSteps: result.nextSteps,
+          source: result.source,
+          generatedAt: new Date(result.generatedAt)
+        }
+      }
+    });
+  } catch (err) {
+    console.error("[qualify] answers saved, analysis failed:", err);
+  }
+  return { success: true };
+});
+
+const _token__post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _token__post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const bodySchema$7 = z.object({
