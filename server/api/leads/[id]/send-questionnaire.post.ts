@@ -3,6 +3,7 @@ import { Resend } from 'resend'
 import type { Model } from 'mongoose'
 import LeadModelImport from '../../../../lib/database/models/Lead'
 import loggedInUser from '~/utils/loggedInUser'
+import { ghostFormUrl } from '~/utils/ghostFormUrl';
 
 const LeadModel = LeadModelImport as Model<any>
 
@@ -19,7 +20,8 @@ const bodySchema = z.object({
  */
 export default defineEventHandler(async (event) => {
   const leadId = event.context.params?.id
-  const user = await loggedInUser(event)
+  const user = await loggedInUser(event);
+
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
 
   const { intent } = await readValidatedBody(event, bodySchema.parse)
@@ -31,8 +33,8 @@ export default defineEventHandler(async (event) => {
   const resolvedIntent = intent || (String(lead.buy_sell_both || '').toLowerCase().includes('sell') ? 'sell' : 'buy')
   const token = createQualifyToken(String(lead._id))
 
-  const captureBase = process.env.CAPTURE_URL || 'https://ghostform-zeta.vercel.app'
-  const link = `${captureBase}/?source=qualify&t=${encodeURIComponent(token)}`
+  const useGhostFormUrl = ghostFormUrl(user.category, 'qualify', user?._id, user.company_hashed, user.email_hashed, user?.calendar_link)
+  const link = `${useGhostFormUrl}/&t=${encodeURIComponent(token)}`
 
   const u = user as any
   const agentName = u.name || u.company || 'Your agent'
