@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,7 +3006,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"3c343-1YH9OBVJ1T5HvhU6D4kakvJW9oA\"",
+    "mtime": "2026-08-23T00:14:14.768Z",
+    "size": 246595,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"dae73-e8QQBvXsVyL8Bim7n8/jBdTGKSI\"",
+    "mtime": "2026-08-23T00:14:14.769Z",
+    "size": 896627,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3492,17 +3507,41 @@ async function generateLeadDraft(lead, channel = "sms") {
   return { message: templateDraft(lead, channel), source: "template" };
 }
 
-const { MONGO_URI } = process.env;
+var _a;
+const MONGO_URI = process.env.MONGO_URI;
+const globalCache = globalThis;
+const cached = (_a = globalCache._mongoose) != null ? _a : { conn: null, promise: null };
+globalCache._mongoose = cached;
 const connectDB = async () => {
-  try {
-    const { connection } = await mongoose.connect(MONGO_URI);
-    if (connection.readyState === 1) {
-      return Promise.resolve(true);
-    }
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
+  if (!MONGO_URI) {
+    throw new Error("MONGO_URI is not set. Check your environment variables.");
   }
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return true;
+  }
+  if (!cached.promise) {
+    cached.promise = mongoose.connect(MONGO_URI, {
+      // Don't queue operations forever if the connection is down; fail fast
+      // so the caller gets a real error instead of hanging.
+      bufferCommands: false,
+      // Keep the pool small — serverless containers are short-lived and a
+      // large pool per container exhausts the Atlas limit quickly.
+      maxPoolSize: 10,
+      minPoolSize: 0,
+      serverSelectionTimeoutMS: 1e4,
+      socketTimeoutMS: 45e3,
+      // Retry a dropped write once rather than surfacing a transient blip.
+      retryWrites: true
+    });
+  }
+  try {
+    cached.conn = await cached.promise;
+  } catch (error) {
+    cached.promise = null;
+    console.error("[db] connection failed:", error == null ? void 0 : error.message);
+    throw error;
+  }
+  return true;
 };
 
 const userSchema = new Schema({

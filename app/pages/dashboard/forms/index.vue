@@ -60,16 +60,16 @@ const formFunnels = computed(() => [
     icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586A1 1 0 0114 3.414L18.586 8A1 1 0 0119 8.586V19a2 2 0 01-2 2z',
     form_url: buildUrl('data_entry')
   },
-  //   {
-  //   id: 'data-active',
-  //   label: 'Active Entry',
-  //   description:
-  //     'To gather more defined information from the lead.',
-  //   badge: 'Active lead',
-  //   source: 'data_active',
-  //   icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586A1 1 0 0114 3.414L18.586 8A1 1 0 0119 8.586V19a2 2 0 01-2 2z',
-  //   form_url: buildUrl('data_active')
-  // }
+  {
+    id: 'data-active',
+    label: 'Active Entry',
+    description:
+      'To gather more defined information from the lead.',
+    badge: 'Active lead',
+    source: 'data_active',
+    icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586A1 1 0 0114 3.414L18.586 8A1 1 0 0119 8.586V19a2 2 0 01-2 2z',
+    form_url: buildUrl('data_active')
+  }
 ]);
 </script>
 
@@ -98,12 +98,7 @@ const formFunnels = computed(() => [
     </header>
 
     <!-- ── The forms ─────────────────────────────────────────── -->
-    <section
-      v-for="(item, i) in formFunnels"
-      :key="item.id"
-      class="gf-depth mb-16"
-      :style="`--d:${0.05 * i}s`"
-    >
+    <section v-for="(item, i) in formFunnels" :key="item.id" class="gf-depth mb-16" :style="`--d:${0.05 * i}s`">
       <div class="flex flex-wrap items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
         <span class="gf-eyebrow">{{ String(i + 1).padStart(2, '0') }} — Form</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">{{ item.label }}</span>
@@ -115,15 +110,8 @@ const formFunnels = computed(() => [
       </p>
 
       <div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7">
-        <baseCardForm
-          :label="item.label"
-          :description="item.description"
-          :icon="item.icon"
-          :badge="item.badge"
-          badgeClass="text-[#B5563A]"
-          :qr_code_url="item.form_url"
-          :data="item.data_home"
-        />
+        <baseCardForm :label="item.label" :description="item.description" :icon="item.icon" :badge="item.badge"
+          badgeClass="text-[#B5563A]" :qr_code_url="item.form_url" :data="item.data_home" />
       </div>
     </section>
 

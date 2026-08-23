@@ -21,8 +21,7 @@ interface Briefing {
   headline: string
 }
 
-const { data: briefing } = useNuxtData<Briefing>('briefing')
-const pending = computed(() => !briefing.value)
+const { data: briefing, pending } = useNuxtData<Briefing>('briefing')
 const toast = useToast()
 
 const marking = ref<Set<string>>(new Set())
@@ -78,19 +77,38 @@ async function markContacted(lead: BriefingLead) {
   fileAway(lead._id)
 
   try {
+    // The WRITE is the only thing that decides success or failure.
     await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' })
-    toast.success(`Marked ${lead.name} as contacted`)
-    await refreshNuxtData('leads')
   } catch {
-    // Roll back on failure.
+    // The write genuinely failed — put the lead back and say so.
     if (briefing.value) {
       briefing.value.leads = prevLeads
       briefing.value.totals = prevTotals
     }
     toast.error('Could not update. Please try again.')
+    marking.value.delete(lead._id)
+    return
+  }
+
+  toast.success(`Marked ${lead.name} as contacted`)
+
+  // Refresh AFTER the write is confirmed, and deliberately outside the
+  // try above. A refresh is a nice-to-have: if it fails (network blip, a
+  // Mongo hiccup) the contact is already saved, so resurrecting the lead
+  // would be wrong and confusing.
+  //
+  // This was the bug — refreshNuxtData sat inside the same try/catch, so a
+  // failed REFRESH triggered the rollback for a write that had already
+  // succeeded. The lead reappeared right after a success toast.
+  try {
+    await Promise.all([
+      refreshNuxtData('leads'),
+      refreshNuxtData('briefing')
+    ])
+  } catch (err) {
+    console.error('[briefing] refresh after contact failed (contact was saved):', err)
   } finally {
-    marking.value.delete(lead._id);
-    await refreshNuxtData('leads')
+    marking.value.delete(lead._id)
   }
 }
 </script>

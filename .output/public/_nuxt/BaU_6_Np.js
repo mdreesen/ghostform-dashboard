@@ -1,0 +1,1 @@
+import{e as s,y as o,c as r,K as n,A as _,o as c}from"./mV32UKH1.js";const p=s({__name:"form",async setup(l){let e,t;return[e,t]=o(()=>_("/api/user",{key:"get_user",lazy:!0},"$CMfEJoZiRU")),await e,t(),(a,u)=>(c(),r("main",null,[n(a.$slots,"default")]))}});export{p as default};

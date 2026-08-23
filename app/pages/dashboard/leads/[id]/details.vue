@@ -48,11 +48,22 @@ async function markContacted() {
   marking.value = true;
   try {
     await $fetch(`/api/leads/${route.params.id}/contacted`, { method: 'POST' });
-    (lead.value as any).lastContactedAt = new Date().toISOString();
-    toast.success('Marked as contacted');
-    await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')]);
   } catch {
+    // Only a failed WRITE is an error worth showing.
     toast.error('Could not update. Please try again.');
+    marking.value = false;
+    return;
+  }
+
+  (lead.value as any).lastContactedAt = new Date().toISOString();
+  toast.success('Marked as contacted');
+
+  // Refresh is best-effort — the contact is already saved, so a failed
+  // refetch must not surface as "could not update".
+  try {
+    await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')]);
+  } catch (err) {
+    console.error('[lead] refresh after contact failed (contact was saved):', err);
   } finally {
     marking.value = false;
   }

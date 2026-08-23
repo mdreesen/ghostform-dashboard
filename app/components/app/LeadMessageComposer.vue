@@ -78,11 +78,20 @@ watch(channel, () => { if (open.value) generate() })
 /** Shared cleanup after either send path succeeds. */
 async function afterSend(label: string) {
   toast.success(label)
-  await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')])
+
+  // Close and file the lead away FIRST. A refresh failing must not stop the
+  // UI from reflecting a send that already happened — previously a thrown
+  // refresh skipped the emit entirely and the row stayed on the list.
   emit('sent', props.leadId)
   open.value = false
   message.value = ''
   source.value = null
+
+  try {
+    await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')])
+  } catch (err) {
+    console.error('[composer] refresh after send failed (message was sent):', err)
+  }
 }
 
 async function openMessages() {
