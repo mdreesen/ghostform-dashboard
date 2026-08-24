@@ -20,8 +20,7 @@ const bodySchema = z.object({
  */
 export default defineEventHandler(async (event) => {
   const leadId = event.context.params?.id
-  const user = await loggedInUser(event);
-
+  const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
 
   const { intent } = await readValidatedBody(event, bodySchema.parse)
@@ -31,10 +30,12 @@ export default defineEventHandler(async (event) => {
   if (!lead.email) throw createError({ statusCode: 400, message: 'This lead has no email address.' })
 
   const resolvedIntent = intent || (String(lead.buy_sell_both || '').toLowerCase().includes('sell') ? 'sell' : 'buy')
-  const token = createQualifyToken(String(lead._id))
-
-  const useGhostFormUrl = ghostFormUrl(user.category, 'qualify', user?._id, user.company_hashed, user.email_hashed, user?.calendar_link)
-  const link = `${useGhostFormUrl}/&t=${encodeURIComponent(token)}`
+  // Plain lead id. The capture app serves the questionnaire from its OWN
+  // backend against the shared database, so there is no cross-origin call and
+  // nothing to sign for a fetch. The id is a Mongo ObjectId — not guessable,
+  // and the questionnaire endpoint returns only a first name.
+  const captureBase = process.env.CAPTURE_URL || 'https://ghostform-zeta.vercel.app'
+  const link = ghostFormUrl(user.category, 'qualify', user?._id, user.company_hashed, user.email_hashed, user?.calendar_link)
 
   const u = user as any
   const agentName = u.name || u.company || 'Your agent'

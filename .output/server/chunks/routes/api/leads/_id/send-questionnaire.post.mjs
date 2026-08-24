@@ -1,4 +1,4 @@
-import { a as defineEventHandler, b as createError, r as readValidatedBody, s as schemaImport, q as createQualifyToken } from '../../../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError, r as readValidatedBody, s as schemaImport } from '../../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import { Resend } from 'resend';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
@@ -16,6 +16,21 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
+function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, options) {
+  const base = "https://ghostform-zeta.vercel.app/";
+  const stripHash = (c) => (c || "").replace(/^#/, "");
+  const params = new URLSearchParams();
+  if (useCategory) params.set("category", useCategory);
+  params.set("source", useSource);
+  if (useCategory && useId) params.set("id", useId);
+  if (useName) params.set("company_name", useName);
+  if (useEmail) params.set("company_email", useEmail);
+  if (useCalendar) params.set("calendar", useCalendar);
+  params.set("background_color", stripHash(void 0 ) || "F7F4EF");
+  params.set("font_color", stripHash(void 0 ) || "1F1B16");
+  return `${base}?${params.toString()}`;
+}
+
 const LeadModel = schemaImport;
 const bodySchema = z.object({
   intent: z.enum(["buy", "sell"]).optional()
@@ -30,9 +45,8 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
   const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
-  const token = createQualifyToken(String(lead._id));
-  const captureBase = process.env.CAPTURE_URL || "https://ghostform-zeta.vercel.app";
-  const link = `${captureBase}/?source=qualify&t=${encodeURIComponent(token)}`;
+  process.env.CAPTURE_URL || "https://ghostform-zeta.vercel.app";
+  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link);
   const u = user;
   const agentName = u.name || u.company || "Your agent";
   const firstName = String(lead.name || "").split(" ")[0] || "there";
