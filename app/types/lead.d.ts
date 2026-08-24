@@ -1,3 +1,4 @@
+  import type { BUY, SELL } from '~/types/answers';
   export interface Lead {
     _id?: string;
     company_name?: string;
@@ -30,7 +31,7 @@
     qualification?: {
       intent: string;
       sentAt: string;
-      answers: Object;
+      answers: BUY | SELL;
       completedAt: string;
     }
 }

@@ -23,8 +23,8 @@ const analysis = computed(() => lead.value?.ai_analysis || null);
 const answeredCount = computed(() =>
   Object.values(qual.value?.answers || {}).filter((v: any) => String(v ?? '').trim()).length
 );
-const answers_qualifying = computed(() => lead.value?.qualification.answers);
-console.log(analysis.value)
+const qualificationAnswer = (key: string) => (lead.value as any)?.qualification?.answers?.[key];
+
 /** Default to what the lead already told us at capture. */
 const intent = ref(
   String((lead.value as any)?.buy_sell_both || '').toLowerCase().includes('sell') ? 'sell' : 'buy'
@@ -64,6 +64,8 @@ async function runAnalysis() {
       source: res.source,
       generatedAt: res.generatedAt
     };
+    await refreshNuxtData(['leads']);
+
     toast.success('Analysis updated.');
   } catch (err: any) {
     toast.error(err?.data?.message || 'Could not run the analysis.');
@@ -177,20 +179,108 @@ async function markContacted() {
         </div>
 
         <div v-if="lead.qualification" class="flex flex-col gap-4">
+
           <div class="flex flex-col">
             <span class="gf-eyebrow">Lead is looking to {{ lead.qualification.intent }}</span>
             <span class="font-display text-[25px] font-semibold tracking-tight">Qualifying Details</span>
           </div>
           <div>
-            <div>
-              <p>{{ `Time Line ${lead.qualification?.answers?.q_timeline}` }}</p>
-              <p>{{ `Financing ${lead.qualification?.answers?.q_financing}` }}</p>
-              <p>{{ `Lender ${lead.qualification?.answers?.q_lender}` }}</p>
-              <p>{{ `Budget $${lead.qualification?.answers?.q_budget_max}` }}</p>
-              <p>{{ `Must Haves ${lead.qualification?.answers?.q_must_haves}` }}</p>
-              <p>{{ `Deal Breakders ${lead.qualification?.answers?.q_deal_breakers}` }}</p>
-              <p>{{ `Current Situation ${lead.qualification?.answers?.q_current_situation}` }}</p>
-              <p>{{ `Areas they are considering ${lead.qualification?.answers?.q_areas}` }}</p>
+            <div v-if="lead.qualification.intent === 'buy'">
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Time Line</span><span>{{
+                  qualificationAnswer('q_timeline') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Financing</span><span>{{
+                  qualificationAnswer('q_financing') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Lender</span><span>{{
+                  qualificationAnswer('q_lender') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Budget</span><span>{{
+                  qualificationAnswer('q_budget_max') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Must Haves</span><span>{{
+                  qualificationAnswer('q_must_haves') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Deal Breakers</span><span>{{
+                  qualificationAnswer('q_deal_breakers') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Current Situation</span><span>{{
+                  qualificationAnswer('q_current_situation') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Areas they are considering</span><span>{{ qualificationAnswer('q_areas') }}</span>
+              </div>
+            </div>
+
+            <div v-if="lead.qualification.intent === 'sell'" class="flex flex-col gap-2">
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Time Line</span><span>{{
+                  qualificationAnswer('q_timeline') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Reason</span><span>{{
+                  qualificationAnswer('q_reason') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Price Expectation</span><span>{{
+                  qualificationAnswer('q_price_expectation')}}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Price Basis</span><span>{{
+                  qualificationAnswer('q_price_basis')}}</span>
+              </div>
+
+              <div>
+                <span
+                  class="text-[18px] font-semibold tracking-tight pr-2">Mortage</span><span>{{ `$${qualificationAnswer('q_mortgage')}` }}</span>
+              </div>
+
+              <div>
+                <span
+                  class="text-[18px] font-semibold tracking-tight pr-2">Conditions</span><span>{{ qualificationAnswer('q_condition') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Improvements
+                  Done</span><span>{{ qualificationAnswer('q_improvements') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Listed
+                  Before</span><span>{{ qualificationAnswer('q_listed_before') }}</span>
+              </div>
+
+              <div>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Also
+                  Buying</span><span>{{ qualificationAnswer('q_buying_too') }}</span>
+              </div>
+
+              <div>
+                <span
+                  class="text-[18px] font-semibold tracking-tight pr-2">Flexibility</span><span>{{ qualificationAnswer('q_flexibility') }}</span>
+              </div>
+
+              <div>
+                <span
+                  class="text-[18px] font-semibold tracking-tight pr-2">Decision</span><span>{{ qualificationAnswer('q_decision') }}</span>
+              </div>
             </div>
           </div>
 
@@ -299,7 +389,8 @@ async function markContacted() {
           <div v-if="analysis?.scorecard?.gaps?.length">
             <p class="gf-eyebrow mb-3">Still unknown</p>
             <ul class="space-y-2.5">
-              <li v-for="g in analysis?.scorecard.gaps" :key="g" class="flex gap-3 text-[13.5px] leading-relaxed text-[#8A847C]">
+              <li v-for="g in analysis?.scorecard.gaps" :key="g"
+                class="flex gap-3 text-[13.5px] leading-relaxed text-[#8A847C]">
                 <span class="w-1.5 h-1.5 border border-[#A9A39A] mt-2 shrink-0" />
                 <span>{{ g }}</span>
               </li>
