@@ -1,0 +1,1 @@
+import{_ as s}from"./DlAUqK2U.js";import{o as t,c as o,a,M as n}from"./C_2PqVoj.js";const r={},c={class:"bg-[#F7F4EF] text-[#1F1B16] selection:bg-[#B5563A]/30 font-sans min-h-screen relative overflow-hidden"},l={class:"py-20 p-6 lg:py-18 relative z-10"};function i(e,_){return t(),o("main",c,[a("main",l,[n(e.$slots,"default")])])}const m=s(r,[["render",i]]);export{m as default};

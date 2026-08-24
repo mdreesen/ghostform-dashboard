@@ -16,6 +16,7 @@ export function ghostFormUrl(
     useName: string,
     useEmail: string,
     useCalendar: string,
+    useLead: string,
     options?: { backgroundColor?: string; fontColor?: string; baseUrl?: string }
 ) {
     // For the questions (the source), valid question rendering is as follows:
@@ -36,6 +37,7 @@ export function ghostFormUrl(
     if (useName) params.set('company_name', useName);
     if (useEmail) params.set('company_email', useEmail);
     if (useCalendar) params.set('calendar', useCalendar);
+    if (useLead) params.set('lead', useLead);
     params.set('background_color', stripHash(options?.backgroundColor) || 'F7F4EF');
     params.set('font_color', stripHash(options?.fontColor) || '1F1B16');
 

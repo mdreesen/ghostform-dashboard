@@ -35,7 +35,8 @@ export default defineEventHandler(async (event) => {
   // nothing to sign for a fetch. The id is a Mongo ObjectId — not guessable,
   // and the questionnaire endpoint returns only a first name.
   const captureBase = process.env.CAPTURE_URL || 'https://ghostform-zeta.vercel.app'
-  const link = ghostFormUrl(user.category, 'qualify', user?._id, user.company_hashed, user.email_hashed, user?.calendar_link)
+  const link = ghostFormUrl(user.category, 'qualify', user?._id, user.company_hashed, user.email_hashed, user?.calendar_link, leadId)
+  console.log('link', link);
 
   const u = user as any
   const agentName = u.name || u.company || 'Your agent'

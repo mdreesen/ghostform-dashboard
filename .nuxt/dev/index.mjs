@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,22 +3006,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"430ea-MwZ1dnMUjZI9bAxKP673hNEZBWA\"",
-    "mtime": "2026-08-24T13:41:09.371Z",
-    "size": 274666,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"f42f9-ScwQ4vyHtEsj2WPjIcyO3kQLd90\"",
-    "mtime": "2026-08-24T13:41:09.373Z",
-    "size": 1000185,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3314,7 +3299,7 @@ const leadSchema = new Schema({
   budget: Number,
   notes: String,
   seeing_an_agent: String,
-  ai_analysis: String,
+  ai_analysis: Object,
   status: { type: String, default: "new" },
   date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
   reminderSent: { type: Boolean, default: false },
@@ -6276,7 +6261,7 @@ const analyse_post = defineEventHandler(async (event) => {
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const lead = await LeadModel$8.findOne({ _id: leadId, userId: user._id }).lean();
+  const lead = await LeadModel$8.findOne({ _id: leadId }).lean();
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   const answers = (_c = (_b = lead == null ? void 0 : lead.qualification) == null ? void 0 : _b.answers) != null ? _c : {};
   const answered = Object.values(answers).filter((v) => String(v != null ? v : "").trim()).length;
@@ -6288,21 +6273,9 @@ const analyse_post = defineEventHandler(async (event) => {
   }
   const intent = ((_d = lead == null ? void 0 : lead.qualification) == null ? void 0 : _d.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
   const result = await analyseLead(answers, intent, (lead == null ? void 0 : lead.name) || "");
-  await LeadModel$8.updateOne({ _id: leadId, userId: user._id }, {
-    $set: {
-      analysis: {
-        readiness: result.scorecard.readiness,
-        readinessLabel: result.scorecard.readinessLabel,
-        financingRisk: result.scorecard.financingRisk,
-        signals: result.scorecard.signals,
-        gaps: result.scorecard.gaps,
-        read: result.read,
-        nextSteps: result.nextSteps,
-        source: result.source,
-        generatedAt: new Date(result.generatedAt)
-      }
-    }
-  });
+  console.log("lead", lead);
+  console.log("Analysis result", result);
+  await LeadModel$8.findOneAndUpdate({ _id: leadId }, { ai_analysis: result });
   return result;
 });
 
@@ -6566,7 +6539,7 @@ const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
   default: sendMessage_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, options) {
+function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useLead, options) {
   const base = "https://ghostform-zeta.vercel.app/";
   const stripHash = (c) => (c || "").replace(/^#/, "");
   const params = new URLSearchParams();
@@ -6576,6 +6549,7 @@ function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalen
   if (useName) params.set("company_name", useName);
   if (useEmail) params.set("company_email", useEmail);
   if (useCalendar) params.set("calendar", useCalendar);
+  if (useLead) params.set("lead", useLead);
   params.set("background_color", stripHash(void 0 ) || "F7F4EF");
   params.set("font_color", stripHash(void 0 ) || "1F1B16");
   return `${base}?${params.toString()}`;
@@ -6596,7 +6570,8 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
   const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
   process.env.CAPTURE_URL || "https://ghostform-zeta.vercel.app";
-  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link);
+  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link, leadId);
+  console.log("link", link);
   const u = user;
   const agentName = u.name || u.company || "Your agent";
   const firstName = String(lead.name || "").split(" ")[0] || "there";

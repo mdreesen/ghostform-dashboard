@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
 
-  const lead = await LeadModel.findOne({ _id: leadId, userId: user._id }).lean() as any
+  const lead = await LeadModel.findOne({ _id: leadId }).lean() as any
   if (!lead) throw createError({ statusCode: 404, message: 'Lead not found.' })
 
   const answers = lead?.qualification?.answers ?? {}
@@ -34,22 +34,9 @@ export default defineEventHandler(async (event) => {
 
   const intent = lead?.qualification?.intent || lead?.buy_sell_both || 'buy'
   const result = await analyseLead(answers, intent, lead?.name || '')
-
-  await LeadModel.updateOne({ _id: leadId, userId: user._id }, {
-    $set: {
-      analysis: {
-        readiness: result.scorecard.readiness,
-        readinessLabel: result.scorecard.readinessLabel,
-        financingRisk: result.scorecard.financingRisk,
-        signals: result.scorecard.signals,
-        gaps: result.scorecard.gaps,
-        read: result.read,
-        nextSteps: result.nextSteps,
-        source: result.source,
-        generatedAt: new Date(result.generatedAt)
-      }
-    }
-  })
+console.log('lead', lead)
+console.log('Analysis result', result);
+  await LeadModel.findOneAndUpdate({ _id: leadId }, { ai_analysis: result })
 
   return result
 })

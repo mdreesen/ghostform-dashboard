@@ -826,7 +826,7 @@ const _routes = [
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
     meta: __nuxt_page_meta$9 || {},
-    component: () => import('./details-CaWGLb7U.mjs')
+    component: () => import('./details-C0or7yNB.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
@@ -844,7 +844,7 @@ const _routes = [
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-BiUXXeiD.mjs')
+    component: () => import('./index-BPwg8bf2.mjs')
   },
   {
     name: "dashboard-home",

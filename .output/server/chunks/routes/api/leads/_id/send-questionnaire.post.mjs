@@ -16,7 +16,7 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, options) {
+function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useLead, options) {
   const base = "https://ghostform-zeta.vercel.app/";
   const stripHash = (c) => (c || "").replace(/^#/, "");
   const params = new URLSearchParams();
@@ -26,6 +26,7 @@ function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalen
   if (useName) params.set("company_name", useName);
   if (useEmail) params.set("company_email", useEmail);
   if (useCalendar) params.set("calendar", useCalendar);
+  if (useLead) params.set("lead", useLead);
   params.set("background_color", stripHash(void 0 ) || "F7F4EF");
   params.set("font_color", stripHash(void 0 ) || "1F1B16");
   return `${base}?${params.toString()}`;
@@ -46,7 +47,8 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
   const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
   process.env.CAPTURE_URL || "https://ghostform-zeta.vercel.app";
-  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link);
+  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link, leadId);
+  console.log("link", link);
   const u = user;
   const agentName = u.name || u.company || "Your agent";
   const firstName = String(lead.name || "").split(" ")[0] || "there";

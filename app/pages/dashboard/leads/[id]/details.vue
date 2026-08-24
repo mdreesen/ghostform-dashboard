@@ -19,11 +19,12 @@ const analysing = ref(false);
 
 /** Has this lead already been sent, or completed, the deep-dive questionnaire? */
 const qual = computed(() => (lead.value as any)?.qualification || {});
-const analysis = computed(() => (lead.value as any)?.analysis || null);
+const analysis = computed(() => lead.value?.ai_analysis || null);
 const answeredCount = computed(() =>
   Object.values(qual.value?.answers || {}).filter((v: any) => String(v ?? '').trim()).length
 );
-
+const answers_qualifying = computed(() => lead.value?.qualification.answers);
+console.log(analysis.value)
 /** Default to what the lead already told us at capture. */
 const intent = ref(
   String((lead.value as any)?.buy_sell_both || '').toLowerCase().includes('sell') ? 'sell' : 'buy'
@@ -131,11 +132,8 @@ async function markContacted() {
 
     <!-- ── Head ──────────────────────────────────────────────── -->
     <header class="mb-16 pt-4">
-      <NuxtLink
-        to="/dashboard/leads"
-        class="gf-eyebrow inline-block mb-6 hover:text-[#B5563A] transition-colors gf-rise"
-        style="--d:.04s"
-      >
+      <NuxtLink to="/dashboard/leads"
+        class="gf-eyebrow inline-block mb-6 hover:text-[#B5563A] transition-colors gf-rise" style="--d:.04s">
         ← All leads
       </NuxtLink>
 
@@ -156,18 +154,12 @@ async function markContacted() {
 
         <div class="flex gap-2.5 gf-rise shrink-0" style="--d:.18s">
           <ClientOnly>
-            <appLeadMessageComposer
-              v-if="lead?._id"
-              :lead-id="String(lead._id)"
-              :lead-name="lead?.name"
-              :lead-phone="lead?.phone"
-            />
+            <appLeadMessageComposer v-if="lead?._id" :lead-id="String(lead._id)" :lead-name="lead?.name"
+              :lead-phone="lead?.phone" />
           </ClientOnly>
-          <button
-            :disabled="marking"
+          <button :disabled="marking"
             class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
-            @click="markContacted"
-          >
+            @click="markContacted">
             {{ marking ? 'Saving…' : 'Contacted' }}
           </button>
           <baseButtonNavigate text="Edit" :path="`/dashboard/leads/${route.params.id}/edit`" />
@@ -178,9 +170,41 @@ async function markContacted() {
     <!-- ── 01 Reach them ─────────────────────────────────────── -->
     <!-- ── Qualification & analysis ──────────────────────────── -->
     <section class="gf-depth mb-20">
-      <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">Qualifying</span>
-        <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
+      <div class="flex flex-col items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+        <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+          <span class="gf-eyebrow">Qualifying</span>
+          <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
+        </div>
+
+        <div v-if="lead.qualification" class="flex flex-col gap-4">
+          <div class="flex flex-col">
+            <span class="gf-eyebrow">Lead is looking to {{ lead.qualification.intent }}</span>
+            <span class="font-display text-[25px] font-semibold tracking-tight">Qualifying Details</span>
+          </div>
+          <div>
+            <div>
+              <p>{{ `Time Line ${lead.qualification?.answers?.q_timeline}` }}</p>
+              <p>{{ `Financing ${lead.qualification?.answers?.q_financing}` }}</p>
+              <p>{{ `Lender ${lead.qualification?.answers?.q_lender}` }}</p>
+              <p>{{ `Budget $${lead.qualification?.answers?.q_budget_max}` }}</p>
+              <p>{{ `Must Haves ${lead.qualification?.answers?.q_must_haves}` }}</p>
+              <p>{{ `Deal Breakders ${lead.qualification?.answers?.q_deal_breakers}` }}</p>
+              <p>{{ `Current Situation ${lead.qualification?.answers?.q_current_situation}` }}</p>
+              <p>{{ `Areas they are considering ${lead.qualification?.answers?.q_areas}` }}</p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button :disabled="analysing"
+              class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors disabled:opacity-40"
+              @click="runAnalysis">
+              {{ analysing ? 'Thinking…' : analysis ? 'Re-run analysis' : 'Run analysis' }}
+            </button>
+            <p v-if="analysis?.source === 'scorecard-only'" class="text-[12.5px] text-[#A9A39A]">
+              Scorecard only — add an AI key for the written read.
+            </p>
+          </div>
+        </div>
       </div>
 
       <!-- Not yet sent -->
@@ -193,19 +217,15 @@ async function markContacted() {
         </p>
 
         <div class="flex flex-wrap items-center gap-3">
-          <select
-            v-model="intent"
-            class="bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[14px] focus:outline-none focus:border-[#B5563A]"
-          >
+          <select v-model="intent"
+            class="bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[14px] focus:outline-none focus:border-[#B5563A]">
             <option value="buy">Buyer questions</option>
             <option value="sell">Seller questions</option>
           </select>
 
-          <button
-            :disabled="sendingQuestionnaire || !lead?.email"
+          <button :disabled="sendingQuestionnaire || !lead?.email"
             class="px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-            @click="sendQuestionnaire"
-          >
+            @click="sendQuestionnaire">
             {{ sendingQuestionnaire ? 'Sending…' : 'Send questionnaire' }}
           </button>
         </div>
@@ -222,11 +242,9 @@ async function markContacted() {
           They haven't finished it yet. Worth a mention next time you speak —
           it's the fastest way to make your next conversation useful.
         </p>
-        <button
-          :disabled="sendingQuestionnaire"
+        <button :disabled="sendingQuestionnaire"
           class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors disabled:opacity-40"
-          @click="sendQuestionnaire"
-        >
+          @click="sendQuestionnaire">
           {{ sendingQuestionnaire ? 'Sending…' : 'Send it again' }}
         </button>
       </div>
@@ -238,20 +256,20 @@ async function markContacted() {
           <div class="bg-[#F7F4EF] p-7">
             <p class="gf-eyebrow mb-3">Readiness</p>
             <p class="font-display text-[42px] font-semibold leading-none tabular-nums">
-              {{ analysis.readiness }}<span class="text-[18px] text-[#A9A39A]">/100</span>
+              {{ analysis.scorecard.readiness }}<span class="text-[18px] text-[#A9A39A]">/100</span>
             </p>
-            <p class="text-[13px] text-[#8A847C] mt-2">{{ analysis.readinessLabel }}</p>
+            <p class="text-[13px] text-[#8A847C] mt-2">{{ analysis.scorecard.readinessLabel }}</p>
           </div>
           <div class="bg-[#F7F4EF] p-7">
             <p class="gf-eyebrow mb-3">Financing</p>
             <p class="font-display text-[26px] font-semibold capitalize"
-              :class="analysis.financingRisk === 'high' ? 'text-[#B5563A]' : ''">
-              {{ analysis.financingRisk }}
+              :class="analysis.scorecard.financingRisk === 'high' ? 'text-[#B5563A]' : ''">
+              {{ analysis.scorecard.financingRisk }}
             </p>
             <p class="text-[13px] text-[#8A847C] mt-2">
-              {{ analysis.financingRisk === 'high'
+              {{ analysis.scorecard.financingRisk === 'high'
                 ? 'Most likely thing to stall this'
-                : analysis.financingRisk === 'low' ? 'Not a concern' : 'Worth confirming' }}
+                : analysis.scorecard.financingRisk === 'low' ? 'Not a concern' : 'Worth confirming' }}
             </p>
           </div>
           <div class="bg-[#F7F4EF] p-7">
@@ -269,19 +287,19 @@ async function markContacted() {
 
         <!-- Signals & gaps -->
         <div class="grid sm:grid-cols-2 gap-6 mb-6">
-          <div v-if="analysis?.signals?.length">
+          <div v-if="analysis?.scorecard?.signals?.length">
             <p class="gf-eyebrow mb-3">What stands out</p>
             <ul class="space-y-2.5">
-              <li v-for="s in analysis.signals" :key="s" class="flex gap-3 text-[13.5px] leading-relaxed">
+              <li v-for="s in analysis?.scorecard.signals" :key="s" class="flex gap-3 text-[13.5px] leading-relaxed">
                 <span class="w-1.5 h-1.5 bg-[#B5563A] mt-2 shrink-0" />
                 <span>{{ s }}</span>
               </li>
             </ul>
           </div>
-          <div v-if="analysis?.gaps?.length">
+          <div v-if="analysis?.scorecard?.gaps?.length">
             <p class="gf-eyebrow mb-3">Still unknown</p>
             <ul class="space-y-2.5">
-              <li v-for="g in analysis.gaps" :key="g" class="flex gap-3 text-[13.5px] leading-relaxed text-[#8A847C]">
+              <li v-for="g in analysis?.scorecard.gaps" :key="g" class="flex gap-3 text-[13.5px] leading-relaxed text-[#8A847C]">
                 <span class="w-1.5 h-1.5 border border-[#A9A39A] mt-2 shrink-0" />
                 <span>{{ g }}</span>
               </li>
@@ -294,25 +312,13 @@ async function markContacted() {
           <p class="gf-eyebrow mb-4">Do this next</p>
           <ol class="space-y-3">
             <li v-for="(n, i) in analysis.nextSteps" :key="n" class="flex gap-4 text-[14.5px] leading-relaxed">
-              <span class="font-display text-[13px] text-[#B5563A] border border-[#B5563A] w-6 h-6 flex items-center justify-center shrink-0">
+              <span
+                class="font-display text-[13px] text-[#B5563A] border border-[#B5563A] w-6 h-6 flex items-center justify-center shrink-0">
                 {{ Number(i) + 1 }}
               </span>
               <span>{{ n }}</span>
             </li>
           </ol>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3">
-          <button
-            :disabled="analysing"
-            class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors disabled:opacity-40"
-            @click="runAnalysis"
-          >
-            {{ analysing ? 'Thinking…' : analysis ? 'Re-run analysis' : 'Run analysis' }}
-          </button>
-          <p v-if="analysis?.source === 'scorecard-only'" class="text-[12.5px] text-[#A9A39A]">
-            Scorecard only — add an AI key for the written read.
-          </p>
         </div>
       </div>
     </section>
@@ -350,11 +356,8 @@ async function markContacted() {
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
         <div class="lg:col-span-7">
           <div v-if="facts.length">
-            <div
-              v-for="f in facts"
-              :key="f.label"
-              class="flex justify-between items-baseline gap-6 border-b border-[#DDD6C9] py-3.5"
-            >
+            <div v-for="f in facts" :key="f.label"
+              class="flex justify-between items-baseline gap-6 border-b border-[#DDD6C9] py-3.5">
               <span class="gf-eyebrow">{{ f.label }}</span>
               <span class="font-display text-[17px] font-semibold text-right">{{ f.value }}</span>
             </div>
@@ -381,7 +384,7 @@ async function markContacted() {
     </section>
 
     <!-- ── 03 AI read ────────────────────────────────────────── -->
-    <ClientOnly>
+    <!-- <ClientOnly>
       <section v-if="lead?.ai_analysis" class="gf-depth">
         <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
           <span class="gf-eyebrow">03 — Analysis</span>
@@ -389,10 +392,10 @@ async function markContacted() {
         </div>
         <div class="bg-[#EFEAE0] border border-[#DDD6C9] p-9 relative">
           <span class="absolute top-5 right-5 gf-eyebrow text-[#A9A39A]">AI generated</span>
-          <p class="text-[15px] leading-[1.75] max-w-[70ch]" v-html="lead?.ai_analysis" />
+          <p class="text-[15px] leading-[1.75] max-w-[70ch]" v-html="lead?.ai_analysis?.read" />
         </div>
       </section>
-    </ClientOnly>
+    </ClientOnly> -->
 
   </div>
 </template>

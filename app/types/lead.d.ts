@@ -21,10 +21,16 @@
     budget?: number;
     seeing_an_agent?: string;
     notes?: string;
-    ai_analysis?: string;
+    ai_analysis?: Object;
     // Contact tracking — powers the daily briefing and "last contact" display.
     lastContactedAt?: string | Date | null;
     contactCount?: number;
     reminderStatus?: string;
     reminderScheduledAt?: string | Date | null;
+    qualification?: {
+      intent: string;
+      sentAt: string;
+      answers: Object;
+      completedAt: string;
+    }
 }
