@@ -33,8 +33,6 @@ const analyse_post = defineEventHandler(async (event) => {
   }
   const intent = ((_d = lead == null ? void 0 : lead.qualification) == null ? void 0 : _d.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
   const result = await analyseLead(answers, intent, (lead == null ? void 0 : lead.name) || "");
-  console.log("lead", lead);
-  console.log("Analysis result", result);
   await LeadModel.findOneAndUpdate({ _id: leadId }, { ai_analysis: result });
   return result;
 });

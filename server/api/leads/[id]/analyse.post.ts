@@ -34,8 +34,7 @@ export default defineEventHandler(async (event) => {
 
   const intent = lead?.qualification?.intent || lead?.buy_sell_both || 'buy'
   const result = await analyseLead(answers, intent, lead?.name || '')
-console.log('lead', lead)
-console.log('Analysis result', result);
+
   await LeadModel.findOneAndUpdate({ _id: leadId }, { ai_analysis: result })
 
   return result

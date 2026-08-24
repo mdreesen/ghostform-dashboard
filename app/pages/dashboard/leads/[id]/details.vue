@@ -99,6 +99,7 @@ const facts = computed(() => {
     { label: 'Timeline', value: l.want_to_move || null },
     { label: 'Working with an agent', value: l.seeing_an_agent || null },
     { label: 'Source', value: l.source || null },
+    { label: 'Aquired at', value: l.seen_at || null }
   ].filter((f) => f.value);
 });
 

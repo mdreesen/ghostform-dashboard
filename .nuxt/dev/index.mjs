@@ -3009,16 +3009,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"42f33-ZXUadMd/0dIfYXaeX0NM7e0vBEA\"",
-    "mtime": "2026-08-24T20:32:57.617Z",
-    "size": 274227,
+    "etag": "\"42ea0-gfYzlIIGzhPBNsLPoA5FQFv7nPU\"",
+    "mtime": "2026-08-24T20:50:38.474Z",
+    "size": 274080,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"f3c31-YTyhH4GkgjmyXyxmDFCXLQqh1Fc\"",
-    "mtime": "2026-08-24T20:32:57.618Z",
-    "size": 998449,
+    "etag": "\"f3a3d-i5TTmETY6MDSJMSnUC/ZgWu8NQw\"",
+    "mtime": "2026-08-24T20:50:38.475Z",
+    "size": 997949,
     "path": "index.mjs.map"
   }
 };
@@ -3315,6 +3315,7 @@ const leadSchema = new Schema({
   notes: String,
   seeing_an_agent: String,
   ai_analysis: Object,
+  seen_at: String,
   status: { type: String, default: "new" },
   date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
   reminderSent: { type: Boolean, default: false },
@@ -6288,8 +6289,6 @@ const analyse_post = defineEventHandler(async (event) => {
   }
   const intent = ((_d = lead == null ? void 0 : lead.qualification) == null ? void 0 : _d.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
   const result = await analyseLead(answers, intent, (lead == null ? void 0 : lead.name) || "");
-  console.log("lead", lead);
-  console.log("Analysis result", result);
   await LeadModel$8.findOneAndUpdate({ _id: leadId }, { ai_analysis: result });
   return result;
 });
@@ -6581,9 +6580,7 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
   const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
-  process.env.CAPTURE_URL || "https://ghostform-zeta.vercel.app";
   const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link, leadId);
-  console.log("link", link);
   const u = user;
   const agentName = u.name || u.company || "Your agent";
   const firstName = String(lead.name || "").split(" ")[0] || "there";
