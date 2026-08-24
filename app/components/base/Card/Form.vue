@@ -40,19 +40,14 @@ const props = defineProps({
   },
 });
 
-/**
- * Final link, with the selected property attached.
- *
- * NOTE: this previously appended the raw address as `&${address}` — a value
- * with no parameter name and no encoding, producing a malformed query string
- * like `...&348 Whitefish Stage Rd`. The capture form never received it.
- * It's now a properly named, encoded `address` param.
- */
 const finalUrl = computed(() => {
   if (!props.qr_code_url) return '';
   if (!address.value) return props.qr_code_url;
+
   const sep = props.qr_code_url.includes('?') ? '&' : '?';
-  return `${props.qr_code_url}${sep}address=${encodeURIComponent(address.value)}`;
+  const useURL = `${props.qr_code_url}${sep}address=${encodeURIComponent(address.value)}`;
+
+  return useURL;
 });
 
 

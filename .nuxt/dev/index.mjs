@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,7 +3006,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"42f33-ZXUadMd/0dIfYXaeX0NM7e0vBEA\"",
+    "mtime": "2026-08-24T20:32:57.617Z",
+    "size": 274227,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"f3c31-YTyhH4GkgjmyXyxmDFCXLQqh1Fc\"",
+    "mtime": "2026-08-24T20:32:57.618Z",
+    "size": 998449,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -6539,9 +6554,8 @@ const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
   default: sendMessage_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useLead, options) {
+function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useAddress, useLead, options) {
   const base = "https://ghostform-zeta.vercel.app/";
-  const stripHash = (c) => (c || "").replace(/^#/, "");
   const params = new URLSearchParams();
   if (useCategory) params.set("category", useCategory);
   params.set("source", useSource);
@@ -6549,9 +6563,7 @@ function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalen
   if (useName) params.set("company_name", useName);
   if (useEmail) params.set("company_email", useEmail);
   if (useCalendar) params.set("calendar", useCalendar);
-  if (useLead) params.set("lead", useLead);
-  params.set("background_color", stripHash(void 0 ) || "F7F4EF");
-  params.set("font_color", stripHash(void 0 ) || "1F1B16");
+  if (useAddress) params.set("address", useAddress);
   return `${base}?${params.toString()}`;
 }
 

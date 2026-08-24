@@ -16,9 +16,8 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useLead, options) {
+function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useAddress, useLead, options) {
   const base = "https://ghostform-zeta.vercel.app/";
-  const stripHash = (c) => (c || "").replace(/^#/, "");
   const params = new URLSearchParams();
   if (useCategory) params.set("category", useCategory);
   params.set("source", useSource);
@@ -26,9 +25,7 @@ function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalen
   if (useName) params.set("company_name", useName);
   if (useEmail) params.set("company_email", useEmail);
   if (useCalendar) params.set("calendar", useCalendar);
-  if (useLead) params.set("lead", useLead);
-  params.set("background_color", stripHash(void 0 ) || "F7F4EF");
-  params.set("font_color", stripHash(void 0 ) || "1F1B16");
+  if (useAddress) params.set("address", useAddress);
   return `${base}?${params.toString()}`;
 }
 
