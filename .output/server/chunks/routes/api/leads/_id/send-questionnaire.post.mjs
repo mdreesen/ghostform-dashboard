@@ -16,16 +16,26 @@ import '@iconify/utils';
 import 'consola';
 import 'ipx';
 
-function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useAddress, useLead, options) {
+function customGhostFormUrl({
+  category,
+  source,
+  id,
+  name,
+  email,
+  calendar,
+  address,
+  lead
+}) {
   const base = "https://ghostform-zeta.vercel.app/";
   const params = new URLSearchParams();
-  if (useCategory) params.set("category", useCategory);
-  params.set("source", useSource);
-  if (useCategory && useId) params.set("id", useId);
-  if (useName) params.set("company_name", useName);
-  if (useEmail) params.set("company_email", useEmail);
-  if (useCalendar) params.set("calendar", useCalendar);
-  if (useAddress) params.set("address", useAddress);
+  if (category) params.set("category", category);
+  params.set("source", source);
+  if (category && id) params.set("id", id);
+  if (name) params.set("company_name", name);
+  if (email) params.set("company_email", email);
+  if (calendar) params.set("calendar", calendar);
+  if (lead) params.set("lead", lead);
+  if (address) params.set("address", address);
   return `${base}?${params.toString()}`;
 }
 
@@ -43,7 +53,7 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
   const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
-  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link, leadId);
+  const link = customGhostFormUrl({ category: user.category, source: "qualify", id: user == null ? void 0 : user._id, company: user.company_hashed, email: user.email_hashed, calendar: user == null ? void 0 : user.calendar_link, lead: lead == null ? void 0 : lead._id });
   const u = user;
   const agentName = u.name || u.company || "Your agent";
   const firstName = String(lead.name || "").split(" ")[0] || "there";

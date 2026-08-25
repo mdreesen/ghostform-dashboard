@@ -3,7 +3,7 @@ import { Resend } from 'resend'
 import type { Model } from 'mongoose'
 import LeadModelImport from '../../../../lib/database/models/Lead'
 import loggedInUser from '~/utils/loggedInUser'
-import { ghostFormUrl } from '~/utils/ghostFormUrl';
+import { ghostFormUrl, customGhostFormUrl } from '~/utils/ghostFormUrl';
 
 const LeadModel = LeadModelImport as Model<any>
 
@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   // nothing to sign for a fetch. The id is a Mongo ObjectId — not guessable,
   // and the questionnaire endpoint returns only a first name.
   // const captureBase = process.env.CAPTURE_URL || 'https://ghostform-zeta.vercel.app'
-  const link = ghostFormUrl(user.category, 'qualify', user?._id, user.company_hashed, user.email_hashed, user?.calendar_link, leadId)
+  const link = customGhostFormUrl({ category: user.category, source: 'qualify', id: user?._id, company: user.company_hashed, email: user.email_hashed, calendar: user?.calendar_link, lead: lead?._id})
 
   const u = user as any
   const agentName = u.name || u.company || 'Your agent'

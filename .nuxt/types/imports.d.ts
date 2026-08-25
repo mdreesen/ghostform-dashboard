@@ -27,6 +27,7 @@ declare global {
   const createError: typeof import('../../node_modules/nuxt/dist/app/composables/error').createError
   const createUseAsyncData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').createUseAsyncData
   const createUseFetch: typeof import('../../node_modules/nuxt/dist/app/composables/fetch').createUseFetch
+  const customGhostFormUrl: typeof import('../../app/utils/ghostFormUrl').customGhostFormUrl
   const customRef: typeof import('vue').customRef
   const date: typeof import('../../app/utils/date').date
   const defineAppConfig: typeof import('../../node_modules/nuxt/dist/app/nuxt').defineAppConfig
@@ -309,6 +310,7 @@ declare module 'vue' {
     readonly createError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['createError']>
     readonly createUseAsyncData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['createUseAsyncData']>
     readonly createUseFetch: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/fetch')['createUseFetch']>
+    readonly customGhostFormUrl: UnwrapRef<typeof import('../../app/utils/ghostFormUrl')['customGhostFormUrl']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly date: UnwrapRef<typeof import('../../app/utils/date')['date']>
     readonly defineAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineAppConfig']>

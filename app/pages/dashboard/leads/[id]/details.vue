@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Lead } from '~/types/lead';
-
+import type { AI_ANALYSIS } from '~/types/ai';
 definePageMeta({
   layout: 'authenticated',
 });
@@ -19,7 +19,8 @@ const analysing = ref(false);
 
 /** Has this lead already been sent, or completed, the deep-dive questionnaire? */
 const qual = computed(() => (lead.value as any)?.qualification || {});
-const analysis = computed(() => lead.value?.ai_analysis || null);
+const analysis = computed(() => lead.value?.ai_analysis as AI_ANALYSIS);
+
 const answeredCount = computed(() =>
   Object.values(qual.value?.answers || {}).filter((v: any) => String(v ?? '').trim()).length
 );

@@ -3009,16 +3009,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"42ea0-gfYzlIIGzhPBNsLPoA5FQFv7nPU\"",
-    "mtime": "2026-08-24T20:50:38.474Z",
-    "size": 274080,
+    "etag": "\"42ed5-Wyt8E8YuUaTzAW3sRYlYIhZJ71Y\"",
+    "mtime": "2026-08-25T16:13:44.045Z",
+    "size": 274133,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"f3a3d-i5TTmETY6MDSJMSnUC/ZgWu8NQw\"",
-    "mtime": "2026-08-24T20:50:38.475Z",
-    "size": 997949,
+    "etag": "\"f3bfc-1iJnxngUUiWCzGkS80C8Q3gCVhE\"",
+    "mtime": "2026-08-25T16:13:44.047Z",
+    "size": 998396,
     "path": "index.mjs.map"
   }
 };
@@ -5030,7 +5030,7 @@ const _DGH2dc = lazyEventHandler(() => {
   return useBase(opts.baseURL, ipxHandler);
 });
 
-const _lazy_FaiDIZ = () => Promise.resolve().then(function () { return _id__get$3; });
+const _lazy_FaiDIZ = () => Promise.resolve().then(function () { return _id__get$5; });
 const _lazy_QAyDq3 = () => Promise.resolve().then(function () { return delete_delete$1; });
 const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_post$1; });
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
@@ -5060,9 +5060,9 @@ const _lazy_IxLe3T = () => Promise.resolve().then(function () { return sendQuest
 const _lazy_YUWevn = () => Promise.resolve().then(function () { return create_post$1; });
 const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_0Doaks = () => Promise.resolve().then(function () { return tiers_get$1; });
-const _lazy_i191PU = () => Promise.resolve().then(function () { return _id__get$1; });
-const _lazy_rVP_UB = () => Promise.resolve().then(function () { return _token__get$1; });
-const _lazy_JYmLBo = () => Promise.resolve().then(function () { return _token__post$1; });
+const _lazy_i191PU = () => Promise.resolve().then(function () { return _id__get$3; });
+const _lazy_nSdyfJ = () => Promise.resolve().then(function () { return _id__get$1; });
+const _lazy_0GAYoF = () => Promise.resolve().then(function () { return _id__post$1; });
 const _lazy_rfaZfx = () => Promise.resolve().then(function () { return generate_post$1; });
 const _lazy_Z1oZ9j = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$3; });
@@ -5113,8 +5113,8 @@ const handlers = [
   { route: '/api/leads', handler: _lazy_t9F3bu, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/tiers', handler: _lazy_0Doaks, lazy: true, middleware: false, method: "get" },
   { route: '/api/qr_code/:id', handler: _lazy_i191PU, lazy: true, middleware: false, method: "get" },
-  { route: '/api/qualify/:token', handler: _lazy_rVP_UB, lazy: true, middleware: false, method: "get" },
-  { route: '/api/qualify/:token', handler: _lazy_JYmLBo, lazy: true, middleware: false, method: "post" },
+  { route: '/api/qualify/:id', handler: _lazy_nSdyfJ, lazy: true, middleware: false, method: "get" },
+  { route: '/api/qualify/:id', handler: _lazy_0GAYoF, lazy: true, middleware: false, method: "post" },
   { route: '/api/social/generate', handler: _lazy_rfaZfx, lazy: true, middleware: false, method: "post" },
   { route: '/api/social', handler: _lazy_Z1oZ9j, lazy: true, middleware: false, method: "delete" },
   { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
@@ -5680,7 +5680,7 @@ assetSchema.index({ userId: 1, kind: 1 }, { unique: true });
 const AssetModel = mongoose.models.Asset || mongoose.model("Asset", assetSchema);
 
 const Asset$2 = AssetModel;
-const _id__get$2 = defineEventHandler(async (event) => {
+const _id__get$4 = defineEventHandler(async (event) => {
   var _a;
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
   if (!id) throw createError({ statusCode: 400, message: "Missing id." });
@@ -5696,9 +5696,9 @@ const _id__get$2 = defineEventHandler(async (event) => {
   return buffer;
 });
 
-const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _id__get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _id__get$2
+  default: _id__get$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$a = UserModelImport;
@@ -6553,16 +6553,26 @@ const sendMessage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
   default: sendMessage_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-function ghostFormUrl(useCategory, useSource, useId, useName, useEmail, useCalendar, useAddress, useLead, options) {
+function customGhostFormUrl({
+  category,
+  source,
+  id,
+  name,
+  email,
+  calendar,
+  address,
+  lead
+}) {
   const base = "https://ghostform-zeta.vercel.app/";
   const params = new URLSearchParams();
-  if (useCategory) params.set("category", useCategory);
-  params.set("source", useSource);
-  if (useCategory && useId) params.set("id", useId);
-  if (useName) params.set("company_name", useName);
-  if (useEmail) params.set("company_email", useEmail);
-  if (useCalendar) params.set("calendar", useCalendar);
-  if (useAddress) params.set("address", useAddress);
+  if (category) params.set("category", category);
+  params.set("source", source);
+  if (category && id) params.set("id", id);
+  if (name) params.set("company_name", name);
+  if (email) params.set("company_email", email);
+  if (calendar) params.set("calendar", calendar);
+  if (lead) params.set("lead", lead);
+  if (address) params.set("address", address);
   return `${base}?${params.toString()}`;
 }
 
@@ -6580,7 +6590,7 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
   const resolvedIntent = intent || (String(lead.buy_sell_both || "").toLowerCase().includes("sell") ? "sell" : "buy");
-  const link = ghostFormUrl(user.category, "qualify", user == null ? void 0 : user._id, user.company_hashed, user.email_hashed, user == null ? void 0 : user.calendar_link, leadId);
+  const link = customGhostFormUrl({ category: user.category, source: "qualify", id: user == null ? void 0 : user._id, company: user.company_hashed, email: user.email_hashed, calendar: user == null ? void 0 : user.calendar_link, lead: lead == null ? void 0 : lead._id });
   const u = user;
   const agentName = u.name || u.company || "Your agent";
   const firstName = String(lead.name || "").split(" ")[0] || "there";
@@ -6731,7 +6741,7 @@ const tiers_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: tiers_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const _id__get = defineEventHandler(async (event) => {
+const _id__get$2 = defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const scanUrl = `https://ghostform.com/capture?ref=${id}`;
   const QRCode = require("qrcode");
@@ -6752,13 +6762,13 @@ const _id__get = defineEventHandler(async (event) => {
   }
 });
 
-const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _id__get
+  default: _id__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$2 = schemaImport;
-const _token__get = defineEventHandler(async (event) => {
+const _id__get = defineEventHandler(async (event) => {
   var _a, _b, _c;
   setHeader(event, "Access-Control-Allow-Origin", "*");
   setHeader(event, "Access-Control-Allow-Headers", "content-type");
@@ -6790,16 +6800,16 @@ const _token__get = defineEventHandler(async (event) => {
   };
 });
 
-const _token__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _token__get
+  default: _id__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$1 = schemaImport;
 const bodySchema$8 = z.object({
   answers: z.record(z.string(), z.union([z.string(), z.number()]))
 });
-const _token__post = defineEventHandler(async (event) => {
+const _id__post = defineEventHandler(async (event) => {
   var _a, _b;
   setHeader(event, "Access-Control-Allow-Origin", "*");
   setHeader(event, "Access-Control-Allow-Headers", "content-type");
@@ -6845,9 +6855,9 @@ const _token__post = defineEventHandler(async (event) => {
   return { success: true };
 });
 
-const _token__post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const _id__post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: _token__post
+  default: _id__post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const bodySchema$7 = z.object({

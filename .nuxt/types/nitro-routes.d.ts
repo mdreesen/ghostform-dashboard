@@ -90,9 +90,9 @@ declare module "nitropack/types" {
     '/api/qr_code/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qr_code/[id].get').default>>>>
     }
-    '/api/qualify/:token': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[token].get').default>>>>
-      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[token].post').default>>>>
+    '/api/qualify/:id': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[id].get').default>>>>
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[id].post').default>>>>
     }
     '/api/social/generate': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/generate.post').default>>>>
