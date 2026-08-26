@@ -39,6 +39,7 @@ const leadSchema = new Schema({
         type: Date,
         required: false
       },
+      lastContactedAt: Date,
 
     // Deep-dive questionnaire answers. Written by THIS app and read by the
     // dashboard — both share one database, so there is no cross-origin call

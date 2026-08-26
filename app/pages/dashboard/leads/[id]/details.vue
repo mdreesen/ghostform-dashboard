@@ -174,13 +174,14 @@ async function markContacted() {
     <!-- ── 01 Reach them ─────────────────────────────────────── -->
     <!-- ── Qualification & analysis ──────────────────────────── -->
     <section class="gf-depth mb-20">
-      <div class="flex flex-col items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-          <span class="gf-eyebrow">Qualifying</span>
-          <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
-        </div>
+      <div class="flex flex-col items-baseline gap-4 pb-3.5 mb-8">
 
-        <div v-if="lead.qualification" class="flex flex-col gap-4">
+        <div v-if="lead.qualification && lead.qualification?.answers"
+          class="flex flex-col gap-4">
+          <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+            <span class="gf-eyebrow">Qualifying</span>
+            <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
+          </div>
 
           <div class="flex flex-col">
             <span class="gf-eyebrow">Lead is looking to {{ lead.qualification.intent }}</span>
@@ -224,7 +225,8 @@ async function markContacted() {
               </div>
 
               <div>
-                <span class="text-[18px] font-semibold tracking-tight pr-2">Areas they are considering</span><span>{{ qualificationAnswer('q_areas') }}</span>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Areas they are considering</span><span>{{
+                  qualificationAnswer('q_areas') }}</span>
               </div>
             </div>
 
@@ -241,22 +243,22 @@ async function markContacted() {
 
               <div>
                 <span class="text-[18px] font-semibold tracking-tight pr-2">Price Expectation</span><span>{{
-                  qualificationAnswer('q_price_expectation')}}</span>
+                  qualificationAnswer('q_price_expectation') }}</span>
               </div>
 
               <div>
                 <span class="text-[18px] font-semibold tracking-tight pr-2">Price Basis</span><span>{{
-                  qualificationAnswer('q_price_basis')}}</span>
+                  qualificationAnswer('q_price_basis') }}</span>
               </div>
 
               <div>
-                <span
-                  class="text-[18px] font-semibold tracking-tight pr-2">Mortage</span><span>{{ `$${qualificationAnswer('q_mortgage')}` }}</span>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Mortage</span><span>{{
+                  `$${qualificationAnswer('q_mortgage')}` }}</span>
               </div>
 
               <div>
-                <span
-                  class="text-[18px] font-semibold tracking-tight pr-2">Conditions</span><span>{{ qualificationAnswer('q_condition') }}</span>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Conditions</span><span>{{
+                  qualificationAnswer('q_condition') }}</span>
               </div>
 
               <div>
@@ -275,15 +277,16 @@ async function markContacted() {
               </div>
 
               <div>
-                <span
-                  class="text-[18px] font-semibold tracking-tight pr-2">Flexibility</span><span>{{ qualificationAnswer('q_flexibility') }}</span>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Flexibility</span><span>{{
+                  qualificationAnswer('q_flexibility') }}</span>
               </div>
 
               <div>
-                <span
-                  class="text-[18px] font-semibold tracking-tight pr-2">Decision</span><span>{{ qualificationAnswer('q_decision') }}</span>
+                <span class="text-[18px] font-semibold tracking-tight pr-2">Decision</span><span>{{
+                  qualificationAnswer('q_decision') }}</span>
               </div>
             </div>
+
           </div>
 
           <div class="flex flex-wrap items-center gap-3">
@@ -296,6 +299,11 @@ async function markContacted() {
               Scorecard only — add an AI key for the written read.
             </p>
           </div>
+        </div>
+
+        <div v-if="lead.qualification?.sentAt && !lead.qualification.answers" class="flex flex-col gap-2">
+          <span class="gf-eyebrow">Sent detailed questions</span>
+          <span class="font-display text-[25px] font-semibold tracking-tight">Awaiting detailed response</span>
         </div>
       </div>
 
