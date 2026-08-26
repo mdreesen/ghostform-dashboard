@@ -174,13 +174,14 @@ async function markContacted() {
     <!-- ── 01 Reach them ─────────────────────────────────────── -->
     <!-- ── Qualification & analysis ──────────────────────────── -->
     <section class="gf-depth mb-20">
-      <div class="flex flex-col items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-          <span class="gf-eyebrow">Qualifying</span>
-          <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
-        </div>
+      <div class="flex flex-col items-baseline gap-4 pb-3.5 mb-8">
 
-        <div v-if="lead.qualification?.answers" class="flex flex-col gap-4">
+        <div v-if="lead.qualification && lead.qualification?.answers"
+          class="flex flex-col gap-4">
+          <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
+            <span class="gf-eyebrow">Qualifying</span>
+            <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
+          </div>
 
           <div class="flex flex-col">
             <span class="gf-eyebrow">Lead is looking to {{ lead.qualification.intent }}</span>
@@ -285,23 +286,24 @@ async function markContacted() {
                   qualificationAnswer('q_decision') }}</span>
               </div>
             </div>
+
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button :disabled="analysing"
+              class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors disabled:opacity-40"
+              @click="runAnalysis">
+              {{ analysing ? 'Thinking…' : analysis ? 'Re-run analysis' : 'Run analysis' }}
+            </button>
+            <p v-if="analysis?.source === 'scorecard-only'" class="text-[12.5px] text-[#A9A39A]">
+              Scorecard only — add an AI key for the written read.
+            </p>
           </div>
         </div>
 
-        <div v-else class="flex flex-col gap-2">
+        <div v-if="lead.qualification?.sentAt && !lead.qualification.answers" class="flex flex-col gap-2">
           <span class="gf-eyebrow">Sent detailed questions</span>
           <span class="font-display text-[25px] font-semibold tracking-tight">Awaiting detailed response</span>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-3">
-          <button :disabled="analysing"
-            class="px-6 py-3.5 border border-[#DDD6C9] text-[#8A847C] text-[11px] uppercase tracking-[0.12em] font-semibold hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors disabled:opacity-40"
-            @click="runAnalysis">
-            {{ analysing ? 'Thinking…' : analysis ? 'Re-run analysis' : 'Run analysis' }}
-          </button>
-          <p v-if="analysis?.source === 'scorecard-only'" class="text-[12.5px] text-[#A9A39A]">
-            Scorecard only — add an AI key for the written read.
-          </p>
         </div>
       </div>
 
