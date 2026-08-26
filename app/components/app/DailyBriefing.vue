@@ -74,11 +74,10 @@ async function markContacted(lead: BriefingLead) {
   const prevTotals = { ...briefing.value.totals }
 
   marking.value.add(lead._id)
-  fileAway(lead._id)
 
   try {
     // The WRITE is the only thing that decides success or failure.
-    await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' })
+    await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' });
   } catch {
     // The write genuinely failed — put the lead back and say so.
     if (briefing.value) {
@@ -91,6 +90,7 @@ async function markContacted(lead: BriefingLead) {
   }
 
   toast.success(`Marked ${lead.name} as contacted`)
+  fileAway(lead._id);
 
   // Refresh AFTER the write is confirmed, and deliberately outside the
   // try above. A refresh is a nice-to-have: if it fails (network blip, a

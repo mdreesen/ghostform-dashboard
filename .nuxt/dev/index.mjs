@@ -2887,7 +2887,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,22 +3006,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"42ed5-Wyt8E8YuUaTzAW3sRYlYIhZJ71Y\"",
-    "mtime": "2026-08-25T16:13:44.045Z",
-    "size": 274133,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"f3bfc-1iJnxngUUiWCzGkS80C8Q3gCVhE\"",
-    "mtime": "2026-08-25T16:13:44.047Z",
-    "size": 998396,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3329,6 +3314,7 @@ const leadSchema = new Schema({
     type: Date,
     required: false
   },
+  lastContactedAt: Date,
   // Deep-dive questionnaire answers. Written by THIS app and read by the
   // dashboard — both share one database, so there is no cross-origin call
   // and no CORS involved.
