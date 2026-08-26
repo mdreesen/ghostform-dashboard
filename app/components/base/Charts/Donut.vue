@@ -3,12 +3,14 @@ defineOptions({
   tags: ['donutcharts', 'withlegend']
 });
 
-const props = defineProps({
-    data: {
-        type: Array,
-        required: true
-    }
-});
+interface DonutDataItem {
+  count?: number;
+  month?: keyof typeof marketShareLabels;
+}
+
+const props = defineProps<{
+  data: DonutDataItem[];
+}>();
 
 let donutData = ref([]);
 let monthData = ref({})
