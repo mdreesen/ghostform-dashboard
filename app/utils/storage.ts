@@ -16,6 +16,25 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
  * previews reloading during editing and users re-downloading their carousels,
  * which on S3 is the line item that grows quietly.
  * ============================================================================
+ *
+ * CREDENTIALS COME FROM process.env, NOT useRuntimeConfig().
+ *
+ * A note on why, since the reason isn't the obvious one: private (non-public)
+ * runtimeConfig keys are NOT bundled to the client — only `runtimeConfig.public`
+ * is. So `cfg.r2` was never reaching the browser.
+ *
+ * The real reasons to prefer process.env here:
+ *   1. CONSISTENCY. useOpenAi.ts and useAnthropic.ts already read process.env
+ *      directly. Three files, three patterns was the problem.
+ *   2. This file is server-only. It can't be imported into a component by
+ *      accident, so there's nothing runtimeConfig buys.
+ *   3. One less place to get wrong — a value has to be added to nuxt.config
+ *      AND .env with runtimeConfig, versus just .env here.
+ *
+ * The thing that ACTUALLY leaks keys is hardcoding them in nuxt.config.ts,
+ * which is committed. As long as that file only ever references
+ * process.env.X, nothing sensitive is in the repo.
+ * ============================================================================
  */
 
 let client: S3Client | null = null
@@ -27,15 +46,17 @@ let client: S3Client | null = null
  * means the whole upload → analyse → compose flow can be run and tested with
  * no external service at all — you only need Cloudflare when you deploy.
  */
+const accountId = process.env.R2_ACCOUNT_ID
+const accessKeyId = process.env.R2_ACCESS_KEY_ID
+const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY
+const r2bucket = process.env.R2_BUCKET
+
 export function hasR2(): boolean {
-  const r2 = useRuntimeConfig().r2 as any
-  return Boolean(r2?.accountId && r2?.accessKeyId && r2?.secretAccessKey && r2?.bucket)
+  return Boolean(accountId && accessKeyId && secretAccessKey && r2bucket)
 }
 
 function s3(): S3Client {
   if (client) return client
-  const cfg = useRuntimeConfig()
-  const { accountId, accessKeyId, secretAccessKey } = cfg.r2 as any
 
   if (!accountId || !accessKeyId || !secretAccessKey) {
     throw createError({
@@ -53,7 +74,7 @@ function s3(): S3Client {
 }
 
 function bucket(): string {
-  const b = (useRuntimeConfig().r2 as any)?.bucket
+  const b = r2bucket
   if (!b) throw createError({ statusCode: 500, message: 'R2_BUCKET is not set.' })
   return b
 }
@@ -105,7 +126,7 @@ export async function readUrl(key: string): Promise<string> {
   // without any custom-domain setup while you're developing.
   if (!hasR2()) return `/api/uploads/local/${key}`
 
-  const base = useRuntimeConfig().public.assetBase
+  const base = process.env.NUXT_PUBLIC_ASSET_BASE
   if (base) return `${String(base).replace(/\/$/, '')}/${key}`
 
   // Fallback for local dev without a custom domain.

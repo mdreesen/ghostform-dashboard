@@ -11,18 +11,13 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/ui',
     '@vite-pwa/nuxt',
-    // Provides useUserSession / getUserSession / requireUserSession.
-    // It was installed as a dependency but never registered here, so none of
-    // those auto-imports existed — 17 call sites across the app rely on them.
     'nuxt-auth-utils',
-    // <Qrcode> is used on the forms page.
     'nuxt-qrcode',
-    // <LineChart> and <DonutChart> are used on the dashboard.
     'nuxt-charts'
   ],
   app: {
     head: {
-      title: 'GhostForm', // default fallback title
+      title: 'GhostForm Dashboard', // default fallback title
       htmlAttrs: {
         lang: 'en',
       },
@@ -139,14 +134,6 @@ export default defineNuxtConfig({
 
   // @vueuse/motion/nuxt
   runtimeConfig: {
-    // ── Object storage for documents (Cloudflare R2, S3-compatible) ──
-    // Without these, presignUpload throws and no document can be uploaded.
-    r2: {
-      accountId: process.env.R2_ACCOUNT_ID,
-      accessKeyId: process.env.R2_ACCESS_KEY_ID,
-      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
-      bucket: process.env.R2_BUCKET
-    },
     // Used by documentRead to extract deadlines.
     anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
 
