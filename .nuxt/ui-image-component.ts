@@ -1,0 +1,1 @@
+export { default } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/image/dist/runtime/components/NuxtImg.vue";
