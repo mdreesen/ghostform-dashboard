@@ -37,6 +37,7 @@ export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
 export { useCSV } from '../app/utils/csv';
 export { date, month, timeZone, formatDate, useFormatDate, yearMonthDayFormat } from '../app/utils/date';
 export { ghostFormUrl, customGhostFormUrl } from '../app/utils/ghostFormUrl';
+export { guessColumns, parseCsv, mapRows, ColumnGuess, MappedLead, ImportResult } from '../app/utils/leadImport';
 export { default as loggedInUser } from '../app/utils/loggedInUser';
 export { nameSpreadsheet } from '../app/utils/names';
 export { useSpreadsheet, LeadRecord } from '../app/utils/spreadsheet';

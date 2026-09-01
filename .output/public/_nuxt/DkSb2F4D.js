@@ -1,0 +1,1 @@
+import{e as s,z as o,c as r,M as n,C as _,o as c}from"./DDcMxyBf.js";const p=s({__name:"form",async setup(l){let e,t;return[e,t]=o(()=>_("/api/user",{key:"get_user",lazy:!0},"$CMfEJoZiRU")),await e,t(),(a,u)=>(c(),r("main",null,[n(a.$slots,"default")]))}});export{p as default};

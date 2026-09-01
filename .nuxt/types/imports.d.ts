@@ -58,6 +58,7 @@ declare global {
   const getPin: typeof import('../../node_modules/vue-chrts').getPin
   const getRouteRules: typeof import('../../node_modules/nuxt/dist/app/composables/manifest').getRouteRules
   const ghostFormUrl: typeof import('../../app/utils/ghostFormUrl').ghostFormUrl
+  const guessColumns: typeof import('../../app/utils/leadImport').guessColumns
   const h: typeof import('vue').h
   const hasInjectionContext: typeof import('vue').hasInjectionContext
   const inject: typeof import('vue').inject
@@ -75,6 +76,7 @@ declare global {
   const itemVarient: typeof import('../../app/utils/varients').itemVarient
   const loadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload').loadPayload
   const loggedInUser: typeof import('../../app/utils/loggedInUser').default
+  const mapRows: typeof import('../../app/utils/leadImport').mapRows
   const markRaw: typeof import('vue').markRaw
   const month: typeof import('../../app/utils/date').month
   const nameSpreadsheet: typeof import('../../app/utils/names').nameSpreadsheet
@@ -100,6 +102,7 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
+  const parseCsv: typeof import('../../app/utils/leadImport').parseCsv
   const prefetchComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload').prefetchComponents
   const preloadComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload').preloadComponents
   const preloadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload').preloadPayload
@@ -277,6 +280,9 @@ declare global {
   export type { PageMeta } from '../../node_modules/nuxt/dist/app/composables/pages'
   import('../../node_modules/nuxt/dist/app/composables/pages')
   // @ts-ignore
+  export type { ColumnGuess, MappedLead, ImportResult } from '../../app/utils/leadImport'
+  import('../../app/utils/leadImport')
+  // @ts-ignore
   export type { LeadRecord } from '../../app/utils/spreadsheet'
   import('../../app/utils/spreadsheet')
 }
@@ -341,6 +347,7 @@ declare module 'vue' {
     readonly getPin: UnwrapRef<typeof import('../../node_modules/vue-chrts')['getPin']>
     readonly getRouteRules: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/manifest')['getRouteRules']>
     readonly ghostFormUrl: UnwrapRef<typeof import('../../app/utils/ghostFormUrl')['ghostFormUrl']>
+    readonly guessColumns: UnwrapRef<typeof import('../../app/utils/leadImport')['guessColumns']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hasInjectionContext: UnwrapRef<typeof import('vue')['hasInjectionContext']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
@@ -358,6 +365,7 @@ declare module 'vue' {
     readonly itemVarient: UnwrapRef<typeof import('../../app/utils/varients')['itemVarient']>
     readonly loadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['loadPayload']>
     readonly loggedInUser: UnwrapRef<typeof import('../../app/utils/loggedInUser')['default']>
+    readonly mapRows: UnwrapRef<typeof import('../../app/utils/leadImport')['mapRows']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
     readonly month: UnwrapRef<typeof import('../../app/utils/date')['month']>
     readonly nameSpreadsheet: UnwrapRef<typeof import('../../app/utils/names')['nameSpreadsheet']>
@@ -383,6 +391,7 @@ declare module 'vue' {
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
+    readonly parseCsv: UnwrapRef<typeof import('../../app/utils/leadImport')['parseCsv']>
     readonly prefetchComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['prefetchComponents']>
     readonly preloadComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['preloadComponents']>
     readonly preloadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['preloadPayload']>

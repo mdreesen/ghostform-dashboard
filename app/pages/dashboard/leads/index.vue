@@ -49,8 +49,9 @@ const neverContacted = computed(() =>
           </p>
         </div>
 
-        <div class="gf-rise shrink-0" style="--d:.28s">
+        <div class="gf-rise shrink-0 flex gap-2" style="--d:.28s">
           <baseButtonNavigate text="+ Create Lead" path="/dashboard/leads/create" />
+          <baseButtonNavigate text="+ import Leads" path="/dashboard/leads/import" />
         </div>
       </div>
     </header>

@@ -783,10 +783,11 @@ function getRouteRules(arg) {
     return {};
   }
 }
-const __nuxt_page_meta$b = { layout: "authenticated" };
-const __nuxt_page_meta$a = {
+const __nuxt_page_meta$c = { layout: "authenticated" };
+const __nuxt_page_meta$b = {
   layout: "authenticated"
 };
+const __nuxt_page_meta$a = { layout: "authenticated" };
 const __nuxt_page_meta$9 = {
   layout: "authenticated"
 };
@@ -813,14 +814,20 @@ const _routes = [
   {
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
-    meta: __nuxt_page_meta$b || {},
+    meta: __nuxt_page_meta$c || {},
     component: () => import('./create-DDfCY1xU.mjs')
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
-    meta: __nuxt_page_meta$a || {},
+    meta: __nuxt_page_meta$b || {},
     component: () => import('./index-WK1LPYtz.mjs')
+  },
+  {
+    name: "dashboard-leads-import",
+    path: "/dashboard/leads/import",
+    meta: __nuxt_page_meta$a || {},
+    component: () => import('./import-C4CLnL1l.mjs')
   },
   {
     name: "dashboard-leads-id-details",
