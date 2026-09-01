@@ -97,9 +97,6 @@
       "vue-demi": [
         "../node_modules/nuxt/dist/app/compat/vue-demi"
       ],
-      "#auth-utils": [
-        "../node_modules/nuxt-auth-utils/dist/runtime/types/index"
-      ],
       "#image": [
         "../node_modules/@nuxt/image/dist/runtime"
       ],
@@ -115,14 +112,17 @@
       "#ui/*": [
         "../node_modules/@nuxt/ui/dist/runtime/*"
       ],
+      "#pwa": [
+        "../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index"
+      ],
+      "#auth-utils": [
+        "../node_modules/nuxt-auth-utils/dist/runtime/types/index"
+      ],
       "#qrcode": [
         "../node_modules/nuxt-qrcode/dist/runtime"
       ],
       "#qrcode/*": [
         "../node_modules/nuxt-qrcode/dist/runtime/*"
-      ],
-      "#pwa": [
-        "../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index"
       ],
       "@unovis/ts": [
         "../node_modules/@unovis/ts"
@@ -140,7 +140,7 @@
         "./imports"
       ],
       "#app-manifest": [
-        "./manifest/meta/dev.json"
+        "./manifest/meta/d48c8ac2-209e-4016-911d-d479fb4ed8c2.json"
       ],
       "#components": [
         "./components"
@@ -210,17 +210,13 @@
   "exclude": [
     "../node_modules",
     "../node_modules/nuxt/node_modules",
-    "../node_modules/@nuxt/eslint/node_modules",
-    "../node_modules/nuxt-auth-utils/node_modules",
     "../node_modules/@vueuse/motion/node_modules",
     "../node_modules/@nuxt/image/node_modules",
     "../node_modules/@nuxtjs/color-mode/node_modules",
     "../node_modules/@nuxt/ui/node_modules",
-    "../node_modules/nuxt-vitalizer/node_modules",
-    "../node_modules/nuxt-google-auth/node_modules",
-    "../node_modules/nuxt-notify/node_modules",
-    "../node_modules/nuxt-qrcode/node_modules",
     "../node_modules/@vite-pwa/nuxt/node_modules",
+    "../node_modules/nuxt-auth-utils/node_modules",
+    "../node_modules/nuxt-qrcode/node_modules",
     "../node_modules/nuxt-charts/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",

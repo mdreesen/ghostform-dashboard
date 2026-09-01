@@ -1,4 +1,4 @@
-import { hasInjectionContext, getCurrentInstance, shallowReactive, reactive, effectScope, getCurrentScope, inject, toRef as toRef$1, isRef, computed, shallowRef, isReadonly, isShallow, isReactive, toRaw, defineAsyncComponent, defineComponent, createElementBlock, provide, cloneVNode, h, toValue, onServerPrefetch, ref, nextTick, unref, onScopeDispose, resolveComponent, watch, useSlots, Fragment, shallowReadonly, customRef, toRefs, readonly, renderSlot, toHandlerKey, camelize as camelize$1, Comment, mergeProps, openBlock, createBlock, withCtx, Teleport, createCommentVNode, watchEffect, markRaw, createTextVNode, toDisplayString, renderList, createVNode, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, resolveDynamicComponent, useSSRContext, useAttrs, useModel, mergeModels, useTemplateRef, useId, Suspense, onErrorCaptured, createApp } from "vue";
+import { hasInjectionContext, getCurrentInstance, shallowReactive, reactive, effectScope, getCurrentScope, inject, toRef as toRef$1, isRef, computed, shallowRef, isReadonly, isShallow, isReactive, toRaw, defineAsyncComponent, ref, onScopeDispose, watch, toValue, unref, defineComponent, useSlots, h, Fragment, provide, shallowReadonly, customRef, toRefs, readonly, nextTick, renderSlot, toHandlerKey, camelize as camelize$1, Comment, mergeProps, cloneVNode, openBlock, createBlock, withCtx, Teleport, createCommentVNode, watchEffect, markRaw, createTextVNode, toDisplayString, createElementBlock, renderList, createVNode, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, onServerPrefetch, resolveDynamicComponent, useSSRContext, useAttrs, useModel, mergeModels, resolveComponent, useTemplateRef, useId, Suspense, onErrorCaptured, createApp } from "vue";
 import { $fetch as $fetch$1 } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/ofetch/dist/node.mjs";
 import { baseURL } from "#internal/nuxt/paths";
 import { createHooks } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/hookable/dist/index.mjs";
@@ -6,16 +6,13 @@ import { getContext, executeAsync } from "/Users/mdreesen/projects/ghostform-das
 import { sanitizeStatusCode, createError as createError$1 } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/dist/runtime/h3-compat.mjs";
 import { START_LOCATION, createMemoryHistory, createRouter, useRoute as useRoute$1, RouterView } from "vue-router";
 import defu$1, { defu, defuFn } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/defu/dist/defu.mjs";
-import { hasProtocol, joinURL, withQuery, parseURL, encodePath, decodePath, isScriptProtocol, parseQuery, withTrailingSlash, withoutTrailingSlash, withLeadingSlash, encodeParam } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs";
+import { hasProtocol, joinURL, withQuery, parseURL, encodePath, decodePath, isScriptProtocol, withLeadingSlash, encodeParam, parseQuery, withTrailingSlash, withoutTrailingSlash } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs";
 import { executeAsync as executeAsync$1 } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/unctx/dist/index.mjs";
 import { appendResponseHeader, appendHeader } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/h3/dist/index.mjs";
 import { _api, addAPIProvider, setCustomIconsLoader, getIcon, loadIcon as loadIcon$1, addIcon, Icon } from "@iconify/vue";
 import { klona } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/klona/dist/index.mjs";
-import { debounce } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/perfect-debounce/dist/index.mjs";
-import { hash } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/ohash/dist/index.mjs";
-import { isPlainObject } from "@vue/shared";
 import colors from "tailwindcss/colors";
-import { useHead as useHead$1, headSymbol, useSeoMeta as useSeoMeta$1 } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/@unhead/vue/dist/index.mjs";
+import { useHead as useHead$1, headSymbol, useSeoMeta as useSeoMeta$1 } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt/node_modules/@unhead/vue/dist/index.mjs";
 import sync, { getFrameData } from "framesync";
 import { inertia, animate, velocityPerSecond, cubicBezier, bounceOut, bounceInOut, bounceIn, anticipate, backOut, backInOut, backIn, circOut, circInOut, circIn, easeOut, easeInOut, easeIn, linear } from "popmotion";
 import { complex, number, alpha, filter, px, progressPercentage, degrees, scale, color } from "style-value-types";
@@ -23,6 +20,8 @@ import { ssrRenderComponent, ssrRenderVNode, ssrRenderAttrs, ssrRenderSlot, ssrR
 import { isEqual, diff } from "ohash/utils";
 import { createTV, cnMerge } from "tailwind-variants";
 import { getIconCSS } from "@iconify/utils/lib/css/icon";
+import { hash } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/ohash/dist/index.mjs";
+import { debounce } from "/Users/mdreesen/projects/ghostform-dashboard/node_modules/perfect-debounce/dist/index.mjs";
 if (!globalThis.$fetch) {
   globalThis.$fetch = $fetch$1.create({
     baseURL: baseURL()
@@ -424,19 +423,9 @@ const unhead_k2P3m_ZDyjlr2mMYnoDPwavjsDN8hBlk9cFai0bbopU = /* @__PURE__ */ defin
 function toArray$3(value) {
   return Array.isArray(value) ? value : [value];
 }
-const matcher = /* @__PURE__ */ (() => {
-  const $0 = { payload: false, payload: false };
-  return (m, p) => {
-    let r = [];
-    if (p.charCodeAt(p.length - 1) === 47) p = p.slice(0, -1) || "/";
-    if (p === "/api/cron") {
-      r.unshift({ data: $0 });
-    } else if (p === "/api/stripe/webhook") {
-      r.unshift({ data: $0 });
-    }
-    return r;
-  };
-})();
+const matcher = (m, p) => {
+  return [];
+};
 const _routeRulesMatcher = (path) => defu({}, ...matcher("", typeof path === "string" ? path.toLowerCase() : path).map((r) => r.data).reverse());
 const routeRulesMatcher$1 = _routeRulesMatcher;
 function getRouteRules(arg) {
@@ -448,6 +437,10 @@ function getRouteRules(arg) {
     return {};
   }
 }
+const __nuxt_page_meta$d = { layout: "authenticated" };
+const __nuxt_page_meta$c = {
+  layout: "authenticated"
+};
 const __nuxt_page_meta$b = { layout: "authenticated" };
 const __nuxt_page_meta$a = {
   layout: "authenticated"
@@ -455,9 +448,7 @@ const __nuxt_page_meta$a = {
 const __nuxt_page_meta$9 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$8 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$8 = { layout: "authenticated" };
 const __nuxt_page_meta$7 = { layout: "authenticated" };
 const __nuxt_page_meta$6 = { layout: "authenticated" };
 const __nuxt_page_meta$5 = { layout: "authenticated" };
@@ -478,80 +469,92 @@ const _routes = [
   {
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
-    meta: __nuxt_page_meta$b || {},
-    component: () => import("./_nuxt/create-DDfCY1xU.js")
+    meta: __nuxt_page_meta$d || {},
+    component: () => import("./_nuxt/create-CCjkdd57.js")
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
-    meta: __nuxt_page_meta$a || {},
-    component: () => import("./_nuxt/index-WK1LPYtz.js")
+    meta: __nuxt_page_meta$c || {},
+    component: () => import("./_nuxt/index-BmbWxy-2.js")
+  },
+  {
+    name: "dashboard-leads-import",
+    path: "/dashboard/leads/import",
+    meta: __nuxt_page_meta$b || {},
+    component: () => import("./_nuxt/import--sWPgWEm.js")
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
-    meta: __nuxt_page_meta$9 || {},
-    component: () => import("./_nuxt/details-CbU9ePym.js")
+    meta: __nuxt_page_meta$a || {},
+    component: () => import("./_nuxt/details-Dh4-QXaY.js")
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
+    meta: __nuxt_page_meta$9 || {},
+    component: () => import("./_nuxt/edit-CiuQn2M_.js")
+  },
+  {
+    name: "dashboard-home-id",
+    path: "/dashboard/home/:id()",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import("./_nuxt/edit-Dw-hD4p4.js")
+    component: () => import("./_nuxt/index-D4qh0bXp.js")
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import("./_nuxt/index-BRzfPx0p.js")
+    component: () => import("./_nuxt/index-CAcyg_uh.js")
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import("./_nuxt/index-BiUXXeiD.js")
+    component: () => import("./_nuxt/index-dCnNXCEd.js")
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import("./_nuxt/index-VUBROKLN.js")
+    component: () => import("./_nuxt/index-Cf3sl0Fl.js")
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import("./_nuxt/index-Ba-Kt9fC.js")
+    component: () => import("./_nuxt/index-DyAFeZGc.js")
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import("./_nuxt/index-LUV85mVK.js")
+    component: () => import("./_nuxt/index-AzMM86dW.js")
   },
   {
     name: "dashboard-social",
     path: "/dashboard/social",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import("./_nuxt/index-PX3y6Kms.js")
+    component: () => import("./_nuxt/index-Dwaw3c3w.js")
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import("./_nuxt/index-CE6_hxd-.js")
+    component: () => import("./_nuxt/index-CAnqrHKZ.js")
   },
   {
     name: "forgotpassword",
     path: "/forgotpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/forgotpassword-QpKfXXEq.js")
+    component: () => import("./_nuxt/forgotpassword-B2BwaAAC.js")
   },
   {
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/login-CQrQIBRM.js")
+    component: () => import("./_nuxt/login-BXB6eKNT.js")
   },
   {
     name: "privacy-policy",
@@ -562,25 +565,25 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/signup-zQAqrsV8.js")
+    component: () => import("./_nuxt/signup-BsoeJbFJ.js")
   },
   {
     name: "subscribe",
     path: "/subscribe",
     meta: { ...__nuxt_page_meta || {}, ...{ "groups": ["payment"] } },
-    component: () => import("./_nuxt/subscribe-CErxWklZ.js")
+    component: () => import("./_nuxt/subscribe-BO5-6rxF.js")
   },
   {
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/resetpassword-D_4oSr9p.js")
+    component: () => import("./_nuxt/resetpassword-C1osG-Zd.js")
   },
   {
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import("./_nuxt/index-DCR4ofQt.js")
+    component: () => import("./_nuxt/index-B7ssIIme.js")
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1430,8 +1433,12 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   setup() {
     const configs = /* @__PURE__ */ useRuntimeConfig();
     const options = useAppConfig().icon;
-    const $fetch = useRequestFetch();
-    _api.setFetch($fetch.native);
+    const requestFetch = useRequestFetch();
+    const nativeFetch = requestFetch.native;
+    _api.setFetch((input, init2) => {
+      const nitroFetch = globalThis.$fetch?.native;
+      return (nativeFetch || nitroFetch || globalThis.fetch)(input, init2);
+    });
     const resources = [];
     if (options.provider === "server") {
       const baseURL2 = configs.app?.baseURL?.replace(/\/$/, "") ?? "";
@@ -1446,7 +1453,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
     }
     async function customIconLoader(icons, prefix) {
       try {
-        const data = await $fetch(resources[0] + "/" + prefix + ".json", {
+        const data = await requestFetch(resources[0] + "/" + prefix + ".json", {
           query: {
             icons: icons.join(",")
           }
@@ -1468,7 +1475,6 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // For type portability
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
-const LazyToastContainer = defineAsyncComponent(() => import("./_nuxt/ToastContainer-DMbdjDDH.js").then((r) => r["default"] || r.default || r));
 const AreaChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["AreaChart"] || r.default || r));
 const LineChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["LineChart"] || r.default || r));
 const BarChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["BarChart"] || r.default || r));
@@ -1482,7 +1488,6 @@ const TopoJSONMap = defineAsyncComponent(() => Promise.resolve().then(() => serv
 const DottedMap = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["DottedMap"] || r.default || r));
 const LazyIcon = defineAsyncComponent(() => Promise.resolve().then(() => index).then((r) => r["default"] || r.default || r));
 const lazyGlobalComponents = [
-  ["ToastContainer", LazyToastContainer],
   ["AreaChart", AreaChart],
   ["LineChart", LineChart],
   ["BarChart", BarChart],
@@ -1517,1071 +1522,6 @@ const pwa_icons_plugin_C24GcIKjcI2zsa8A86om0L2LZjx1chWtzYxD11T7Txg = /* @__PURE_
       }
     }
   };
-});
-const ServerPlaceholder = defineComponent({
-  name: "ServerPlaceholder",
-  render() {
-    return createElementBlock("div");
-  }
-});
-const serverPlaceholder = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: ServerPlaceholder
-}, Symbol.toStringTag, { value: "Module" }));
-const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
-const __nuxt_component_1$1 = defineComponent({
-  name: "ClientOnly",
-  inheritAttrs: false,
-  props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
-  ...false,
-  setup(props, { slots, attrs }) {
-    const mounted = shallowRef(false);
-    const vm = getCurrentInstance();
-    if (vm) {
-      vm._nuxtClientOnly = true;
-    }
-    provide(clientOnlySymbol, true);
-    return () => {
-      if (mounted.value) {
-        const vnodes = slots.default?.();
-        if (vnodes && vnodes.length === 1) {
-          return [cloneVNode(vnodes[0], attrs)];
-        }
-        return vnodes;
-      }
-      const slot = slots.fallback || slots.placeholder;
-      if (slot) {
-        return h(slot);
-      }
-      const fallbackStr = props.fallback || props.placeholder || "";
-      const fallbackTag = props.fallbackTag || props.placeholderTag || "span";
-      return createElementBlock(fallbackTag, attrs, fallbackStr);
-    };
-  }
-});
-function defineKeyedFunctionFactory(factory) {
-  const placeholder = function() {
-    throw new Error(`[nuxt] \`${factory.name}\` is a compiler macro and cannot be called at runtime.`);
-  };
-  return Object.defineProperty(placeholder, "__nuxt_factory", {
-    enumerable: false,
-    get: () => factory.factory
-  });
-}
-const createUseAsyncData = defineKeyedFunctionFactory({
-  name: "createUseAsyncData",
-  factory(options = {}) {
-    function useAsyncData2(...args) {
-      const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
-      if (_isAutoKeyNeeded(args[0], args[1])) {
-        args.unshift(autoKey);
-      }
-      let [_key, _handler, opts = {}] = args;
-      const isKeyReactive = isRef(_key) || typeof _key === "function";
-      const key = isKeyReactive ? computed(() => toValue(_key)) : { value: _key };
-      if (!key.value || typeof key.value !== "string") {
-        throw new TypeError("[nuxt] [useAsyncData] key must be a non-empty string.");
-      }
-      if (typeof _handler !== "function") {
-        throw new TypeError("[nuxt] [useAsyncData] handler must be a function.");
-      }
-      const shouldFactoryOptionsOverride = typeof options === "function";
-      const nuxtApp = useNuxtApp();
-      const factoryOptions = shouldFactoryOptionsOverride ? options(opts) : options;
-      if (!shouldFactoryOptionsOverride) {
-        for (const key2 in factoryOptions) {
-          if (factoryOptions[key2] === void 0) {
-            continue;
-          }
-          if (opts[key2] !== void 0) {
-            continue;
-          }
-          opts[key2] = factoryOptions[key2];
-        }
-      }
-      opts.server ??= true;
-      opts.default ??= getDefault;
-      opts.getCachedData ??= getDefaultCachedData;
-      opts.lazy ??= false;
-      opts.immediate ??= true;
-      opts.deep ??= asyncDataDefaults.deep;
-      opts.dedupe ??= "cancel";
-      if (shouldFactoryOptionsOverride) {
-        for (const key2 in factoryOptions) {
-          if (factoryOptions[key2] === void 0) {
-            continue;
-          }
-          opts[key2] = factoryOptions[key2];
-        }
-      }
-      nuxtApp._asyncData[key.value];
-      function createInitialFetch() {
-        const initialFetchOptions = { cause: "initial", dedupe: opts.dedupe };
-        const existing = nuxtApp._asyncData[key.value];
-        if (!existing?._init) {
-          initialFetchOptions.cachedData = opts.getCachedData(key.value, nuxtApp, { cause: "initial" });
-          nuxtApp._asyncData[key.value] = buildAsyncData(nuxtApp, key.value, _handler, opts, initialFetchOptions.cachedData);
-          nuxtApp._asyncData[key.value]._initialCachedData = initialFetchOptions.cachedData;
-        } else if (nuxtApp._asyncDataPromises[key.value]) {
-          initialFetchOptions.cachedData = existing._initialCachedData;
-        }
-        return () => nuxtApp._asyncData[key.value].execute(initialFetchOptions);
-      }
-      const initialFetch = createInitialFetch();
-      const asyncData = nuxtApp._asyncData[key.value];
-      asyncData._deps++;
-      const fetchOnServer = opts.server !== false && nuxtApp.payload.serverRendered;
-      if (fetchOnServer && opts.immediate) {
-        const promise = initialFetch();
-        if (getCurrentInstance()) {
-          onServerPrefetch(() => promise);
-        } else {
-          nuxtApp.hook("app:created", async () => {
-            await promise;
-          });
-        }
-      }
-      const asyncReturn = {
-        data: writableComputedRef(() => nuxtApp._asyncData[key.value]?.data),
-        pending: writableComputedRef(() => nuxtApp._asyncData[key.value]?.pending),
-        status: writableComputedRef(() => nuxtApp._asyncData[key.value]?.status),
-        error: writableComputedRef(() => nuxtApp._asyncData[key.value]?.error),
-        refresh: (...args2) => {
-          if (!nuxtApp._asyncData[key.value]?._init) {
-            const initialFetch2 = createInitialFetch();
-            return initialFetch2();
-          }
-          return nuxtApp._asyncData[key.value].execute(...args2);
-        },
-        execute: (...args2) => asyncReturn.refresh(...args2),
-        clear: () => {
-          const entry2 = nuxtApp._asyncData[key.value];
-          if (entry2?._abortController) {
-            try {
-              entry2._abortController.abort(new DOMException("AsyncData aborted by user.", "AbortError"));
-            } finally {
-              entry2._abortController = void 0;
-            }
-          }
-          clearNuxtDataByKey(nuxtApp, key.value);
-        }
-      };
-      const asyncDataPromise = Promise.resolve(nuxtApp._asyncDataPromises[key.value]).then(() => asyncReturn);
-      Object.assign(asyncDataPromise, asyncReturn);
-      Object.defineProperties(asyncDataPromise, {
-        then: { enumerable: true, value: asyncDataPromise.then.bind(asyncDataPromise) },
-        catch: { enumerable: true, value: asyncDataPromise.catch.bind(asyncDataPromise) },
-        finally: { enumerable: true, value: asyncDataPromise.finally.bind(asyncDataPromise) }
-      });
-      return asyncDataPromise;
-    }
-    return useAsyncData2;
-  }
-});
-const useAsyncData = createUseAsyncData.__nuxt_factory();
-createUseAsyncData.__nuxt_factory({
-  lazy: true,
-  // @ts-expect-error private property
-  _functionName: "useLazyAsyncData"
-});
-function writableComputedRef(getter) {
-  return computed({
-    get() {
-      return getter()?.value;
-    },
-    set(value) {
-      const ref2 = getter();
-      if (ref2) {
-        ref2.value = value;
-      }
-    }
-  });
-}
-function _isAutoKeyNeeded(keyOrFetcher, fetcher) {
-  if (typeof keyOrFetcher === "string") {
-    return false;
-  }
-  if (typeof keyOrFetcher === "object" && keyOrFetcher !== null) {
-    return false;
-  }
-  if (typeof keyOrFetcher === "function" && typeof fetcher === "function") {
-    return false;
-  }
-  return true;
-}
-function useNuxtData(key) {
-  const nuxtApp = useNuxtApp();
-  if (!(key in nuxtApp.payload.data)) {
-    nuxtApp.payload.data[key] = void 0;
-  }
-  if (nuxtApp._asyncData[key]) {
-    const data = nuxtApp._asyncData[key];
-    data._deps++;
-    if (getCurrentScope()) {
-      onScopeDispose(() => {
-        data._deps--;
-        if (data._deps === 0) {
-          data?._off();
-        }
-      });
-    }
-  }
-  return {
-    data: computed({
-      get() {
-        return nuxtApp._asyncData[key]?.data.value ?? nuxtApp.payload.data[key];
-      },
-      set(value) {
-        if (nuxtApp._asyncData[key]) {
-          nuxtApp._asyncData[key].data.value = value;
-        } else {
-          nuxtApp.payload.data[key] = value;
-        }
-      }
-    })
-  };
-}
-async function refreshNuxtData(keys) {
-  {
-    return Promise.resolve();
-  }
-}
-function clearNuxtDataByKey(nuxtApp, key) {
-  if (key in nuxtApp.payload.data) {
-    nuxtApp.payload.data[key] = void 0;
-  }
-  if (key in nuxtApp.payload._errors) {
-    nuxtApp.payload._errors[key] = void 0;
-  }
-  if (nuxtApp._asyncData[key]) {
-    nuxtApp._asyncData[key].data.value = unref(nuxtApp._asyncData[key]._default());
-    nuxtApp._asyncData[key].error.value = void 0;
-    nuxtApp._asyncData[key].status.value = "idle";
-    nuxtApp._asyncData[key]._initialCachedData = void 0;
-  }
-  if (key in nuxtApp._asyncDataPromises) {
-    nuxtApp._asyncDataPromises[key] = void 0;
-  }
-}
-function pick(obj, keys) {
-  const newObj = {};
-  for (const key of keys) {
-    newObj[key] = obj[key];
-  }
-  return newObj;
-}
-function buildAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
-  nuxtApp.payload._errors[key] ??= void 0;
-  const hasCustomGetCachedData = options.getCachedData !== getDefaultCachedData;
-  const handler = !import.meta.prerender || !nuxtApp.ssrContext?.["~sharedPrerenderCache"] ? _handler : (nuxtApp2, options2) => {
-    const value = nuxtApp2.ssrContext["~sharedPrerenderCache"].get(key);
-    if (value) {
-      return value;
-    }
-    const promise = Promise.resolve().then(() => nuxtApp2.runWithContext(() => _handler(nuxtApp2, options2)));
-    nuxtApp2.ssrContext["~sharedPrerenderCache"].set(key, promise);
-    return promise;
-  };
-  const _ref = options.deep ? ref : shallowRef;
-  const hasCachedData = initialCachedData !== void 0;
-  const unsubRefreshAsyncData = nuxtApp.hook("app:data:refresh", async (keys) => {
-    if (!keys || keys.includes(key)) {
-      await asyncData.execute({ cause: "refresh:hook" });
-    }
-  });
-  const asyncData = {
-    data: _ref(hasCachedData ? initialCachedData : options.default()),
-    pending: computed(() => asyncData.status.value === "pending"),
-    error: toRef$1(nuxtApp.payload._errors, key),
-    status: shallowRef("idle"),
-    execute: (...args) => {
-      const [_opts, newValue = void 0] = args;
-      const opts = _opts && newValue === void 0 && typeof _opts === "object" ? _opts : {};
-      if (nuxtApp._asyncDataPromises[key]) {
-        if ((opts.dedupe ?? options.dedupe) === "defer") {
-          return nuxtApp._asyncDataPromises[key];
-        }
-      }
-      {
-        const cachedData = "cachedData" in opts ? opts.cachedData : options.getCachedData(key, nuxtApp, { cause: opts.cause ?? "refresh:manual" });
-        if (cachedData !== void 0) {
-          nuxtApp.payload.data[key] = asyncData.data.value = cachedData;
-          asyncData.error.value = void 0;
-          asyncData.status.value = "success";
-          return Promise.resolve(cachedData);
-        }
-      }
-      if (asyncData._abortController) {
-        asyncData._abortController.abort(new DOMException("AsyncData request cancelled by deduplication", "AbortError"));
-      }
-      asyncData._abortController = new AbortController();
-      asyncData.status.value = "pending";
-      const cleanupController = new AbortController();
-      const promise = new Promise(
-        (resolve, reject) => {
-          try {
-            const timeout = opts.timeout ?? options.timeout;
-            const mergedSignal = mergeAbortSignals([asyncData._abortController?.signal, opts?.signal], cleanupController.signal, timeout);
-            if (mergedSignal.aborted) {
-              const reason = mergedSignal.reason;
-              reject(reason instanceof Error ? reason : new DOMException(String(reason ?? "Aborted"), "AbortError"));
-              return;
-            }
-            mergedSignal.addEventListener("abort", () => {
-              const reason = mergedSignal.reason;
-              reject(reason instanceof Error ? reason : new DOMException(String(reason ?? "Aborted"), "AbortError"));
-            }, { once: true, signal: cleanupController.signal });
-            return Promise.resolve(handler(nuxtApp, { signal: mergedSignal })).then(resolve, reject);
-          } catch (err) {
-            reject(err);
-          }
-        }
-      ).then(async (_result) => {
-        if (nuxtApp._asyncDataPromises[key] !== promise) {
-          return;
-        }
-        let result = _result;
-        if (options.transform) {
-          result = await options.transform(_result);
-        }
-        if (options.pick) {
-          result = pick(result, options.pick);
-        }
-        nuxtApp.payload.data[key] = result;
-        asyncData.data.value = result;
-        asyncData.error.value = void 0;
-        asyncData.status.value = "success";
-      }).catch((error) => {
-        if (nuxtApp._asyncDataPromises[key] !== promise) {
-          return nuxtApp._asyncDataPromises[key];
-        }
-        if (asyncData._abortController?.signal.aborted) {
-          return nuxtApp._asyncDataPromises[key];
-        }
-        if (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") {
-          asyncData.status.value = "idle";
-          return nuxtApp._asyncDataPromises[key];
-        }
-        asyncData.error.value = createError(error);
-        asyncData.data.value = unref(options.default());
-        asyncData.status.value = "error";
-      }).finally(() => {
-        cleanupController.abort();
-        if (nuxtApp._asyncDataPromises[key] === promise) {
-          delete nuxtApp._asyncDataPromises[key];
-        }
-      });
-      nuxtApp._asyncDataPromises[key] = promise;
-      return nuxtApp._asyncDataPromises[key];
-    },
-    _execute: debounce((...args) => asyncData.execute(...args), 0, { leading: true }),
-    _default: options.default,
-    _deps: 0,
-    _init: true,
-    _hash: void 0,
-    _off: () => {
-      unsubRefreshAsyncData();
-      if (nuxtApp._asyncData[key]?._init) {
-        nuxtApp._asyncData[key]._init = false;
-      }
-      if (!hasCustomGetCachedData) {
-        nextTick(() => {
-          if (!nuxtApp._asyncData[key]?._init) {
-            clearNuxtDataByKey(nuxtApp, key);
-            asyncData.execute = () => Promise.resolve();
-          }
-        });
-      }
-    }
-  };
-  return asyncData;
-}
-const getDefault = () => void 0;
-const getDefaultCachedData = (key, nuxtApp, ctx) => {
-  if (nuxtApp.isHydrating) {
-    return nuxtApp.payload.data[key];
-  }
-  if (ctx.cause !== "refresh:manual" && ctx.cause !== "refresh:hook") {
-    return nuxtApp.static.data[key];
-  }
-};
-function mergeAbortSignals(signals, cleanupSignal, timeout) {
-  const list = signals.filter((s) => !!s);
-  if (typeof timeout === "number" && timeout >= 0) {
-    const timeoutSignal = AbortSignal.timeout?.(timeout);
-    if (timeoutSignal) {
-      list.push(timeoutSignal);
-    }
-  }
-  if (AbortSignal.any) {
-    return AbortSignal.any(list);
-  }
-  const controller = new AbortController();
-  for (const sig of list) {
-    if (sig.aborted) {
-      const reason = sig.reason ?? new DOMException("Aborted", "AbortError");
-      try {
-        controller.abort(reason);
-      } catch {
-        controller.abort();
-      }
-      return controller.signal;
-    }
-  }
-  const onAbort = () => {
-    const abortedSignal = list.find((s) => s.aborted);
-    const reason = abortedSignal?.reason ?? new DOMException("Aborted", "AbortError");
-    try {
-      controller.abort(reason);
-    } catch {
-      controller.abort();
-    }
-  };
-  for (const sig of list) {
-    sig.addEventListener?.("abort", onAbort, { once: true, signal: cleanupSignal });
-  }
-  return controller.signal;
-}
-function generateOptionSegments(opts) {
-  const segments = [
-    toValue(opts.method)?.toUpperCase() || "GET",
-    toValue(opts.baseURL)
-  ];
-  for (const _obj of [opts.query || opts.params]) {
-    const obj = toValue(_obj);
-    if (!obj) {
-      continue;
-    }
-    const unwrapped = {};
-    for (const [key, value] of Object.entries(obj)) {
-      unwrapped[toValue(key)] = toValue(value);
-    }
-    segments.push(unwrapped);
-  }
-  if (opts.body) {
-    const value = toValue(opts.body);
-    if (!value) {
-      segments.push(hash(value));
-    } else if (value instanceof ArrayBuffer) {
-      segments.push(hash(Object.fromEntries([...new Uint8Array(value).entries()].map(([k, v]) => [k, v.toString()]))));
-    } else if (value instanceof FormData) {
-      const entries = [];
-      for (const entry2 of value.entries()) {
-        const [key, val] = entry2;
-        entries.push([key, val instanceof File ? `${val.name}:${val.size}:${val.lastModified}` : val]);
-      }
-      segments.push(hash(entries));
-    } else if (isPlainObject(value)) {
-      segments.push(hash(reactive(value)));
-    } else {
-      try {
-        segments.push(hash(value));
-      } catch {
-        console.warn("[useFetch] Failed to hash body", value);
-      }
-    }
-  }
-  return segments;
-}
-const createUseFetch = defineKeyedFunctionFactory({
-  name: "createUseFetch",
-  factory(options = {}) {
-    function useFetch2(request, arg1, arg2) {
-      const [opts = {}, autoKey] = typeof arg1 === "string" ? [{}, arg1] : [arg1, arg2];
-      const factoryOptions = typeof options === "function" ? options(opts) : options;
-      const {
-        server,
-        lazy,
-        default: defaultFn,
-        transform,
-        pick: pick2,
-        watch: watchSources,
-        immediate,
-        getCachedData,
-        deep,
-        dedupe,
-        timeout,
-        ...fetchOptions
-      } = {
-        ...typeof options === "function" ? {} : factoryOptions,
-        ...opts,
-        ...typeof options === "function" ? factoryOptions : {}
-      };
-      const _request = computed(() => toValue(request));
-      const key = computed(() => toValue(fetchOptions.key) || "$f" + hash([autoKey, typeof _request.value === "string" ? _request.value : "", ...generateOptionSegments(fetchOptions)]));
-      if (!fetchOptions.baseURL && typeof _request.value === "string" && (_request.value[0] === "/" && _request.value[1] === "/")) {
-        throw new Error('[nuxt] [useFetch] the request URL must not start with "//".');
-      }
-      const _fetchOptions = reactive({
-        ...fetchDefaults,
-        ...fetchOptions,
-        cache: typeof fetchOptions.cache === "boolean" ? void 0 : fetchOptions.cache
-      });
-      const _asyncDataOptions = {
-        server,
-        lazy,
-        default: defaultFn,
-        transform,
-        pick: pick2,
-        immediate,
-        getCachedData,
-        deep,
-        dedupe,
-        timeout,
-        watch: watchSources === false ? [] : [...watchSources || [], _fetchOptions]
-      };
-      if (watchSources === false) {
-        _asyncDataOptions._keyTriggersExecute = false;
-      }
-      const asyncData = useAsyncData(key, (_, { signal }) => {
-        let _$fetch = fetchOptions.$fetch || globalThis.$fetch;
-        if (!fetchOptions.$fetch) {
-          const isLocalFetch = typeof _request.value === "string" && _request.value[0] === "/" && (!toValue(fetchOptions.baseURL) || toValue(fetchOptions.baseURL)[0] === "/");
-          if (isLocalFetch) {
-            _$fetch = useRequestFetch();
-          }
-        }
-        return _$fetch(_request.value, { signal, ..._fetchOptions });
-      }, _asyncDataOptions);
-      return asyncData;
-    }
-    return useFetch2;
-  }
-});
-const useFetch = createUseFetch.__nuxt_factory();
-createUseFetch.__nuxt_factory({
-  lazy: true,
-  // @ts-expect-error private property
-  _functionName: "useLazyFetch"
-});
-const firstNonUndefined = (...args) => args.find((arg) => arg !== void 0);
-function sanitizeExternalHref(value) {
-  let candidate = value.replace(/[\u0000-\u001F\s]+/g, "");
-  while (candidate.toLowerCase().startsWith("view-source:")) {
-    candidate = candidate.slice("view-source:".length);
-  }
-  const colon = candidate.indexOf(":");
-  if (colon > 0 && isScriptProtocol(candidate.slice(0, colon + 1))) {
-    return null;
-  }
-  return value;
-}
-// @__NO_SIDE_EFFECTS__
-function defineNuxtLink(options) {
-  const componentName = options.componentName || "NuxtLink";
-  function isHashLinkWithoutHashMode(link) {
-    return typeof link === "string" && link.startsWith("#");
-  }
-  function resolveTrailingSlashBehavior(to, resolve, trailingSlash) {
-    const effectiveTrailingSlash = trailingSlash ?? options.trailingSlash;
-    if (!to || effectiveTrailingSlash !== "append" && effectiveTrailingSlash !== "remove") {
-      return to;
-    }
-    if (typeof to === "string") {
-      return applyTrailingSlashBehavior(to, effectiveTrailingSlash);
-    }
-    const path = "path" in to && to.path !== void 0 ? to.path : resolve(to).path;
-    const resolvedPath = {
-      ...to,
-      name: void 0,
-      // named routes would otherwise always override trailing slash behavior
-      path: applyTrailingSlashBehavior(path, effectiveTrailingSlash)
-    };
-    return resolvedPath;
-  }
-  function useNuxtLink(props) {
-    const router = useRouter();
-    const config2 = /* @__PURE__ */ useRuntimeConfig();
-    const hasTarget = computed(() => !!unref(props.target) && unref(props.target) !== "_self");
-    const isAbsoluteUrl = computed(() => {
-      const path = unref(props.to) || unref(props.href) || "";
-      return typeof path === "string" && hasProtocol(path, { acceptRelative: true });
-    });
-    const builtinRouterLink = resolveComponent("RouterLink");
-    const useBuiltinLink = builtinRouterLink && typeof builtinRouterLink !== "string" ? builtinRouterLink.useLink : void 0;
-    const isExternal = computed(() => {
-      if (unref(props.external)) {
-        return true;
-      }
-      const path = unref(props.to) || unref(props.href) || "";
-      if (typeof path === "object") {
-        return false;
-      }
-      return path === "" || isAbsoluteUrl.value;
-    });
-    const to = computed(() => {
-      const path = unref(props.to) || unref(props.href) || "";
-      if (isExternal.value) {
-        return path;
-      }
-      return resolveTrailingSlashBehavior(path, router.resolve, unref(props.trailingSlash));
-    });
-    const link = isExternal.value ? void 0 : useBuiltinLink?.({ ...props, to, viewTransition: unref(props.viewTransition) });
-    const href = computed(() => {
-      const effectiveTrailingSlash = unref(props.trailingSlash) ?? options.trailingSlash;
-      if (!to.value || isAbsoluteUrl.value || isHashLinkWithoutHashMode(to.value)) {
-        const raw = to.value;
-        return typeof raw === "string" ? sanitizeExternalHref(raw) : raw;
-      }
-      if (isExternal.value) {
-        const path = typeof to.value === "object" && "path" in to.value ? resolveRouteObject(to.value) : to.value;
-        const href2 = typeof path === "object" ? router.resolve(path).href : path;
-        const safe = typeof href2 === "string" ? sanitizeExternalHref(href2) : href2;
-        return safe === null ? null : applyTrailingSlashBehavior(safe, effectiveTrailingSlash);
-      }
-      if (typeof to.value === "object") {
-        return router.resolve(to.value)?.href ?? null;
-      }
-      return applyTrailingSlashBehavior(joinURL(config2.app.baseURL, to.value), effectiveTrailingSlash);
-    });
-    return {
-      to,
-      hasTarget,
-      isAbsoluteUrl,
-      isExternal,
-      //
-      href,
-      isActive: link?.isActive ?? computed(() => to.value === router.currentRoute.value.path),
-      isExactActive: link?.isExactActive ?? computed(() => to.value === router.currentRoute.value.path),
-      route: link?.route ?? computed(() => router.resolve(to.value)),
-      async navigate(_e) {
-        if (href.value === null) {
-          return;
-        }
-        await navigateTo(href.value, { replace: unref(props.replace), external: isExternal.value || hasTarget.value });
-      }
-    };
-  }
-  return defineComponent({
-    name: componentName,
-    props: {
-      // Routing
-      to: {
-        type: [String, Object],
-        default: void 0,
-        required: false
-      },
-      href: {
-        type: [String, Object],
-        default: void 0,
-        required: false
-      },
-      // Attributes
-      target: {
-        type: String,
-        default: void 0,
-        required: false
-      },
-      rel: {
-        type: String,
-        default: void 0,
-        required: false
-      },
-      noRel: {
-        type: Boolean,
-        default: void 0,
-        required: false
-      },
-      // Prefetching
-      prefetch: {
-        type: Boolean,
-        default: void 0,
-        required: false
-      },
-      prefetchOn: {
-        type: [String, Object],
-        default: void 0,
-        required: false
-      },
-      noPrefetch: {
-        type: Boolean,
-        default: void 0,
-        required: false
-      },
-      // Styling
-      activeClass: {
-        type: String,
-        default: void 0,
-        required: false
-      },
-      exactActiveClass: {
-        type: String,
-        default: void 0,
-        required: false
-      },
-      prefetchedClass: {
-        type: String,
-        default: void 0,
-        required: false
-      },
-      // Vue Router's `<RouterLink>` additional props
-      replace: {
-        type: Boolean,
-        default: void 0,
-        required: false
-      },
-      ariaCurrentValue: {
-        type: String,
-        default: void 0,
-        required: false
-      },
-      // Edge cases handling
-      external: {
-        type: Boolean,
-        default: void 0,
-        required: false
-      },
-      // Slot API
-      custom: {
-        type: Boolean,
-        default: void 0,
-        required: false
-      },
-      // Behavior
-      trailingSlash: {
-        type: String,
-        default: void 0,
-        required: false
-      }
-    },
-    useLink: useNuxtLink,
-    setup(props, { slots }) {
-      const router = useRouter();
-      const { to, href, navigate, isExternal, hasTarget, isAbsoluteUrl } = useNuxtLink(props);
-      shallowRef(false);
-      const el = void 0;
-      const elRef = void 0;
-      async function prefetch(nuxtApp = useNuxtApp()) {
-        {
-          return;
-        }
-      }
-      return () => {
-        if (!isExternal.value && !hasTarget.value && !isHashLinkWithoutHashMode(to.value)) {
-          const routerLinkProps = {
-            ref: elRef,
-            to: to.value,
-            activeClass: props.activeClass || options.activeClass,
-            exactActiveClass: props.exactActiveClass || options.exactActiveClass,
-            replace: props.replace,
-            ariaCurrentValue: props.ariaCurrentValue,
-            custom: props.custom
-          };
-          if (!props.custom) {
-            routerLinkProps.rel = props.rel || void 0;
-          }
-          return h(
-            resolveComponent("RouterLink"),
-            routerLinkProps,
-            slots.default
-          );
-        }
-        const target = props.target || null;
-        const rel = firstNonUndefined(
-          // converts `""` to `null` to prevent the attribute from being added as empty (`rel=""`)
-          props.noRel ? "" : props.rel,
-          options.externalRelAttribute,
-          /*
-          * A fallback rel of `noopener noreferrer` is applied for external links or links that open in a new tab.
-          * This solves a reverse tabnapping security flaw in browsers pre-2021 as well as improving privacy.
-          */
-          isAbsoluteUrl.value || hasTarget.value ? "noopener noreferrer" : ""
-        ) || null;
-        if (props.custom) {
-          if (!slots.default) {
-            return null;
-          }
-          return slots.default({
-            href: href.value,
-            navigate,
-            prefetch,
-            get route() {
-              if (!href.value) {
-                return void 0;
-              }
-              const url = new URL(href.value, "http://localhost");
-              return {
-                path: url.pathname,
-                fullPath: url.pathname,
-                get query() {
-                  return parseQuery(url.search);
-                },
-                hash: url.hash,
-                params: {},
-                name: void 0,
-                matched: [],
-                redirectedFrom: void 0,
-                meta: {},
-                href: href.value
-              };
-            },
-            rel,
-            target,
-            isExternal: isExternal.value || hasTarget.value,
-            isActive: false,
-            isExactActive: false
-          });
-        }
-        return h("a", {
-          ref: el,
-          href: href.value || null,
-          // converts `""` to `null` to prevent the attribute from being added as empty (`href=""`)
-          rel,
-          target,
-          onClick: async (event) => {
-            if (isExternal.value || hasTarget.value) {
-              return;
-            }
-            event.preventDefault();
-            try {
-              const encodedHref = encodeRoutePath(href.value ?? "");
-              return await (props.replace ? router.replace(encodedHref) : router.push(encodedHref));
-            } finally {
-            }
-          }
-        }, slots.default?.());
-      };
-    }
-  });
-}
-const __nuxt_component_0$1 = /* @__PURE__ */ defineNuxtLink(nuxtLinkDefaults);
-function applyTrailingSlashBehavior(to, trailingSlash) {
-  const normalizeFn = trailingSlash === "append" ? withTrailingSlash : withoutTrailingSlash;
-  const hasProtocolDifferentFromHttp = hasProtocol(to) && !to.startsWith("http");
-  if (hasProtocolDifferentFromHttp) {
-    return to;
-  }
-  return normalizeFn(to, true);
-}
-let _initialized = false;
-function init(addIcon2) {
-  if (_initialized)
-    return;
-  const collections = JSON.parse('[{"prefix":"lucide","icons":{"arrow-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 5v14m7-7l-7 7l-7-7\\"/>"},"arrow-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m12 19l-7-7l7-7m7 7H5\\"/>"},"arrow-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7l7 7l-7 7\\"/>"},"arrow-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m5 12l7-7l7 7m-7 7V5\\"/>"},"arrow-up-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M7 7h10v10M7 17L17 7\\"/>"},"check":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 6L9 17l-5-5\\"/>"},"chevron-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 9l6 6l6-6\\"/>"},"chevron-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m15 18l-6-6l6-6\\"/>"},"chevron-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m9 18l6-6l-6-6\\"/>"},"chevron-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m18 15l-6-6l-6 6\\"/>"},"chevrons-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m11 17l-5-5l5-5m7 10l-5-5l5-5\\"/>"},"chevrons-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 17l5-5l-5-5m7 10l5-5l-5-5\\"/>"},"circle-alert":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 8v4m0 4h.01\\"/></g>"},"circle-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m9 12l2 2l4-4\\"/></g>"},"circle-x":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m15 9l-6 6m0-6l6 6\\"/></g>"},"copy":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"copy-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m12 15l2 2l4-4\\"/><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"ellipsis":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"/></g>"},"eye":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0\\"/><circle cx=\\"12\\" cy=\\"12\\" r=\\"3\\"/></g>"},"eye-off":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242\\"/><path d=\\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20\\"/></g>"},"file":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\\"/><path d=\\"M14 2v5a1 1 0 0 0 1 1h5\\"/></g>"},"folder":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\\"/>"},"folder-open":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\\"/>"},"grip-vertical":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"9\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"19\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"19\\" r=\\"1\\"/></g>"},"hash":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 9h16M4 15h16M10 3L8 21m8-18l-2 18\\"/>"},"info":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 16v-4m0-4h.01\\"/></g>"},"lightbulb":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M15 14c.2-1 .7-1.7 1.5-2.5c1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5c.7.7 1.3 1.5 1.5 2.5m0 4h6m-5 4h4\\"/>"},"loader-circle":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M21 12a9 9 0 1 1-6.219-8.56\\"/>"},"menu":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 5h16M4 12h16M4 19h16\\"/>"},"minus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14\\"/>"},"monitor":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"20\\" height=\\"14\\" x=\\"2\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M8 21h8m-4-4v4\\"/></g>"},"moon":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\\"/>"},"panel-left-close":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m7-6l-3-3l3-3\\"/></g>"},"panel-left-open":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m5-12l3 3l-3 3\\"/></g>"},"plus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7v14\\"/>"},"rotate-ccw":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8\\"/><path d=\\"M3 3v5h5\\"/></g>"},"search":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m21 21l-4.34-4.34\\"/><circle cx=\\"11\\" cy=\\"11\\" r=\\"8\\"/></g>"},"square":{"width":24,"height":24,"body":"<rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" rx=\\"2\\"/>"},"star":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z\\"/>"},"sun":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"4\\"/><path d=\\"M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\\"/></g>"},"triangle-alert":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\\"/>"},"upload":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 3v12m5-7l-5-5l-5 5m14 7v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\\"/>"},"x":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M18 6L6 18M6 6l12 12\\"/>"}}}]');
-  for (const collection of collections) {
-    for (const [name, data] of Object.entries(collection.icons)) {
-      addIcon2(collection.prefix ? collection.prefix + ":" + name : name, data);
-    }
-  }
-  _initialized = true;
-}
-async function loadIcon(name, timeout) {
-  if (!name)
-    return null;
-  init(addIcon);
-  const _icon = getIcon(name);
-  if (_icon)
-    return _icon;
-  let timeoutWarn;
-  const load = loadIcon$1(name).catch(() => {
-    console.warn(`[Icon] failed to load icon \`${name}\``);
-    return null;
-  });
-  if (timeout > 0)
-    await Promise.race([
-      load,
-      new Promise((resolve) => {
-        timeoutWarn = setTimeout(() => {
-          console.warn(`[Icon] loading icon \`${name}\` timed out after ${timeout}ms`);
-          resolve();
-        }, timeout);
-      })
-    ]).finally(() => clearTimeout(timeoutWarn));
-  else
-    await load;
-  return getIcon(name);
-}
-function useResolvedName(getName) {
-  const options = useAppConfig().icon;
-  const collections = (options.collections || []).sort((a, b) => b.length - a.length);
-  return computed(() => {
-    const name = getName();
-    const bare = name.startsWith(options.cssSelectorPrefix) ? name.slice(options.cssSelectorPrefix.length) : name;
-    const resolved = options.aliases?.[bare] || bare;
-    if (!resolved.includes(":")) {
-      const collection = collections.find((c) => resolved.startsWith(c + "-"));
-      return collection ? collection + ":" + resolved.slice(collection.length + 1) : resolved;
-    }
-    return resolved;
-  });
-}
-function resolveCustomizeFn(customize, globalCustomize) {
-  if (customize === false) return void 0;
-  if (customize === true || customize === null) return globalCustomize;
-  return customize;
-}
-const SYMBOL_SERVER_CSS = "NUXT_ICONS_SERVER_CSS";
-function escapeCssSelector(selector) {
-  return selector.replace(/([^\w-])/g, "\\$1");
-}
-const NuxtIconCss = /* @__PURE__ */ defineComponent({
-  name: "NuxtIconCss",
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    customize: {
-      type: [Function, Boolean, null],
-      default: null,
-      required: false
-    }
-  },
-  setup(props) {
-    const nuxt = useNuxtApp();
-    const options = useAppConfig().icon;
-    const cssClass = computed(() => {
-      if (!props.name) return "";
-      const base = options.cssSelectorPrefix + props.name;
-      if (typeof props.customize === "function") {
-        return base + "--customized-" + hash(props.customize.toString());
-      }
-      return base;
-    });
-    const selector = computed(() => "." + escapeCssSelector(cssClass.value));
-    function getCSS(icon, withLayer = true) {
-      let iconSelector = selector.value;
-      if (options.cssWherePseudo) {
-        iconSelector = `:where(${iconSelector})`;
-      }
-      const css = getIconCSS(icon, {
-        iconSelector,
-        format: "compressed",
-        customise: resolveCustomizeFn(props.customize, options.customize)
-      });
-      if (options.cssLayer && withLayer) {
-        return `@layer ${options.cssLayer} { ${css} }`;
-      }
-      return css;
-    }
-    onServerPrefetch(async () => {
-      {
-        const configs = (/* @__PURE__ */ useRuntimeConfig()).icon || {};
-        if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
-          const icon = await loadIcon(props.name, options.fetchTimeout).catch(() => null);
-          if (!icon)
-            return null;
-          let ssrCSS = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS];
-          if (!ssrCSS) {
-            ssrCSS = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS] = /* @__PURE__ */ new Map();
-            nuxt.runWithContext(() => {
-              useHead({
-                style: [
-                  () => {
-                    const sep = "";
-                    let css = Array.from(ssrCSS.values()).sort().join(sep);
-                    if (options.cssLayer) {
-                      css = `@layer ${options.cssLayer} {${sep}${css}${sep}}`;
-                    }
-                    return { innerHTML: css };
-                  }
-                ]
-              }, {
-                tagPriority: "low"
-              });
-            });
-          }
-          if (cssClass.value && !ssrCSS.has(cssClass.value)) {
-            const css = getCSS(icon, false);
-            ssrCSS.set(cssClass.value, css);
-          }
-          return null;
-        }
-      }
-    });
-    return () => h("span", { class: ["iconify", cssClass.value] });
-  }
-});
-const NuxtIconSvg = /* @__PURE__ */ defineComponent({
-  name: "NuxtIconSvg",
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    customize: {
-      type: [Function, Boolean, null],
-      default: null,
-      required: false
-    }
-  },
-  setup(props, { slots }) {
-    useNuxtApp();
-    const options = useAppConfig().icon;
-    const name = useResolvedName(() => props.name);
-    const storeKey = "i-" + name.value;
-    if (name.value) {
-      onServerPrefetch(async () => {
-        {
-          await useAsyncData(
-            storeKey,
-            async () => await loadIcon(name.value, options.fetchTimeout),
-            { deep: false }
-          );
-        }
-      });
-    }
-    return () => h(Icon, {
-      icon: name.value,
-      ssr: true,
-      // Iconify uses `customise`, where we expose `customize` for consistency
-      customise: resolveCustomizeFn(props.customize, options.customize)
-    }, slots);
-  }
-});
-const NuxtIcon = defineComponent({
-  name: "NuxtIcon",
-  props: {
-    name: {
-      type: String,
-      required: true
-    },
-    mode: {
-      type: String,
-      required: false,
-      default: null
-    },
-    size: {
-      type: [Number, String],
-      required: false,
-      default: null
-    },
-    customize: {
-      type: [Function, Boolean, null],
-      default: null,
-      required: false
-    }
-  },
-  setup(props, { slots }) {
-    const nuxtApp = useNuxtApp();
-    const runtimeOptions = useAppConfig().icon;
-    const name = useResolvedName(() => props.name);
-    const component = computed(
-      () => nuxtApp.vueApp?.component(name.value) || ((props.mode || runtimeOptions.mode) === "svg" ? NuxtIconSvg : NuxtIconCss)
-    );
-    const style = computed(() => {
-      const size = props.size || runtimeOptions.size;
-      return size ? { fontSize: Number.isNaN(+size) ? size : size + "px" } : null;
-    });
-    return () => h(
-      component.value,
-      {
-        ...runtimeOptions.attrs,
-        name: name.value,
-        class: runtimeOptions.class,
-        style: style.value,
-        customize: props.customize
-      },
-      slots
-    );
-  }
-});
-const index = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: NuxtIcon
-}, Symbol.toStringTag, { value: "Module" }));
-const plugin_PkzIodqHrECZiqJYWG6YoAUH8WdazzfetYETfN19XBg = /* @__PURE__ */ defineNuxtPlugin((nuxtApp) => {
-  return;
 });
 const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
 function getColor(color2, shade) {
@@ -4468,7 +3408,6 @@ const plugins = [
   plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8,
   components_plugin_z4hgvsiddfKkfXTP6M8M4zG5Cb7sGnDhcryKVM45Di4,
   pwa_icons_plugin_C24GcIKjcI2zsa8A86om0L2LZjx1chWtzYxD11T7Txg,
-  plugin_PkzIodqHrECZiqJYWG6YoAUH8WdazzfetYETfN19XBg,
   colors_E7kSti5pGZ28QhUUurq6gGRU3l65WuXO_KJC3GQgzFo,
   plugin_server_9Ca9_HhnjAGwBWpwAydRauMHxWoxTDY60BrArRnXN_A,
   motion_F8atB0kBNE8FIgT_ajBXU_q0VzJ7X_J9WFqahA8C37U
@@ -5262,10 +4201,11 @@ function usePresence(present, node) {
     }
   }, { immediate: true });
   const handleAnimationEnd = (event) => {
+    if (event.target !== node.value) return;
     const currentAnimationName = getAnimationName(node.value);
     const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
     state.value === "mounted" ? "enter" : "leave";
-    if (event.target === node.value && isCurrentAnimation) {
+    if (isCurrentAnimation) {
       dispatch("ANIMATION_END");
       if (!prevPresentRef.value) {
         const currentFillMode = node.value.style.animationFillMode;
@@ -5275,7 +4215,7 @@ function usePresence(present, node) {
         });
       }
     }
-    if (event.target === node.value && currentAnimationName === "none") dispatch("ANIMATION_END");
+    if (currentAnimationName === "none") dispatch("ANIMATION_END");
   };
   const handleAnimationStart = (event) => {
     if (event.target === node.value) prevAnimationNameRef.value = getAnimationName(node.value);
@@ -6033,10 +4973,10 @@ var ToastRootImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
         };
         viewport.addEventListener(VIEWPORT_PAUSE, handlePause);
         viewport.addEventListener(VIEWPORT_RESUME, handleResume);
-        return () => {
+        cleanupFn(() => {
           viewport.removeEventListener(VIEWPORT_PAUSE, handlePause);
           viewport.removeEventListener(VIEWPORT_RESUME, handleResume);
-        };
+        });
       }
     });
     watch(() => [props.open, duration.value], () => {
@@ -7013,6 +5953,12 @@ function useComponentProps(name, props) {
         if (!raw && !themeUi) return raw;
         return defu$1(raw ?? {}, themeUi ?? {});
       }
+      if (prop === "class") {
+        const themeClass = themeEntry?.class;
+        if (themeClass === void 0) return raw;
+        if (raw === void 0) return themeClass;
+        return [themeClass, raw];
+      }
       if (vm && propIsDefined(vm.vnode, prop)) return raw;
       const themeValue = themeEntry?.[prop];
       if (themeValue !== void 0) return themeValue;
@@ -7176,7 +6122,44 @@ function plainClasses(value) {
 function applyReplacer(replacer, slotProps, resolveDefaults) {
   return cnMerge(replacer(resolveDefaults()), ...plainClasses(slotProps.class), ...plainClasses(slotProps.className))(config) ?? "";
 }
-function wrapSlots(slots, directives) {
+function isMemoizable(value, depth = 0) {
+  if (value === void 0 || value === null) {
+    return true;
+  }
+  const type = typeof value;
+  if (type === "string" || type === "boolean") {
+    return true;
+  }
+  if (type === "number") {
+    return Number.isFinite(value);
+  }
+  if (Array.isArray(value)) {
+    if (depth >= 4) {
+      return false;
+    }
+    for (const item of value) {
+      if (!isMemoizable(item, depth + 1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+function memoKey(slotProps) {
+  const proto = Object.getPrototypeOf(slotProps);
+  if (proto !== Object.prototype && proto !== null) {
+    return void 0;
+  }
+  for (const key of Object.keys(slotProps)) {
+    if (!isMemoizable(slotProps[key])) {
+      return void 0;
+    }
+  }
+  return JSON.stringify(slotProps);
+}
+function wrapSlots(slots) {
+  const memo = /* @__PURE__ */ new Map();
   return new Proxy(slots, {
     get(target, key) {
       const slot = target[key];
@@ -7184,52 +6167,93 @@ function wrapSlots(slots, directives) {
         return slot;
       }
       return (slotProps = {}) => {
-        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className) ?? directives?.[key];
+        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className);
         if (!replacer) {
-          return slot(slotProps);
+          const cacheKey = memoKey(slotProps);
+          if (cacheKey === void 0) {
+            return slot(slotProps);
+          }
+          let cache = memo.get(key);
+          if (!cache) {
+            cache = /* @__PURE__ */ new Map();
+            memo.set(key, cache);
+          }
+          let result = cache.get(cacheKey);
+          if (result === void 0 && !cache.has(cacheKey)) {
+            if (cache.size >= 500) {
+              cache.clear();
+            }
+            result = slot(slotProps);
+            cache.set(cacheKey, result);
+          }
+          return result;
         }
         return applyReplacer(replacer, slotProps, () => slot({ ...slotProps, class: void 0, className: void 0 }));
       };
     }
   });
 }
-function extractDirectives(componentConfig) {
+function defaultClasses(value) {
+  return cnMerge(value)(config) ?? "";
+}
+function resolveReplacers(componentConfig) {
   if (!componentConfig || typeof componentConfig !== "object") {
-    return { config: componentConfig };
-  }
-  let config2 = componentConfig;
-  let directives;
-  if (typeof componentConfig.base === "function") {
-    directives = { base: componentConfig.base };
-    config2 = { ...config2, base: "" };
+    return componentConfig;
   }
   const slots = componentConfig.slots;
-  if (slots && typeof slots === "object") {
-    const replacers = Object.entries(slots).filter(([, value]) => typeof value === "function");
-    if (replacers.length) {
-      directives ??= {};
-      const cleaned = { ...slots };
-      for (const [slot, replacer] of replacers) {
-        directives[slot] = replacer;
-        cleaned[slot] = "";
-      }
-      config2 = { ...config2, slots: cleaned };
+  const replacers = slots && typeof slots === "object" ? Object.entries(slots).filter((entry2) => typeof entry2[1] === "function") : [];
+  const baseReplacer = typeof componentConfig.base === "function" ? componentConfig.base : void 0;
+  if (!replacers.length && !baseReplacer) {
+    return componentConfig;
+  }
+  const extend = componentConfig.extend;
+  const resolved = { ...componentConfig };
+  let extendSlots;
+  let blankExtendBase = false;
+  if (baseReplacer) {
+    resolved.base = baseReplacer(defaultClasses(extend?.slots?.base ?? extend?.base));
+    if (extend?.slots?.base) {
+      extendSlots ??= { ...extend.slots };
+      extendSlots.base = "";
+    }
+    if (extend?.base) {
+      blankExtendBase = true;
     }
   }
-  return { config: config2, directives };
+  if (replacers.length) {
+    const cleaned = { ...slots };
+    for (const [slot, replacer] of replacers) {
+      cleaned[slot] = replacer(defaultClasses(extend?.slots?.[slot]));
+      if (extend?.slots?.[slot]) {
+        extendSlots ??= { ...extend.slots };
+        extendSlots[slot] = "";
+      }
+    }
+    resolved.slots = cleaned;
+  }
+  if (extendSlots || blankExtendBase) {
+    const cleanedExtend = { ...extend };
+    if (extendSlots) {
+      cleanedExtend.slots = extendSlots;
+    }
+    if (blankExtendBase) {
+      cleanedExtend.base = "";
+    }
+    resolved.extend = cleanedExtend;
+  }
+  return resolved;
 }
 const tv = ((componentConfig) => {
-  const { config: cleanConfig, directives } = extractDirectives(componentConfig);
-  const component = baseTv(cleanConfig);
+  const component = baseTv(resolveReplacers(componentConfig));
   return new Proxy(component, {
     apply(target, thisArg, args) {
       const result = Reflect.apply(target, thisArg, args);
       if (result && typeof result === "object") {
-        return wrapSlots(result, directives);
+        return wrapSlots(result);
       }
       if (typeof result === "string") {
         const slotProps = args[0] ?? {};
-        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className) ?? directives?.base;
+        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className);
         if (replacer) {
           return applyReplacer(replacer, slotProps, () => Reflect.apply(target, thisArg, [{ ...slotProps, class: void 0, className: void 0 }]));
         }
@@ -7238,6 +6262,657 @@ const tv = ((componentConfig) => {
     }
   });
 });
+let _initialized = false;
+function init(addIcon2) {
+  if (_initialized)
+    return;
+  const collections = JSON.parse('[{"prefix":"lucide","icons":{"arrow-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 5v14m7-7l-7 7l-7-7\\"/>"},"arrow-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m12 19l-7-7l7-7m7 7H5\\"/>"},"arrow-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7l7 7l-7 7\\"/>"},"arrow-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m5 12l7-7l7 7m-7 7V5\\"/>"},"arrow-up-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M7 7h10v10M7 17L17 7\\"/>"},"check":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 6L9 17l-5-5\\"/>"},"chevron-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 9l6 6l6-6\\"/>"},"chevron-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m15 18l-6-6l6-6\\"/>"},"chevron-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m9 18l6-6l-6-6\\"/>"},"chevron-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m18 15l-6-6l-6 6\\"/>"},"chevrons-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m11 17l-5-5l5-5m7 10l-5-5l5-5\\"/>"},"chevrons-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 17l5-5l-5-5m7 10l5-5l-5-5\\"/>"},"circle-alert":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 8v4m0 4h.01\\"/></g>"},"circle-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m16 9l-5.5 5.5L8 12\\"/></g>"},"circle-x":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m15 9l-6 6m0-6l6 6\\"/></g>"},"copy":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"copy-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m12 15l2 2l4-4\\"/><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"ellipsis":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"/></g>"},"eye":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0\\"/><circle cx=\\"12\\" cy=\\"12\\" r=\\"3\\"/></g>"},"eye-off":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242\\"/><path d=\\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20\\"/></g>"},"file":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\\"/><path d=\\"M14 2v5a1 1 0 0 0 1 1h5\\"/></g>"},"folder":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\\"/>"},"folder-open":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\\"/>"},"grip-vertical":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"9\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"19\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"19\\" r=\\"1\\"/></g>"},"hash":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 9h16M4 15h16M10 3L8 21m8-18l-2 18\\"/>"},"info":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 16v-4m0-4h.01\\"/></g>"},"lightbulb":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M15 14c.2-1 .7-1.7 1.5-2.5c1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5c.7.7 1.3 1.5 1.5 2.5m0 4h6m-5 4h4\\"/>"},"loader-circle":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M21 12a9 9 0 1 1-6.219-8.56\\"/>"},"menu":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 5h16M4 12h16M4 19h16\\"/>"},"minus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14\\"/>"},"monitor":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"20\\" height=\\"14\\" x=\\"2\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M8 21h8m-4-4v4\\"/></g>"},"moon":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\\"/>"},"panel-left-close":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m7-6l-3-3l3-3\\"/></g>"},"panel-left-open":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m5-12l3 3l-3 3\\"/></g>"},"plus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7v14\\"/>"},"rotate-ccw":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8\\"/><path d=\\"M3 3v5h5\\"/></g>"},"search":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m21 21l-4.34-4.34\\"/><circle cx=\\"11\\" cy=\\"11\\" r=\\"8\\"/></g>"},"square":{"width":24,"height":24,"body":"<rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" rx=\\"2\\"/>"},"star":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z\\"/>"},"sun":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"4\\"/><path d=\\"M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\\"/></g>"},"triangle-alert":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\\"/>"},"upload":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 3v12m5-7l-5-5l-5 5m14 7v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\\"/>"},"x":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M18 6L6 18M6 6l12 12\\"/>"}}}]');
+  for (const collection of collections) {
+    for (const [name, data] of Object.entries(collection.icons)) {
+      addIcon2(collection.prefix ? collection.prefix + ":" + name : name, data);
+    }
+  }
+  _initialized = true;
+}
+async function loadIcon(name, timeout) {
+  if (!name)
+    return null;
+  init(addIcon);
+  const _icon = getIcon(name);
+  if (_icon)
+    return _icon;
+  let timeoutWarn;
+  const load = loadIcon$1(name).catch(() => {
+    console.warn(`[Icon] failed to load icon \`${name}\``);
+    return null;
+  });
+  if (timeout > 0)
+    await Promise.race([
+      load,
+      new Promise((resolve) => {
+        timeoutWarn = setTimeout(() => {
+          console.warn(`[Icon] loading icon \`${name}\` timed out after ${timeout}ms`);
+          resolve();
+        }, timeout);
+      })
+    ]).finally(() => clearTimeout(timeoutWarn));
+  else
+    await load;
+  return getIcon(name);
+}
+function useResolvedName(getName) {
+  const options = useAppConfig().icon;
+  const collections = (options.collections || []).sort((a, b) => b.length - a.length);
+  return computed(() => {
+    const name = getName();
+    const bare = name.startsWith(options.cssSelectorPrefix) ? name.slice(options.cssSelectorPrefix.length) : name;
+    const resolved = options.aliases?.[bare] || bare;
+    if (!resolved.includes(":")) {
+      const collection = collections.find((c) => resolved.startsWith(c + "-"));
+      return collection ? collection + ":" + resolved.slice(collection.length + 1) : resolved;
+    }
+    return resolved;
+  });
+}
+function resolveCustomizeFn(customize, globalCustomize) {
+  if (customize === false) return void 0;
+  if (customize === true || customize === null) return globalCustomize;
+  return customize;
+}
+const SYMBOL_SERVER_CSS = "NUXT_ICONS_SERVER_CSS";
+function escapeCssSelector(selector) {
+  return selector.replace(/([^\w-])/g, "\\$1");
+}
+const NuxtIconCss = /* @__PURE__ */ defineComponent({
+  name: "NuxtIconCss",
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    customize: {
+      type: [Function, Boolean, null],
+      default: null,
+      required: false
+    }
+  },
+  setup(props) {
+    const nuxt = useNuxtApp();
+    const options = useAppConfig().icon;
+    const cssClass = computed(() => {
+      if (!props.name) return "";
+      const base = options.cssSelectorPrefix + props.name;
+      if (typeof props.customize === "function") {
+        return base + "--customized-" + hash(props.customize.toString());
+      }
+      return base;
+    });
+    const selector = computed(() => "." + escapeCssSelector(cssClass.value));
+    function getCSS(icon, withLayer = true) {
+      let iconSelector = selector.value;
+      if (options.cssWherePseudo) {
+        iconSelector = `:where(${iconSelector})`;
+      }
+      const css = getIconCSS(icon, {
+        iconSelector,
+        format: "compressed",
+        customise: resolveCustomizeFn(props.customize, options.customize)
+      });
+      if (options.cssLayer && withLayer) {
+        return `@layer ${options.cssLayer} { ${css} }`;
+      }
+      return css;
+    }
+    onServerPrefetch(async () => {
+      {
+        const configs = (/* @__PURE__ */ useRuntimeConfig()).icon || {};
+        if (!configs?.serverKnownCssClasses?.includes(cssClass.value)) {
+          const icon = await loadIcon(props.name, options.fetchTimeout).catch(() => null);
+          if (!icon)
+            return null;
+          let ssrCSS = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS];
+          if (!ssrCSS) {
+            ssrCSS = nuxt.vueApp._context.provides[SYMBOL_SERVER_CSS] = /* @__PURE__ */ new Map();
+            nuxt.runWithContext(() => {
+              useHead({
+                style: [
+                  () => {
+                    const sep = "";
+                    let css = Array.from(ssrCSS.values()).sort().join(sep);
+                    if (options.cssLayer) {
+                      css = `@layer ${options.cssLayer} {${sep}${css}${sep}}`;
+                    }
+                    return { innerHTML: css };
+                  }
+                ]
+              }, {
+                tagPriority: "low"
+              });
+            });
+          }
+          if (cssClass.value && !ssrCSS.has(cssClass.value)) {
+            const css = getCSS(icon, false);
+            ssrCSS.set(cssClass.value, css);
+          }
+          return null;
+        }
+      }
+    });
+    return () => h("span", { class: ["iconify", cssClass.value] });
+  }
+});
+const ServerPlaceholder = defineComponent({
+  name: "ServerPlaceholder",
+  render() {
+    return createElementBlock("div");
+  }
+});
+const serverPlaceholder = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: ServerPlaceholder
+}, Symbol.toStringTag, { value: "Module" }));
+const clientOnlySymbol = /* @__PURE__ */ Symbol.for("nuxt:client-only");
+const __nuxt_component_1$1 = defineComponent({
+  name: "ClientOnly",
+  inheritAttrs: false,
+  props: ["fallback", "placeholder", "placeholderTag", "fallbackTag"],
+  ...false,
+  setup(props, { slots, attrs }) {
+    const mounted = shallowRef(false);
+    const vm = getCurrentInstance();
+    if (vm) {
+      vm._nuxtClientOnly = true;
+    }
+    provide(clientOnlySymbol, true);
+    return () => {
+      if (mounted.value) {
+        const vnodes = slots.default?.();
+        if (vnodes && vnodes.length === 1) {
+          return [cloneVNode(vnodes[0], attrs)];
+        }
+        return vnodes;
+      }
+      const slot = slots.fallback || slots.placeholder;
+      if (slot) {
+        return h(slot);
+      }
+      const fallbackStr = props.fallback || props.placeholder || "";
+      const fallbackTag = props.fallbackTag || props.placeholderTag || "span";
+      return createElementBlock(fallbackTag, attrs, fallbackStr);
+    };
+  }
+});
+function defineKeyedFunctionFactory(factory) {
+  const placeholder = function() {
+    throw new Error(`[nuxt] \`${factory.name}\` is a compiler macro and cannot be called at runtime.`);
+  };
+  return Object.defineProperty(placeholder, "__nuxt_factory", {
+    enumerable: false,
+    get: () => factory.factory
+  });
+}
+const createUseAsyncData = defineKeyedFunctionFactory({
+  name: "createUseAsyncData",
+  factory(options = {}) {
+    function useAsyncData2(...args) {
+      const autoKey = typeof args[args.length - 1] === "string" ? args.pop() : void 0;
+      if (_isAutoKeyNeeded(args[0], args[1])) {
+        args.unshift(autoKey);
+      }
+      let [_key, _handler, opts = {}] = args;
+      const isKeyReactive = isRef(_key) || typeof _key === "function";
+      const key = isKeyReactive ? computed(() => toValue(_key)) : { value: _key };
+      if (!key.value || typeof key.value !== "string") {
+        throw new TypeError("[nuxt] [useAsyncData] key must be a non-empty string.");
+      }
+      if (typeof _handler !== "function") {
+        throw new TypeError("[nuxt] [useAsyncData] handler must be a function.");
+      }
+      const shouldFactoryOptionsOverride = typeof options === "function";
+      const nuxtApp = useNuxtApp();
+      const factoryOptions = shouldFactoryOptionsOverride ? options(opts) : options;
+      if (!shouldFactoryOptionsOverride) {
+        for (const key2 in factoryOptions) {
+          if (factoryOptions[key2] === void 0) {
+            continue;
+          }
+          if (opts[key2] !== void 0) {
+            continue;
+          }
+          opts[key2] = factoryOptions[key2];
+        }
+      }
+      opts.server ??= true;
+      opts.default ??= getDefault;
+      opts.getCachedData ??= getDefaultCachedData;
+      opts.lazy ??= false;
+      opts.immediate ??= true;
+      opts.deep ??= asyncDataDefaults.deep;
+      opts.dedupe ??= "cancel";
+      if (shouldFactoryOptionsOverride) {
+        for (const key2 in factoryOptions) {
+          if (factoryOptions[key2] === void 0) {
+            continue;
+          }
+          opts[key2] = factoryOptions[key2];
+        }
+      }
+      nuxtApp._asyncData[key.value];
+      function createInitialFetch() {
+        const initialFetchOptions = { cause: "initial", dedupe: opts.dedupe };
+        const existing = nuxtApp._asyncData[key.value];
+        if (!existing?._init) {
+          initialFetchOptions.cachedData = opts.getCachedData(key.value, nuxtApp, { cause: "initial" });
+          nuxtApp._asyncData[key.value] = buildAsyncData(nuxtApp, key.value, _handler, opts, initialFetchOptions.cachedData);
+          nuxtApp._asyncData[key.value]._initialCachedData = initialFetchOptions.cachedData;
+        } else if (nuxtApp._asyncDataPromises[key.value]) {
+          initialFetchOptions.cachedData = existing._initialCachedData;
+        }
+        return () => nuxtApp._asyncData[key.value].execute(initialFetchOptions);
+      }
+      const initialFetch = createInitialFetch();
+      const asyncData = nuxtApp._asyncData[key.value];
+      asyncData._deps++;
+      const fetchOnServer = opts.server !== false && nuxtApp.payload.serverRendered;
+      if (fetchOnServer && opts.immediate) {
+        const promise = initialFetch();
+        if (getCurrentInstance()) {
+          onServerPrefetch(() => promise);
+        } else {
+          nuxtApp.hook("app:created", async () => {
+            await promise;
+          });
+        }
+      }
+      const asyncReturn = {
+        data: writableComputedRef(() => nuxtApp._asyncData[key.value]?.data),
+        pending: writableComputedRef(() => nuxtApp._asyncData[key.value]?.pending),
+        status: writableComputedRef(() => nuxtApp._asyncData[key.value]?.status),
+        error: writableComputedRef(() => nuxtApp._asyncData[key.value]?.error),
+        refresh: (...args2) => {
+          if (!nuxtApp._asyncData[key.value]?._init) {
+            const initialFetch2 = createInitialFetch();
+            return initialFetch2();
+          }
+          return nuxtApp._asyncData[key.value].execute(...args2);
+        },
+        execute: (...args2) => asyncReturn.refresh(...args2),
+        clear: () => {
+          const entry2 = nuxtApp._asyncData[key.value];
+          if (entry2?._abortController) {
+            try {
+              entry2._abortController.abort(new DOMException("AsyncData aborted by user.", "AbortError"));
+            } finally {
+              entry2._abortController = void 0;
+            }
+          }
+          clearNuxtDataByKey(nuxtApp, key.value);
+        }
+      };
+      const asyncDataPromise = Promise.resolve(nuxtApp._asyncDataPromises[key.value]).then(() => asyncReturn);
+      Object.assign(asyncDataPromise, asyncReturn);
+      Object.defineProperties(asyncDataPromise, {
+        then: { enumerable: true, value: asyncDataPromise.then.bind(asyncDataPromise) },
+        catch: { enumerable: true, value: asyncDataPromise.catch.bind(asyncDataPromise) },
+        finally: { enumerable: true, value: asyncDataPromise.finally.bind(asyncDataPromise) }
+      });
+      return asyncDataPromise;
+    }
+    return useAsyncData2;
+  }
+});
+const useAsyncData = createUseAsyncData.__nuxt_factory();
+createUseAsyncData.__nuxt_factory({
+  lazy: true,
+  // @ts-expect-error private property
+  _functionName: "useLazyAsyncData"
+});
+function writableComputedRef(getter) {
+  return computed({
+    get() {
+      return getter()?.value;
+    },
+    set(value) {
+      const ref2 = getter();
+      if (ref2) {
+        ref2.value = value;
+      }
+    }
+  });
+}
+function _isAutoKeyNeeded(keyOrFetcher, fetcher) {
+  if (typeof keyOrFetcher === "string") {
+    return false;
+  }
+  if (typeof keyOrFetcher === "object" && keyOrFetcher !== null) {
+    return false;
+  }
+  if (typeof keyOrFetcher === "function" && typeof fetcher === "function") {
+    return false;
+  }
+  return true;
+}
+function useNuxtData(key) {
+  const nuxtApp = useNuxtApp();
+  if (!(key in nuxtApp.payload.data)) {
+    nuxtApp.payload.data[key] = void 0;
+  }
+  if (nuxtApp._asyncData[key]) {
+    const data = nuxtApp._asyncData[key];
+    data._deps++;
+    if (getCurrentScope()) {
+      onScopeDispose(() => {
+        data._deps--;
+        if (data._deps === 0) {
+          data?._off();
+        }
+      });
+    }
+  }
+  return {
+    data: computed({
+      get() {
+        return nuxtApp._asyncData[key]?.data.value ?? nuxtApp.payload.data[key];
+      },
+      set(value) {
+        if (nuxtApp._asyncData[key]) {
+          nuxtApp._asyncData[key].data.value = value;
+        } else {
+          nuxtApp.payload.data[key] = value;
+        }
+      }
+    })
+  };
+}
+async function refreshNuxtData(keys) {
+  {
+    return Promise.resolve();
+  }
+}
+function clearNuxtDataByKey(nuxtApp, key) {
+  if (key in nuxtApp.payload.data) {
+    nuxtApp.payload.data[key] = void 0;
+  }
+  if (key in nuxtApp.payload._errors) {
+    nuxtApp.payload._errors[key] = void 0;
+  }
+  if (nuxtApp._asyncData[key]) {
+    nuxtApp._asyncData[key].data.value = unref(nuxtApp._asyncData[key]._default());
+    nuxtApp._asyncData[key].error.value = void 0;
+    nuxtApp._asyncData[key].status.value = "idle";
+    nuxtApp._asyncData[key]._initialCachedData = void 0;
+  }
+  if (key in nuxtApp._asyncDataPromises) {
+    nuxtApp._asyncDataPromises[key] = void 0;
+  }
+}
+function pick(obj, keys) {
+  const newObj = {};
+  for (const key of keys) {
+    newObj[key] = obj[key];
+  }
+  return newObj;
+}
+function buildAsyncData(nuxtApp, key, _handler, options, initialCachedData) {
+  nuxtApp.payload._errors[key] ??= void 0;
+  const hasCustomGetCachedData = options.getCachedData !== getDefaultCachedData;
+  const handler = !import.meta.prerender || !nuxtApp.ssrContext?.["~sharedPrerenderCache"] ? _handler : (nuxtApp2, options2) => {
+    const value = nuxtApp2.ssrContext["~sharedPrerenderCache"].get(key);
+    if (value) {
+      return value;
+    }
+    const promise = Promise.resolve().then(() => nuxtApp2.runWithContext(() => _handler(nuxtApp2, options2)));
+    nuxtApp2.ssrContext["~sharedPrerenderCache"].set(key, promise);
+    return promise;
+  };
+  const _ref = options.deep ? ref : shallowRef;
+  const hasCachedData = initialCachedData !== void 0;
+  const unsubRefreshAsyncData = nuxtApp.hook("app:data:refresh", async (keys) => {
+    if (!keys || keys.includes(key)) {
+      await asyncData.execute({ cause: "refresh:hook" });
+    }
+  });
+  const asyncData = {
+    data: _ref(hasCachedData ? initialCachedData : options.default()),
+    pending: computed(() => asyncData.status.value === "pending"),
+    error: toRef$1(nuxtApp.payload._errors, key),
+    status: shallowRef("idle"),
+    execute: (...args) => {
+      const [_opts, newValue = void 0] = args;
+      const opts = _opts && newValue === void 0 && typeof _opts === "object" ? _opts : {};
+      if (nuxtApp._asyncDataPromises[key]) {
+        if ((opts.dedupe ?? options.dedupe) === "defer") {
+          return nuxtApp._asyncDataPromises[key];
+        }
+      }
+      {
+        const cachedData = "cachedData" in opts ? opts.cachedData : options.getCachedData(key, nuxtApp, { cause: opts.cause ?? "refresh:manual" });
+        if (cachedData !== void 0) {
+          nuxtApp.payload.data[key] = asyncData.data.value = cachedData;
+          asyncData.error.value = void 0;
+          asyncData.status.value = "success";
+          return Promise.resolve(cachedData);
+        }
+      }
+      if (asyncData._abortController) {
+        asyncData._abortController.abort(new DOMException("AsyncData request cancelled by deduplication", "AbortError"));
+      }
+      asyncData._abortController = new AbortController();
+      asyncData.status.value = "pending";
+      const cleanupController = new AbortController();
+      const promise = new Promise(
+        (resolve, reject) => {
+          try {
+            const timeout = opts.timeout ?? options.timeout;
+            const mergedSignal = mergeAbortSignals([asyncData._abortController?.signal, opts?.signal], cleanupController.signal, timeout);
+            if (mergedSignal.aborted) {
+              const reason = mergedSignal.reason;
+              reject(reason instanceof Error ? reason : new DOMException(String(reason ?? "Aborted"), "AbortError"));
+              return;
+            }
+            mergedSignal.addEventListener("abort", () => {
+              const reason = mergedSignal.reason;
+              reject(reason instanceof Error ? reason : new DOMException(String(reason ?? "Aborted"), "AbortError"));
+            }, { once: true, signal: cleanupController.signal });
+            return Promise.resolve(handler(nuxtApp, { signal: mergedSignal })).then(resolve, reject);
+          } catch (err) {
+            reject(err);
+          }
+        }
+      ).then(async (_result) => {
+        if (nuxtApp._asyncDataPromises[key] !== promise) {
+          return;
+        }
+        let result = _result;
+        if (options.transform) {
+          result = await options.transform(_result);
+        }
+        if (options.pick) {
+          result = pick(result, options.pick);
+        }
+        nuxtApp.payload.data[key] = result;
+        asyncData.data.value = result;
+        asyncData.error.value = void 0;
+        asyncData.status.value = "success";
+      }).catch((error) => {
+        if (nuxtApp._asyncDataPromises[key] !== promise) {
+          return nuxtApp._asyncDataPromises[key];
+        }
+        if (asyncData._abortController?.signal.aborted) {
+          return nuxtApp._asyncDataPromises[key];
+        }
+        if (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") {
+          asyncData.status.value = "idle";
+          return nuxtApp._asyncDataPromises[key];
+        }
+        asyncData.error.value = createError(error);
+        asyncData.data.value = unref(options.default());
+        asyncData.status.value = "error";
+      }).finally(() => {
+        cleanupController.abort();
+        if (nuxtApp._asyncDataPromises[key] === promise) {
+          delete nuxtApp._asyncDataPromises[key];
+        }
+      });
+      nuxtApp._asyncDataPromises[key] = promise;
+      return nuxtApp._asyncDataPromises[key];
+    },
+    _execute: debounce((...args) => asyncData.execute(...args), 0, { leading: true }),
+    _default: options.default,
+    _deps: 0,
+    _init: true,
+    _hash: void 0,
+    _off: () => {
+      unsubRefreshAsyncData();
+      if (nuxtApp._asyncData[key]?._init) {
+        nuxtApp._asyncData[key]._init = false;
+      }
+      if (!hasCustomGetCachedData) {
+        nextTick(() => {
+          if (!nuxtApp._asyncData[key]?._init) {
+            clearNuxtDataByKey(nuxtApp, key);
+            asyncData.execute = () => Promise.resolve();
+          }
+        });
+      }
+    }
+  };
+  return asyncData;
+}
+const getDefault = () => void 0;
+const getDefaultCachedData = (key, nuxtApp, ctx) => {
+  if (nuxtApp.isHydrating) {
+    return nuxtApp.payload.data[key];
+  }
+  if (ctx.cause !== "refresh:manual" && ctx.cause !== "refresh:hook") {
+    return nuxtApp.static.data[key];
+  }
+};
+function mergeAbortSignals(signals, cleanupSignal, timeout) {
+  const list = signals.filter((s) => !!s);
+  if (typeof timeout === "number" && timeout >= 0) {
+    const timeoutSignal = AbortSignal.timeout?.(timeout);
+    if (timeoutSignal) {
+      list.push(timeoutSignal);
+    }
+  }
+  if (AbortSignal.any) {
+    return AbortSignal.any(list);
+  }
+  const controller = new AbortController();
+  for (const sig of list) {
+    if (sig.aborted) {
+      const reason = sig.reason ?? new DOMException("Aborted", "AbortError");
+      try {
+        controller.abort(reason);
+      } catch {
+        controller.abort();
+      }
+      return controller.signal;
+    }
+  }
+  const onAbort = () => {
+    const abortedSignal = list.find((s) => s.aborted);
+    const reason = abortedSignal?.reason ?? new DOMException("Aborted", "AbortError");
+    try {
+      controller.abort(reason);
+    } catch {
+      controller.abort();
+    }
+  };
+  for (const sig of list) {
+    sig.addEventListener?.("abort", onAbort, { once: true, signal: cleanupSignal });
+  }
+  return controller.signal;
+}
+const NuxtIconSvg = /* @__PURE__ */ defineComponent({
+  name: "NuxtIconSvg",
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    customize: {
+      type: [Function, Boolean, null],
+      default: null,
+      required: false
+    }
+  },
+  setup(props, { slots }) {
+    useNuxtApp();
+    const options = useAppConfig().icon;
+    const name = useResolvedName(() => props.name);
+    const storeKey = "i-" + name.value;
+    if (name.value) {
+      onServerPrefetch(async () => {
+        {
+          await useAsyncData(
+            storeKey,
+            async () => await loadIcon(name.value, options.fetchTimeout),
+            { deep: false }
+          );
+        }
+      });
+    }
+    return () => h(Icon, {
+      icon: name.value,
+      ssr: true,
+      // Iconify uses `customise`, where we expose `customize` for consistency
+      customise: resolveCustomizeFn(props.customize, options.customize)
+    }, slots);
+  }
+});
+const NuxtIcon = defineComponent({
+  name: "NuxtIcon",
+  props: {
+    name: {
+      type: String,
+      required: true
+    },
+    mode: {
+      type: String,
+      required: false,
+      default: null
+    },
+    size: {
+      type: [Number, String],
+      required: false,
+      default: null
+    },
+    customize: {
+      type: [Function, Boolean, null],
+      default: null,
+      required: false
+    }
+  },
+  setup(props, { slots }) {
+    const nuxtApp = useNuxtApp();
+    const runtimeOptions = useAppConfig().icon;
+    const name = useResolvedName(() => props.name);
+    const component = computed(
+      () => nuxtApp.vueApp?.component(name.value) || ((props.mode || runtimeOptions.mode) === "svg" ? NuxtIconSvg : NuxtIconCss)
+    );
+    const style = computed(() => {
+      const size = props.size || runtimeOptions.size;
+      return size ? { fontSize: Number.isNaN(+size) ? size : size + "px" } : null;
+    });
+    return () => h(
+      component.value,
+      {
+        ...runtimeOptions.attrs,
+        name: name.value,
+        class: runtimeOptions.class,
+        style: style.value,
+        customize: props.customize
+      },
+      slots
+    );
+  }
+});
+const index = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: NuxtIcon
+}, Symbol.toStringTag, { value: "Module" }));
 const _sfc_main$e = {
   __name: "UIcon",
   __ssrInlineRender: true,
@@ -8339,8 +8014,15 @@ function useFormField(props, opts) {
   function emitFormChange() {
     emitFormEvent("change", formField?.value.name);
   }
+  let disposed = false;
+  if (getCurrentScope()) {
+    onScopeDispose(() => {
+      disposed = true;
+    });
+  }
   const emitFormInput = useDebounceFn(
     () => {
+      if (disposed) return;
       emitFormEvent("input", formField?.value.name, !opts?.deferInputValidation || formField?.value.eagerValidation);
     },
     formField?.value.validateOnInputDelay ?? formOptions?.value.validateOnInputDelay ?? 0
@@ -8350,8 +8032,8 @@ function useFormField(props, opts) {
     name: computed(() => props?.name ?? formField?.value.name),
     size: computed(() => props?.size ?? formField?.value.size),
     color: computed(() => formField?.value.error ? "error" : props?.color),
-    highlight: computed(() => formField?.value.error ? true : props?.highlight),
-    disabled: computed(() => formOptions?.value.disabled || props?.disabled),
+    highlight: computed(() => formField?.value.error ? true : props?.highlight || void 0),
+    disabled: computed(() => formOptions?.value.disabled || props?.disabled || void 0),
     emitFormBlur,
     emitFormInput,
     emitFormChange,
@@ -8430,6 +8112,305 @@ function isPartiallyEqual(item1, item2) {
   const item1Filtered = Object.fromEntries(Object.entries(item1).filter(([key]) => !diffedKeys.has(key)));
   const item2Filtered = Object.fromEntries(Object.entries(item2).filter(([key]) => !diffedKeys.has(key)));
   return isEqual(item1Filtered, item2Filtered);
+}
+const firstNonUndefined = (...args) => args.find((arg) => arg !== void 0);
+function sanitizeExternalHref(value) {
+  let candidate = value.replace(/[\u0000-\u001F\s]+/g, "");
+  while (candidate.toLowerCase().startsWith("view-source:")) {
+    candidate = candidate.slice("view-source:".length);
+  }
+  const colon = candidate.indexOf(":");
+  if (colon > 0 && isScriptProtocol(candidate.slice(0, colon + 1))) {
+    return null;
+  }
+  return value;
+}
+// @__NO_SIDE_EFFECTS__
+function defineNuxtLink(options) {
+  const componentName = options.componentName || "NuxtLink";
+  function isHashLinkWithoutHashMode(link) {
+    return typeof link === "string" && link.startsWith("#");
+  }
+  function resolveTrailingSlashBehavior(to, resolve, trailingSlash) {
+    const effectiveTrailingSlash = trailingSlash ?? options.trailingSlash;
+    if (!to || effectiveTrailingSlash !== "append" && effectiveTrailingSlash !== "remove") {
+      return to;
+    }
+    if (typeof to === "string") {
+      return applyTrailingSlashBehavior(to, effectiveTrailingSlash);
+    }
+    const path = "path" in to && to.path !== void 0 ? to.path : resolve(to).path;
+    const resolvedPath = {
+      ...to,
+      name: void 0,
+      // named routes would otherwise always override trailing slash behavior
+      path: applyTrailingSlashBehavior(path, effectiveTrailingSlash)
+    };
+    return resolvedPath;
+  }
+  function useNuxtLink(props) {
+    const router = useRouter();
+    const config2 = /* @__PURE__ */ useRuntimeConfig();
+    const hasTarget = computed(() => !!unref(props.target) && unref(props.target) !== "_self");
+    const isAbsoluteUrl = computed(() => {
+      const path = unref(props.to) || unref(props.href) || "";
+      return typeof path === "string" && hasProtocol(path, { acceptRelative: true });
+    });
+    const builtinRouterLink = resolveComponent("RouterLink");
+    const useBuiltinLink = builtinRouterLink && typeof builtinRouterLink !== "string" ? builtinRouterLink.useLink : void 0;
+    const isExternal = computed(() => {
+      if (unref(props.external)) {
+        return true;
+      }
+      const path = unref(props.to) || unref(props.href) || "";
+      if (typeof path === "object") {
+        return false;
+      }
+      return path === "" || isAbsoluteUrl.value;
+    });
+    const to = computed(() => {
+      const path = unref(props.to) || unref(props.href) || "";
+      if (isExternal.value) {
+        return path;
+      }
+      return resolveTrailingSlashBehavior(path, router.resolve, unref(props.trailingSlash));
+    });
+    const link = isExternal.value ? void 0 : useBuiltinLink?.({ ...props, to, viewTransition: unref(props.viewTransition) });
+    const href = computed(() => {
+      const effectiveTrailingSlash = unref(props.trailingSlash) ?? options.trailingSlash;
+      if (!to.value || isAbsoluteUrl.value || isHashLinkWithoutHashMode(to.value)) {
+        const raw = to.value;
+        return typeof raw === "string" ? sanitizeExternalHref(raw) : raw;
+      }
+      if (isExternal.value) {
+        const path = typeof to.value === "object" && "path" in to.value ? resolveRouteObject(to.value) : to.value;
+        const href2 = typeof path === "object" ? router.resolve(path).href : path;
+        const safe = typeof href2 === "string" ? sanitizeExternalHref(href2) : href2;
+        return safe === null ? null : applyTrailingSlashBehavior(safe, effectiveTrailingSlash);
+      }
+      if (typeof to.value === "object") {
+        return router.resolve(to.value)?.href ?? null;
+      }
+      return applyTrailingSlashBehavior(joinURL(config2.app.baseURL, to.value), effectiveTrailingSlash);
+    });
+    return {
+      to,
+      hasTarget,
+      isAbsoluteUrl,
+      isExternal,
+      //
+      href,
+      isActive: link?.isActive ?? computed(() => to.value === router.currentRoute.value.path),
+      isExactActive: link?.isExactActive ?? computed(() => to.value === router.currentRoute.value.path),
+      route: link?.route ?? computed(() => router.resolve(to.value)),
+      async navigate(_e) {
+        if (href.value === null) {
+          return;
+        }
+        await navigateTo(href.value, { replace: unref(props.replace), external: isExternal.value || hasTarget.value });
+      }
+    };
+  }
+  return defineComponent({
+    name: componentName,
+    props: {
+      // Routing
+      to: {
+        type: [String, Object],
+        default: void 0,
+        required: false
+      },
+      href: {
+        type: [String, Object],
+        default: void 0,
+        required: false
+      },
+      // Attributes
+      target: {
+        type: String,
+        default: void 0,
+        required: false
+      },
+      rel: {
+        type: String,
+        default: void 0,
+        required: false
+      },
+      noRel: {
+        type: Boolean,
+        default: void 0,
+        required: false
+      },
+      // Prefetching
+      prefetch: {
+        type: Boolean,
+        default: void 0,
+        required: false
+      },
+      prefetchOn: {
+        type: [String, Object],
+        default: void 0,
+        required: false
+      },
+      noPrefetch: {
+        type: Boolean,
+        default: void 0,
+        required: false
+      },
+      // Styling
+      activeClass: {
+        type: String,
+        default: void 0,
+        required: false
+      },
+      exactActiveClass: {
+        type: String,
+        default: void 0,
+        required: false
+      },
+      prefetchedClass: {
+        type: String,
+        default: void 0,
+        required: false
+      },
+      // Vue Router's `<RouterLink>` additional props
+      replace: {
+        type: Boolean,
+        default: void 0,
+        required: false
+      },
+      ariaCurrentValue: {
+        type: String,
+        default: void 0,
+        required: false
+      },
+      // Edge cases handling
+      external: {
+        type: Boolean,
+        default: void 0,
+        required: false
+      },
+      // Slot API
+      custom: {
+        type: Boolean,
+        default: void 0,
+        required: false
+      },
+      // Behavior
+      trailingSlash: {
+        type: String,
+        default: void 0,
+        required: false
+      }
+    },
+    useLink: useNuxtLink,
+    setup(props, { slots }) {
+      const router = useRouter();
+      const { to, href, navigate, isExternal, hasTarget, isAbsoluteUrl } = useNuxtLink(props);
+      shallowRef(false);
+      const el = void 0;
+      const elRef = void 0;
+      async function prefetch(nuxtApp = useNuxtApp()) {
+        {
+          return;
+        }
+      }
+      return () => {
+        if (!isExternal.value && !hasTarget.value && !isHashLinkWithoutHashMode(to.value)) {
+          const routerLinkProps = {
+            ref: elRef,
+            to: to.value,
+            activeClass: props.activeClass || options.activeClass,
+            exactActiveClass: props.exactActiveClass || options.exactActiveClass,
+            replace: props.replace,
+            ariaCurrentValue: props.ariaCurrentValue,
+            custom: props.custom
+          };
+          if (!props.custom) {
+            routerLinkProps.rel = props.rel || void 0;
+          }
+          return h(
+            resolveComponent("RouterLink"),
+            routerLinkProps,
+            slots.default
+          );
+        }
+        const target = props.target || null;
+        const rel = firstNonUndefined(
+          // converts `""` to `null` to prevent the attribute from being added as empty (`rel=""`)
+          props.noRel ? "" : props.rel,
+          options.externalRelAttribute,
+          /*
+          * A fallback rel of `noopener noreferrer` is applied for external links or links that open in a new tab.
+          * This solves a reverse tabnapping security flaw in browsers pre-2021 as well as improving privacy.
+          */
+          isAbsoluteUrl.value || hasTarget.value ? "noopener noreferrer" : ""
+        ) || null;
+        if (props.custom) {
+          if (!slots.default) {
+            return null;
+          }
+          return slots.default({
+            href: href.value,
+            navigate,
+            prefetch,
+            get route() {
+              if (!href.value) {
+                return void 0;
+              }
+              const url = new URL(href.value, "http://localhost");
+              return {
+                path: url.pathname,
+                fullPath: url.pathname,
+                get query() {
+                  return parseQuery(url.search);
+                },
+                hash: url.hash,
+                params: {},
+                name: void 0,
+                matched: [],
+                redirectedFrom: void 0,
+                meta: {},
+                href: href.value
+              };
+            },
+            rel,
+            target,
+            isExternal: isExternal.value || hasTarget.value,
+            isActive: false,
+            isExactActive: false
+          });
+        }
+        return h("a", {
+          ref: el,
+          href: href.value || null,
+          // converts `""` to `null` to prevent the attribute from being added as empty (`href=""`)
+          rel,
+          target,
+          onClick: async (event) => {
+            if (isExternal.value || hasTarget.value) {
+              return;
+            }
+            event.preventDefault();
+            try {
+              const encodedHref = encodeRoutePath(href.value ?? "");
+              return await (props.replace ? router.replace(encodedHref) : router.push(encodedHref));
+            } finally {
+            }
+          }
+        }, slots.default?.());
+      };
+    }
+  });
+}
+const __nuxt_component_0$1 = /* @__PURE__ */ defineNuxtLink(nuxtLinkDefaults);
+function applyTrailingSlashBehavior(to, trailingSlash) {
+  const normalizeFn = trailingSlash === "append" ? withTrailingSlash : withoutTrailingSlash;
+  const hasProtocolDifferentFromHttp = hasProtocol(to) && !to.startsWith("http");
+  if (hasProtocolDifferentFromHttp) {
+    return to;
+  }
+  return normalizeFn(to, true);
 }
 const _sfc_main$a = {
   __name: "ULinkBase",
@@ -9237,6 +9218,7 @@ const _sfc_main$8 = {
     const appConfig2 = useAppConfig();
     const { orientation, size: buttonSize } = useFieldGroup(_props);
     const linkProps = useForwardProps(pickLinkProps(props));
+    const forwardedLinkProps = computed(() => omit(linkProps.value, ["type", "disabled", "onClick"]));
     const loadingAutoState = ref(false);
     const formLoading = inject(formLoadingInjectionKey, void 0);
     async function onClickWrapper(event) {
@@ -9252,7 +9234,15 @@ const _sfc_main$8 = {
       return props.loading || props.loadingAuto && (loadingAutoState.value || formLoading?.value && props.type === "submit");
     });
     const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(
-      computed(() => ({ ...props, loading: isLoading.value }))
+      computed(() => ({
+        icon: props.icon,
+        leading: props.leading,
+        leadingIcon: props.leadingIcon,
+        trailing: props.trailing,
+        trailingIcon: props.trailingIcon,
+        loading: isLoading.value,
+        loadingIcon: props.loadingIcon
+      }))
     );
     const ui = computed(() => tv({
       extend: theme$3,
@@ -9283,7 +9273,7 @@ const _sfc_main$8 = {
       _push(ssrRenderComponent(_sfc_main$9, mergeProps({
         type: unref(props).type,
         disabled: unref(props).disabled || isLoading.value
-      }, unref(omit)(unref(linkProps), ["type", "disabled", "onClick"]), { custom: "" }, _attrs), {
+      }, forwardedLinkProps.value, { custom: "" }, _attrs), {
         default: withCtx(({ active, ...slotProps }, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(_sfc_main$a, mergeProps({ "data-slot": "base" }, slotProps, {
@@ -9431,10 +9421,10 @@ const theme$2 = {
   "slots": {
     "root": "gap-2",
     "base": "relative overflow-hidden rounded-full bg-accented",
-    "indicator": "rounded-full size-full transition-transform duration-200 ease-out motion-reduce:data-[state=indeterminate]:animate-pulse",
-    "status": "flex text-dimmed transition-[width] duration-200",
+    "indicator": "rounded-full size-full transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:data-[state=indeterminate]:animate-pulse",
+    "status": "flex text-dimmed duration-200 ease-out motion-reduce:transition-none",
     "steps": "grid items-end",
-    "step": "truncate text-end row-start-1 col-start-1 transition-opacity"
+    "step": "truncate text-end row-start-1 col-start-1 transition-opacity ease-out"
   },
   "variants": {
     "animation": {
@@ -9470,7 +9460,7 @@ const theme$2 = {
       },
       "neutral": {
         "indicator": "bg-inverted",
-        "steps": "text-inverted"
+        "steps": "text-highlighted"
       }
     },
     "size": {
@@ -9521,12 +9511,12 @@ const theme$2 = {
       "horizontal": {
         "root": "w-full flex flex-col",
         "base": "w-full",
-        "status": "flex-row items-center justify-end min-w-fit"
+        "status": "flex-row items-center justify-end w-(--percent) min-w-fit transition-[width]"
       },
       "vertical": {
         "root": "h-full flex flex-row-reverse",
         "base": "h-full",
-        "status": "flex-col justify-end min-h-fit"
+        "status": "flex-col justify-end h-(--percent) min-h-fit transition-[height]"
       }
     },
     "inverted": {
@@ -9626,56 +9616,56 @@ const theme$2 = {
       "orientation": "horizontal",
       "animation": "carousel",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel_2s_linear_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_linear_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "carousel",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-vertical_2s_linear_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "carousel-inverse",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse_2s_linear_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_linear_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "carousel-inverse",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_linear_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "swing",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "swing",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing-vertical_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "elastic",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[elastic_2s_ease-in-out_infinite]"
+        "indicator": "relative motion-safe:data-[state=indeterminate]:animate-[elastic_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "elastic",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]"
+        "indicator": "relative motion-safe:data-[state=indeterminate]:animate-[elastic-vertical_2s_var(--ease-in-out)_infinite]"
       }
     }
   ],
@@ -9756,10 +9746,7 @@ const _sfc_main$7 = {
         }
       }
     });
-    const statusStyle = computed(() => {
-      const value = `${Math.max(percent.value ?? 0, 0)}%`;
-      return props.orientation === "vertical" ? { height: value } : { width: value };
-    });
+    const statusStyle = computed(() => ({ "--percent": `${Math.max(percent.value ?? 0, 0)}%` }));
     function isActive(index2) {
       return index2 === Number(props.modelValue);
     }
@@ -9789,6 +9776,8 @@ const _sfc_main$7 = {
       orientation: props.orientation,
       inverted: props.inverted
     }));
+    const themeColors = computed(() => Object.keys({ ...theme$2.variants?.color, ...appConfig2.ui?.progress?.variants?.color }));
+    const customColor = computed(() => props.color && !themeColors.value.includes(props.color) ? props.color : void 0);
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: unref(props).as,
@@ -9818,14 +9807,14 @@ const _sfc_main$7 = {
                   _push3(ssrRenderComponent(unref(ProgressIndicator_default), {
                     "data-slot": "indicator",
                     class: ui.value.indicator({ class: unref(props).ui?.indicator }),
-                    style: indicatorStyle.value
+                    style: [indicatorStyle.value, customColor.value ? { backgroundColor: customColor.value } : void 0]
                   }, null, _parent3, _scopeId2));
                 } else {
                   return [
                     createVNode(unref(ProgressIndicator_default), {
                       "data-slot": "indicator",
                       class: ui.value.indicator({ class: unref(props).ui?.indicator }),
-                      style: indicatorStyle.value
+                      style: [indicatorStyle.value, customColor.value ? { backgroundColor: customColor.value } : void 0]
                     }, null, 8, ["class", "style"])
                   ];
                 }
@@ -9833,7 +9822,7 @@ const _sfc_main$7 = {
               _: 1
             }, _parent2, _scopeId));
             if (hasSteps.value) {
-              _push2(`<div data-slot="steps" class="${ssrRenderClass(ui.value.steps({ class: unref(props).ui?.steps }))}"${_scopeId}><!--[-->`);
+              _push2(`<div data-slot="steps" class="${ssrRenderClass(ui.value.steps({ class: unref(props).ui?.steps }))}" style="${ssrRenderStyle(customColor.value ? { color: customColor.value } : void 0)}"${_scopeId}><!--[-->`);
               ssrRenderList(unref(props).max, (step, index2) => {
                 _push2(`<div data-slot="step" class="${ssrRenderClass(ui.value.step({ class: unref(props).ui?.step, step: stepVariant(index2) }))}"${_scopeId}>`);
                 ssrRenderSlot(_ctx.$slots, `step-${index2}`, { step }, () => {
@@ -9867,7 +9856,7 @@ const _sfc_main$7 = {
                   createVNode(unref(ProgressIndicator_default), {
                     "data-slot": "indicator",
                     class: ui.value.indicator({ class: unref(props).ui?.indicator }),
-                    style: indicatorStyle.value
+                    style: [indicatorStyle.value, customColor.value ? { backgroundColor: customColor.value } : void 0]
                   }, null, 8, ["class", "style"])
                 ]),
                 _: 1
@@ -9875,7 +9864,8 @@ const _sfc_main$7 = {
               hasSteps.value ? (openBlock(), createBlock("div", {
                 key: 1,
                 "data-slot": "steps",
-                class: ui.value.steps({ class: unref(props).ui?.steps })
+                class: ui.value.steps({ class: unref(props).ui?.steps }),
+                style: customColor.value ? { color: customColor.value } : void 0
               }, [
                 (openBlock(true), createBlock(Fragment, null, renderList(unref(props).max, (step, index2) => {
                   return openBlock(), createBlock("div", {
@@ -9888,7 +9878,7 @@ const _sfc_main$7 = {
                     ])
                   ], 2);
                 }), 128))
-              ], 2)) : createCommentVNode("", true)
+              ], 6)) : createCommentVNode("", true)
             ];
           }
         }),
@@ -10382,7 +10372,7 @@ _sfc_main$6.setup = (props, ctx) => {
 const theme = {
   "slots": {
     "viewport": "fixed flex flex-col w-[calc(100%-2rem)] sm:w-96 z-[100] data-[expanded=true]:h-(--height) focus:outline-none",
-    "base": "pointer-events-auto absolute inset-x-0 z-(--index) transform-(--transform) data-[expanded=false]:data-[front=false]:h-(--front-height) data-[expanded=false]:data-[front=false]:*:opacity-0 data-[front=false]:*:transition-opacity data-[front=false]:*:duration-100 data-[state=closed]:animate-[toast-closed_200ms_ease-in-out] data-[state=closed]:data-[expanded=false]:data-[front=false]:animate-[toast-collapsed-closed_200ms_ease-in-out] data-[state=open]:data-[pulsing=odd]:animate-[toast-pulse-a_300ms_ease-out] data-[state=open]:data-[pulsing=even]:animate-[toast-pulse-b_300ms_ease-out] data-[swipe=move]:transition-none transition-[transform,translate,height] duration-200 ease-out"
+    "base": "pointer-events-auto absolute inset-x-0 z-(--index) transform-(--transform) data-[expanded=false]:data-[front=false]:h-(--front-height) data-[expanded=false]:data-[front=false]:*:opacity-0 data-[front=false]:*:transition-opacity data-[front=false]:*:duration-100 data-[state=closed]:animate-[toast-closed_200ms_var(--ease-out)] data-[state=closed]:data-[expanded=false]:data-[front=false]:animate-[toast-collapsed-closed_200ms_var(--ease-out)] motion-safe:data-[state=open]:data-[pulsing=odd]:animate-[toast-pulse-a_200ms_var(--ease-out)] motion-safe:data-[state=open]:data-[pulsing=even]:animate-[toast-pulse-b_200ms_var(--ease-out)] data-[swipe=move]:transition-none transition-[transform,translate,height] duration-200 ease-out motion-reduce:transition-none"
   },
   "variants": {
     "position": {
@@ -10406,10 +10396,10 @@ const theme = {
       }
     },
     "swipeDirection": {
-      "up": "data-[swipe=end]:animate-[toast-slide-up_200ms_ease-out]",
-      "right": "data-[swipe=end]:animate-[toast-slide-right_200ms_ease-out]",
-      "down": "data-[swipe=end]:animate-[toast-slide-down_200ms_ease-out]",
-      "left": "data-[swipe=end]:animate-[toast-slide-left_200ms_ease-out]"
+      "up": "data-[swipe=end]:animate-[toast-slide-up_200ms_var(--ease-out)]",
+      "right": "data-[swipe=end]:animate-[toast-slide-right_200ms_var(--ease-out)]",
+      "down": "data-[swipe=end]:animate-[toast-slide-down_200ms_var(--ease-out)]",
+      "left": "data-[swipe=end]:animate-[toast-slide-left_200ms_var(--ease-out)]"
     }
   },
   "compoundVariants": [
@@ -10421,7 +10411,7 @@ const theme = {
       ],
       "class": {
         "viewport": "top-4",
-        "base": "top-0 data-[state=open]:animate-[toast-slide-in-from-top_200ms_ease-in-out]"
+        "base": "top-0 data-[state=open]:animate-[toast-slide-in-from-top_200ms_var(--ease-out)]"
       }
     },
     {
@@ -10432,7 +10422,7 @@ const theme = {
       ],
       "class": {
         "viewport": "bottom-4",
-        "base": "bottom-0 data-[state=open]:animate-[toast-slide-in-from-bottom_200ms_ease-in-out]"
+        "base": "bottom-0 data-[state=open]:animate-[toast-slide-in-from-bottom_200ms_var(--ease-out)]"
       }
     },
     {
@@ -10861,9 +10851,9 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import("./_nuxt/authenticated-wZr29SZW.js").then((m) => m.default || m)),
-  default: defineAsyncComponent(() => import("./_nuxt/default-D6BhmMrf.js").then((m) => m.default || m)),
-  form: defineAsyncComponent(() => import("./_nuxt/form-Flt6bszS.js").then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import("./_nuxt/authenticated-BTUmSshF.js").then((m) => m.default || m)),
+  default: defineAsyncComponent(() => import("./_nuxt/default-CAoysz1D.js").then((m) => m.default || m)),
+  form: defineAsyncComponent(() => import("./_nuxt/form-pZyPWIF7.js").then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import("./_nuxt/payment-Cp8Rb9d4.js").then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
@@ -11199,8 +11189,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-CL7y-lte.js"));
-    const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-B0d76mYc.js"));
+    const _Error404 = defineAsyncComponent(() => import("./_nuxt/error-404-DTj2ACun.js"));
+    const _Error = defineAsyncComponent(() => import("./_nuxt/error-500-BVfN6mFW.js"));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));
@@ -11320,7 +11310,7 @@ export {
   omit as Y,
   refAutoReset as Z,
   __nuxt_component_0$1 as _,
-  useRoute as a,
+  useToast as a,
   formStateInjectionKey as a0,
   formErrorsInjectionKey as a1,
   formInputsInjectionKey as a2,
@@ -11340,8 +11330,11 @@ export {
   EVENT_OPTIONS as ag,
   getTabbableEdges as ah,
   useMotion as ai,
-  NuxtIcon as aj,
-  useFetch as b,
+  defineKeyedFunctionFactory as aj,
+  fetchDefaults as ak,
+  useAsyncData as al,
+  useRequestFetch as am,
+  useRoute as b,
   __nuxt_component_1$1 as c,
   unrefElement as d,
   entry_default as default,

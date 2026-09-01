@@ -15,11 +15,15 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 
 export const AppAccess: typeof import("../app/components/app/Access.vue")['default']
+export const AppAskDocuments: typeof import("../app/components/app/AskDocuments.vue")['default']
 export const AppCardsOverview: typeof import("../app/components/app/CardsOverview.vue")['default']
 export const AppDailyBriefing: typeof import("../app/components/app/DailyBriefing.vue")['default']
+export const AppDocumentList: typeof import("../app/components/app/DocumentList.vue")['default']
+export const AppDocumentUpload: typeof import("../app/components/app/DocumentUpload.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
 export const AppLeadMessageComposer: typeof import("../app/components/app/LeadMessageComposer.vue")['default']
 export const AppSocialCard: typeof import("../app/components/app/SocialCard.vue")['default']
+export const AppVoiceCapture: typeof import("../app/components/app/VoiceCapture.vue")['default']
 export const AppReminderEmail: typeof import("../app/components/app/appReminderEmail.vue")['default']
 export const AppPricing: typeof import("../app/components/app/pricing.vue")['default']
 export const BaseButtonDelete: typeof import("../app/components/base/Button/Delete.vue")['default']
@@ -45,11 +49,11 @@ export const BaseQrCode: typeof import("../app/components/base/QrCode.vue")['def
 export const BaseTable: typeof import("../app/components/base/Table.vue")['default']
 export const BaseTerrain: typeof import("../app/components/base/Terrain.vue")['default']
 export const BaseTour: typeof import("../app/components/base/Tour.vue")['default']
+export const BaseVoiceField: typeof import("../app/components/base/VoiceField.vue")['default']
 export const BaseButton: typeof import("../app/components/base/button.vue")['default']
 export const BaseFooter: typeof import("../app/components/base/footer.vue")['default']
 export const BaseIcon: typeof import("../app/components/base/icon.vue")['default']
 export const BaseMaps: typeof import("../app/components/base/maps.vue")['default']
-export const AuthState: typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
 export const UColorModeAvatar: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']
 export const UColorModeButton: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.vue")['default']
 export const UColorModeImage: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeImage.vue")['default']
@@ -156,6 +160,7 @@ export const UPricingPlan: typeof import("../node_modules/@nuxt/ui/dist/runtime/
 export const UPricingPlans: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingPlans.vue")['default']
 export const UPricingTable: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingTable.vue")['default']
 export const UProgress: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Progress.vue")['default']
+export const UProgressGroup: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ProgressGroup.vue")['default']
 export const URadioGroup: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/RadioGroup.vue")['default']
 export const UScrollArea: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ScrollArea.vue")['default']
 export const USelect: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Select.vue")['default']
@@ -165,6 +170,7 @@ export const USidebar: typeof import("../node_modules/@nuxt/ui/dist/runtime/comp
 export const USkeleton: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue")['default']
 export const USlideover: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slideover.vue")['default']
 export const USlider: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slider.vue")['default']
+export const USplitter: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Splitter.vue")['default']
 export const UStepper: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Stepper.vue")['default']
 export const USwitch: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Switch.vue")['default']
 export const UTable: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Table.vue")['default']
@@ -178,6 +184,7 @@ export const UTooltip: typeof import("../node_modules/@nuxt/ui/dist/runtime/comp
 export const UTree: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Tree.vue")['default']
 export const UUser: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/User.vue")['default']
 export const ULocaleSelect: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/locale/LocaleSelect.vue")['default']
+export const AuthState: typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
 export const QrcodeCapture: typeof import("../node_modules/nuxt-qrcode/dist/runtime/app/components/qrcode-capture.vue")['default']
 export const QrcodeDropZone: typeof import("../node_modules/nuxt-qrcode/dist/runtime/app/components/qrcode-drop-zone.vue")['default']
 export const QrcodeStream: typeof import("../node_modules/nuxt-qrcode/dist/runtime/app/components/qrcode-stream.vue")['default']
@@ -198,9 +205,6 @@ export const NuxtPicture: typeof import("../node_modules/@nuxt/image/dist/runtim
 export const Motion: typeof import("@vueuse/motion")['MotionComponent']
 export const MotionGroup: typeof import("@vueuse/motion")['MotionGroupComponent']
 export const ColorScheme: typeof import("../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']
-export const GoogleLoginButton: typeof import("../node_modules/nuxt-google-auth/dist/runtime/components/GoogleLoginButton.vue")['default']
-export const ToastContainer: typeof import("../node_modules/nuxt-notify/dist/runtime/components/ToastContainer.vue")['default']
-export const Toast: typeof import("../node_modules/nuxt-notify/dist/runtime/components/Toast.vue")['default']
 export const VitePwaManifest: typeof import("../node_modules/@vite-pwa/nuxt/dist/runtime/components/VitePwaManifest")['default']
 export const NuxtPwaManifest: typeof import("../node_modules/@vite-pwa/nuxt/dist/runtime/components/VitePwaManifest")['default']
 export const NuxtPwaAssets: typeof import("../node_modules/@vite-pwa/nuxt/dist/runtime/components/NuxtPwaAssets")['default']
@@ -233,11 +237,15 @@ export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Icon: typeof import("../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const LazyAppAccess: LazyComponent<typeof import("../app/components/app/Access.vue")['default']>
+export const LazyAppAskDocuments: LazyComponent<typeof import("../app/components/app/AskDocuments.vue")['default']>
 export const LazyAppCardsOverview: LazyComponent<typeof import("../app/components/app/CardsOverview.vue")['default']>
 export const LazyAppDailyBriefing: LazyComponent<typeof import("../app/components/app/DailyBriefing.vue")['default']>
+export const LazyAppDocumentList: LazyComponent<typeof import("../app/components/app/DocumentList.vue")['default']>
+export const LazyAppDocumentUpload: LazyComponent<typeof import("../app/components/app/DocumentUpload.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
 export const LazyAppLeadMessageComposer: LazyComponent<typeof import("../app/components/app/LeadMessageComposer.vue")['default']>
 export const LazyAppSocialCard: LazyComponent<typeof import("../app/components/app/SocialCard.vue")['default']>
+export const LazyAppVoiceCapture: LazyComponent<typeof import("../app/components/app/VoiceCapture.vue")['default']>
 export const LazyAppReminderEmail: LazyComponent<typeof import("../app/components/app/appReminderEmail.vue")['default']>
 export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/pricing.vue")['default']>
 export const LazyBaseButtonDelete: LazyComponent<typeof import("../app/components/base/Button/Delete.vue")['default']>
@@ -263,11 +271,11 @@ export const LazyBaseQrCode: LazyComponent<typeof import("../app/components/base
 export const LazyBaseTable: LazyComponent<typeof import("../app/components/base/Table.vue")['default']>
 export const LazyBaseTerrain: LazyComponent<typeof import("../app/components/base/Terrain.vue")['default']>
 export const LazyBaseTour: LazyComponent<typeof import("../app/components/base/Tour.vue")['default']>
+export const LazyBaseVoiceField: LazyComponent<typeof import("../app/components/base/VoiceField.vue")['default']>
 export const LazyBaseButton: LazyComponent<typeof import("../app/components/base/button.vue")['default']>
 export const LazyBaseFooter: LazyComponent<typeof import("../app/components/base/footer.vue")['default']>
 export const LazyBaseIcon: LazyComponent<typeof import("../app/components/base/icon.vue")['default']>
 export const LazyBaseMaps: LazyComponent<typeof import("../app/components/base/maps.vue")['default']>
-export const LazyAuthState: LazyComponent<typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']>
 export const LazyUColorModeAvatar: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']>
 export const LazyUColorModeButton: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.vue")['default']>
 export const LazyUColorModeImage: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeImage.vue")['default']>
@@ -374,6 +382,7 @@ export const LazyUPricingPlan: LazyComponent<typeof import("../node_modules/@nux
 export const LazyUPricingPlans: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingPlans.vue")['default']>
 export const LazyUPricingTable: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingTable.vue")['default']>
 export const LazyUProgress: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Progress.vue")['default']>
+export const LazyUProgressGroup: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ProgressGroup.vue")['default']>
 export const LazyURadioGroup: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/RadioGroup.vue")['default']>
 export const LazyUScrollArea: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ScrollArea.vue")['default']>
 export const LazyUSelect: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Select.vue")['default']>
@@ -383,6 +392,7 @@ export const LazyUSidebar: LazyComponent<typeof import("../node_modules/@nuxt/ui
 export const LazyUSkeleton: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue")['default']>
 export const LazyUSlideover: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slideover.vue")['default']>
 export const LazyUSlider: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slider.vue")['default']>
+export const LazyUSplitter: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Splitter.vue")['default']>
 export const LazyUStepper: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Stepper.vue")['default']>
 export const LazyUSwitch: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Switch.vue")['default']>
 export const LazyUTable: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Table.vue")['default']>
@@ -396,6 +406,7 @@ export const LazyUTooltip: LazyComponent<typeof import("../node_modules/@nuxt/ui
 export const LazyUTree: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Tree.vue")['default']>
 export const LazyUUser: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/User.vue")['default']>
 export const LazyULocaleSelect: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/locale/LocaleSelect.vue")['default']>
+export const LazyAuthState: LazyComponent<typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']>
 export const LazyQrcodeCapture: LazyComponent<typeof import("../node_modules/nuxt-qrcode/dist/runtime/app/components/qrcode-capture.vue")['default']>
 export const LazyQrcodeDropZone: LazyComponent<typeof import("../node_modules/nuxt-qrcode/dist/runtime/app/components/qrcode-drop-zone.vue")['default']>
 export const LazyQrcodeStream: LazyComponent<typeof import("../node_modules/nuxt-qrcode/dist/runtime/app/components/qrcode-stream.vue")['default']>
@@ -416,9 +427,6 @@ export const LazyNuxtPicture: LazyComponent<typeof import("../node_modules/@nuxt
 export const LazyMotion: LazyComponent<typeof import("@vueuse/motion")['MotionComponent']>
 export const LazyMotionGroup: LazyComponent<typeof import("@vueuse/motion")['MotionGroupComponent']>
 export const LazyColorScheme: LazyComponent<typeof import("../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']>
-export const LazyGoogleLoginButton: LazyComponent<typeof import("../node_modules/nuxt-google-auth/dist/runtime/components/GoogleLoginButton.vue")['default']>
-export const LazyToastContainer: LazyComponent<typeof import("../node_modules/nuxt-notify/dist/runtime/components/ToastContainer.vue")['default']>
-export const LazyToast: LazyComponent<typeof import("../node_modules/nuxt-notify/dist/runtime/components/Toast.vue")['default']>
 export const LazyVitePwaManifest: LazyComponent<typeof import("../node_modules/@vite-pwa/nuxt/dist/runtime/components/VitePwaManifest")['default']>
 export const LazyNuxtPwaManifest: LazyComponent<typeof import("../node_modules/@vite-pwa/nuxt/dist/runtime/components/VitePwaManifest")['default']>
 export const LazyNuxtPwaAssets: LazyComponent<typeof import("../node_modules/@vite-pwa/nuxt/dist/runtime/components/NuxtPwaAssets")['default']>

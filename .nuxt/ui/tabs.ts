@@ -30,7 +30,7 @@ export default {
   "slots": {
     "root": "flex items-center gap-2",
     "list": "relative flex p-1 group",
-    "indicator": "absolute transition-[translate,width] duration-200",
+    "indicator": "absolute transition-[translate,width] duration-200 ease-out motion-reduce:transition-none",
     "trigger": [
       "group relative inline-flex items-center min-w-0 data-[state=inactive]:text-muted hover:data-[state=inactive]:not-disabled:text-default font-medium rounded-md disabled:cursor-not-allowed disabled:opacity-75",
       "transition-colors"

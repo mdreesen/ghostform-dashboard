@@ -191,7 +191,7 @@ export default {
     },
     "position": {
       "popper": {
-        "content": "data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in]"
+        "content": "data-[state=open]:animate-[scale-in_100ms_var(--ease-out)] data-[state=closed]:animate-[scale-out_100ms_var(--ease-out)]"
       },
       "item-aligned": {
         "content": ""

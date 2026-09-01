@@ -39,14 +39,14 @@ export default {
     },
     "sticky": {
       "true": {
-        "thead": "sticky top-0 inset-x-0 bg-default/75 backdrop-blur z-1",
-        "tfoot": "sticky bottom-0 inset-x-0 bg-default/75 backdrop-blur z-1"
+        "thead": "sticky top-0 inset-x-0 bg-default/75 backdrop-blur-sm z-1",
+        "tfoot": "sticky bottom-0 inset-x-0 bg-default/75 backdrop-blur-sm z-1"
       },
       "header": {
-        "thead": "sticky top-0 inset-x-0 bg-default/75 backdrop-blur z-1"
+        "thead": "sticky top-0 inset-x-0 bg-default/75 backdrop-blur-sm z-1"
       },
       "footer": {
-        "tfoot": "sticky bottom-0 inset-x-0 bg-default/75 backdrop-blur z-1"
+        "tfoot": "sticky bottom-0 inset-x-0 bg-default/75 backdrop-blur-sm z-1"
       }
     },
     "loading": {
@@ -129,28 +129,28 @@ export default {
       "loading": true,
       "loadingAnimation": "carousel" as typeof loadingAnimation[number],
       "class": {
-        "thead": "motion-safe:after:animate-[carousel_2s_ease-in-out_infinite] motion-safe:rtl:after:animate-[carousel-rtl_2s_ease-in-out_infinite]"
+        "thead": "motion-safe:after:animate-[carousel_2s_linear_infinite] motion-safe:rtl:after:animate-[carousel-rtl_2s_linear_infinite]"
       }
     },
     {
       "loading": true,
       "loadingAnimation": "carousel-inverse" as typeof loadingAnimation[number],
       "class": {
-        "thead": "motion-safe:after:animate-[carousel-inverse_2s_ease-in-out_infinite] motion-safe:rtl:after:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]"
+        "thead": "motion-safe:after:animate-[carousel-inverse_2s_linear_infinite] motion-safe:rtl:after:animate-[carousel-inverse-rtl_2s_linear_infinite]"
       }
     },
     {
       "loading": true,
       "loadingAnimation": "swing" as typeof loadingAnimation[number],
       "class": {
-        "thead": "motion-safe:after:animate-[swing_2s_ease-in-out_infinite]"
+        "thead": "motion-safe:after:animate-[swing_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "loading": true,
       "loadingAnimation": "elastic" as typeof loadingAnimation[number],
       "class": {
-        "thead": "motion-safe:after:animate-[elastic_2s_ease-in-out_infinite]"
+        "thead": "motion-safe:after:animate-[elastic_2s_var(--ease-in-out)_infinite]"
       }
     }
   ],

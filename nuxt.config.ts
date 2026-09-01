@@ -6,42 +6,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ["~/assets/css/main.css"],
   modules: [
-    '@nuxt/eslint',
-    'nuxt-auth-utils',
     '@vueuse/motion/nuxt',
     '@nuxt/image',
     '@nuxtjs/color-mode',
     '@nuxt/ui',
-    'nuxt-vitalizer',
-    'nuxt-google-auth',
-    'nuxt-notify',
-    'nuxt-qrcode',
     '@vite-pwa/nuxt',
-    'nuxt-charts',
+    'nuxt-auth-utils',
+    'nuxt-qrcode',
+    'nuxt-charts'
   ],
-
-  // Nitro wakes up and fires off task reminders
-  nitro: {
-    experimental: { tasks: true },
-    tasks: {
-      'lead:reminders': {
-        handler: './server/tasks/lead/reminders', 
-        description: 'Processes custom individual queues and recurring marketing blasts'
-      }
-    },
-    scheduledTasks: {
-      // Local-dev only (Vercel uses vercel.json). Once per day to mirror
-      // the Hobby-plan cron: '0 15 * * *' = 15:00 UTC (US morning).
-      '0 15 * * *': ['lead:reminders']
-    },
-  },
-  routeRules: {
-    // Disable caching so Vercel executes the function fresh
-    '/api/cron': { swr: false, cache: false },
-    // Stripe webhook must run fresh and read the raw body for signature checks.
-    '/api/stripe/webhook': { swr: false, cache: false }
-  },
-
   app: {
     head: {
       title: 'GhostForm Dashboard', // default fallback title
@@ -50,69 +23,39 @@ export default defineNuxtConfig({
       },
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap'
-        },
       ],
     }
-  },
-  notify: {
-    position: "top-right",
-    duration: 5000,
-    maxToasts: 5,
-    theme: "light",
-    showIcon: true,
-  },
-  qrcode: {
-    options: {
-      variant: 'circle', // rounded, circle
-      radius: 1,
-      blackColor: 'currentColor',
-      whiteColor: 'transparent',
-    },
   },
   vite: {
     plugins: [
       tailwindcss()
     ],
-    optimizeDeps: {
-      include: [
-        '@vue/devtools-core',
-        '@vue/devtools-kit',
-        'date-fns',
-        'lucide-vue-next',
-        'vue-qrcode-reader',
-        '@tanstack/vue-table',
-        'nuxt-notify',
-        'zod',
-        'workbox-window',
-        'exceljs', // CJS
-      ]
-    },
   },
-
   typescript: {
     strict: false
   },
   colorMode: {
     dataValue: 'theme',
-    classSuffix: '',
+    classSuffix: '', // Important for Tailwind CSS integration
   },
 
   pwa: {
-    /* PWA options */
+    registerType: 'autoUpdate',
+    // The module must NOT inject its own <link rel="manifest">. The layout
+    // links a per-realtor manifest (server/routes/gf-manifest.webmanifest)
+    // that carries the query params into start_url — two competing manifest
+    // links would be resolved by document order, not by which one is correct.
+    injectRegister: 'auto',
+    includeManifestIcons: false,
     manifest: {
-      name: 'GhostForm Dashboard',
-      short_name: 'GhostForm Dashboard',
-      description: 'Manifest your leads instantly.',
-      orientation: 'natural',
-      lang: 'en',
-      display: 'standalone',
-      background_color: '#020203',
-      theme_color: '#020203',
+      name: 'GhostForm Lead Capture',
+      short_name: 'GhostForm',
+      description: 'Automated offline-capable lead generation and check-in portal',
+      theme_color: '#09090B', // Matches your background_color layout variables
+      background_color: '#09090B',
+      display: 'standalone', // Essential for forcing native mobile-app view wrapper
+      start_url: '/',
+      scope: '/',
       icons: [
         {
           src: '/images/maskable-icon.png',
@@ -138,41 +81,47 @@ export default defineNuxtConfig({
           type: 'image/png',
         }
       ],
-      categories: [
-        "realtor",
-        "housing",
-        "leads",
-        "lead generation",
-        "scheduling",
-        "personalization"
-      ],
-      display_override: [
-        "standalone",
-        "window-controls-overlay"
-      ],
-      prefer_related_applications: true,
     },
-    registerType: 'autoUpdate',
     workbox: {
-      'navigateFallback': '/login',
-      // Cache static routes and core UI structures
-      globPatterns: ['**/*.{js,css,html,png,svg}'],
+      // Clean up outdated caches automatically across site iterations
       cleanupOutdatedCaches: true,
       clientsClaim: true,
-      // Enable Background Sync API for deferred network payloads
+      skipWaiting: true,
+      globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
+
+      // ── THE KEY TO OFFLINE LOADING ─────────────────────────────────
+      // The form is always opened with unique query params, e.g.
+      //   /?category=realtor&id=...&company_email=<hash>&...
+      // Precached entries are keyed by full URL, so that request never
+      // matches a cache entry and the page fails to open offline.
+      // navigateFallback tells the service worker: for ANY navigation
+      // request it can't otherwise satisfy, serve the cached app shell.
+      // The query string is then read by the app as normal.
+      navigateFallback: '/',
+      // Never hijack API calls with the shell — they must fail honestly
+      // so the offline queue can catch them.
+      navigateFallbackDenylist: [/^\/api\//],
+
       runtimeCaching: [
         {
-          // Intercepts your background synchronization endpoint
-          urlPattern: /\/api\/leads\/sync/,
-          handler: 'NetworkOnly',
-          method: 'POST',
+          // The document itself: serve from network when possible so config
+          // changes land, but fall back to cache the moment signal drops.
+          urlPattern: ({ request }) => request.mode === 'navigate',
+          handler: 'NetworkFirst',
           options: {
-            backgroundSync: {
-              name: 'mongodb-sync-queue',
-              options: {
-                maxRetentionTime: 24 * 60 // Max retry duration in minutes (24 Hours)
-              }
-            }
+            cacheName: 'ghostform-pages',
+            networkTimeoutSeconds: 3,
+            expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 30 }
+          }
+        },
+        {
+          // Fonts/images used by the form shell.
+          urlPattern: ({ request }) =>
+            ['style', 'script', 'font', 'image'].includes(request.destination),
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'ghostform-assets',
+            expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 60 }
           }
         }
       ]
@@ -185,6 +134,9 @@ export default defineNuxtConfig({
 
   // @vueuse/motion/nuxt
   runtimeConfig: {
+    // Used by documentRead to extract deadlines.
+    anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
+
     public: {
       motion: {
         directives: {

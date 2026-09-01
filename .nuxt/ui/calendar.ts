@@ -110,14 +110,18 @@ export default {
         "cell": "text-sm"
       },
       "lg": {
-        "headingLabel": "text-md",
-        "headCell": "text-md",
-        "headCellWeek": "text-md"
+        "headingLabel": "text-base",
+        "headCell": "text-base",
+        "headCellWeek": "text-base",
+        "cellWeek": "text-base",
+        "cell": "text-base"
       },
       "xl": {
         "headingLabel": "text-lg",
         "headCell": "text-lg",
-        "headCellWeek": "text-lg"
+        "headCellWeek": "text-lg",
+        "cellWeek": "text-lg",
+        "cell": "text-lg"
       }
     },
     "view": {
@@ -339,7 +343,7 @@ export default {
       "size": "xs" as typeof size[number],
       "view": "day" as typeof view[number],
       "class": {
-        "cellTrigger": "size-7"
+        "cellTrigger": "size-6"
       }
     },
     {
@@ -360,14 +364,14 @@ export default {
       "size": "lg" as typeof size[number],
       "view": "day" as typeof view[number],
       "class": {
-        "cellTrigger": "size-9 text-md"
+        "cellTrigger": "size-9"
       }
     },
     {
       "size": "xl" as typeof size[number],
       "view": "day" as typeof view[number],
       "class": {
-        "cellTrigger": "size-10 text-lg"
+        "cellTrigger": "size-10"
       }
     },
     {
@@ -377,7 +381,7 @@ export default {
         "year" as typeof view[number]
       ],
       "class": {
-        "cellTrigger": "h-7 px-2"
+        "cellTrigger": "h-6 px-2"
       }
     },
     {
@@ -407,7 +411,7 @@ export default {
         "year" as typeof view[number]
       ],
       "class": {
-        "cellTrigger": "h-9 px-4 text-md"
+        "cellTrigger": "h-9 px-4"
       }
     },
     {
@@ -417,7 +421,7 @@ export default {
         "year" as typeof view[number]
       ],
       "class": {
-        "cellTrigger": "h-10 px-5 text-lg"
+        "cellTrigger": "h-10 px-5"
       }
     },
     {

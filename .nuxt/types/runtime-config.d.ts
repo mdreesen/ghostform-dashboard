@@ -10,6 +10,8 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
       cdnURL: string,
    },
 
+   anthropicModel: string,
+
    nitro: {
       envPrefix: string,
    },
@@ -565,26 +567,6 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
       loadStrategy: string,
    },
 
-   googleAuth: {
-      clientId: string,
-
-      promptOneTap: boolean,
-
-      enableServerVerify: boolean,
-   },
-
-   notify: {
-      position: string,
-
-      duration: number,
-
-      maxToasts: number,
-
-      theme: string,
-
-      showIcon: boolean,
-   },
-
    qrcode: {
       reader: {
          autoImport: boolean,
@@ -608,10 +590,6 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
          maxVersion: number,
 
          border: number,
-
-         variant: string,
-
-         radius: number,
 
          blackColor: string,
 

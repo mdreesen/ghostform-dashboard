@@ -7,10 +7,10 @@ export default {
     ],
     "leading": "relative size-4 shrink-0",
     "leadingIcon": "size-4 shrink-0",
-    "chevronIcon": "size-4 shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200",
+    "chevronIcon": "size-4 shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200 ease-out motion-reduce:transition-none",
     "label": "truncate",
-    "trailingIcon": "size-4 shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200",
-    "content": "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] data-[state=closed]:overflow-hidden rounded-sm outline-primary/25 has-focus-visible:outline-3",
+    "trailingIcon": "size-4 shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200 ease-out motion-reduce:transition-none",
+    "content": "data-[state=open]:animate-[collapsible-down_200ms_var(--ease-out)] data-[state=closed]:animate-[collapsible-up_200ms_var(--ease-out)] data-[state=closed]:overflow-hidden rounded-sm outline-primary/25 has-focus-visible:outline-3",
     "body": "max-h-[200px] pt-2 overflow-y-auto text-sm text-dimmed whitespace-pre-wrap focus:outline-none"
   },
   "variants": {
@@ -24,11 +24,11 @@ export default {
       "false": {
         "leadingIcon": [
           "absolute inset-0 group-data-[state=open]:opacity-0",
-          "transition-opacity duration-200"
+          "transition-opacity duration-200 ease-out"
         ],
         "chevronIcon": [
           "absolute inset-0 opacity-0 group-hover:opacity-100 group-data-[state=open]:opacity-100",
-          "transition-[rotate,opacity] duration-200"
+          "transition-[rotate,opacity] duration-200 ease-out motion-reduce:transition-none"
         ]
       }
     }
