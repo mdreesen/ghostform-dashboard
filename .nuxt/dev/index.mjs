@@ -1,7 +1,7 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
 import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, createError, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, getResponseStatus, useSession, getQuery as getQuery$1, readBody, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, setHeader, readValidatedBody, getHeader, readRawBody, getResponseStatusText } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
-import { resolve, dirname, join } from 'node:path';
+import { resolve, dirname, join, normalize, extname } from 'node:path';
 import crypto$1, { timingSafeEqual, createHmac } from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
@@ -15,6 +15,9 @@ import bcrypt from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_mod
 import { Cron } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/croner/dist/croner.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import OpenAI from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/openai/index.mjs';
+import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { DeleteObjectCommand, PutObjectCommand, S3Client, GetObjectCommand } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/client-s3/dist-cjs/index.js';
+import { getSignedUrl } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/s3-request-presigner/dist-cjs/index.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL, parseQuery, parsePath, encodePath } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -30,7 +33,6 @@ import { klona } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_
 import { snakeCase } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/scule/dist/index.mjs';
 import { getContext } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/nitropack/node_modules/unctx/dist/index.mjs';
 import { toRouteMatcher, createRouter } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/radix3/dist/index.mjs';
-import { readFile } from 'node:fs/promises';
 import consola, { consola as consola$1 } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/consola/dist/index.mjs';
 import { ErrorParser } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/youch-core/build/index.js';
 import { Youch } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/youch/build/index.js';
@@ -47,9 +49,9 @@ import { dirname as dirname$1, resolve as resolve$1, isAbsolute } from 'file:///
 import { createHooks } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/hookable/dist/index.mjs';
 import { getIcons } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@iconify/utils/lib/index.js';
 import { collections } from 'file:///Users/mdreesen/projects/ghostform-dashboard/.nuxt/nuxt-icon-server-bundle.mjs';
-import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/unhead/dist/server.mjs';
+import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/node_modules/unhead/dist/server.mjs';
 import { renderToString } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/vue/server-renderer/index.mjs';
-import { walkResolver } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/unhead/dist/utils.mjs';
+import { walkResolver } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/nitro-server/node_modules/unhead/dist/utils.mjs';
 import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/ipx/dist/index.mjs';
 
 const serverAssets = [{"baseName":"server","dir":"/Users/mdreesen/projects/ghostform-dashboard/server/assets"}];
@@ -1133,6 +1135,14 @@ const _inlineRuntimeConfig = {
       }
     }
   },
+  "r2": {
+    "accountId": "",
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "bucket": ""
+  },
+  "anthropicKey": "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",
+  "anthropicModel": "claude-haiku-4-5-20251001",
   "session": {
     "name": "nuxt-session",
     "password": "",
@@ -2887,7 +2897,7 @@ const _72rdM3gRxjYczXChZls5i8aHxH1iSWd92H8wuXVceI = defineNitroPlugin((nitroApp)
 
 const rootDir = "/Users/mdreesen/projects/ghostform-dashboard";
 
-const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
+const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[{"rel":"icon","type":"image/x-icon","href":"/favicon.ico"},{"rel":"preconnect","href":"https://fonts.googleapis.com"},{"rel":"preconnect","href":"https://fonts.gstatic.com","crossorigin":""},{"rel":"stylesheet","href":"https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap"}],"style":[],"script":[{"src":"https://accounts.google.com/gsi/client","async":true,"defer":true}],"noscript":[],"title":"GhostForm Dashboard","htmlAttrs":{"lang":"en"}};
 
 const appRootTag = "div";
 
@@ -3006,7 +3016,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"4b40f-GS5k62xdAoGoRPjL5C4mqM/yPyc\"",
+    "mtime": "2026-09-01T16:52:36.984Z",
+    "size": 308239,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"10f48a-8r1LPC6V2bWnk/z5e79QP0npikk\"",
+    "mtime": "2026-09-01T16:52:36.984Z",
+    "size": 1111178,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3247,7 +3272,7 @@ async function useOpenAi(messages) {
   }
 }
 
-function buildPrompt$3(briefing) {
+function buildPrompt$4(briefing) {
   const { totals, leads } = briefing;
   const sample = leads.slice(0, 5).map((l) => {
     const first = (l.name || "A lead").split(" ")[0];
@@ -3267,10 +3292,13 @@ ${sample.join("\n")}` : `No leads need attention today.`,
 async function narrateBriefing(briefing) {
   var _a;
   if (briefing.totals.total === 0) return null;
-  return (_a = useOpenAi([{ role: "user", content: buildPrompt$3(briefing) }])) != null ? _a : null;
+  return (_a = useOpenAi([{ role: "user", content: buildPrompt$4(briefing) }])) != null ? _a : null;
 }
 
 const leadSchema = new Schema({
+  // Which property this lead is interested in. Optional — plenty of leads
+  // aren't tied to a specific listing.
+  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
   userId: {
     type: Schema.Types.ObjectId,
     ref: "User",
@@ -3564,7 +3592,7 @@ function violatesFairHousing(text) {
   }
   return null;
 }
-function buildPrompt$2(a, intent, card, name) {
+function buildPrompt$3(a, intent, card, name) {
   const answered = Object.entries(a).filter(([, v]) => String(v != null ? v : "").trim().length > 0).map(([k, v]) => `${k.replace(/^q_/, "").replace(/_/g, " ")}: ${v}`).join("\n");
   return [
     `You are helping a real estate agent prepare for their next conversation with a lead.`,
@@ -3661,7 +3689,7 @@ async function analyseLead(answers, intent, name = "") {
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
   const openaiKey = process.env.OPENAI_API_KEY;
   if (!anthropicKey && !openaiKey) return base;
-  const prompt = buildPrompt$2(answers, intent, scorecard, name);
+  const prompt = buildPrompt$3(answers, intent, scorecard, name);
   const raw = anthropicKey ? await callAnthropic(prompt, anthropicKey) : await callOpenAI(prompt, openaiKey);
   if (!raw) return base;
   const parsed = parseJson$1(raw);
@@ -3714,7 +3742,7 @@ Do you have a few minutes this week? Just reply here and we'll find a time.
 Best,
 ${lead.agentName || ""}`;
 }
-function buildPrompt$1(lead, channel) {
+function buildPrompt$2(lead, channel) {
   const facts = [];
   facts.push(`Lead first name: ${firstName(lead.name)}`);
   if (money(lead.budget)) facts.push(`Budget: ${money(lead.budget)}`);
@@ -3736,7 +3764,7 @@ function buildPrompt$1(lead, channel) {
 }
 async function generateLeadDraft(lead, channel = "sms") {
   let aiText = null;
-  aiText = await useOpenAi([{ role: "user", content: buildPrompt$1(lead, channel) }]);
+  aiText = await useOpenAi([{ role: "user", content: buildPrompt$2(lead, channel) }]);
   if (aiText) return { message: aiText, source: "ai" };
   return { message: templateDraft(lead, channel), source: "template" };
 }
@@ -4142,7 +4170,7 @@ function hashtagLine(level, platform) {
   }
   return platform === "instagram" ? "Include 3-5 relevant hashtags on their own line at the end." : "Include at most 1 hashtag, or none.";
 }
-function buildPrompt(platform, topicKey, ctx, details) {
+function buildPrompt$1(platform, topicKey, ctx, details) {
   var _a;
   const v = ctx.voice || {};
   const topic = TOPICS[topicKey] || TOPICS.personal;
@@ -4236,7 +4264,7 @@ async function generateSocialPosts(platform, topicKey, ctx, opts = {}) {
   const anthropicKey = process.env.ANTHROPIC_API_KEY;
   const openaiKey = process.env.OPENAI_API_KEY;
   if (anthropicKey || openaiKey) {
-    const prompt = buildPrompt(platform, topicKey, ctx, opts.details);
+    const prompt = buildPrompt$1(platform, topicKey, ctx, opts.details);
     const results = [];
     for (let i = 0; i < count; i++) {
       const variation = i === 0 ? prompt : `${prompt}
@@ -5022,14 +5050,22 @@ const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_d8uRs7 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_z7u2Qs = () => Promise.resolve().then(function () { return signup_post$1; });
-const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$d; });
+const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$h; });
 const _lazy_0YaBRe = () => Promise.resolve().then(function () { return index_delete$5; });
-const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$b; });
+const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$f; });
 const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$3; });
 const _lazy_6dQdG0 = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_vknMpb = () => Promise.resolve().then(function () { return vary_post$1; });
 const _lazy_oJWXNf = () => Promise.resolve().then(function () { return lead_get$1; });
 const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; });
+const _lazy_kA9GOf = () => Promise.resolve().then(function () { return deadline_post$1; });
+const _lazy_aV7cm5 = () => Promise.resolve().then(function () { return delete_post$3; });
+const _lazy_SaAvss = () => Promise.resolve().then(function () { return read_post$1; });
+const _lazy_i6MJs0 = () => Promise.resolve().then(function () { return create_post$5; });
+const _lazy_fGRu2X = () => Promise.resolve().then(function () { return deadlines_get$1; });
+const _lazy_xqNoig = () => Promise.resolve().then(function () { return diagnose_get$1; });
+const _lazy_8nucrz = () => Promise.resolve().then(function () { return index_get$d; });
+const _lazy_62qNmD = () => Promise.resolve().then(function () { return index_get$b; });
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
 const _lazy_tq6B3q = () => Promise.resolve().then(function () { return delete_post$1; });
 const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$9; });
@@ -5055,9 +5091,13 @@ const _lazy_Z1oZ9j = () => Promise.resolve().then(function () { return index_del
 const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_YyhPdT = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_PGwJYq = () => Promise.resolve().then(function () { return status_post$1; });
+const _lazy_6lsoPX = () => Promise.resolve().then(function () { return storageMode_get$1; });
 const _lazy_UPg2Ir = () => Promise.resolve().then(function () { return subscribe_post$1; });
 const _lazy_pjRUBv = () => Promise.resolve().then(function () { return webhook_post$1; });
 const _lazy_JDeNrs = () => Promise.resolve().then(function () { return testReminder_get$1; });
+const _lazy_gkofUB = () => Promise.resolve().then(function () { return ____key__get$1; });
+const _lazy_0rRNqX = () => Promise.resolve().then(function () { return ____key__put$1; });
+const _lazy_nkx6RX = () => Promise.resolve().then(function () { return sign_post$1; });
 const _lazy_zchBPt = () => Promise.resolve().then(function () { return cardStyle_post$1; });
 const _lazy_wZagNx = () => Promise.resolve().then(function () { return headshot_delete$1; });
 const _lazy_HddarY = () => Promise.resolve().then(function () { return headshot_post$1; });
@@ -5083,6 +5123,14 @@ const handlers = [
   { route: '/api/campaigns/vary', handler: _lazy_vknMpb, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_oJWXNf, lazy: true, middleware: false, method: "get" },
   { route: '/api/cron', handler: _lazy_kQloHj, lazy: true, middleware: false, method: undefined },
+  { route: '/api/documents/:id/deadline', handler: _lazy_kA9GOf, lazy: true, middleware: false, method: "post" },
+  { route: '/api/documents/:id/delete', handler: _lazy_aV7cm5, lazy: true, middleware: false, method: "post" },
+  { route: '/api/documents/:id/read', handler: _lazy_SaAvss, lazy: true, middleware: false, method: "post" },
+  { route: '/api/documents/create', handler: _lazy_i6MJs0, lazy: true, middleware: false, method: "post" },
+  { route: '/api/documents/deadlines', handler: _lazy_fGRu2X, lazy: true, middleware: false, method: "get" },
+  { route: '/api/documents/diagnose', handler: _lazy_xqNoig, lazy: true, middleware: false, method: "get" },
+  { route: '/api/documents', handler: _lazy_8nucrz, lazy: true, middleware: false, method: "get" },
+  { route: '/api/homes/:id', handler: _lazy_62qNmD, lazy: true, middleware: false, method: "get" },
   { route: '/api/homes/create', handler: _lazy_6aFyol, lazy: true, middleware: false, method: "post" },
   { route: '/api/homes/delete', handler: _lazy_tq6B3q, lazy: true, middleware: false, method: "post" },
   { route: '/api/homes', handler: _lazy_TuGNAE, lazy: true, middleware: false, method: "get" },
@@ -5108,9 +5156,13 @@ const handlers = [
   { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
   { route: '/api/social/save', handler: _lazy_YyhPdT, lazy: true, middleware: false, method: "post" },
   { route: '/api/social/status', handler: _lazy_PGwJYq, lazy: true, middleware: false, method: "post" },
+  { route: '/api/storage-mode', handler: _lazy_6lsoPX, lazy: true, middleware: false, method: "get" },
   { route: '/api/stripe/subscribe', handler: _lazy_UPg2Ir, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/webhook', handler: _lazy_pjRUBv, lazy: true, middleware: false, method: "post" },
   { route: '/api/test-reminder', handler: _lazy_JDeNrs, lazy: true, middleware: false, method: "get" },
+  { route: '/api/uploads/local/**:key', handler: _lazy_gkofUB, lazy: true, middleware: false, method: "get" },
+  { route: '/api/uploads/local/**:key', handler: _lazy_0rRNqX, lazy: true, middleware: false, method: "put" },
+  { route: '/api/uploads/sign', handler: _lazy_nkx6RX, lazy: true, middleware: false, method: "post" },
   { route: '/api/user/card-style', handler: _lazy_zchBPt, lazy: true, middleware: false, method: "post" },
   { route: '/api/user/headshot', handler: _lazy_wZagNx, lazy: true, middleware: false, method: "delete" },
   { route: '/api/user/headshot', handler: _lazy_HddarY, lazy: true, middleware: false, method: "post" },
@@ -5733,9 +5785,9 @@ const homeSchema = new Schema({
 const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 
 const UserDoc$1 = UserModelImport;
-const Lead$8 = schemaImport;
+const Lead$a = schemaImport;
 const Campaign$5 = CampaignModelImport;
-const Home$3 = HomeModel;
+const Home$5 = HomeModel;
 const stripe$2 = new Stripe(process.env.STRIPE_SECRET_KEY);
 const delete_delete = defineEventHandler(async (event) => {
   try {
@@ -5752,9 +5804,9 @@ const delete_delete = defineEventHandler(async (event) => {
       }
     }
     await Promise.all([
-      Lead$8.deleteMany({ userId: user._id }),
+      Lead$a.deleteMany({ userId: user._id }),
       Campaign$5.deleteMany({ userId: user._id }),
-      Home$3.deleteMany({ userId: user._id })
+      Home$5.deleteMany({ userId: user._id })
     ]);
     await UserDoc$1.deleteOne({ _id: user._id });
   } catch (error) {
@@ -5772,12 +5824,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$9 = UserModelImport;
-const bodySchema$n = z.object({
+const bodySchema$q = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$n.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$q.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5816,13 +5868,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$8 = UserModelImport;
-const bodySchema$m = z.object({
+const bodySchema$p = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$m.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$p.parse);
   try {
     await connectDB();
     const user = await User$8.findOne({ email });
@@ -5876,13 +5928,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$7 = UserModelImport;
-const bodySchema$l = z.object({
+const bodySchema$o = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$l.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$o.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -5905,7 +5957,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$k = z.object({
+const bodySchema$n = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5914,7 +5966,7 @@ const bodySchema$k = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$k.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$n.parse);
   try {
     await connectDB();
     const user = await User$6.findOne({ email });
@@ -5955,7 +6007,7 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const index_get$c = defineEventHandler(async (event) => {
+const index_get$g = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) {
@@ -5969,18 +6021,18 @@ const index_get$c = defineEventHandler(async (event) => {
   return briefing;
 });
 
-const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$c
+  default: index_get$g
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$j = z.object({
+const bodySchema$m = z.object({
   _id: z.string()
 });
 const index_delete$4 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$j.parse);
+    const body = await readValidatedBody(event, bodySchema$m.parse);
     await Campaign$4.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5997,15 +6049,15 @@ const index_delete$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$3 = CampaignModelImport;
-const index_get$a = defineEventHandler(async (event) => {
+const index_get$e = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
   const data = await Campaign$3.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$f = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$a
+  default: index_get$e
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$2 = CampaignModelImport;
@@ -6060,7 +6112,7 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const bodySchema$i = z.object({
+const bodySchema$l = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -6069,7 +6121,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$i.parse);
+  const body = await readValidatedBody(event, bodySchema$l.parse);
   try {
     await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
@@ -6087,14 +6139,14 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$h = z.object({
+const bodySchema$k = z.object({
   _id: z.string(),
   varyWording: z.boolean()
 });
 const vary_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, varyWording } = await readValidatedBody(event, bodySchema$h.parse);
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$k.parse);
   const res = await Campaign.updateOne(
     { _id, userId: user._id },
     { $set: { varyWording } }
@@ -6115,10 +6167,10 @@ function month(date2) {
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$7 = schemaImport;
+const Lead$9 = schemaImport;
 const lead_get = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
-  const leads = await Lead$7.find({ userId: user == null ? void 0 : user._id }).lean();
+  const leads = await Lead$9.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
@@ -6174,8 +6226,613 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: cron
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const deadlineSchema = new Schema({
+  label: { type: String, required: true },
+  // "Inspection contingency expires"
+  date: { type: Date, required: true },
+  /**
+   * The sentence this came from, quoted verbatim.
+   *
+   * Non-negotiable. A misread contingency date is a real financial loss and
+   * it's the agent's liability — so every extracted date shows its source and
+   * must be confirmed before it becomes a reminder.
+   */
+  sourceText: { type: String, default: "" },
+  priority: {
+    type: String,
+    enum: ["high", "medium", "low"],
+    default: "medium"
+  },
+  /** Extracted dates are proposals until a human agrees. */
+  confirmed: { type: Boolean, default: false },
+  dismissed: { type: Boolean, default: false },
+  completed: { type: Boolean, default: false },
+  completedAt: Date
+}, { timestamps: true });
+const documentSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  // A document belongs to a property, a lead, or both.
+  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
+  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
+  filename: { type: String, required: true },
+  storageKey: { type: String, required: true },
+  mime: { type: String, default: "" },
+  bytes: { type: Number, default: 0 },
+  /** What the AI decided this is. Free text — we don't constrain the set. */
+  docType: { type: String, default: "" },
+  /** Two or three lines. Not the full text — see the note above. */
+  summary: { type: String, default: "" },
+  deadlines: [deadlineSchema],
+  status: {
+    type: String,
+    enum: ["uploaded", "reading", "ready", "failed"],
+    default: "uploaded",
+    index: true
+  },
+  failureReason: { type: String, default: "" },
+  uploadedAt: { type: Date, default: Date.now }
+}, { timestamps: true });
+documentSchema.index({ userId: 1, homeId: 1 });
+const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
+
+const Doc$5 = DocumentModel;
+const bodySchema$j = z.object({
+  deadlineId: z.string(),
+  action: z.enum(["confirm", "dismiss", "complete", "reopen"]),
+  // Corrections — the realtor may fix a misread date or reprioritise.
+  date: z.string().optional(),
+  label: z.string().max(120).optional(),
+  priority: z.enum(["high", "medium", "low"]).optional()
+});
+const deadline_post = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { deadlineId, action, date, label, priority } = await readValidatedBody(event, bodySchema$j.parse);
+  const set = {};
+  if (action === "confirm") set["deadlines.$.confirmed"] = true;
+  if (action === "dismiss") set["deadlines.$.dismissed"] = true;
+  if (action === "complete") {
+    set["deadlines.$.completed"] = true;
+    set["deadlines.$.completedAt"] = /* @__PURE__ */ new Date();
+  }
+  if (action === "reopen") {
+    set["deadlines.$.completed"] = false;
+    set["deadlines.$.completedAt"] = null;
+  }
+  if (date && !Number.isNaN(Date.parse(date))) {
+    set["deadlines.$.date"] = new Date(date);
+    set["deadlines.$.confirmed"] = true;
+  }
+  if (label) set["deadlines.$.label"] = label;
+  if (priority) set["deadlines.$.priority"] = priority;
+  const res = await Doc$5.updateOne(
+    { _id: (_a = event.context.params) == null ? void 0 : _a.id, userId: user._id, "deadlines._id": deadlineId },
+    { $set: set }
+  );
+  if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Not found." });
+  return { success: true };
+});
+
+const deadline_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: deadline_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+let client = null;
+function hasR2() {
+  const r2 = useRuntimeConfig().r2;
+  return Boolean((r2 == null ? void 0 : r2.accountId) && (r2 == null ? void 0 : r2.accessKeyId) && (r2 == null ? void 0 : r2.secretAccessKey) && (r2 == null ? void 0 : r2.bucket));
+}
+function s3() {
+  if (client) return client;
+  const cfg = useRuntimeConfig();
+  const { accountId, accessKeyId, secretAccessKey } = cfg.r2;
+  if (!accountId || !accessKeyId || !secretAccessKey) {
+    throw createError({
+      statusCode: 500,
+      message: "Object storage is not configured. Set R2_* in .env, or leave them unset to use local storage in development."
+    });
+  }
+  client = new S3Client({
+    region: "auto",
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: { accessKeyId, secretAccessKey }
+  });
+  return client;
+}
+function bucket() {
+  var _a;
+  const b = (_a = useRuntimeConfig().r2) == null ? void 0 : _a.bucket;
+  if (!b) throw createError({ statusCode: 500, message: "R2_BUCKET is not set." });
+  return b;
+}
+function buildKey(userId, projectId, filename) {
+  const ext = (filename.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const rand = Math.random().toString(36).slice(2, 10);
+  return `u/${userId}/p/${projectId}/${Date.now()}-${rand}.${ext}`;
+}
+async function presignUpload(key, contentType) {
+  if (!hasR2()) return `/api/uploads/local/${key}`;
+  return getSignedUrl(
+    s3(),
+    new PutObjectCommand({ Bucket: bucket(), Key: key, ContentType: contentType }),
+    { expiresIn: 600 }
+  );
+}
+async function readUrl(key) {
+  if (!hasR2()) return `/api/uploads/local/${key}`;
+  const base = useRuntimeConfig().public.assetBase;
+  if (base) return `${String(base).replace(/\/$/, "")}/${key}`;
+  return getSignedUrl(s3(), new GetObjectCommand({ Bucket: bucket(), Key: key }), { expiresIn: 3600 });
+}
+async function deleteObject(key) {
+  if (!hasR2()) {
+    const { unlink } = await import('node:fs/promises');
+    const { join } = await import('node:path');
+    await unlink(join(process.cwd(), ".data", "uploads", key)).catch(() => {
+    });
+    return;
+  }
+  await s3().send(new DeleteObjectCommand({ Bucket: bucket(), Key: key }));
+}
+const MIME_BY_EXT = {
+  ".pdf": "application/pdf",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".heic": "image/heic",
+  ".heif": "image/heif"
+};
+async function fetchAsBase64(key) {
+  try {
+    if (!hasR2()) {
+      const { readFile } = await import('node:fs/promises');
+      const { join, normalize, extname } = await import('node:path');
+      const root = join(process.cwd(), ".data", "uploads");
+      const target = normalize(join(root, key));
+      if (!target.startsWith(root)) {
+        console.error("[storage] refused a key that escapes the upload dir:", key);
+        return null;
+      }
+      const buf2 = await readFile(target);
+      return {
+        data: buf2.toString("base64"),
+        // MIME from the extension — buildKey preserves it for exactly this.
+        mime: MIME_BY_EXT[extname(target).toLowerCase()] || "application/octet-stream"
+      };
+    }
+    const url = await readUrl(key);
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.error("[storage] read returned", res.status, "for", key);
+      return null;
+    }
+    const buf = Buffer.from(await res.arrayBuffer());
+    return {
+      data: buf.toString("base64"),
+      mime: res.headers.get("content-type") || "application/octet-stream"
+    };
+  } catch (err) {
+    console.error("[storage] read failed for", key, (err == null ? void 0 : err.message) || err);
+    return null;
+  }
+}
+
+const Doc$4 = DocumentModel;
+const delete_post$2 = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const id = (_a = event.context.params) == null ? void 0 : _a.id;
+  const doc = await Doc$4.findOne({ _id: id, userId: user._id }).lean();
+  if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
+  const liveDeadlines = ((_b = doc.deadlines) != null ? _b : []).filter(
+    (d) => d.confirmed && !d.dismissed && !d.completed
+  ).length;
+  let fileRemoved = true;
+  if (doc.storageKey) {
+    try {
+      await deleteObject(doc.storageKey);
+    } catch (err) {
+      fileRemoved = false;
+      console.error("[document] could not remove stored file for", id);
+    }
+  }
+  await Doc$4.deleteOne({ _id: id, userId: user._id });
+  if (!fileRemoved) {
+    console.warn(`[document] record ${id} deleted but its file remains in storage.`);
+  }
+  return { success: true, liveDeadlines };
+});
+
+const delete_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: delete_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function buildPrompt(filename, today) {
+  return [
+    `Read this real estate document and pull out the dates that matter.`,
+    `Filename: ${filename}`,
+    `Today's date: ${today}`,
+    ``,
+    `FIRST decide what kind of document it is \u2014 purchase agreement, listing`,
+    `agreement, inspection report, disclosure, addendum, repair estimate,`,
+    `something else. Which dates matter depends entirely on that.`,
+    ``,
+    `THEN extract every date that creates an obligation or a deadline for the`,
+    `agent. Examples of what counts:`,
+    `  \xB7 inspection or due-diligence period ending`,
+    `  \xB7 financing or appraisal contingency expiring`,
+    `  \xB7 earnest money due`,
+    `  \xB7 closing / settlement date`,
+    `  \xB7 listing agreement expiry`,
+    `  \xB7 offer or counter-offer expiry`,
+    `  \xB7 repair completion or re-inspection`,
+    `  \xB7 possession or key handover`,
+    ``,
+    `For EACH date give:`,
+    `  label      \u2014 what has to happen, in the agent's words ("Inspection`,
+    `               contingency expires"). Not a quote from the contract.`,
+    `  date       \u2014 ISO YYYY-MM-DD. If the document says "10 days from`,
+    `               acceptance", calculate it and say so in sourceText.`,
+    `  sourceText \u2014 the sentence you took it from, VERBATIM. This is how the`,
+    `               agent checks your work. Never paraphrase it.`,
+    `  priority   \u2014 high | medium | low`,
+    `  reason     \u2014 one short line on why that priority`,
+    ``,
+    `PRIORITY MEANS:`,
+    `  high   \u2014 missing it loses the deal or costs money. Contingency`,
+    `           deadlines, earnest money, financing dates, closing.`,
+    `  medium \u2014 needs doing but has slack. Scheduling, document returns.`,
+    `  low    \u2014 informational or far off. Expiry dates months away.`,
+    ``,
+    `Also write a 2-3 line summary of what this document is and what it commits`,
+    `the parties to.`,
+    ``,
+    `HARD RULES`,
+    `- If a date is ambiguous or you had to infer it, say so plainly in`,
+    `  sourceText. An honest "unclear" is far better than a confident guess \u2014`,
+    `  the agent will act on this.`,
+    `- Do NOT include dates that create no obligation (the date it was printed,`,
+    `  someone's birthday, a past date that has already passed).`,
+    `- Do NOT give legal advice or interpret what a clause means. Report what`,
+    `  it says.`,
+    `- Do NOT repeat any Social Security number, bank account, or full card`,
+    `  number in the summary or sourceText, even if the document contains one.`,
+    ``,
+    `Return ONLY JSON, no fence:`,
+    `{"docType":"...","summary":"...","deadlines":[{"label":"...","date":"YYYY-MM-DD",`,
+    `"sourceText":"...","priority":"high","reason":"..."}]}`
+  ].join("\n");
+}
+const SENSITIVE = [
+  /\b\d{3}-\d{2}-\d{4}\b/g,
+  // SSN
+  /\b\d{13,19}\b/g,
+  // card / account numbers
+  /\b\d{9,12}\b(?=\s*(routing|account))/gi
+];
+function redact(text) {
+  let out = String(text || "");
+  for (const re of SENSITIVE) out = out.replace(re, "[removed]");
+  return out;
+}
+async function readDocument(base64, mime, filename) {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
+  const cfg = useRuntimeConfig();
+  const key = cfg.anthropicKey;
+  if (!key) throw new Error("CONFIG: ANTHROPIC_API_KEY is not set.");
+  const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  const isPdf = mime === "application/pdf";
+  const content = [{
+    type: isPdf ? "document" : "image",
+    source: { type: "base64", media_type: mime, data: base64 }
+  }, {
+    type: "text",
+    text: buildPrompt(filename, today)
+  }];
+  try {
+    const res = await $fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        // PDF document blocks require this beta header. Without it the API
+        // rejects the request, which surfaced as "we could not find dates" —
+        // blaming the document for a header problem.
+        ...isPdf ? { "anthropic-beta": "pdfs-2024-09-25" } : {},
+        "content-type": "application/json"
+      },
+      body: {
+        model: cfg.anthropicModel,
+        max_tokens: 2e3,
+        messages: [{ role: "user", content }]
+      }
+    });
+    const raw = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
+    if (!raw) throw new Error("MODEL: the API returned no text.");
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const s = cleaned.indexOf("{"), e = cleaned.lastIndexOf("}");
+    if (s === -1) throw new Error("MODEL: response was not JSON.");
+    const parsed = JSON.parse(cleaned.slice(s, e + 1));
+    const deadlines = ((_c = parsed.deadlines) != null ? _c : []).map((d) => {
+      var _a2, _b2, _c2, _d2;
+      return {
+        label: redact(String((_a2 = d.label) != null ? _a2 : "")).slice(0, 120),
+        date: String((_b2 = d.date) != null ? _b2 : ""),
+        sourceText: redact(String((_c2 = d.sourceText) != null ? _c2 : "")).slice(0, 400),
+        priority: ["high", "medium", "low"].includes(d.priority) ? d.priority : "medium",
+        reason: redact(String((_d2 = d.reason) != null ? _d2 : "")).slice(0, 160)
+      };
+    }).filter((d) => d.label && !Number.isNaN(Date.parse(d.date)));
+    return {
+      docType: redact(String((_d = parsed.docType) != null ? _d : "")).slice(0, 60),
+      summary: redact(String((_e = parsed.summary) != null ? _e : "")).slice(0, 600),
+      deadlines
+    };
+  } catch (err) {
+    const detail = ((_g = (_f = err == null ? void 0 : err.data) == null ? void 0 : _f.error) == null ? void 0 : _g.message) || ((_j = (_i = (_h = err == null ? void 0 : err.response) == null ? void 0 : _h._data) == null ? void 0 : _i.error) == null ? void 0 : _j.message) || (err == null ? void 0 : err.message);
+    console.error("[document] read failed:", {
+      status: (err == null ? void 0 : err.status) || (err == null ? void 0 : err.statusCode),
+      detail,
+      model: cfg.anthropicModel,
+      isPdf
+    });
+    if (String(detail).match(/beta|pdf/i)) throw new Error(`PDF: ${detail}`);
+    if ((err == null ? void 0 : err.status) === 401 || (err == null ? void 0 : err.statusCode) === 401) throw new Error("CONFIG: the API key was rejected.");
+    if ((err == null ? void 0 : err.status) === 429 || (err == null ? void 0 : err.statusCode) === 429) throw new Error("RATE: too many requests.");
+    throw new Error(`MODEL: ${detail || "unknown error"}`);
+  }
+}
+
+const Doc$3 = DocumentModel;
+const read_post = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const id = (_a = event.context.params) == null ? void 0 : _a.id;
+  const doc = await Doc$3.findOne({ _id: id, userId: user._id }).lean();
+  if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
+  await Doc$3.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
+  const run = async () => {
+    try {
+      const file = await fetchAsBase64(doc.storageKey);
+      if (!file) throw new Error("Could not read the file from storage.");
+      const reading = await readDocument(file.data, file.mime || doc.mime, doc.filename);
+      if (!reading) throw new Error("The document could not be read.");
+      await Doc$3.updateOne({ _id: id }, {
+        $set: {
+          docType: reading.docType,
+          summary: reading.summary,
+          // confirmed:false — these are proposals, not reminders.
+          deadlines: reading.deadlines.map((d) => ({
+            label: d.label,
+            date: new Date(d.date),
+            sourceText: d.sourceText,
+            priority: d.priority,
+            confirmed: false,
+            dismissed: false,
+            completed: false
+          })),
+          status: "ready"
+        }
+      });
+    } catch (err) {
+      const msg = String((err == null ? void 0 : err.message) || "");
+      console.error("[document] read failed for", id, msg);
+      let reason = "We could not read that document. You can add dates yourself.";
+      if (msg.startsWith("CONFIG:")) {
+        reason = "Document reading is not configured yet. This is on us \u2014 the AI key is missing or rejected.";
+      } else if (msg.startsWith("RATE:")) {
+        reason = "Too many requests right now. Wait a minute and try reading it again.";
+      } else if (msg.startsWith("PDF:")) {
+        reason = "We could not open that PDF. If it is a scan, try a photo of the pages instead.";
+      } else if (/storage/i.test(msg)) {
+        reason = "We could not open that file. Try uploading it again.";
+      }
+      await Doc$3.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
+    }
+  };
+  event.waitUntil ? event.waitUntil(run()) : run();
+  return { status: "reading" };
+});
+
+const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: read_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Doc$2 = DocumentModel;
+const bodySchema$i = z.object({
+  filename: z.string().min(1),
+  storageKey: z.string().min(1),
+  mime: z.string().default(""),
+  bytes: z.number().default(0),
+  homeId: z.string().nullish(),
+  leadId: z.string().nullish()
+});
+const create_post$4 = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const body = await readValidatedBody(event, bodySchema$i.parse);
+  const doc = await Doc$2.create({
+    userId: user._id,
+    filename: body.filename,
+    storageKey: body.storageKey,
+    mime: body.mime,
+    bytes: body.bytes,
+    homeId: body.homeId || void 0,
+    leadId: body.leadId || void 0,
+    status: "uploaded"
+  });
+  return { _id: String(doc._id) };
+});
+
+const create_post$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: create_post$4
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Doc$1 = DocumentModel;
+const Home$4 = HomeModel;
+const Lead$8 = schemaImport;
+async function buildDeadlineBriefing(userId, horizonDays = 14) {
+  var _a, _b, _c, _d, _e;
+  const now = /* @__PURE__ */ new Date();
+  const start = new Date(now);
+  start.setHours(0, 0, 0, 0);
+  const horizon = new Date(start);
+  horizon.setDate(horizon.getDate() + horizonDays);
+  const docs = await Doc$1.find(
+    { userId, "deadlines.confirmed": true },
+    { filename: 1, deadlines: 1, homeId: 1, leadId: 1, docType: 1 }
+  ).lean();
+  const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
+  const leadIds = [...new Set(docs.map((d) => d.leadId).filter(Boolean).map(String))];
+  const [homes, leads] = await Promise.all([
+    homeIds.length ? Home$4.find({ _id: { $in: homeIds }, userId }, { name: 1, address: 1 }).lean() : Promise.resolve([]),
+    leadIds.length ? Lead$8.find({ _id: { $in: leadIds }, userId }, { name: 1, email: 1 }).lean() : Promise.resolve([])
+  ]);
+  const homeById = new Map(homes.map((h) => [String(h._id), h]));
+  const leadById = new Map(leads.map((l) => [String(l._id), l]));
+  const out = [];
+  for (const doc of docs) {
+    for (const d of (_a = doc.deadlines) != null ? _a : []) {
+      if (!d.confirmed || d.dismissed || d.completed) continue;
+      const when = new Date(d.date);
+      if (Number.isNaN(when.getTime())) continue;
+      if (when > horizon) continue;
+      const home = doc.homeId ? homeById.get(String(doc.homeId)) : null;
+      const lead = doc.leadId ? leadById.get(String(doc.leadId)) : null;
+      out.push({
+        documentId: String(doc._id),
+        deadlineId: String(d._id),
+        filename: doc.filename,
+        propertyName: (_b = home == null ? void 0 : home.name) != null ? _b : "",
+        propertyAddress: (_c = home == null ? void 0 : home.address) != null ? _c : "",
+        leadName: (lead == null ? void 0 : lead.name) || (lead == null ? void 0 : lead.email) || "",
+        docType: (_d = doc.docType) != null ? _d : "",
+        label: d.label,
+        date: when.toISOString(),
+        priority: (_e = d.priority) != null ? _e : "medium",
+        daysUntil: Math.round((new Date(when).setHours(0, 0, 0, 0) - start.getTime()) / 864e5),
+        homeId: doc.homeId ? String(doc.homeId) : void 0,
+        leadId: doc.leadId ? String(doc.leadId) : void 0
+      });
+    }
+  }
+  return out.sort((a, b) => a.daysUntil - b.daysUntil);
+}
+function deadlineHeadline(items) {
+  const overdue = items.filter((i) => i.daysUntil < 0).length;
+  const today = items.filter((i) => i.daysUntil === 0).length;
+  if (overdue) return `${overdue} deadline${overdue === 1 ? "" : "s"} overdue`;
+  if (today) return `${today} deadline${today === 1 ? "" : "s"} today`;
+  const soon = items.filter((i) => i.daysUntil <= 3).length;
+  if (soon) return `${soon} deadline${soon === 1 ? "" : "s"} in the next few days`;
+  return "";
+}
+
+const deadlines_get = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const items = await buildDeadlineBriefing(user._id);
+  return { items, headline: deadlineHeadline(items) };
+});
+
+const deadlines_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: deadlines_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const diagnose_get = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const cfg = useRuntimeConfig();
+  const key = cfg.anthropicKey;
+  const out = {
+    storageDriver: hasR2() ? "r2" : "local (.data/uploads)",
+    anthropicKeyPresent: Boolean(key),
+    anthropicKeyLooksValid: Boolean(key && key.startsWith("sk-ant-")),
+    model: cfg.anthropicModel
+  };
+  if (!key) {
+    out.verdict = "ANTHROPIC_API_KEY is missing from .env \u2014 reading cannot work.";
+    return out;
+  }
+  try {
+    await $fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "content-type": "application/json"
+      },
+      body: { model: cfg.anthropicModel, max_tokens: 4, messages: [{ role: "user", content: "hi" }] }
+    });
+    out.apiReachable = true;
+    out.verdict = "Key and model both work. If reading still fails, the issue is the PDF itself \u2014 check the server log for [document] read failed.";
+  } catch (err) {
+    const detail = ((_b = (_a = err == null ? void 0 : err.data) == null ? void 0 : _a.error) == null ? void 0 : _b.message) || (err == null ? void 0 : err.message);
+    out.apiReachable = false;
+    out.status = (err == null ? void 0 : err.status) || (err == null ? void 0 : err.statusCode);
+    out.detail = detail;
+    out.verdict = out.status === 401 ? "The API key was rejected. Check ANTHROPIC_API_KEY." : out.status === 404 ? `The model "${cfg.anthropicModel}" was not found. Set ANTHROPIC_MODEL to one your key can use.` : "The API call failed \u2014 see detail.";
+  }
+  return out;
+});
+
+const diagnose_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: diagnose_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Doc = DocumentModel;
+const index_get$c = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const q = getQuery$1(event);
+  const filter = { userId: user._id };
+  if (q.homeId) filter.homeId = q.homeId;
+  if (q.leadId) filter.leadId = q.leadId;
+  return Doc.find(filter).sort({ createdAt: -1 }).limit(200).lean();
+});
+
+const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$c
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Home$3 = HomeModel;
+const Lead$7 = schemaImport;
+const index_get$a = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const id = (_a = event.context.params) == null ? void 0 : _a.id;
+  const home = await Home$3.findOne({ _id: id, userId: user._id }).lean();
+  if (!home) throw createError({ statusCode: 404, message: "Property not found." });
+  const leads = await Lead$7.find({
+    userId: user._id,
+    $or: [
+      { homeId: home._id },
+      ...home.address ? [{ address: home.address }] : []
+    ]
+  }).sort({ createdAt: -1 }).limit(100).lean();
+  return { home, leads };
+});
+
+const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$a
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const Lead$6 = HomeModel;
-const bodySchema$g = z.object({
+const bodySchema$h = z.object({
   name: z.string().nullish(),
   // The address is the only field that genuinely matters — it's what gets
   // attached to a captured lead so the realtor knows which listing it came from.
@@ -6185,7 +6842,7 @@ const bodySchema$g = z.object({
   status: z.enum(["active", "pending", "sold"]).optional()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$g.parse);
+  const body = await readValidatedBody(event, bodySchema$h.parse);
   const user = await loggedInUser(event);
   try {
     const created = await Lead$6.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -6205,11 +6862,11 @@ const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$2 = HomeModel;
-const bodySchema$f = z.object({ _id: z.string() });
+const bodySchema$g = z.object({ _id: z.string() });
 const delete_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id } = await readValidatedBody(event, bodySchema$f.parse);
+  const { _id } = await readValidatedBody(event, bodySchema$g.parse);
   const res = await Home$2.deleteOne({ _id, userId: user._id });
   if (res.deletedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
@@ -6235,7 +6892,7 @@ const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home = HomeModel;
-const bodySchema$e = z.object({
+const bodySchema$f = z.object({
   _id: z.string(),
   name: z.string().nullish(),
   address: z.string().min(1),
@@ -6246,7 +6903,7 @@ const bodySchema$e = z.object({
 const update_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, ...fields } = await readValidatedBody(event, bodySchema$e.parse);
+  const { _id, ...fields } = await readValidatedBody(event, bodySchema$f.parse);
   const res = await Home.updateOne({ _id, userId: user._id }, { $set: fields });
   if (res.matchedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
@@ -6397,7 +7054,7 @@ const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$3 = schemaImport;
-const bodySchema$d = z.object({
+const bodySchema$e = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -6420,7 +7077,7 @@ const bodySchema$d = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$d.parse);
+  const body = await readValidatedBody(event, bodySchema$e.parse);
   try {
     const existing = await Lead$3.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
@@ -6489,7 +7146,7 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 
 const LeadModel$4 = schemaImport;
 const resend$1 = new Resend(process.env.RESEND_KEY);
-const bodySchema$c = z.object({
+const bodySchema$d = z.object({
   // The (possibly realtor-edited) message body to send.
   message: z.string().min(1),
   // Optional custom subject; defaults to a friendly follow-up line.
@@ -6502,7 +7159,7 @@ const sendMessage_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session expired." });
   }
-  const { message, subject } = await readValidatedBody(event, bodySchema$c.parse);
+  const { message, subject } = await readValidatedBody(event, bodySchema$d.parse);
   const lead = await LeadModel$4.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
@@ -6565,7 +7222,7 @@ function customGhostFormUrl({
 }
 
 const LeadModel$3 = schemaImport;
-const bodySchema$b = z.object({
+const bodySchema$c = z.object({
   intent: z.enum(["buy", "sell"]).optional()
 });
 const sendQuestionnaire_post = defineEventHandler(async (event) => {
@@ -6573,7 +7230,7 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { intent } = await readValidatedBody(event, bodySchema$b.parse);
+  const { intent } = await readValidatedBody(event, bodySchema$c.parse);
   const lead = await LeadModel$3.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
@@ -6635,7 +7292,7 @@ const sendQuestionnaire_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$a = z.object({
+const bodySchema$b = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -6656,7 +7313,7 @@ const bodySchema$a = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$a.parse);
+  const body = await readValidatedBody(event, bodySchema$b.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$2.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -6675,7 +7332,7 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$1 = schemaImport;
-const bodySchema$9 = z.object({
+const bodySchema$a = z.object({
   leads: z.array(z.object({
     name: z.string().optional(),
     email: z.string(),
@@ -6692,7 +7349,7 @@ const bodySchema$9 = z.object({
 const import_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$9.parse);
+  const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$a.parse);
   const emails = leads.map((l) => l.email.toLowerCase());
   const existing = await Lead$1.find(
     { userId: user._id, email: { $in: emails } },
@@ -6873,7 +7530,7 @@ const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$1 = schemaImport;
-const bodySchema$8 = z.object({
+const bodySchema$9 = z.object({
   answers: z.record(z.string(), z.union([z.string(), z.number()]))
 });
 const _id__post = defineEventHandler(async (event) => {
@@ -6886,7 +7543,7 @@ const _id__post = defineEventHandler(async (event) => {
   if (!parsed) {
     throw createError({ statusCode: 401, message: "This link is not valid or has expired." });
   }
-  const { answers } = await readValidatedBody(event, bodySchema$8.parse);
+  const { answers } = await readValidatedBody(event, bodySchema$9.parse);
   await connectDB();
   const lead = await LeadModel$1.findById(parsed.leadId);
   if (!lead) throw createError({ statusCode: 404, message: "We could not find that record." });
@@ -6927,7 +7584,7 @@ const _id__post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: _id__post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const bodySchema$7 = z.object({
+const bodySchema$8 = z.object({
   platform: z.enum(["facebook", "instagram", "x"]),
   topic: z.string().default("personal"),
   details: z.string().optional(),
@@ -6936,7 +7593,7 @@ const bodySchema$7 = z.object({
 const generate_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$7.parse);
+  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$8.parse);
   const { posts, source } = await generateSocialPosts(
     platform,
     topic,
@@ -6989,12 +7646,12 @@ const socialPostSchema = new Schema({
 const SocialPostModel = mongoose.models.SocialPost || mongoose.model("SocialPost", socialPostSchema);
 
 const Social = SocialPostModel;
-const bodySchema$6 = z.object({
+const bodySchema$7 = z.object({
   _id: z.string()
 });
 const index_delete = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$6.parse);
+    const body = await readValidatedBody(event, bodySchema$7.parse);
     await Social.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -7031,7 +7688,7 @@ const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost$1 = SocialPostModel;
-const bodySchema$5 = z.object({
+const bodySchema$6 = z.object({
   platform: z.enum(["facebook", "instagram", "x"]),
   topic: z.string().default("general"),
   body: z.string().min(1),
@@ -7042,7 +7699,7 @@ const bodySchema$5 = z.object({
 const save_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const data = await readValidatedBody(event, bodySchema$5.parse);
+  const data = await readValidatedBody(event, bodySchema$6.parse);
   const created = await SocialPost$1.create({ userId: user._id, ...data });
   return { success: true, _id: String(created._id) };
 });
@@ -7053,7 +7710,7 @@ const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost = SocialPostModel;
-const bodySchema$4 = z.object({
+const bodySchema$5 = z.object({
   _id: z.string(),
   status: z.enum(["draft", "approved", "posted", "discarded"]),
   body: z.string().optional()
@@ -7061,7 +7718,7 @@ const bodySchema$4 = z.object({
 const status_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, status, body } = await readValidatedBody(event, bodySchema$4.parse);
+  const { _id, status, body } = await readValidatedBody(event, bodySchema$5.parse);
   const update = { status };
   if (typeof body === "string" && body.trim()) update.body = body.trim();
   if (status === "posted") update.postedAt = /* @__PURE__ */ new Date();
@@ -7075,6 +7732,13 @@ const status_post = defineEventHandler(async (event) => {
 const status_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: status_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const storageMode_get = defineEventHandler(() => ({ driver: hasR2() ? "r2" : "local" }));
+
+const storageMode_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: storageMode_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const stripe$1 = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -7264,6 +7928,97 @@ const testReminder_get = defineEventHandler(async (event) => {
 const testReminder_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: testReminder_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const MIME = {
+  ".pdf": "application/pdf",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".heic": "image/heic",
+  ".heif": "image/heif"
+};
+const ____key__get = defineEventHandler(async (event) => {
+  var _a;
+  if (hasR2()) throw createError({ statusCode: 404, message: "Not found." });
+  const key = (((_a = event.context.params) == null ? void 0 : _a.key) || "").split("/").filter(Boolean).join("/");
+  const root = join(process.cwd(), ".data", "uploads");
+  const target = normalize(join(root, key));
+  if (!target.startsWith(root)) throw createError({ statusCode: 400, message: "Invalid key." });
+  try {
+    const buf = await readFile(target);
+    setHeader(event, "Content-Type", MIME[extname(target).toLowerCase()] || "application/octet-stream");
+    setHeader(event, "Cache-Control", "private, max-age=3600");
+    return buf;
+  } catch {
+    throw createError({ statusCode: 404, message: "File not found." });
+  }
+});
+
+const ____key__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: ____key__get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const ____key__put = defineEventHandler(async (event) => {
+  var _a;
+  if (hasR2()) throw createError({ statusCode: 404, message: "Not found." });
+  const key = (((_a = event.context.params) == null ? void 0 : _a.key) || "").split("/").filter(Boolean).join("/");
+  const root = join(process.cwd(), ".data", "uploads");
+  const target = normalize(join(root, key));
+  if (!target.startsWith(root)) {
+    throw createError({ statusCode: 400, message: "Invalid key." });
+  }
+  const body = await readRawBody(event, false);
+  if (!body) throw createError({ statusCode: 400, message: "Empty upload." });
+  await mkdir(dirname(target), { recursive: true });
+  await writeFile(target, body);
+  return { success: true };
+});
+
+const ____key__put$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: ____key__put
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const bodySchema$4 = z.object({
+  filename: z.string().min(1),
+  contentType: z.string().min(1),
+  bytes: z.number().int().positive(),
+  /** 'document' for contracts, 'brand' for logos/headshots. */
+  scope: z.enum(["document", "brand"]).default("document")
+});
+const MAX_BYTES = 25 * 1024 * 1024;
+const ALLOWED = /* @__PURE__ */ new Set([
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/heic",
+  "image/heif"
+]);
+const sign_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { filename, contentType, bytes, scope } = await readValidatedBody(event, bodySchema$4.parse);
+  if (!ALLOWED.has(contentType)) {
+    throw createError({
+      statusCode: 400,
+      message: "Upload a PDF or an image. Word documents need exporting to PDF first."
+    });
+  }
+  if (bytes > MAX_BYTES) {
+    throw createError({ statusCode: 413, message: "That file is larger than 25MB." });
+  }
+  const key = buildKey(String(user._id), scope, filename);
+  const uploadUrl = await presignUpload(key, contentType);
+  return { uploadUrl, key };
+});
+
+const sign_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: sign_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$5 = UserModelImport;

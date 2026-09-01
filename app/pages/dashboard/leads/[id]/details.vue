@@ -499,4 +499,15 @@ async function markContacted() {
     </ClientOnly> -->
 
   </div>
+
+    <!-- Documents for this lead — offers, pre-approvals, disclosures -->
+    <section class="mt-14 pt-10 border-t border-[#DDD6C9]">
+      <p class="gf-eyebrow mb-2">Documents</p>
+      <p class="text-[13.5px] text-[#8A847C] leading-relaxed max-w-[54ch] mb-6">
+        Add a contract or pre-approval and we'll pull out the dates you need to
+        watch. You confirm each one before it becomes a reminder.
+      </p>
+      <appDocumentUpload :lead-id="String($route.params.id)" class="mb-2" />
+      <appDocumentList :lead-id="String($route.params.id)" />
+    </section>
 </template>

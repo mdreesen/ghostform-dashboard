@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { PRIORITIES, effectivePriority, whenLabel } from '~/utils/priority'
+
 
 interface BriefingLead {
   _id: string
@@ -111,6 +113,104 @@ async function markContacted(lead: BriefingLead) {
     marking.value.delete(lead._id)
   }
 }
+
+/**
+ * Confirmed document deadlines, shown ABOVE the call list.
+ *
+ * A contingency expiring today outranks any follow-up — miss it and the deal
+ * is gone, whereas a lead can be called tomorrow. Only confirmed deadlines
+ * appear; an unconfirmed extraction is a guess and belongs on the document,
+ * not in the morning briefing.
+ */
+/**
+ * Deadlines.
+ *
+ * WHY THIS IS CLIENT-SIDE ONLY:
+ * On a hard reload the SSR pass fetches from the server, where the browser's
+ * session cookie isn't attached — so /api/documents/deadlines returned 401 and
+ * `default` quietly turned that into an empty list. Deadlines vanished on
+ * reload and reappeared on client navigation, which is exactly the symptom.
+ *
+ * `server: false` skips SSR entirely, so the request always runs in the
+ * browser with the cookie present. The rest of this component already works
+ * this way — the page wraps it in <ClientOnly>.
+ *
+ * The alternative (forwarding headers with useRequestHeaders) would also work,
+ * but there's nothing to gain from rendering deadlines on the server when the
+ * component around them is client-only anyway.
+ */
+const { data: deadlineData, status: deadlineStatus } = useFetch<any>('/api/documents/deadlines', {
+  key: 'briefing-deadlines',
+  server: false,
+  lazy: true,
+  // No `default` — an empty object and a failed request must stay
+  // distinguishable, or the next auth bug hides itself the same way.
+  onResponseError({ response }) {
+    console.error('[briefing] deadlines request failed:', response.status)
+  }
+})
+const deadlines = computed(() => deadlineData.value?.items ?? [])
+/** Distinguish "still loading" from "genuinely none" so nothing flashes. */
+const deadlinesLoading = computed(() => deadlineStatus.value === 'pending')
+const urgentDeadlines = computed(() => deadlines.value.filter((d: any) => d.daysUntil <= 3))
+
+function deadlineStyle(d: any) {
+  return PRIORITIES[effectivePriority(d.date, d.priority)]
+}
+
+/**
+ * Acting on a deadline from the briefing itself.
+ *
+ * Seeing it at 7am and having to navigate to the property, find the document
+ * and mark it there is three steps too many for a morning routine — so it
+ * doesn't get done, and the list stops reflecting reality.
+ */
+const busyDeadline = ref<string | null>(null)
+const reschedule = ref<string | null>(null)
+const newDate = ref('')
+
+async function actOnDeadline(d: any, action: string, extra: Record<string, any> = {}) {
+  busyDeadline.value = d.deadlineId
+  try {
+    await $fetch(`/api/documents/${d.documentId}/deadline`, {
+      method: 'POST',
+      body: { deadlineId: d.deadlineId, action, ...extra }
+    })
+    reschedule.value = null
+    await refreshNuxtData('briefing-deadlines')
+    // The document list shows the same deadline, so it's stale too.
+    await refreshNuxtData(`docs-${d.homeId || d.leadId || 'all'}`)
+  } catch {
+    toast.error('Could not update that deadline.')
+  } finally {
+    busyDeadline.value = null
+  }
+}
+
+/**
+ * What this deadline is FOR, in the words a realtor thinks in.
+ * The property address first — that's how they hold a deal in their head.
+ * Falls back to the lead, then the filename, so it's never blank.
+ */
+function subjectOf(d: any): string {
+  return d.propertyAddress || d.propertyName || d.leadName || d.filename || 'Unattached'
+}
+
+/** Grouped by property so a deal reads as one block, not scattered rows. */
+const deadlineGroups = computed(() => {
+  const groups = new Map<string, { subject: string; homeId?: string; items: any[] }>()
+  for (const d of urgentDeadlines.value) {
+    const subject = subjectOf(d)
+    if (!groups.has(subject)) groups.set(subject, { subject, homeId: d.homeId, items: [] })
+    groups.get(subject)!.items.push(d)
+  }
+  return [...groups.values()]
+})
+
+function beginReschedule(d: any) {
+  reschedule.value = d.deadlineId
+  newDate.value = new Date(d.date).toISOString().slice(0, 10)
+}
 </script>
 
 <template>
@@ -134,6 +234,100 @@ async function markContacted(lead: BriefingLead) {
     >
       {{ briefing?.headline }}
     </p>
+
+    <!-- Document deadlines. Above the leads deliberately — a contingency
+         expiring today can't wait for the call list. -->
+    <section v-if="urgentDeadlines.length" class="mb-11">
+      <p class="gf-eyebrow mb-4">Deadlines</p>
+
+      <!-- Grouped by property. A realtor holds a deal in their head as an
+           address, so three deadlines on one house should read as one block
+           rather than three unrelated rows. -->
+      <div
+        v-for="group in deadlineGroups" :key="group.subject"
+        class="border-t border-[#DDD6C9] last:border-b py-5"
+      >
+        <div class="flex items-baseline justify-between gap-4 mb-3">
+          <NuxtLink
+            v-if="group.homeId"
+            :to="`/dashboard/home/${group.homeId}`"
+            class="font-display text-[17px] font-semibold tracking-tight hover:text-[#B5563A] transition-colors truncate"
+          >
+            {{ group.subject }}
+          </NuxtLink>
+          <p v-else class="font-display text-[17px] font-semibold tracking-tight truncate">
+            {{ group.subject }}
+          </p>
+          <span class="text-[11px] uppercase tracking-[0.1em] text-[#A9A39A] shrink-0">
+            {{ group.items.length }} {{ group.items.length === 1 ? 'deadline' : 'deadlines' }}
+          </span>
+        </div>
+
+        <div
+          v-for="d in group.items" :key="d.deadlineId"
+          class="flex items-start gap-3.5 py-2.5"
+        >
+          <span
+            class="w-2.5 h-2.5 mt-1.5 shrink-0"
+            :style="{
+              background: deadlineStyle(d).shape === 'filled' ? deadlineStyle(d).color : 'transparent',
+              border: `1.5px solid ${deadlineStyle(d).color}`
+            }"
+          />
+          <div class="min-w-0 flex-1">
+            <div class="flex flex-wrap items-baseline gap-x-2.5">
+              <p class="text-[15px] leading-snug">{{ d.label }}</p>
+              <span
+                class="text-[12.5px] font-semibold shrink-0"
+                :style="{ color: deadlineStyle(d).color }"
+              >
+                {{ whenLabel(d.date) }}
+              </span>
+            </div>
+
+            <!-- Document TYPE, not filename. "Purchase agreement" is what they
+                 know it as; "purchase-agreement-TEST.pdf" is what we called it. -->
+            <p class="text-[12.5px] text-[#A9A39A] mt-0.5">
+              {{ d.docType || d.filename }}
+              <template v-if="d.leadName && d.propertyAddress"> · {{ d.leadName }}</template>
+            </p>
+
+            <div v-if="reschedule === d.deadlineId" class="flex flex-wrap items-center gap-2 mt-2.5">
+              <input
+                v-model="newDate" type="date"
+                class="bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-1.5 text-[13px] focus:outline-none focus:border-[#B5563A]"
+              />
+              <button
+                class="text-[12px] font-semibold text-[#B5563A] hover:underline disabled:opacity-40"
+                :disabled="busyDeadline === d.deadlineId"
+                @click="actOnDeadline(d, 'confirm', { date: newDate })"
+              >
+                Save
+              </button>
+              <button class="text-[12px] text-[#8A847C] hover:text-[#1F1B16]" @click="reschedule = null">
+                Cancel
+              </button>
+            </div>
+
+            <div v-else class="flex flex-wrap items-center gap-3 mt-2">
+              <button
+                class="text-[11px] uppercase tracking-[0.08em] font-semibold px-3 py-1.5 border border-[#5A6349] text-[#5A6349] hover:bg-[#5A6349] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
+                :disabled="busyDeadline === d.deadlineId"
+                @click="actOnDeadline(d, 'complete')"
+              >
+                {{ busyDeadline === d.deadlineId ? 'Saving…' : 'Done' }}
+              </button>
+              <button
+                class="text-[12px] text-[#8A847C] hover:text-[#1F1B16] transition-colors"
+                @click="beginReschedule(d)"
+              >
+                Date changed
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Ranked list -->
     <div v-if="briefing?.leads?.length">

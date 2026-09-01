@@ -13,6 +13,7 @@ const search = ref('');
 const statusFilter = ref<'all' | 'active' | 'pending' | 'sold'>('all');
 const busyId = ref<string | null>(null);
 
+
 const list = computed(() => homes.value ?? []);
 
 const filtered = computed(() =>
@@ -130,9 +131,12 @@ async function remove(home: any) {
         >
           <div class="min-w-0">
             <div class="flex flex-wrap items-baseline gap-3 mb-1.5">
-              <p class="font-display text-[21px] font-semibold tracking-tight">
+              <NuxtLink
+                :to="`/dashboard/home/${home._id}`"
+                class="font-display text-[21px] font-semibold tracking-tight hover:text-[#B5563A] transition-colors"
+              >
                 {{ home.name || home.address }}
-              </p>
+              </NuxtLink>
               <span
                 class="text-[10.5px] uppercase tracking-[0.14em]"
                 :class="(home.status || 'active') === 'sold' ? 'text-[#A9A39A]' : 'text-[#5A6349]'"
@@ -160,11 +164,12 @@ async function remove(home: any) {
               <option value="sold">Sold</option>
             </select>
 
+
             <NuxtLink
-              to="/dashboard/forms"
+              :to="`/dashboard/home/${home._id}`"
               class="flex-1 sm:flex-initial text-center px-4 py-2.5 border border-[#B5563A] text-[#B5563A] text-[11px] uppercase tracking-[0.1em] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors whitespace-nowrap"
             >
-              Make a QR code
+              Open
             </NuxtLink>
 
             <button
@@ -175,6 +180,7 @@ async function remove(home: any) {
               Remove
             </button>
           </div>
+
         </div>
       </div>
 

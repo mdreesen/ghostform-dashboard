@@ -1,5 +1,5 @@
-import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { computed, toValue, unref, mergeProps, createVNode, resolveDynamicComponent, ref, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, defineComponent, provide, useModel, createTextVNode, createCommentVNode, mergeModels, getCurrentScope, onScopeDispose, getCurrentInstance, toHandlerKey, camelize as camelize$1, h, toRef as toRef$1, inject, shallowRef, Teleport, customRef, hasInjectionContext, effectScope, cloneVNode, createElementBlock, nextTick, toRefs, useSlots, isRef, Comment, resolveComponent, reactive, onServerPrefetch, watchEffect, markRaw, Fragment, useAttrs, shallowReadonly, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, isReadonly, isShallow, isReactive } from 'vue';
-import { J as serialize, K as defu, L as hasProtocol, M as isScriptProtocol, N as joinURL, O as klona, P as isEqual, Q as parseQuery, R as hash, S as withQuery, T as sanitizeStatusCode, V as parseURL, B as encodePath, W as decodePath, X as appendResponseHeader, Y as defuFn, Z as withTrailingSlash, _ as withoutTrailingSlash, $ as withLeadingSlash, b as createError$1, a0 as $fetch, a1 as baseURL, a2 as createHooks, a3 as encodeParam } from '../nitro/nitro.mjs';
+import process from 'node:process';globalThis._importMeta_=globalThis._importMeta_||{url:"file:///_entry.js",env:process.env};import { isRef, toValue, hasInjectionContext, inject, getCurrentScope, ref, watchEffect, getCurrentInstance, onBeforeUnmount, onDeactivated, onActivated, computed, unref, mergeProps, createVNode, resolveDynamicComponent, watch, withCtx, renderSlot, openBlock, createBlock, toDisplayString, defineComponent, provide, useModel, createTextVNode, createCommentVNode, mergeModels, onScopeDispose, toHandlerKey, camelize as camelize$1, h, toRef as toRef$1, shallowRef, Teleport, customRef, effectScope, cloneVNode, createElementBlock, nextTick, toRefs, useSlots, Comment, resolveComponent, reactive, onServerPrefetch, markRaw, Fragment, useAttrs, shallowReadonly, defineAsyncComponent, useSSRContext, shallowReactive, Suspense, createApp, toRaw, readonly, renderList, useId, onErrorCaptured, useTemplateRef, withModifiers, normalizeProps, guardReactiveProps, normalizeStyle, isReadonly, isShallow, isReactive } from 'vue';
+import { J as serialize, K as defu, L as hasProtocol, M as isScriptProtocol, N as joinURL, O as klona, P as isEqual, Q as parseQuery, R as hash, S as withQuery, T as sanitizeStatusCode, V as parseURL, C as encodePath, W as decodePath, X as appendResponseHeader, Y as defuFn, Z as withTrailingSlash, _ as withoutTrailingSlash, $ as withLeadingSlash, b as createError$1, a0 as $fetch, a1 as baseURL, a2 as createHooks, a3 as encodeParam } from '../nitro/nitro.mjs';
 import { useRoute as useRoute$1, RouterView, createMemoryHistory, createRouter, START_LOCATION } from 'vue-router';
 import { Icon, getIcon, loadIcon as loadIcon$1, addIcon, _api, addAPIProvider, setCustomIconsLoader } from '@iconify/vue';
 import { debounce } from 'perfect-debounce';
@@ -11,7 +11,8 @@ import { complex, number, alpha, filter, px, progressPercentage, degrees, scale,
 import { ssrRenderComponent, ssrRenderVNode, ssrRenderSlot, ssrRenderClass, ssrInterpolate, ssrRenderAttrs, ssrRenderList, ssrRenderSuspense, ssrRenderStyle } from 'vue/server-renderer';
 import { createTV, cnMerge } from 'tailwind-variants';
 import { getIconCSS } from '@iconify/utils/lib/css/icon';
-import { u as useHead$1, h as headSymbol, a as useSeoMeta$1 } from '../routes/renderer.mjs';
+import { FlatMetaPlugin } from 'unhead/plugins';
+import { walkResolver } from 'unhead/utils';
 import 'mongoose';
 import 'node:crypto';
 import 'openai';
@@ -26,11 +27,6 @@ import 'node:url';
 import '@iconify/utils';
 import 'consola';
 import 'ipx';
-import 'vue-bundle-renderer/runtime';
-import 'unhead/server';
-import 'devalue';
-import 'unhead/plugins';
-import 'unhead/utils';
 
 function createContext$2(opts = {}) {
   let currentInstance;
@@ -153,6 +149,15 @@ function executeAsync$1(function_) {
 function _getAsyncLocalStorage() {
 	return globalThis.AsyncLocalStorage || globalThis.process?.getBuiltinModule?.("node:async_hooks")?.AsyncLocalStorage;
 }
+const _WeakRef = globalThis.WeakRef || class StrongRef {
+	#value;
+	constructor(value) {
+		this.#value = value;
+	}
+	deref() {
+		return this.#value;
+	}
+};
 function createContext$1(opts = {}) {
 	let currentInstance;
 	let isSingleton = false;
@@ -165,7 +170,7 @@ function createContext$1(opts = {}) {
 		if (_AsyncLocalStorage) als = new _AsyncLocalStorage();
 		else console.warn("[unctx] `AsyncLocalStorage` is not provided.");
 	}
-	const _wrapInstance = (instance) => als && instance !== null && typeof instance === "object" ? { __unctx_weak: new WeakRef(instance) } : instance;
+	const _wrapInstance = (instance) => als && instance !== null && typeof instance === "object" ? { __unctx_weak: new _WeakRef(instance) } : instance;
 	const _unwrapInstance = (store) => store && store.__unctx_weak ? store.__unctx_weak.deref() : store;
 	const _getCurrentInstance = () => {
 		if (als) {
@@ -181,7 +186,7 @@ function createContext$1(opts = {}) {
 			return _instance;
 		},
 		tryUse: () => {
-			return _getCurrentInstance();
+			return _getCurrentInstance() ?? null;
 		},
 		set: (instance, replace) => {
 			if (!replace) checkConflict(instance);
@@ -248,6 +253,81 @@ function executeAsync(function_) {
 		throw error;
 	});
 	return [awaitable, restore];
+}
+
+const VueResolver = (_, value) => {
+  return isRef(value) ? toValue(value) : value;
+};
+
+const headSymbol = "usehead";
+
+// @__NO_SIDE_EFFECTS__
+function injectHead$1() {
+  if (hasInjectionContext()) {
+    const instance = inject(headSymbol);
+    if (instance) {
+      return instance;
+    }
+  }
+  throw new Error("useHead() was called without provide context, ensure you call it through the setup() function.");
+}
+function useHead$1(input, options = {}) {
+  const head = options.head || /* @__PURE__ */ injectHead$1();
+  return head.ssr ? head.push(input || {}, options) : clientUseHead(head, input, options);
+}
+function clientUseHead(head, input, options = {}) {
+  const scope = getCurrentScope();
+  if (scope && !scope.active)
+    return { patch() {
+    }, dispose() {
+    }, _poll() {
+    } };
+  const deactivated = ref(false);
+  let entry;
+  watchEffect(() => {
+    const i = deactivated.value ? {} : walkResolver(input, VueResolver);
+    if (entry) {
+      entry.patch(i);
+    } else {
+      entry = head.push(i, options);
+    }
+  });
+  const vm = getCurrentInstance();
+  if (vm) {
+    onBeforeUnmount(() => {
+      entry.dispose();
+    });
+    onDeactivated(() => {
+      deactivated.value = true;
+    });
+    onActivated(() => {
+      deactivated.value = false;
+    });
+  }
+  return entry;
+}
+function useSeoMeta$1(input = {}, options = {}) {
+  const head = options.head || /* @__PURE__ */ injectHead$1();
+  head.use(FlatMetaPlugin);
+  const entry = useHead$1(normalizeSeoMetaInput(input), options);
+  const corePatch = entry.patch;
+  entry.patch = (input2) => corePatch(normalizeSeoMetaInput(input2));
+  return entry;
+}
+function normalizeSeoMetaInput(input) {
+  if (input._flatMeta)
+    return input;
+  const meta = {};
+  for (const key in input) {
+    if (!Object.prototype.hasOwnProperty.call(input, key) || key === "title" || key === "titleTemplate")
+      continue;
+    meta[key] = input[key];
+  }
+  return {
+    title: input.title,
+    titleTemplate: input.titleTemplate,
+    _flatMeta: meta
+  };
 }
 
 const PROTO_KEY = "__proto__";
@@ -783,17 +863,18 @@ function getRouteRules(arg) {
     return {};
   }
 }
-const __nuxt_page_meta$c = { layout: "authenticated" };
-const __nuxt_page_meta$b = {
+const __nuxt_page_meta$d = { layout: "authenticated" };
+const __nuxt_page_meta$c = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$a = { layout: "authenticated" };
+const __nuxt_page_meta$b = { layout: "authenticated" };
+const __nuxt_page_meta$a = {
+  layout: "authenticated"
+};
 const __nuxt_page_meta$9 = {
   layout: "authenticated"
 };
-const __nuxt_page_meta$8 = {
-  layout: "authenticated"
-};
+const __nuxt_page_meta$8 = { layout: "authenticated" };
 const __nuxt_page_meta$7 = { layout: "authenticated" };
 const __nuxt_page_meta$6 = { layout: "authenticated" };
 const __nuxt_page_meta$5 = { layout: "authenticated" };
@@ -814,86 +895,92 @@ const _routes = [
   {
     name: "dashboard-home-create",
     path: "/dashboard/home/create",
-    meta: __nuxt_page_meta$c || {},
-    component: () => import('./create-DDfCY1xU.mjs')
+    meta: __nuxt_page_meta$d || {},
+    component: () => import('./create-C4I1pWlo.mjs')
   },
   {
     name: "dashboard-leads-create",
     path: "/dashboard/leads/create",
-    meta: __nuxt_page_meta$b || {},
-    component: () => import('./index-WK1LPYtz.mjs')
+    meta: __nuxt_page_meta$c || {},
+    component: () => import('./index-Dtj41XBZ.mjs')
   },
   {
     name: "dashboard-leads-import",
     path: "/dashboard/leads/import",
-    meta: __nuxt_page_meta$a || {},
-    component: () => import('./import-C4CLnL1l.mjs')
+    meta: __nuxt_page_meta$b || {},
+    component: () => import('./import-CYwJYboO.mjs')
   },
   {
     name: "dashboard-leads-id-details",
     path: "/dashboard/leads/:id()/details",
-    meta: __nuxt_page_meta$9 || {},
-    component: () => import('./details-DQdAk9eC.mjs')
+    meta: __nuxt_page_meta$a || {},
+    component: () => import('./details-DcpYc9PN.mjs')
   },
   {
     name: "dashboard-leads-id-edit",
     path: "/dashboard/leads/:id()/edit",
+    meta: __nuxt_page_meta$9 || {},
+    component: () => import('./edit-BYEXyKaq.mjs')
+  },
+  {
+    name: "dashboard-home-id",
+    path: "/dashboard/home/:id()",
     meta: __nuxt_page_meta$8 || {},
-    component: () => import('./edit-Dw-hD4p4.mjs')
+    component: () => import('./index-BxA4xZRN.mjs')
   },
   {
     name: "dashboard-campaigns",
     path: "/dashboard/campaigns",
     meta: __nuxt_page_meta$7 || {},
-    component: () => import('./index-BRzfPx0p.mjs')
+    component: () => import('./index-C_fTOpQ6.mjs')
   },
   {
     name: "dashboard-forms",
     path: "/dashboard/forms",
     meta: __nuxt_page_meta$6 || {},
-    component: () => import('./index-CZsW1Bp6.mjs')
+    component: () => import('./index-gEjduxwb.mjs')
   },
   {
     name: "dashboard-home",
     path: "/dashboard/home",
     meta: __nuxt_page_meta$5 || {},
-    component: () => import('./index-VUBROKLN.mjs')
+    component: () => import('./index-D76qGlYv.mjs')
   },
   {
     name: "dashboard-leads",
     path: "/dashboard/leads",
     meta: __nuxt_page_meta$4 || {},
-    component: () => import('./index-Ba-Kt9fC.mjs')
+    component: () => import('./index-CTOzYsU4.mjs')
   },
   {
     name: "dashboard-profile",
     path: "/dashboard/profile",
     meta: __nuxt_page_meta$3 || {},
-    component: () => import('./index-LUV85mVK.mjs')
+    component: () => import('./index-CA4vIOSM.mjs')
   },
   {
     name: "dashboard-social",
     path: "/dashboard/social",
     meta: __nuxt_page_meta$2 || {},
-    component: () => import('./index-PX3y6Kms.mjs')
+    component: () => import('./index-Dg4HzULT.mjs')
   },
   {
     name: "dashboard",
     path: "/dashboard",
     meta: __nuxt_page_meta$1 || {},
-    component: () => import('./index-CE6_hxd-.mjs')
+    component: () => import('./index-Cqp6Pr1J.mjs')
   },
   {
     name: "forgotpassword",
     path: "/forgotpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./forgotpassword-QpKfXXEq.mjs')
+    component: () => import('./forgotpassword-BAGKgGAt.mjs')
   },
   {
     name: "login",
     path: "/login",
     meta: { "groups": ["authentication"] },
-    component: () => import('./login-CQrQIBRM.mjs')
+    component: () => import('./login-BgT02dr9.mjs')
   },
   {
     name: "privacy-policy",
@@ -904,25 +991,25 @@ const _routes = [
     name: "signup",
     path: "/signup",
     meta: { "groups": ["authentication"] },
-    component: () => import('./signup-zQAqrsV8.mjs')
+    component: () => import('./signup-PvsXSmfb.mjs')
   },
   {
     name: "subscribe",
     path: "/subscribe",
     meta: { ...__nuxt_page_meta || {}, ...{ "groups": ["payment"] } },
-    component: () => import('./subscribe-CErxWklZ.mjs')
+    component: () => import('./subscribe-Bhffs4E-.mjs')
   },
   {
     name: "id-resetpassword",
     path: "/:id()/resetpassword",
     meta: { "groups": ["authentication"] },
-    component: () => import('./resetpassword-D_4oSr9p.mjs')
+    component: () => import('./resetpassword-DfDrL946.mjs')
   },
   {
     name: "index",
     path: "/",
     meta: { "groups": ["authentication"] },
-    component: () => import('./index-DCR4ofQt.mjs')
+    component: () => import('./index-CCvg0dSB.mjs')
   }
 ];
 const _wrapInTransition = (props, children) => {
@@ -1772,8 +1859,12 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   setup() {
     const configs = /* @__PURE__ */ useRuntimeConfig();
     const options = useAppConfig().icon;
-    const $fetch = useRequestFetch();
-    _api.setFetch($fetch.native);
+    const requestFetch = useRequestFetch();
+    const nativeFetch = requestFetch.native;
+    _api.setFetch((input, init2) => {
+      const nitroFetch = globalThis.$fetch?.native;
+      return (nativeFetch || nitroFetch || globalThis.fetch)(input, init2);
+    });
     const resources = [];
     if (options.provider === "server") {
       const baseURL2 = configs.app?.baseURL?.replace(/\/$/, "") ?? "";
@@ -1788,7 +1879,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
     }
     async function customIconLoader(icons, prefix) {
       try {
-        const data = await $fetch(resources[0] + "/" + prefix + ".json", {
+        const data = await requestFetch(resources[0] + "/" + prefix + ".json", {
           query: {
             icons: icons.join(",")
           }
@@ -1810,7 +1901,7 @@ const plugin_MeUvTuoKUi51yb_kBguab6hdcExVXeTtZtTg9TZZBB8 = /* @__PURE__ */ defin
   // For type portability
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 });
-const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-DMbdjDDH.mjs').then((r) => r["default"] || r.default || r));
+const LazyToastContainer = defineAsyncComponent(() => import('./ToastContainer-DL6D9kCT.mjs').then((r) => r["default"] || r.default || r));
 const AreaChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["AreaChart"] || r.default || r));
 const LineChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["LineChart"] || r.default || r));
 const BarChart = defineAsyncComponent(() => Promise.resolve().then(() => serverPlaceholder).then((r) => r["BarChart"] || r.default || r));
@@ -2691,7 +2782,7 @@ let _initialized = false;
 function init(addIcon2) {
   if (_initialized)
     return;
-  const collections = JSON.parse('[{"prefix":"lucide","icons":{"arrow-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 5v14m7-7l-7 7l-7-7\\"/>"},"arrow-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m12 19l-7-7l7-7m7 7H5\\"/>"},"arrow-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7l7 7l-7 7\\"/>"},"arrow-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m5 12l7-7l7 7m-7 7V5\\"/>"},"arrow-up-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M7 7h10v10M7 17L17 7\\"/>"},"check":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 6L9 17l-5-5\\"/>"},"chevron-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 9l6 6l6-6\\"/>"},"chevron-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m15 18l-6-6l6-6\\"/>"},"chevron-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m9 18l6-6l-6-6\\"/>"},"chevron-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m18 15l-6-6l-6 6\\"/>"},"chevrons-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m11 17l-5-5l5-5m7 10l-5-5l5-5\\"/>"},"chevrons-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 17l5-5l-5-5m7 10l5-5l-5-5\\"/>"},"circle-alert":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 8v4m0 4h.01\\"/></g>"},"circle-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m9 12l2 2l4-4\\"/></g>"},"circle-x":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m15 9l-6 6m0-6l6 6\\"/></g>"},"copy":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"copy-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m12 15l2 2l4-4\\"/><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"ellipsis":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"/></g>"},"eye":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0\\"/><circle cx=\\"12\\" cy=\\"12\\" r=\\"3\\"/></g>"},"eye-off":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242\\"/><path d=\\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20\\"/></g>"},"file":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\\"/><path d=\\"M14 2v5a1 1 0 0 0 1 1h5\\"/></g>"},"folder":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\\"/>"},"folder-open":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\\"/>"},"grip-vertical":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"9\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"19\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"19\\" r=\\"1\\"/></g>"},"hash":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 9h16M4 15h16M10 3L8 21m8-18l-2 18\\"/>"},"info":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 16v-4m0-4h.01\\"/></g>"},"lightbulb":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M15 14c.2-1 .7-1.7 1.5-2.5c1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5c.7.7 1.3 1.5 1.5 2.5m0 4h6m-5 4h4\\"/>"},"loader-circle":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M21 12a9 9 0 1 1-6.219-8.56\\"/>"},"menu":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 5h16M4 12h16M4 19h16\\"/>"},"minus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14\\"/>"},"monitor":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"20\\" height=\\"14\\" x=\\"2\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M8 21h8m-4-4v4\\"/></g>"},"moon":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\\"/>"},"panel-left-close":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m7-6l-3-3l3-3\\"/></g>"},"panel-left-open":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m5-12l3 3l-3 3\\"/></g>"},"plus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7v14\\"/>"},"rotate-ccw":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8\\"/><path d=\\"M3 3v5h5\\"/></g>"},"search":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m21 21l-4.34-4.34\\"/><circle cx=\\"11\\" cy=\\"11\\" r=\\"8\\"/></g>"},"square":{"width":24,"height":24,"body":"<rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" rx=\\"2\\"/>"},"star":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z\\"/>"},"sun":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"4\\"/><path d=\\"M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\\"/></g>"},"triangle-alert":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\\"/>"},"upload":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 3v12m5-7l-5-5l-5 5m14 7v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\\"/>"},"x":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M18 6L6 18M6 6l12 12\\"/>"}}}]');
+  const collections = JSON.parse('[{"prefix":"lucide","icons":{"arrow-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 5v14m7-7l-7 7l-7-7\\"/>"},"arrow-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m12 19l-7-7l7-7m7 7H5\\"/>"},"arrow-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7l7 7l-7 7\\"/>"},"arrow-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m5 12l7-7l7 7m-7 7V5\\"/>"},"arrow-up-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M7 7h10v10M7 17L17 7\\"/>"},"check":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 6L9 17l-5-5\\"/>"},"chevron-down":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 9l6 6l6-6\\"/>"},"chevron-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m15 18l-6-6l6-6\\"/>"},"chevron-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m9 18l6-6l-6-6\\"/>"},"chevron-up":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m18 15l-6-6l-6 6\\"/>"},"chevrons-left":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m11 17l-5-5l5-5m7 10l-5-5l5-5\\"/>"},"chevrons-right":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 17l5-5l-5-5m7 10l5-5l-5-5\\"/>"},"circle-alert":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 8v4m0 4h.01\\"/></g>"},"circle-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m16 9l-5.5 5.5L8 12\\"/></g>"},"circle-x":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"m15 9l-6 6m0-6l6 6\\"/></g>"},"copy":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"copy-check":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m12 15l2 2l4-4\\"/><rect width=\\"14\\" height=\\"14\\" x=\\"8\\" y=\\"8\\" rx=\\"2\\" ry=\\"2\\"/><path d=\\"M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2\\"/></g>"},"ellipsis":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"19\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"5\\" cy=\\"12\\" r=\\"1\\"/></g>"},"eye":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M2.062 12.348a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 19.876 0a1 1 0 0 1 0 .696a10.75 10.75 0 0 1-19.876 0\\"/><circle cx=\\"12\\" cy=\\"12\\" r=\\"3\\"/></g>"},"eye-off":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575a1 1 0 0 1 0 .696a10.8 10.8 0 0 1-1.444 2.49m-6.41-.679a3 3 0 0 1-4.242-4.242\\"/><path d=\\"M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151a1 1 0 0 1 0-.696a10.75 10.75 0 0 1 4.446-5.143M2 2l20 20\\"/></g>"},"file":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z\\"/><path d=\\"M14 2v5a1 1 0 0 0 1 1h5\\"/></g>"},"folder":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z\\"/>"},"folder-open":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m6 14l1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\\"/>"},"grip-vertical":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"9\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"9\\" cy=\\"19\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"12\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"5\\" r=\\"1\\"/><circle cx=\\"15\\" cy=\\"19\\" r=\\"1\\"/></g>"},"hash":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 9h16M4 15h16M10 3L8 21m8-18l-2 18\\"/>"},"info":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"10\\"/><path d=\\"M12 16v-4m0-4h.01\\"/></g>"},"lightbulb":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M15 14c.2-1 .7-1.7 1.5-2.5c1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5c.7.7 1.3 1.5 1.5 2.5m0 4h6m-5 4h4\\"/>"},"loader-circle":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M21 12a9 9 0 1 1-6.219-8.56\\"/>"},"menu":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M4 5h16M4 12h16M4 19h16\\"/>"},"minus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14\\"/>"},"monitor":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"20\\" height=\\"14\\" x=\\"2\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M8 21h8m-4-4v4\\"/></g>"},"moon":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401\\"/>"},"panel-left-close":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m7-6l-3-3l3-3\\"/></g>"},"panel-left-open":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" rx=\\"2\\"/><path d=\\"M9 3v18m5-12l3 3l-3 3\\"/></g>"},"plus":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M5 12h14m-7-7v14\\"/>"},"rotate-ccw":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"M3 12a9 9 0 1 0 9-9a9.75 9.75 0 0 0-6.74 2.74L3 8\\"/><path d=\\"M3 3v5h5\\"/></g>"},"search":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><path d=\\"m21 21l-4.34-4.34\\"/><circle cx=\\"11\\" cy=\\"11\\" r=\\"8\\"/></g>"},"square":{"width":24,"height":24,"body":"<rect width=\\"18\\" height=\\"18\\" x=\\"3\\" y=\\"3\\" fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" rx=\\"2\\"/>"},"star":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.12 2.12 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.12 2.12 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.12 2.12 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.12 2.12 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.12 2.12 0 0 0 1.597-1.16z\\"/>"},"sun":{"width":24,"height":24,"body":"<g fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\"><circle cx=\\"12\\" cy=\\"12\\" r=\\"4\\"/><path d=\\"M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41\\"/></g>"},"triangle-alert":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01\\"/>"},"upload":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 3v12m5-7l-5-5l-5 5m14 7v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\\"/>"},"x":{"width":24,"height":24,"body":"<path fill=\\"none\\" stroke=\\"currentColor\\" stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M18 6L6 18M6 6l12 12\\"/>"}}}]');
   for (const collection of collections) {
     for (const [name, data] of Object.entries(collection.icons)) {
       addIcon2(collection.prefix ? collection.prefix + ":" + name : name, data);
@@ -5596,10 +5687,11 @@ function usePresence(present, node) {
     }
   }, { immediate: true });
   const handleAnimationEnd = (event) => {
+    if (event.target !== node.value) return;
     const currentAnimationName = getAnimationName(node.value);
     const isCurrentAnimation = currentAnimationName.includes(CSS.escape(event.animationName));
     state.value === "mounted" ? "enter" : "leave";
-    if (event.target === node.value && isCurrentAnimation) {
+    if (isCurrentAnimation) {
       dispatch("ANIMATION_END");
       if (!prevPresentRef.value) {
         const currentFillMode = node.value.style.animationFillMode;
@@ -5609,7 +5701,7 @@ function usePresence(present, node) {
         });
       }
     }
-    if (event.target === node.value && currentAnimationName === "none") dispatch("ANIMATION_END");
+    if (currentAnimationName === "none") dispatch("ANIMATION_END");
   };
   const handleAnimationStart = (event) => {
     if (event.target === node.value) prevAnimationNameRef.value = getAnimationName(node.value);
@@ -6367,10 +6459,10 @@ var ToastRootImpl_vue_vue_type_script_setup_true_lang_default = /* @__PURE__ */ 
         };
         viewport.addEventListener(VIEWPORT_PAUSE, handlePause);
         viewport.addEventListener(VIEWPORT_RESUME, handleResume);
-        return () => {
+        cleanupFn(() => {
           viewport.removeEventListener(VIEWPORT_PAUSE, handlePause);
           viewport.removeEventListener(VIEWPORT_RESUME, handleResume);
-        };
+        });
       }
     });
     watch(() => [props.open, duration.value], () => {
@@ -7347,6 +7439,12 @@ function useComponentProps(name, props) {
         if (!raw && !themeUi) return raw;
         return defu(raw ?? {}, themeUi ?? {});
       }
+      if (prop === "class") {
+        const themeClass = themeEntry?.class;
+        if (themeClass === void 0) return raw;
+        if (raw === void 0) return themeClass;
+        return [themeClass, raw];
+      }
       if (vm && propIsDefined(vm.vnode, prop)) return raw;
       const themeValue = themeEntry?.[prop];
       if (themeValue !== void 0) return themeValue;
@@ -7510,7 +7608,44 @@ function plainClasses(value) {
 function applyReplacer(replacer, slotProps, resolveDefaults) {
   return cnMerge(replacer(resolveDefaults()), ...plainClasses(slotProps.class), ...plainClasses(slotProps.className))(config) ?? "";
 }
-function wrapSlots(slots, directives) {
+function isMemoizable(value, depth = 0) {
+  if (value === void 0 || value === null) {
+    return true;
+  }
+  const type = typeof value;
+  if (type === "string" || type === "boolean") {
+    return true;
+  }
+  if (type === "number") {
+    return Number.isFinite(value);
+  }
+  if (Array.isArray(value)) {
+    if (depth >= 4) {
+      return false;
+    }
+    for (const item of value) {
+      if (!isMemoizable(item, depth + 1)) {
+        return false;
+      }
+    }
+    return true;
+  }
+  return false;
+}
+function memoKey(slotProps) {
+  const proto = Object.getPrototypeOf(slotProps);
+  if (proto !== Object.prototype && proto !== null) {
+    return void 0;
+  }
+  for (const key of Object.keys(slotProps)) {
+    if (!isMemoizable(slotProps[key])) {
+      return void 0;
+    }
+  }
+  return JSON.stringify(slotProps);
+}
+function wrapSlots(slots) {
+  const memo = /* @__PURE__ */ new Map();
   return new Proxy(slots, {
     get(target, key) {
       const slot = target[key];
@@ -7518,52 +7653,93 @@ function wrapSlots(slots, directives) {
         return slot;
       }
       return (slotProps = {}) => {
-        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className) ?? directives?.[key];
+        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className);
         if (!replacer) {
-          return slot(slotProps);
+          const cacheKey = memoKey(slotProps);
+          if (cacheKey === void 0) {
+            return slot(slotProps);
+          }
+          let cache = memo.get(key);
+          if (!cache) {
+            cache = /* @__PURE__ */ new Map();
+            memo.set(key, cache);
+          }
+          let result = cache.get(cacheKey);
+          if (result === void 0 && !cache.has(cacheKey)) {
+            if (cache.size >= 500) {
+              cache.clear();
+            }
+            result = slot(slotProps);
+            cache.set(cacheKey, result);
+          }
+          return result;
         }
         return applyReplacer(replacer, slotProps, () => slot({ ...slotProps, class: void 0, className: void 0 }));
       };
     }
   });
 }
-function extractDirectives(componentConfig) {
+function defaultClasses(value) {
+  return cnMerge(value)(config) ?? "";
+}
+function resolveReplacers(componentConfig) {
   if (!componentConfig || typeof componentConfig !== "object") {
-    return { config: componentConfig };
-  }
-  let config2 = componentConfig;
-  let directives;
-  if (typeof componentConfig.base === "function") {
-    directives = { base: componentConfig.base };
-    config2 = { ...config2, base: "" };
+    return componentConfig;
   }
   const slots = componentConfig.slots;
-  if (slots && typeof slots === "object") {
-    const replacers = Object.entries(slots).filter(([, value]) => typeof value === "function");
-    if (replacers.length) {
-      directives ??= {};
-      const cleaned = { ...slots };
-      for (const [slot, replacer] of replacers) {
-        directives[slot] = replacer;
-        cleaned[slot] = "";
-      }
-      config2 = { ...config2, slots: cleaned };
+  const replacers = slots && typeof slots === "object" ? Object.entries(slots).filter((entry2) => typeof entry2[1] === "function") : [];
+  const baseReplacer = typeof componentConfig.base === "function" ? componentConfig.base : void 0;
+  if (!replacers.length && !baseReplacer) {
+    return componentConfig;
+  }
+  const extend = componentConfig.extend;
+  const resolved = { ...componentConfig };
+  let extendSlots;
+  let blankExtendBase = false;
+  if (baseReplacer) {
+    resolved.base = baseReplacer(defaultClasses(extend?.slots?.base ?? extend?.base));
+    if (extend?.slots?.base) {
+      extendSlots ??= { ...extend.slots };
+      extendSlots.base = "";
+    }
+    if (extend?.base) {
+      blankExtendBase = true;
     }
   }
-  return { config: config2, directives };
+  if (replacers.length) {
+    const cleaned = { ...slots };
+    for (const [slot, replacer] of replacers) {
+      cleaned[slot] = replacer(defaultClasses(extend?.slots?.[slot]));
+      if (extend?.slots?.[slot]) {
+        extendSlots ??= { ...extend.slots };
+        extendSlots[slot] = "";
+      }
+    }
+    resolved.slots = cleaned;
+  }
+  if (extendSlots || blankExtendBase) {
+    const cleanedExtend = { ...extend };
+    if (extendSlots) {
+      cleanedExtend.slots = extendSlots;
+    }
+    if (blankExtendBase) {
+      cleanedExtend.base = "";
+    }
+    resolved.extend = cleanedExtend;
+  }
+  return resolved;
 }
 const tv = ((componentConfig) => {
-  const { config: cleanConfig, directives } = extractDirectives(componentConfig);
-  const component = baseTv(cleanConfig);
+  const component = baseTv(resolveReplacers(componentConfig));
   return new Proxy(component, {
     apply(target, thisArg, args) {
       const result = Reflect.apply(target, thisArg, args);
       if (result && typeof result === "object") {
-        return wrapSlots(result, directives);
+        return wrapSlots(result);
       }
       if (typeof result === "string") {
         const slotProps = args[0] ?? {};
-        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className) ?? directives?.base;
+        const replacer = findReplacer(slotProps.class) ?? findReplacer(slotProps.className);
         if (replacer) {
           return applyReplacer(replacer, slotProps, () => Reflect.apply(target, thisArg, [{ ...slotProps, class: void 0, className: void 0 }]));
         }
@@ -8654,8 +8830,15 @@ function useFormField(props, opts) {
   function emitFormChange() {
     emitFormEvent("change", formField?.value.name);
   }
+  let disposed = false;
+  if (getCurrentScope()) {
+    onScopeDispose(() => {
+      disposed = true;
+    });
+  }
   const emitFormInput = useDebounceFn(
     () => {
+      if (disposed) return;
       emitFormEvent("input", formField?.value.name, !opts?.deferInputValidation || formField?.value.eagerValidation);
     },
     formField?.value.validateOnInputDelay ?? formOptions?.value.validateOnInputDelay ?? 0
@@ -8665,8 +8848,8 @@ function useFormField(props, opts) {
     name: computed(() => props?.name ?? formField?.value.name),
     size: computed(() => props?.size ?? formField?.value.size),
     color: computed(() => formField?.value.error ? "error" : props?.color),
-    highlight: computed(() => formField?.value.error ? true : props?.highlight),
-    disabled: computed(() => formOptions?.value.disabled || props?.disabled),
+    highlight: computed(() => formField?.value.error ? true : props?.highlight || void 0),
+    disabled: computed(() => formOptions?.value.disabled || props?.disabled || void 0),
     emitFormBlur,
     emitFormInput,
     emitFormChange,
@@ -9552,6 +9735,7 @@ const _sfc_main$8 = {
     const appConfig2 = useAppConfig();
     const { orientation, size: buttonSize } = useFieldGroup(_props);
     const linkProps = useForwardProps(pickLinkProps(props));
+    const forwardedLinkProps = computed(() => omit(linkProps.value, ["type", "disabled", "onClick"]));
     const loadingAutoState = ref(false);
     const formLoading = inject(formLoadingInjectionKey, void 0);
     async function onClickWrapper(event) {
@@ -9567,7 +9751,15 @@ const _sfc_main$8 = {
       return props.loading || props.loadingAuto && (loadingAutoState.value || formLoading?.value && props.type === "submit");
     });
     const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(
-      computed(() => ({ ...props, loading: isLoading.value }))
+      computed(() => ({
+        icon: props.icon,
+        leading: props.leading,
+        leadingIcon: props.leadingIcon,
+        trailing: props.trailing,
+        trailingIcon: props.trailingIcon,
+        loading: isLoading.value,
+        loadingIcon: props.loadingIcon
+      }))
     );
     const ui = computed(() => tv({
       extend: theme$3,
@@ -9598,7 +9790,7 @@ const _sfc_main$8 = {
       _push(ssrRenderComponent(_sfc_main$9, mergeProps({
         type: unref(props).type,
         disabled: unref(props).disabled || isLoading.value
-      }, unref(omit)(unref(linkProps), ["type", "disabled", "onClick"]), { custom: "" }, _attrs), {
+      }, forwardedLinkProps.value, { custom: "" }, _attrs), {
         default: withCtx(({ active, ...slotProps }, _push2, _parent2, _scopeId) => {
           if (_push2) {
             _push2(ssrRenderComponent(_sfc_main$a, mergeProps({ "data-slot": "base" }, slotProps, {
@@ -9746,10 +9938,10 @@ const theme$2 = {
   "slots": {
     "root": "gap-2",
     "base": "relative overflow-hidden rounded-full bg-accented",
-    "indicator": "rounded-full size-full transition-transform duration-200 ease-out motion-reduce:data-[state=indeterminate]:animate-pulse",
-    "status": "flex text-dimmed transition-[width] duration-200",
+    "indicator": "rounded-full size-full transition-transform duration-200 ease-out motion-reduce:transition-none motion-reduce:data-[state=indeterminate]:animate-pulse",
+    "status": "flex text-dimmed duration-200 ease-out motion-reduce:transition-none",
     "steps": "grid items-end",
-    "step": "truncate text-end row-start-1 col-start-1 transition-opacity"
+    "step": "truncate text-end row-start-1 col-start-1 transition-opacity ease-out"
   },
   "variants": {
     "animation": {
@@ -9785,7 +9977,7 @@ const theme$2 = {
       },
       "neutral": {
         "indicator": "bg-inverted",
-        "steps": "text-inverted"
+        "steps": "text-highlighted"
       }
     },
     "size": {
@@ -9836,12 +10028,12 @@ const theme$2 = {
       "horizontal": {
         "root": "w-full flex flex-col",
         "base": "w-full",
-        "status": "flex-row items-center justify-end min-w-fit"
+        "status": "flex-row items-center justify-end w-(--percent) min-w-fit transition-[width]"
       },
       "vertical": {
         "root": "h-full flex flex-row-reverse",
         "base": "h-full",
-        "status": "flex-col justify-end min-h-fit"
+        "status": "flex-col justify-end h-(--percent) min-h-fit transition-[height]"
       }
     },
     "inverted": {
@@ -9941,56 +10133,56 @@ const theme$2 = {
       "orientation": "horizontal",
       "animation": "carousel",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel_2s_linear_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-rtl_2s_linear_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "carousel",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-vertical_2s_linear_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "carousel-inverse",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse_2s_ease-in-out_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse_2s_linear_infinite] motion-safe:data-[state=indeterminate]:rtl:animate-[carousel-inverse-rtl_2s_linear_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "carousel-inverse",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[carousel-inverse-vertical_2s_linear_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "swing",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "swing",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing-vertical_2s_ease-in-out_infinite]"
+        "indicator": "motion-safe:data-[state=indeterminate]:animate-[swing-vertical_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "orientation": "horizontal",
       "animation": "elastic",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[elastic_2s_ease-in-out_infinite]"
+        "indicator": "relative motion-safe:data-[state=indeterminate]:animate-[elastic_2s_var(--ease-in-out)_infinite]"
       }
     },
     {
       "orientation": "vertical",
       "animation": "elastic",
       "class": {
-        "indicator": "motion-safe:data-[state=indeterminate]:animate-[elastic-vertical_2s_ease-in-out_infinite]"
+        "indicator": "relative motion-safe:data-[state=indeterminate]:animate-[elastic-vertical_2s_var(--ease-in-out)_infinite]"
       }
     }
   ],
@@ -10071,10 +10263,7 @@ const _sfc_main$7 = {
         }
       }
     });
-    const statusStyle = computed(() => {
-      const value = `${Math.max(percent.value ?? 0, 0)}%`;
-      return props.orientation === "vertical" ? { height: value } : { width: value };
-    });
+    const statusStyle = computed(() => ({ "--percent": `${Math.max(percent.value ?? 0, 0)}%` }));
     function isActive(index2) {
       return index2 === Number(props.modelValue);
     }
@@ -10104,6 +10293,8 @@ const _sfc_main$7 = {
       orientation: props.orientation,
       inverted: props.inverted
     }));
+    const themeColors = computed(() => Object.keys({ ...theme$2.variants?.color, ...appConfig2.ui?.progress?.variants?.color }));
+    const customColor = computed(() => props.color && !themeColors.value.includes(props.color) ? props.color : void 0);
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(Primitive), mergeProps({
         as: unref(props).as,
@@ -10133,14 +10324,14 @@ const _sfc_main$7 = {
                   _push3(ssrRenderComponent(unref(ProgressIndicator_default), {
                     "data-slot": "indicator",
                     class: ui.value.indicator({ class: unref(props).ui?.indicator }),
-                    style: indicatorStyle.value
+                    style: [indicatorStyle.value, customColor.value ? { backgroundColor: customColor.value } : void 0]
                   }, null, _parent3, _scopeId2));
                 } else {
                   return [
                     createVNode(unref(ProgressIndicator_default), {
                       "data-slot": "indicator",
                       class: ui.value.indicator({ class: unref(props).ui?.indicator }),
-                      style: indicatorStyle.value
+                      style: [indicatorStyle.value, customColor.value ? { backgroundColor: customColor.value } : void 0]
                     }, null, 8, ["class", "style"])
                   ];
                 }
@@ -10148,7 +10339,7 @@ const _sfc_main$7 = {
               _: 1
             }, _parent2, _scopeId));
             if (hasSteps.value) {
-              _push2(`<div data-slot="steps" class="${ssrRenderClass(ui.value.steps({ class: unref(props).ui?.steps }))}"${_scopeId}><!--[-->`);
+              _push2(`<div data-slot="steps" class="${ssrRenderClass(ui.value.steps({ class: unref(props).ui?.steps }))}" style="${ssrRenderStyle(customColor.value ? { color: customColor.value } : void 0)}"${_scopeId}><!--[-->`);
               ssrRenderList(unref(props).max, (step, index2) => {
                 _push2(`<div data-slot="step" class="${ssrRenderClass(ui.value.step({ class: unref(props).ui?.step, step: stepVariant(index2) }))}"${_scopeId}>`);
                 ssrRenderSlot(_ctx.$slots, `step-${index2}`, { step }, () => {
@@ -10182,7 +10373,7 @@ const _sfc_main$7 = {
                   createVNode(unref(ProgressIndicator_default), {
                     "data-slot": "indicator",
                     class: ui.value.indicator({ class: unref(props).ui?.indicator }),
-                    style: indicatorStyle.value
+                    style: [indicatorStyle.value, customColor.value ? { backgroundColor: customColor.value } : void 0]
                   }, null, 8, ["class", "style"])
                 ]),
                 _: 1
@@ -10190,7 +10381,8 @@ const _sfc_main$7 = {
               hasSteps.value ? (openBlock(), createBlock("div", {
                 key: 1,
                 "data-slot": "steps",
-                class: ui.value.steps({ class: unref(props).ui?.steps })
+                class: ui.value.steps({ class: unref(props).ui?.steps }),
+                style: customColor.value ? { color: customColor.value } : void 0
               }, [
                 (openBlock(true), createBlock(Fragment, null, renderList(unref(props).max, (step, index2) => {
                   return openBlock(), createBlock("div", {
@@ -10203,7 +10395,7 @@ const _sfc_main$7 = {
                     ])
                   ], 2);
                 }), 128))
-              ], 2)) : createCommentVNode("", true)
+              ], 6)) : createCommentVNode("", true)
             ];
           }
         }),
@@ -10697,7 +10889,7 @@ _sfc_main$6.setup = (props, ctx) => {
 const theme = {
   "slots": {
     "viewport": "fixed flex flex-col w-[calc(100%-2rem)] sm:w-96 z-[100] data-[expanded=true]:h-(--height) focus:outline-none",
-    "base": "pointer-events-auto absolute inset-x-0 z-(--index) transform-(--transform) data-[expanded=false]:data-[front=false]:h-(--front-height) data-[expanded=false]:data-[front=false]:*:opacity-0 data-[front=false]:*:transition-opacity data-[front=false]:*:duration-100 data-[state=closed]:animate-[toast-closed_200ms_ease-in-out] data-[state=closed]:data-[expanded=false]:data-[front=false]:animate-[toast-collapsed-closed_200ms_ease-in-out] data-[state=open]:data-[pulsing=odd]:animate-[toast-pulse-a_300ms_ease-out] data-[state=open]:data-[pulsing=even]:animate-[toast-pulse-b_300ms_ease-out] data-[swipe=move]:transition-none transition-[transform,translate,height] duration-200 ease-out"
+    "base": "pointer-events-auto absolute inset-x-0 z-(--index) transform-(--transform) data-[expanded=false]:data-[front=false]:h-(--front-height) data-[expanded=false]:data-[front=false]:*:opacity-0 data-[front=false]:*:transition-opacity data-[front=false]:*:duration-100 data-[state=closed]:animate-[toast-closed_200ms_var(--ease-out)] data-[state=closed]:data-[expanded=false]:data-[front=false]:animate-[toast-collapsed-closed_200ms_var(--ease-out)] motion-safe:data-[state=open]:data-[pulsing=odd]:animate-[toast-pulse-a_200ms_var(--ease-out)] motion-safe:data-[state=open]:data-[pulsing=even]:animate-[toast-pulse-b_200ms_var(--ease-out)] data-[swipe=move]:transition-none transition-[transform,translate,height] duration-200 ease-out motion-reduce:transition-none"
   },
   "variants": {
     "position": {
@@ -10721,10 +10913,10 @@ const theme = {
       }
     },
     "swipeDirection": {
-      "up": "data-[swipe=end]:animate-[toast-slide-up_200ms_ease-out]",
-      "right": "data-[swipe=end]:animate-[toast-slide-right_200ms_ease-out]",
-      "down": "data-[swipe=end]:animate-[toast-slide-down_200ms_ease-out]",
-      "left": "data-[swipe=end]:animate-[toast-slide-left_200ms_ease-out]"
+      "up": "data-[swipe=end]:animate-[toast-slide-up_200ms_var(--ease-out)]",
+      "right": "data-[swipe=end]:animate-[toast-slide-right_200ms_var(--ease-out)]",
+      "down": "data-[swipe=end]:animate-[toast-slide-down_200ms_var(--ease-out)]",
+      "left": "data-[swipe=end]:animate-[toast-slide-left_200ms_var(--ease-out)]"
     }
   },
   "compoundVariants": [
@@ -10736,7 +10928,7 @@ const theme = {
       ],
       "class": {
         "viewport": "top-4",
-        "base": "top-0 data-[state=open]:animate-[toast-slide-in-from-top_200ms_ease-in-out]"
+        "base": "top-0 data-[state=open]:animate-[toast-slide-in-from-top_200ms_var(--ease-out)]"
       }
     },
     {
@@ -10747,7 +10939,7 @@ const theme = {
       ],
       "class": {
         "viewport": "bottom-4",
-        "base": "bottom-0 data-[state=open]:animate-[toast-slide-in-from-bottom_200ms_ease-in-out]"
+        "base": "bottom-0 data-[state=open]:animate-[toast-slide-in-from-bottom_200ms_var(--ease-out)]"
       }
     },
     {
@@ -11176,9 +11368,9 @@ _sfc_main$3.setup = (props, ctx) => {
 };
 const __nuxt_component_0 = Object.assign(_sfc_main$3, { __name: "UApp" });
 const layouts = {
-  authenticated: defineAsyncComponent(() => import('./authenticated-BAaCbWU1.mjs').then((m) => m.default || m)),
-  default: defineAsyncComponent(() => import('./default-D6BhmMrf.mjs').then((m) => m.default || m)),
-  form: defineAsyncComponent(() => import('./form-Flt6bszS.mjs').then((m) => m.default || m)),
+  authenticated: defineAsyncComponent(() => import('./authenticated-CT4vc1Fp.mjs').then((m) => m.default || m)),
+  default: defineAsyncComponent(() => import('./default-BXmp5IA8.mjs').then((m) => m.default || m)),
+  form: defineAsyncComponent(() => import('./form-DnsUkVHA.mjs').then((m) => m.default || m)),
   payment: defineAsyncComponent(() => import('./payment-Cp8Rb9d4.mjs').then((m) => m.default || m))
 };
 const routeRulesMatcher = _routeRulesMatcher;
@@ -11514,8 +11706,8 @@ const _sfc_main$1 = {
     const statusText = _error.statusMessage ?? (is404 ? "Page Not Found" : "Internal Server Error");
     const description = _error.message || _error.toString();
     const stack = void 0;
-    const _Error404 = defineAsyncComponent(() => import('./error-404-CL7y-lte.mjs'));
-    const _Error = defineAsyncComponent(() => import('./error-500-B0d76mYc.mjs'));
+    const _Error404 = defineAsyncComponent(() => import('./error-404-D3saHrgF.mjs'));
+    const _Error = defineAsyncComponent(() => import('./error-500-BFcNFAvX.mjs'));
     const ErrorTemplate = is404 ? _Error404 : _Error;
     return (_ctx, _push, _parent, _attrs) => {
       _push(ssrRenderComponent(unref(ErrorTemplate), mergeProps({ status: unref(status), statusText: unref(statusText), statusCode: unref(status), statusMessage: unref(statusText), description: unref(description), stack: unref(stack) }, _attrs), null, _parent));

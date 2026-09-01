@@ -1,4 +1,4 @@
-import { a as defineEventHandler, p as getRouterParam, t as setResponseHeader, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, t as getRouterParam, v as setResponseHeader, b as createError } from '../../../nitro/nitro.mjs';
 import 'mongoose';
 import 'node:crypto';
 import 'openai';

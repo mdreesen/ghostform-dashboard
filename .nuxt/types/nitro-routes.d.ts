@@ -43,6 +43,30 @@ declare module "nitropack/types" {
     '/api/cron': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/cron').default>>>>
     }
+    '/api/documents/:id/deadline': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/[id]/deadline.post').default>>>>
+    }
+    '/api/documents/:id/delete': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/[id]/delete.post').default>>>>
+    }
+    '/api/documents/:id/read': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/[id]/read.post').default>>>>
+    }
+    '/api/documents/create': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/create.post').default>>>>
+    }
+    '/api/documents/deadlines': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/deadlines.get').default>>>>
+    }
+    '/api/documents/diagnose': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/diagnose.get').default>>>>
+    }
+    '/api/documents': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/index.get').default>>>>
+    }
+    '/api/homes/:id': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/[id]/index.get').default>>>>
+    }
     '/api/homes/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/homes/create.post').default>>>>
     }
@@ -110,6 +134,9 @@ declare module "nitropack/types" {
     '/api/social/status': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/status.post').default>>>>
     }
+    '/api/storage-mode': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/storage-mode.get').default>>>>
+    }
     '/api/stripe/subscribe': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/stripe/subscribe.post').default>>>>
     }
@@ -118,6 +145,13 @@ declare module "nitropack/types" {
     }
     '/api/test-reminder': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/test-reminder.get').default>>>>
+    }
+    '/api/uploads/local/**:key': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/uploads/local/[...key].get').default>>>>
+      'put': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/uploads/local/[...key].put').default>>>>
+    }
+    '/api/uploads/sign': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/uploads/sign.post').default>>>>
     }
     '/api/user/card-style': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/card-style.post').default>>>>

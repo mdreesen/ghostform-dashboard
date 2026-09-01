@@ -1,4 +1,4 @@
-import { a as defineEventHandler, p as getRouterParam, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, t as getRouterParam, s as schemaImport, b as createError } from '../../../nitro/nitro.mjs';
 import 'mongoose';
 import 'node:crypto';
 import 'openai';

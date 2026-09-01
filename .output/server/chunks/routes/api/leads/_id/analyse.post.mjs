@@ -1,4 +1,4 @@
-import { a as defineEventHandler, b as createError, s as schemaImport, m as analyseLead } from '../../../../nitro/nitro.mjs';
+import { a as defineEventHandler, b as createError, s as schemaImport, o as analyseLead } from '../../../../nitro/nitro.mjs';
 import { l as loggedInUser } from '../../../../_/loggedInUser.mjs';
 import 'mongoose';
 import 'node:crypto';

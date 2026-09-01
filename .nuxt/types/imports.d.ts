@@ -9,6 +9,7 @@ declare global {
   const IndiaTopoJSON: typeof import('../../node_modules/vue-chrts').IndiaTopoJSON
   const LegendPosition: typeof import('../../node_modules/vue-chrts/enums').LegendPosition
   const Orientation: typeof import('../../node_modules/vue-chrts/enums').Orientation
+  const PRIORITIES: typeof import('../../app/utils/priority').PRIORITIES
   const UKTopoJSON: typeof import('../../node_modules/vue-chrts').UKTopoJSON
   const USATopoJSON: typeof import('../../node_modules/vue-chrts').USATopoJSON
   const USCountiesTopoJSON: typeof import('../../node_modules/vue-chrts').USCountiesTopoJSON
@@ -17,6 +18,9 @@ declare global {
   const WorldMapTopoJSON: typeof import('../../node_modules/vue-chrts').WorldMapTopoJSON
   const abortNavigation: typeof import('../../node_modules/nuxt/dist/app/composables/router').abortNavigation
   const addRouteMiddleware: typeof import('../../node_modules/nuxt/dist/app/composables/router').addRouteMiddleware
+  const assertUploadable: typeof import('../../app/utils/storage').assertUploadable
+  const buildDeadlineBriefing: typeof import('../../app/utils/deadlineBriefing').buildDeadlineBriefing
+  const buildKey: typeof import('../../app/utils/storage').buildKey
   const callOnce: typeof import('../../node_modules/nuxt/dist/app/composables/once').callOnce
   const cancelIdleCallback: typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback').cancelIdleCallback
   const clearError: typeof import('../../node_modules/nuxt/dist/app/composables/error').clearError
@@ -30,6 +34,8 @@ declare global {
   const customGhostFormUrl: typeof import('../../app/utils/ghostFormUrl').customGhostFormUrl
   const customRef: typeof import('vue').customRef
   const date: typeof import('../../app/utils/date').date
+  const daysUntil: typeof import('../../app/utils/priority').daysUntil
+  const deadlineHeadline: typeof import('../../app/utils/deadlineBriefing').deadlineHeadline
   const defineAppConfig: typeof import('../../node_modules/nuxt/dist/app/nuxt').defineAppConfig
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
@@ -44,10 +50,13 @@ declare global {
   const definePayloadReducer: typeof import('../../node_modules/nuxt/dist/app/composables/payload').definePayloadReducer
   const definePayloadReviver: typeof import('../../node_modules/nuxt/dist/app/composables/payload').definePayloadReviver
   const defineShortcuts: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts').defineShortcuts
+  const deleteObject: typeof import('../../app/utils/storage').deleteObject
   const effect: typeof import('vue').effect
   const effectScope: typeof import('vue').effectScope
+  const effectivePriority: typeof import('../../app/utils/priority').effectivePriority
   const extendLocale: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineLocale').extendLocale
   const extractShortcuts: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts').extractShortcuts
+  const fetchAsBase64: typeof import('../../app/utils/storage').fetchAsBase64
   const formVarient: typeof import('../../app/utils/varients').formVarient
   const formatDate: typeof import('../../app/utils/date').formatDate
   const geoMercator: typeof import('../../node_modules/vue-chrts').geoMercator
@@ -61,9 +70,11 @@ declare global {
   const guessColumns: typeof import('../../app/utils/leadImport').guessColumns
   const h: typeof import('vue').h
   const hasInjectionContext: typeof import('vue').hasInjectionContext
+  const hasR2: typeof import('../../app/utils/storage').hasR2
   const inject: typeof import('vue').inject
   const injectHead: typeof import('../../node_modules/nuxt/dist/app/composables/head').injectHead
   const inputVarient: typeof import('../../app/utils/varients').inputVarient
+  const isHighStakes: typeof import('../../app/utils/priority').isHighStakes
   const isNuxtError: typeof import('../../node_modules/nuxt/dist/app/composables/error').isNuxtError
   const isPrerendered: typeof import('../../node_modules/nuxt/dist/app/composables/payload').isPrerendered
   const isProxy: typeof import('vue').isProxy
@@ -108,11 +119,14 @@ declare global {
   const preloadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload').preloadPayload
   const preloadRouteComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload').preloadRouteComponents
   const prerenderRoutes: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').prerenderRoutes
+  const presignUpload: typeof import('../../app/utils/storage').presignUpload
   const provide: typeof import('vue').provide
   const proxyRefs: typeof import('vue').proxyRefs
   const reactive: typeof import('vue').reactive
   const reactiveStyle: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').reactiveStyle
   const reactiveTransform: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').reactiveTransform
+  const readDocument: typeof import('../../app/utils/documentRead').readDocument
+  const readUrl: typeof import('../../app/utils/storage').readUrl
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const refreshCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie').refreshCookie
@@ -127,6 +141,7 @@ declare global {
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
   const showError: typeof import('../../node_modules/nuxt/dist/app/composables/error').showError
+  const sortDeadlines: typeof import('../../app/utils/priority').sortDeadlines
   const timeZone: typeof import('../../app/utils/date').timeZone
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
@@ -260,6 +275,7 @@ declare global {
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
   const watchSyncEffect: typeof import('vue').watchSyncEffect
+  const whenLabel: typeof import('../../app/utils/priority').whenLabel
   const withCtx: typeof import('vue').withCtx
   const withDirectives: typeof import('vue').withDirectives
   const withKeys: typeof import('vue').withKeys
@@ -280,8 +296,17 @@ declare global {
   export type { PageMeta } from '../../node_modules/nuxt/dist/app/composables/pages'
   import('../../node_modules/nuxt/dist/app/composables/pages')
   // @ts-ignore
+  export type { BriefingDeadline } from '../../app/utils/deadlineBriefing'
+  import('../../app/utils/deadlineBriefing')
+  // @ts-ignore
+  export type { ExtractedDeadline, DocumentReading } from '../../app/utils/documentRead'
+  import('../../app/utils/documentRead')
+  // @ts-ignore
   export type { ColumnGuess, MappedLead, ImportResult } from '../../app/utils/leadImport'
   import('../../app/utils/leadImport')
+  // @ts-ignore
+  export type { Priority, PriorityStyle } from '../../app/utils/priority'
+  import('../../app/utils/priority')
   // @ts-ignore
   export type { LeadRecord } from '../../app/utils/spreadsheet'
   import('../../app/utils/spreadsheet')
@@ -298,6 +323,7 @@ declare module 'vue' {
     readonly IndiaTopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['IndiaTopoJSON']>
     readonly LegendPosition: UnwrapRef<typeof import('../../node_modules/vue-chrts/enums')['LegendPosition']>
     readonly Orientation: UnwrapRef<typeof import('../../node_modules/vue-chrts/enums')['Orientation']>
+    readonly PRIORITIES: UnwrapRef<typeof import('../../app/utils/priority')['PRIORITIES']>
     readonly UKTopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['UKTopoJSON']>
     readonly USATopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['USATopoJSON']>
     readonly USCountiesTopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['USCountiesTopoJSON']>
@@ -306,6 +332,9 @@ declare module 'vue' {
     readonly WorldMapTopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['WorldMapTopoJSON']>
     readonly abortNavigation: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']>
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
+    readonly assertUploadable: UnwrapRef<typeof import('../../app/utils/storage')['assertUploadable']>
+    readonly buildDeadlineBriefing: UnwrapRef<typeof import('../../app/utils/deadlineBriefing')['buildDeadlineBriefing']>
+    readonly buildKey: UnwrapRef<typeof import('../../app/utils/storage')['buildKey']>
     readonly callOnce: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']>
     readonly cancelIdleCallback: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['cancelIdleCallback']>
     readonly clearError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['clearError']>
@@ -319,6 +348,8 @@ declare module 'vue' {
     readonly customGhostFormUrl: UnwrapRef<typeof import('../../app/utils/ghostFormUrl')['customGhostFormUrl']>
     readonly customRef: UnwrapRef<typeof import('vue')['customRef']>
     readonly date: UnwrapRef<typeof import('../../app/utils/date')['date']>
+    readonly daysUntil: UnwrapRef<typeof import('../../app/utils/priority')['daysUntil']>
+    readonly deadlineHeadline: UnwrapRef<typeof import('../../app/utils/deadlineBriefing')['deadlineHeadline']>
     readonly defineAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineAppConfig']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>
@@ -333,10 +364,13 @@ declare module 'vue' {
     readonly definePayloadReducer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReducer']>
     readonly definePayloadReviver: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReviver']>
     readonly defineShortcuts: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts')['defineShortcuts']>
+    readonly deleteObject: UnwrapRef<typeof import('../../app/utils/storage')['deleteObject']>
     readonly effect: UnwrapRef<typeof import('vue')['effect']>
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
+    readonly effectivePriority: UnwrapRef<typeof import('../../app/utils/priority')['effectivePriority']>
     readonly extendLocale: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineLocale')['extendLocale']>
     readonly extractShortcuts: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts')['extractShortcuts']>
+    readonly fetchAsBase64: UnwrapRef<typeof import('../../app/utils/storage')['fetchAsBase64']>
     readonly formVarient: UnwrapRef<typeof import('../../app/utils/varients')['formVarient']>
     readonly formatDate: UnwrapRef<typeof import('../../app/utils/date')['formatDate']>
     readonly geoMercator: UnwrapRef<typeof import('../../node_modules/vue-chrts')['geoMercator']>
@@ -350,9 +384,11 @@ declare module 'vue' {
     readonly guessColumns: UnwrapRef<typeof import('../../app/utils/leadImport')['guessColumns']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hasInjectionContext: UnwrapRef<typeof import('vue')['hasInjectionContext']>
+    readonly hasR2: UnwrapRef<typeof import('../../app/utils/storage')['hasR2']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['injectHead']>
     readonly inputVarient: UnwrapRef<typeof import('../../app/utils/varients')['inputVarient']>
+    readonly isHighStakes: UnwrapRef<typeof import('../../app/utils/priority')['isHighStakes']>
     readonly isNuxtError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']>
     readonly isPrerendered: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
@@ -397,11 +433,14 @@ declare module 'vue' {
     readonly preloadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['preloadPayload']>
     readonly preloadRouteComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['preloadRouteComponents']>
     readonly prerenderRoutes: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['prerenderRoutes']>
+    readonly presignUpload: UnwrapRef<typeof import('../../app/utils/storage')['presignUpload']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly proxyRefs: UnwrapRef<typeof import('vue')['proxyRefs']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly reactiveStyle: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['reactiveStyle']>
     readonly reactiveTransform: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['reactiveTransform']>
+    readonly readDocument: UnwrapRef<typeof import('../../app/utils/documentRead')['readDocument']>
+    readonly readUrl: UnwrapRef<typeof import('../../app/utils/storage')['readUrl']>
     readonly readonly: UnwrapRef<typeof import('vue')['readonly']>
     readonly ref: UnwrapRef<typeof import('vue')['ref']>
     readonly refreshCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['refreshCookie']>
@@ -416,6 +455,7 @@ declare module 'vue' {
     readonly shallowReadonly: UnwrapRef<typeof import('vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('vue')['shallowRef']>
     readonly showError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['showError']>
+    readonly sortDeadlines: UnwrapRef<typeof import('../../app/utils/priority')['sortDeadlines']>
     readonly timeZone: UnwrapRef<typeof import('../../app/utils/date')['timeZone']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
@@ -549,6 +589,7 @@ declare module 'vue' {
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>
     readonly watchSyncEffect: UnwrapRef<typeof import('vue')['watchSyncEffect']>
+    readonly whenLabel: UnwrapRef<typeof import('../../app/utils/priority')['whenLabel']>
     readonly withCtx: UnwrapRef<typeof import('vue')['withCtx']>
     readonly withDirectives: UnwrapRef<typeof import('vue')['withDirectives']>
     readonly withKeys: UnwrapRef<typeof import('vue')['withKeys']>

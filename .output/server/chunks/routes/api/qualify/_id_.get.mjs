@@ -1,4 +1,4 @@
-import { a as defineEventHandler, e as setHeader, u as readQualifyToken, b as createError, c as connectDB, s as schemaImport, v as questionsFor } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, e as setHeader, w as readQualifyToken, b as createError, c as connectDB, s as schemaImport, x as questionsFor } from '../../../nitro/nitro.mjs';
 import 'mongoose';
 import 'node:crypto';
 import 'openai';

@@ -132,7 +132,6 @@ declare global {
   const getUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').getUserSession
   const getValidatedQuery: typeof import('../../node_modules/h3').getValidatedQuery
   const getValidatedRouterParams: typeof import('../../node_modules/h3').getValidatedRouterParams
-  const guessColumns: typeof import('../../server/utils/leadImport').guessColumns
   const handleCacheHeaders: typeof import('../../node_modules/h3').handleCacheHeaders
   const handleCors: typeof import('../../node_modules/h3').handleCors
   const hashPassword: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').hashPassword
@@ -145,11 +144,9 @@ declare global {
   const isStream: typeof import('../../node_modules/h3').isStream
   const isWebResponse: typeof import('../../node_modules/h3').isWebResponse
   const lazyEventHandler: typeof import('../../node_modules/h3').lazyEventHandler
-  const mapRows: typeof import('../../server/utils/leadImport').mapRows
   const narrateBriefing: typeof import('../../server/utils/briefingNarration').narrateBriefing
   const nitroPlugin: typeof import('../../node_modules/nitropack/dist/runtime/internal/plugin').nitroPlugin
   const parseCookies: typeof import('../../node_modules/h3').parseCookies
-  const parseCsv: typeof import('../../server/utils/leadImport').parseCsv
   const passwordNeedsReHash: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').passwordNeedsReHash
   const promisifyNodeListener: typeof import('../../node_modules/h3').promisifyNodeListener
   const proxyRequest: typeof import('../../node_modules/h3').proxyRequest
@@ -366,9 +363,6 @@ declare global {
   export type { QualAnswers, Scorecard, LeadAnalysis } from '../../server/utils/leadAnalysis'
   import('../../server/utils/leadAnalysis')
   // @ts-ignore
-  export type { ColumnGuess, MappedLead, ImportResult } from '../../server/utils/leadImport'
-  import('../../server/utils/leadImport')
-  // @ts-ignore
   export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
   import('../../server/utils/leadMessageDraft')
   // @ts-ignore
@@ -448,7 +442,6 @@ export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_mod
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
 export { buildScorecard, analyseLead } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadAnalysis';
-export { guessColumns, parseCsv, mapRows } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadImport';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
 export { BUYER_QUESTIONS, SELLER_QUESTIONS, questionsFor } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualificationQuestions';
 export { createQualifyToken, readQualifyToken } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualifyToken';

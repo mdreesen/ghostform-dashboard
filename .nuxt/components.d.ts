@@ -17,6 +17,8 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 export const AppAccess: typeof import("../app/components/app/Access.vue")['default']
 export const AppCardsOverview: typeof import("../app/components/app/CardsOverview.vue")['default']
 export const AppDailyBriefing: typeof import("../app/components/app/DailyBriefing.vue")['default']
+export const AppDocumentList: typeof import("../app/components/app/DocumentList.vue")['default']
+export const AppDocumentUpload: typeof import("../app/components/app/DocumentUpload.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
 export const AppLeadMessageComposer: typeof import("../app/components/app/LeadMessageComposer.vue")['default']
 export const AppSocialCard: typeof import("../app/components/app/SocialCard.vue")['default']
@@ -156,6 +158,7 @@ export const UPricingPlan: typeof import("../node_modules/@nuxt/ui/dist/runtime/
 export const UPricingPlans: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingPlans.vue")['default']
 export const UPricingTable: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingTable.vue")['default']
 export const UProgress: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Progress.vue")['default']
+export const UProgressGroup: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ProgressGroup.vue")['default']
 export const URadioGroup: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/RadioGroup.vue")['default']
 export const UScrollArea: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ScrollArea.vue")['default']
 export const USelect: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Select.vue")['default']
@@ -165,6 +168,7 @@ export const USidebar: typeof import("../node_modules/@nuxt/ui/dist/runtime/comp
 export const USkeleton: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue")['default']
 export const USlideover: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slideover.vue")['default']
 export const USlider: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slider.vue")['default']
+export const USplitter: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Splitter.vue")['default']
 export const UStepper: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Stepper.vue")['default']
 export const USwitch: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Switch.vue")['default']
 export const UTable: typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Table.vue")['default']
@@ -235,6 +239,8 @@ export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components
 export const LazyAppAccess: LazyComponent<typeof import("../app/components/app/Access.vue")['default']>
 export const LazyAppCardsOverview: LazyComponent<typeof import("../app/components/app/CardsOverview.vue")['default']>
 export const LazyAppDailyBriefing: LazyComponent<typeof import("../app/components/app/DailyBriefing.vue")['default']>
+export const LazyAppDocumentList: LazyComponent<typeof import("../app/components/app/DocumentList.vue")['default']>
+export const LazyAppDocumentUpload: LazyComponent<typeof import("../app/components/app/DocumentUpload.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
 export const LazyAppLeadMessageComposer: LazyComponent<typeof import("../app/components/app/LeadMessageComposer.vue")['default']>
 export const LazyAppSocialCard: LazyComponent<typeof import("../app/components/app/SocialCard.vue")['default']>
@@ -374,6 +380,7 @@ export const LazyUPricingPlan: LazyComponent<typeof import("../node_modules/@nux
 export const LazyUPricingPlans: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingPlans.vue")['default']>
 export const LazyUPricingTable: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/PricingTable.vue")['default']>
 export const LazyUProgress: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Progress.vue")['default']>
+export const LazyUProgressGroup: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ProgressGroup.vue")['default']>
 export const LazyURadioGroup: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/RadioGroup.vue")['default']>
 export const LazyUScrollArea: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/ScrollArea.vue")['default']>
 export const LazyUSelect: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Select.vue")['default']>
@@ -383,6 +390,7 @@ export const LazyUSidebar: LazyComponent<typeof import("../node_modules/@nuxt/ui
 export const LazyUSkeleton: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue")['default']>
 export const LazyUSlideover: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slideover.vue")['default']>
 export const LazyUSlider: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Slider.vue")['default']>
+export const LazyUSplitter: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Splitter.vue")['default']>
 export const LazyUStepper: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Stepper.vue")['default']>
 export const LazyUSwitch: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Switch.vue")['default']>
 export const LazyUTable: LazyComponent<typeof import("../node_modules/@nuxt/ui/dist/runtime/components/Table.vue")['default']>

@@ -1,4 +1,4 @@
-import { a as defineEventHandler, e as setHeader, u as readQualifyToken, b as createError, r as readValidatedBody, c as connectDB, s as schemaImport, m as analyseLead } from '../../../nitro/nitro.mjs';
+import { a as defineEventHandler, e as setHeader, w as readQualifyToken, b as createError, r as readValidatedBody, c as connectDB, s as schemaImport, o as analyseLead } from '../../../nitro/nitro.mjs';
 import { z } from 'zod';
 import 'mongoose';
 import 'node:crypto';

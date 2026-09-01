@@ -10,6 +10,20 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
       cdnURL: string,
    },
 
+   r2: {
+      accountId: string,
+
+      accessKeyId: string,
+
+      secretAccessKey: string,
+
+      bucket: string,
+   },
+
+   anthropicKey: string,
+
+   anthropicModel: string,
+
    nitro: {
       envPrefix: string,
    },

@@ -185,6 +185,18 @@ export default defineNuxtConfig({
 
   // @vueuse/motion/nuxt
   runtimeConfig: {
+    // ── Object storage for documents (Cloudflare R2, S3-compatible) ──
+    // Without these, presignUpload throws and no document can be uploaded.
+    r2: {
+      accountId: process.env.R2_ACCOUNT_ID,
+      accessKeyId: process.env.R2_ACCESS_KEY_ID,
+      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
+      bucket: process.env.R2_BUCKET
+    },
+    // Used by documentRead to extract deadlines.
+    anthropicKey: process.env.ANTHROPIC_API_KEY,
+    anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
+
     public: {
       motion: {
         directives: {

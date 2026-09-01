@@ -1,6 +1,9 @@
 import mongoose, { Schema } from 'mongoose'
 
 const leadSchema = new Schema({
+    // Which property this lead is interested in. Optional — plenty of leads
+    // aren't tied to a specific listing.
+    homeId: { type: Schema.Types.ObjectId, ref: 'Home', index: true },
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',

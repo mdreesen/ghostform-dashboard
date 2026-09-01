@@ -41,7 +41,7 @@ export default {
           "peer-hover:text-toned peer-focus-visible:text-toned",
           "transition-colors"
         ],
-        "avatar": "transform transition-transform duration-200 group-hover/user:scale-115 group-has-focus-visible/user:scale-115"
+        "avatar": "transform transition-transform ease-out motion-reduce:transition-none group-hover/user:scale-115 group-has-focus-visible/user:scale-115"
       },
       "false": {
         "name": "text-highlighted",

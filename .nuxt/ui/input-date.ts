@@ -37,7 +37,7 @@ export default {
     "trailing": "absolute inset-y-0 end-0 flex items-center",
     "trailingIcon": "shrink-0 text-dimmed",
     "segment": [
-      "rounded text-center outline-hidden data-placeholder:text-dimmed data-[segment=literal]:text-muted data-invalid:text-error data-disabled:cursor-not-allowed data-disabled:opacity-75",
+      "rounded-sm text-center outline-hidden data-placeholder:text-dimmed data-[segment=literal]:text-muted data-invalid:text-error data-disabled:cursor-not-allowed data-disabled:opacity-75",
       "transition-colors"
     ],
     "separatorIcon": "shrink-0 size-4 text-muted"
