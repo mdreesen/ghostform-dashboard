@@ -15,6 +15,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 
 export const AppAccess: typeof import("../app/components/app/Access.vue")['default']
+export const AppAskDocuments: typeof import("../app/components/app/AskDocuments.vue")['default']
 export const AppCardsOverview: typeof import("../app/components/app/CardsOverview.vue")['default']
 export const AppDailyBriefing: typeof import("../app/components/app/DailyBriefing.vue")['default']
 export const AppDocumentList: typeof import("../app/components/app/DocumentList.vue")['default']
@@ -22,6 +23,7 @@ export const AppDocumentUpload: typeof import("../app/components/app/DocumentUpl
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
 export const AppLeadMessageComposer: typeof import("../app/components/app/LeadMessageComposer.vue")['default']
 export const AppSocialCard: typeof import("../app/components/app/SocialCard.vue")['default']
+export const AppVoiceCapture: typeof import("../app/components/app/VoiceCapture.vue")['default']
 export const AppReminderEmail: typeof import("../app/components/app/appReminderEmail.vue")['default']
 export const AppPricing: typeof import("../app/components/app/pricing.vue")['default']
 export const BaseButtonDelete: typeof import("../app/components/base/Button/Delete.vue")['default']
@@ -47,6 +49,7 @@ export const BaseQrCode: typeof import("../app/components/base/QrCode.vue")['def
 export const BaseTable: typeof import("../app/components/base/Table.vue")['default']
 export const BaseTerrain: typeof import("../app/components/base/Terrain.vue")['default']
 export const BaseTour: typeof import("../app/components/base/Tour.vue")['default']
+export const BaseVoiceField: typeof import("../app/components/base/VoiceField.vue")['default']
 export const BaseButton: typeof import("../app/components/base/button.vue")['default']
 export const BaseFooter: typeof import("../app/components/base/footer.vue")['default']
 export const BaseIcon: typeof import("../app/components/base/icon.vue")['default']
@@ -234,6 +237,7 @@ export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Icon: typeof import("../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const LazyAppAccess: LazyComponent<typeof import("../app/components/app/Access.vue")['default']>
+export const LazyAppAskDocuments: LazyComponent<typeof import("../app/components/app/AskDocuments.vue")['default']>
 export const LazyAppCardsOverview: LazyComponent<typeof import("../app/components/app/CardsOverview.vue")['default']>
 export const LazyAppDailyBriefing: LazyComponent<typeof import("../app/components/app/DailyBriefing.vue")['default']>
 export const LazyAppDocumentList: LazyComponent<typeof import("../app/components/app/DocumentList.vue")['default']>
@@ -241,6 +245,7 @@ export const LazyAppDocumentUpload: LazyComponent<typeof import("../app/componen
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
 export const LazyAppLeadMessageComposer: LazyComponent<typeof import("../app/components/app/LeadMessageComposer.vue")['default']>
 export const LazyAppSocialCard: LazyComponent<typeof import("../app/components/app/SocialCard.vue")['default']>
+export const LazyAppVoiceCapture: LazyComponent<typeof import("../app/components/app/VoiceCapture.vue")['default']>
 export const LazyAppReminderEmail: LazyComponent<typeof import("../app/components/app/appReminderEmail.vue")['default']>
 export const LazyAppPricing: LazyComponent<typeof import("../app/components/app/pricing.vue")['default']>
 export const LazyBaseButtonDelete: LazyComponent<typeof import("../app/components/base/Button/Delete.vue")['default']>
@@ -266,6 +271,7 @@ export const LazyBaseQrCode: LazyComponent<typeof import("../app/components/base
 export const LazyBaseTable: LazyComponent<typeof import("../app/components/base/Table.vue")['default']>
 export const LazyBaseTerrain: LazyComponent<typeof import("../app/components/base/Terrain.vue")['default']>
 export const LazyBaseTour: LazyComponent<typeof import("../app/components/base/Tour.vue")['default']>
+export const LazyBaseVoiceField: LazyComponent<typeof import("../app/components/base/VoiceField.vue")['default']>
 export const LazyBaseButton: LazyComponent<typeof import("../app/components/base/button.vue")['default']>
 export const LazyBaseFooter: LazyComponent<typeof import("../app/components/base/footer.vue")['default']>
 export const LazyBaseIcon: LazyComponent<typeof import("../app/components/base/icon.vue")['default']>

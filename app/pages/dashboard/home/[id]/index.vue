@@ -70,7 +70,7 @@ async function setStatus(status: string) {
         ← Properties
       </NuxtLink>
 
-      <div v-if="pending && !home" class="text-[14px] text-[#8A847C]">Loading…</div>
+      <div v-if="pending && !home" class="gf-body text-[#8A847C]">Loading…</div>
 
       <template v-else-if="home">
         <div class="flex flex-wrap items-start justify-between gap-5">
@@ -78,7 +78,7 @@ async function setStatus(status: string) {
             <h1 class="font-display text-[clamp(28px,4vw,42px)] leading-[1.12] tracking-tight mb-2">
               {{ home.name || home.address }}
             </h1>
-            <p v-if="home.name && home.address" class="text-[15px] text-[#8A847C]">
+            <p v-if="home.name && home.address" class="gf-body text-[#8A847C]">
               {{ home.address }}
             </p>
           </div>
@@ -87,7 +87,7 @@ async function setStatus(status: string) {
           <div class="flex gap-2">
             <button
               v-for="s in (['active','pending','sold'] as const)" :key="s"
-              class="px-3.5 py-2 text-[11px] uppercase tracking-[0.1em] border transition-colors"
+              class="px-3.5 py-2 gf-label uppercase tracking-[0.1em] border transition-colors"
               :class="form.status === s
                 ? 'border-[#1F1B16] text-[#1F1B16]'
                 : 'border-[#DDD6C9] text-[#A9A39A] hover:border-[#8A847C]'"
@@ -106,7 +106,7 @@ async function setStatus(status: string) {
       <section class="mb-14">
         <div class="flex items-baseline justify-between mb-5">
           <p class="gf-eyebrow">Details</p>
-          <button class="text-[12.5px] text-[#8A847C] hover:text-[#1F1B16]" @click="editing = !editing">
+          <button class="gf-meta text-[#8A847C] hover:text-[#1F1B16]" @click="editing = !editing">
             {{ editing ? 'Cancel' : 'Edit' }}
           </button>
         </div>
@@ -117,8 +117,8 @@ async function setStatus(status: string) {
             { k: 'Owner', v: home.owner },
             { k: 'Notes', v: home.notes }
           ]" :key="row.k" class="grid gap-4 py-4 border-b border-[#DDD6C9]" style="grid-template-columns:140px 1fr">
-            <p class="text-[12.5px] uppercase tracking-[0.1em] text-[#A9A39A]">{{ row.k }}</p>
-            <p class="text-[14.5px] leading-relaxed whitespace-pre-line">
+            <p class="gf-meta uppercase tracking-[0.1em] text-[#A9A39A]">{{ row.k }}</p>
+            <p class="gf-body leading-relaxed whitespace-pre-line">
               {{ row.v || '—' }}
             </p>
           </div>
@@ -127,24 +127,24 @@ async function setStatus(status: string) {
         <div v-else class="space-y-5">
           <div class="grid sm:grid-cols-2 gap-5">
             <div>
-              <label class="block text-[12.5px] text-[#8A847C] mb-2">Name</label>
-              <input v-model="form.name" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 text-[14.5px] focus:outline-none focus:border-[#B5563A]" />
+              <label class="block gf-meta text-[#8A847C] mb-2">Name</label>
+              <input v-model="form.name" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#B5563A]" />
             </div>
             <div>
-              <label class="block text-[12.5px] text-[#8A847C] mb-2">Owner</label>
-              <input v-model="form.owner" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 text-[14.5px] focus:outline-none focus:border-[#B5563A]" />
+              <label class="block gf-meta text-[#8A847C] mb-2">Owner</label>
+              <input v-model="form.owner" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#B5563A]" />
             </div>
           </div>
           <div>
-            <label class="block text-[12.5px] text-[#8A847C] mb-2">Address</label>
-            <input v-model="form.address" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 text-[14.5px] focus:outline-none focus:border-[#B5563A]" />
+            <label class="block gf-meta text-[#8A847C] mb-2">Address</label>
+            <input v-model="form.address" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#B5563A]" />
           </div>
           <div>
-            <label class="block text-[12.5px] text-[#8A847C] mb-2">Notes</label>
-            <textarea v-model="form.notes" rows="4" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 text-[14.5px] resize-none focus:outline-none focus:border-[#B5563A]" />
+            <label class="block gf-meta text-[#8A847C] mb-2">Notes</label>
+            <textarea v-model="form.notes" rows="4" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body resize-none focus:outline-none focus:border-[#B5563A]" />
           </div>
           <button
-            class="px-6 py-3 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] disabled:opacity-40"
+            class="px-6 py-3 bg-[#B5563A] text-[#F7F4EF] gf-label uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] disabled:opacity-40"
             :disabled="saving" @click="save"
           >
             {{ saving ? 'Saving…' : 'Save changes' }}
@@ -155,10 +155,12 @@ async function setStatus(status: string) {
       <!-- ── Documents ── -->
       <section class="mb-14">
         <p class="gf-eyebrow mb-2">Documents</p>
-        <p class="text-[13.5px] text-[#8A847C] leading-relaxed max-w-[56ch] mb-6">
+        <p class="gf-meta text-[#8A847C] leading-relaxed max-w-[56ch] mb-6">
           Contracts, inspections, disclosures. We'll pull out the dates that
           matter and you confirm each one before it becomes a reminder.
         </p>
+        <div class="mb-6"><appVoiceCapture :home-id="id" /></div>
+        <appAskDocuments :home-id="id" class="mb-8" />
         <appDocumentUpload :home-id="id" class="mb-2"  />
         <appDocumentList :home-id="id" />
       </section>
@@ -166,7 +168,7 @@ async function setStatus(status: string) {
       <!-- ── Interested leads ── -->
       <section class="mb-14">
         <p class="gf-eyebrow mb-2">Interested</p>
-        <p class="text-[13.5px] text-[#8A847C] leading-relaxed max-w-[56ch] mb-6">
+        <p class="gf-meta text-[#8A847C] leading-relaxed max-w-[56ch] mb-6">
           Anyone who enquired about this property, including open-house sign-ins.
         </p>
 
@@ -177,18 +179,18 @@ async function setStatus(status: string) {
             class="flex items-center justify-between gap-4 py-4 border-b border-[#DDD6C9] hover:bg-[#DDD6C9]/25 transition-colors px-1.5"
           >
             <div class="min-w-0">
-              <p class="text-[15px] font-semibold truncate">{{ lead.name || lead.email }}</p>
-              <p class="text-[12.5px] text-[#8A847C] truncate">
+              <p class="gf-body font-semibold truncate">{{ lead.name || lead.email }}</p>
+              <p class="gf-meta text-[#8A847C] truncate">
                 {{ lead.email }}
                 <template v-if="lead.phone"> · {{ lead.phone }}</template>
               </p>
             </div>
-            <span class="text-[11px] uppercase tracking-[0.1em] text-[#A9A39A] shrink-0">
+            <span class="gf-label uppercase tracking-[0.1em] text-[#A9A39A] shrink-0">
               {{ lead.status || 'new' }}
             </span>
           </NuxtLink>
         </div>
-        <p v-else class="text-[13.5px] text-[#8A847C] py-4">
+        <p v-else class="gf-meta text-[#8A847C] py-4">
           Nobody yet. Leads captured at this address will show up here.
         </p>
       </section>
@@ -199,7 +201,7 @@ async function setStatus(status: string) {
         <div class="flex flex-wrap gap-2.5">
           <NuxtLink
             to="/dashboard/forms"
-            class="px-5 py-3 border border-[#B5563A] text-[#B5563A] text-[11px] uppercase tracking-[0.1em] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors"
+            class="px-5 py-3 border border-[#B5563A] text-[#B5563A] gf-label uppercase tracking-[0.1em] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors"
           >
             Make a QR code
           </NuxtLink>

@@ -15,6 +15,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 
 interface _GlobalComponents {
   AppAccess: typeof import("../../app/components/app/Access.vue")['default']
+  AppAskDocuments: typeof import("../../app/components/app/AskDocuments.vue")['default']
   AppCardsOverview: typeof import("../../app/components/app/CardsOverview.vue")['default']
   AppDailyBriefing: typeof import("../../app/components/app/DailyBriefing.vue")['default']
   AppDocumentList: typeof import("../../app/components/app/DocumentList.vue")['default']
@@ -22,6 +23,7 @@ interface _GlobalComponents {
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppLeadMessageComposer: typeof import("../../app/components/app/LeadMessageComposer.vue")['default']
   AppSocialCard: typeof import("../../app/components/app/SocialCard.vue")['default']
+  AppVoiceCapture: typeof import("../../app/components/app/VoiceCapture.vue")['default']
   AppReminderEmail: typeof import("../../app/components/app/appReminderEmail.vue")['default']
   AppPricing: typeof import("../../app/components/app/pricing.vue")['default']
   BaseButtonDelete: typeof import("../../app/components/base/Button/Delete.vue")['default']
@@ -47,6 +49,7 @@ interface _GlobalComponents {
   BaseTable: typeof import("../../app/components/base/Table.vue")['default']
   BaseTerrain: typeof import("../../app/components/base/Terrain.vue")['default']
   BaseTour: typeof import("../../app/components/base/Tour.vue")['default']
+  BaseVoiceField: typeof import("../../app/components/base/VoiceField.vue")['default']
   BaseButton: typeof import("../../app/components/base/button.vue")['default']
   BaseFooter: typeof import("../../app/components/base/footer.vue")['default']
   BaseIcon: typeof import("../../app/components/base/icon.vue")['default']
@@ -234,6 +237,7 @@ interface _GlobalComponents {
   Icon: typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
   NuxtIsland: typeof import("../../node_modules/nuxt/dist/app/components/nuxt-island")['default']
   LazyAppAccess: LazyComponent<typeof import("../../app/components/app/Access.vue")['default']>
+  LazyAppAskDocuments: LazyComponent<typeof import("../../app/components/app/AskDocuments.vue")['default']>
   LazyAppCardsOverview: LazyComponent<typeof import("../../app/components/app/CardsOverview.vue")['default']>
   LazyAppDailyBriefing: LazyComponent<typeof import("../../app/components/app/DailyBriefing.vue")['default']>
   LazyAppDocumentList: LazyComponent<typeof import("../../app/components/app/DocumentList.vue")['default']>
@@ -241,6 +245,7 @@ interface _GlobalComponents {
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppLeadMessageComposer: LazyComponent<typeof import("../../app/components/app/LeadMessageComposer.vue")['default']>
   LazyAppSocialCard: LazyComponent<typeof import("../../app/components/app/SocialCard.vue")['default']>
+  LazyAppVoiceCapture: LazyComponent<typeof import("../../app/components/app/VoiceCapture.vue")['default']>
   LazyAppReminderEmail: LazyComponent<typeof import("../../app/components/app/appReminderEmail.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/pricing.vue")['default']>
   LazyBaseButtonDelete: LazyComponent<typeof import("../../app/components/base/Button/Delete.vue")['default']>
@@ -266,6 +271,7 @@ interface _GlobalComponents {
   LazyBaseTable: LazyComponent<typeof import("../../app/components/base/Table.vue")['default']>
   LazyBaseTerrain: LazyComponent<typeof import("../../app/components/base/Terrain.vue")['default']>
   LazyBaseTour: LazyComponent<typeof import("../../app/components/base/Tour.vue")['default']>
+  LazyBaseVoiceField: LazyComponent<typeof import("../../app/components/base/VoiceField.vue")['default']>
   LazyBaseButton: LazyComponent<typeof import("../../app/components/base/button.vue")['default']>
   LazyBaseFooter: LazyComponent<typeof import("../../app/components/base/footer.vue")['default']>
   LazyBaseIcon: LazyComponent<typeof import("../../app/components/base/icon.vue")['default']>

@@ -20,8 +20,6 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
       bucket: string,
    },
 
-   anthropicKey: string,
-
    anthropicModel: string,
 
    nitro: {

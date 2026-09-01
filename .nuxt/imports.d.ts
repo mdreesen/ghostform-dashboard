@@ -34,6 +34,7 @@ export { CurveType, LegendPosition, Orientation } from 'vue-chrts/enums';
 export { DonutType, getMap, getPin, geoMercator, ChinaTopoJSON, FranceTopoJSON, GermanyTopoJSON, IndiaTopoJSON, UKTopoJSON, USATopoJSON, USCountiesTopoJSON, WorldMap110mAlphaTopoJSON, WorldMapSimplestTopoJSON, WorldMapTopoJSON } from 'vue-chrts';
 export { definePageMeta, PageMeta } from '#app/composables/pages';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
+export { useVoiceInput, VoiceState } from '../app/composables/useVoiceInput';
 export { useCSV } from '../app/utils/csv';
 export { date, month, timeZone, formatDate, useFormatDate, yearMonthDayFormat } from '../app/utils/date';
 export { buildDeadlineBriefing, deadlineHeadline, BriefingDeadline } from '../app/utils/deadlineBriefing';
@@ -46,6 +47,7 @@ export { PRIORITIES, effectivePriority, isHighStakes, daysUntil, whenLabel, sort
 export { useSpreadsheet, LeadRecord } from '../app/utils/spreadsheet';
 export { hasR2, assertUploadable, buildKey, presignUpload, readUrl, deleteObject, fetchAsBase64 } from '../app/utils/storage';
 export { formVarient, containerVarient, itemVarient, inputVarient, navVarient, navMenuVarient } from '../app/utils/varients';
+export { buildIntentPrompt, plausibleDate, parseAnalysis, ExtractedReminder, VoiceAnalysis } from '../app/utils/voiceIntent';
 export { reactiveStyle, reactiveTransform, useElementStyle, useElementTransform, useMotion, useMotionControls, useMotionProperties, useMotions, useMotionTransitions, useMotionVariants, useSpring, useReducedMotion } from '../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index';
 export { useQrcodeRead } from '../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode-read';
 export { useQrcode } from '../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode';

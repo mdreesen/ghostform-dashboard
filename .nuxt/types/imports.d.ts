@@ -20,6 +20,7 @@ declare global {
   const addRouteMiddleware: typeof import('../../node_modules/nuxt/dist/app/composables/router').addRouteMiddleware
   const assertUploadable: typeof import('../../app/utils/storage').assertUploadable
   const buildDeadlineBriefing: typeof import('../../app/utils/deadlineBriefing').buildDeadlineBriefing
+  const buildIntentPrompt: typeof import('../../app/utils/voiceIntent').buildIntentPrompt
   const buildKey: typeof import('../../app/utils/storage').buildKey
   const callOnce: typeof import('../../node_modules/nuxt/dist/app/composables/once').callOnce
   const cancelIdleCallback: typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback').cancelIdleCallback
@@ -113,7 +114,9 @@ declare global {
   const onUnmounted: typeof import('vue').onUnmounted
   const onUpdated: typeof import('vue').onUpdated
   const onWatcherCleanup: typeof import('vue').onWatcherCleanup
+  const parseAnalysis: typeof import('../../app/utils/voiceIntent').parseAnalysis
   const parseCsv: typeof import('../../app/utils/leadImport').parseCsv
+  const plausibleDate: typeof import('../../app/utils/voiceIntent').plausibleDate
   const prefetchComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload').prefetchComponents
   const preloadComponents: typeof import('../../node_modules/nuxt/dist/app/composables/preload').preloadComponents
   const preloadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload').preloadPayload
@@ -270,6 +273,7 @@ declare global {
   const useTransitionState: typeof import('vue').useTransitionState
   const useTransparentPwaIcon: typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index').useTransparentPwaIcon
   const useUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session').useUserSession
+  const useVoiceInput: typeof import('../../app/composables/useVoiceInput').useVoiceInput
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
@@ -295,6 +299,9 @@ declare global {
   export type { PageMeta } from '../../node_modules/nuxt/dist/app/composables/pages'
   import('../../node_modules/nuxt/dist/app/composables/pages')
   // @ts-ignore
+  export type { VoiceState } from '../../app/composables/useVoiceInput'
+  import('../../app/composables/useVoiceInput')
+  // @ts-ignore
   export type { BriefingDeadline } from '../../app/utils/deadlineBriefing'
   import('../../app/utils/deadlineBriefing')
   // @ts-ignore
@@ -309,6 +316,9 @@ declare global {
   // @ts-ignore
   export type { LeadRecord } from '../../app/utils/spreadsheet'
   import('../../app/utils/spreadsheet')
+  // @ts-ignore
+  export type { ExtractedReminder, VoiceAnalysis } from '../../app/utils/voiceIntent'
+  import('../../app/utils/voiceIntent')
 }
 // for vue template auto import
 import { UnwrapRef } from 'vue'
@@ -333,6 +343,7 @@ declare module 'vue' {
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
     readonly assertUploadable: UnwrapRef<typeof import('../../app/utils/storage')['assertUploadable']>
     readonly buildDeadlineBriefing: UnwrapRef<typeof import('../../app/utils/deadlineBriefing')['buildDeadlineBriefing']>
+    readonly buildIntentPrompt: UnwrapRef<typeof import('../../app/utils/voiceIntent')['buildIntentPrompt']>
     readonly buildKey: UnwrapRef<typeof import('../../app/utils/storage')['buildKey']>
     readonly callOnce: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/once')['callOnce']>
     readonly cancelIdleCallback: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['cancelIdleCallback']>
@@ -426,7 +437,9 @@ declare module 'vue' {
     readonly onUnmounted: UnwrapRef<typeof import('vue')['onUnmounted']>
     readonly onUpdated: UnwrapRef<typeof import('vue')['onUpdated']>
     readonly onWatcherCleanup: UnwrapRef<typeof import('vue')['onWatcherCleanup']>
+    readonly parseAnalysis: UnwrapRef<typeof import('../../app/utils/voiceIntent')['parseAnalysis']>
     readonly parseCsv: UnwrapRef<typeof import('../../app/utils/leadImport')['parseCsv']>
+    readonly plausibleDate: UnwrapRef<typeof import('../../app/utils/voiceIntent')['plausibleDate']>
     readonly prefetchComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['prefetchComponents']>
     readonly preloadComponents: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preload')['preloadComponents']>
     readonly preloadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['preloadPayload']>
@@ -583,6 +596,7 @@ declare module 'vue' {
     readonly useTransitionState: UnwrapRef<typeof import('vue')['useTransitionState']>
     readonly useTransparentPwaIcon: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['useTransparentPwaIcon']>
     readonly useUserSession: UnwrapRef<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session')['useUserSession']>
+    readonly useVoiceInput: UnwrapRef<typeof import('../../app/composables/useVoiceInput')['useVoiceInput']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
     readonly watchPostEffect: UnwrapRef<typeof import('vue')['watchPostEffect']>

@@ -13,10 +13,10 @@ import { nanoid } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node
 import { Resend } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import bcrypt from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/mongoose/index.js';
-import OpenAI from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/openai/index.mjs';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { DeleteObjectCommand, PutObjectCommand, S3Client, GetObjectCommand } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/client-s3/dist-cjs/index.js';
 import { getSignedUrl } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/s3-request-presigner/dist-cjs/index.js';
+import OpenAI from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/openai/index.mjs';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL, parseQuery, parsePath, encodePath } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/ufo/dist/index.mjs';
 import destr, { destr as destr$1 } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/destr/dist/index.mjs';
@@ -1118,7 +1118,6 @@ const _inlineRuntimeConfig = {
     "secretAccessKey": "",
     "bucket": ""
   },
-  "anthropicKey": "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",
   "anthropicModel": "claude-haiku-4-5-20251001",
   "session": {
     "name": "nuxt-session",
@@ -2993,7 +2992,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"4c6d7-FxmHrsBzb6eTQW0YJvQ4nvLF7XU\"",
+    "mtime": "2026-09-01T19:27:57.275Z",
+    "size": 313047,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"110e11-/2KAsc9s5ihvstn6waJv1AfChSk\"",
+    "mtime": "2026-09-01T19:27:57.275Z",
+    "size": 1117713,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -3179,12 +3193,14 @@ function publicAssetsURL(...path) {
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
-async function useOpenAi(messages) {
+async function useOpenAi(messages, options) {
   var _a, _b, _c;
   try {
     const res = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages
+      messages,
+      ...(options == null ? void 0 : options.maxTokens) ? { max_tokens: options.maxTokens } : {},
+      ...(options == null ? void 0 : options.temperature) !== void 0 ? { temperature: options.temperature } : {}
     });
     const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
     return typeof text === "string" && text.trim() ? text.trim() : null;
@@ -4972,9 +4988,9 @@ const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_d8uRs7 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_z7u2Qs = () => Promise.resolve().then(function () { return signup_post$1; });
-const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$h; });
+const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$j; });
 const _lazy_0YaBRe = () => Promise.resolve().then(function () { return index_delete$5; });
-const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$f; });
+const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$h; });
 const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$3; });
 const _lazy_6dQdG0 = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_vknMpb = () => Promise.resolve().then(function () { return vary_post$1; });
@@ -4983,31 +4999,34 @@ const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; }
 const _lazy_kA9GOf = () => Promise.resolve().then(function () { return deadline_post$1; });
 const _lazy_aV7cm5 = () => Promise.resolve().then(function () { return delete_post$3; });
 const _lazy_SaAvss = () => Promise.resolve().then(function () { return read_post$1; });
+const _lazy_wMMA2J = () => Promise.resolve().then(function () { return ask_post$1; });
 const _lazy_i6MJs0 = () => Promise.resolve().then(function () { return create_post$5; });
 const _lazy_fGRu2X = () => Promise.resolve().then(function () { return deadlines_get$1; });
 const _lazy_xqNoig = () => Promise.resolve().then(function () { return diagnose_get$1; });
-const _lazy_8nucrz = () => Promise.resolve().then(function () { return index_get$d; });
-const _lazy_62qNmD = () => Promise.resolve().then(function () { return index_get$b; });
+const _lazy_8nucrz = () => Promise.resolve().then(function () { return index_get$f; });
+const _lazy_62qNmD = () => Promise.resolve().then(function () { return index_get$d; });
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
 const _lazy_tq6B3q = () => Promise.resolve().then(function () { return delete_post$1; });
-const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$9; });
+const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$b; });
 const _lazy__fdLCf = () => Promise.resolve().then(function () { return update_post$1; });
 const _lazy_fhNUjB = () => Promise.resolve().then(function () { return analyse_post$1; });
 const _lazy_0rvesM = () => Promise.resolve().then(function () { return contacted_post$1; });
 const _lazy_yBxanF = () => Promise.resolve().then(function () { return draft_post$1; });
 const _lazy_qc34eq = () => Promise.resolve().then(function () { return index_delete$3; });
-const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$7; });
+const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$9; });
 const _lazy_f4xwzm = () => Promise.resolve().then(function () { return index_put$3; });
 const _lazy_ygINZT = () => Promise.resolve().then(function () { return schedule_post$1; });
 const _lazy_lZmAO2 = () => Promise.resolve().then(function () { return sendMessage_post$1; });
 const _lazy_IxLe3T = () => Promise.resolve().then(function () { return sendQuestionnaire_post$1; });
 const _lazy_YUWevn = () => Promise.resolve().then(function () { return create_post$1; });
 const _lazy_7YgUZ_ = () => Promise.resolve().then(function () { return import_post$1; });
-const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$5; });
+const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_0Doaks = () => Promise.resolve().then(function () { return tiers_get$1; });
 const _lazy_i191PU = () => Promise.resolve().then(function () { return _id__get$3; });
 const _lazy_nSdyfJ = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_0GAYoF = () => Promise.resolve().then(function () { return _id__post$1; });
+const _lazy_lDNG7s = () => Promise.resolve().then(function () { return index_post$1; });
+const _lazy_swIHoU = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_rfaZfx = () => Promise.resolve().then(function () { return generate_post$1; });
 const _lazy_Z1oZ9j = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$3; });
@@ -5027,6 +5046,7 @@ const _lazy_V0fc_M = () => Promise.resolve().then(function () { return index_get
 const _lazy_24ztMZ = () => Promise.resolve().then(function () { return index_put$1; });
 const _lazy_q1wdXI = () => Promise.resolve().then(function () { return tour_post$1; });
 const _lazy_5mZRNa = () => Promise.resolve().then(function () { return voice_post$1; });
+const _lazy_aU6sq3 = () => Promise.resolve().then(function () { return note_post$1; });
 const _lazy_mqdDEE = () => Promise.resolve().then(function () { return renderer; });
 
 const handlers = [
@@ -5048,6 +5068,7 @@ const handlers = [
   { route: '/api/documents/:id/deadline', handler: _lazy_kA9GOf, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/:id/delete', handler: _lazy_aV7cm5, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/:id/read', handler: _lazy_SaAvss, lazy: true, middleware: false, method: "post" },
+  { route: '/api/documents/ask', handler: _lazy_wMMA2J, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/create', handler: _lazy_i6MJs0, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/deadlines', handler: _lazy_fGRu2X, lazy: true, middleware: false, method: "get" },
   { route: '/api/documents/diagnose', handler: _lazy_xqNoig, lazy: true, middleware: false, method: "get" },
@@ -5073,6 +5094,8 @@ const handlers = [
   { route: '/api/qr_code/:id', handler: _lazy_i191PU, lazy: true, middleware: false, method: "get" },
   { route: '/api/qualify/:id', handler: _lazy_nSdyfJ, lazy: true, middleware: false, method: "get" },
   { route: '/api/qualify/:id', handler: _lazy_0GAYoF, lazy: true, middleware: false, method: "post" },
+  { route: '/api/reminders/:id', handler: _lazy_lDNG7s, lazy: true, middleware: false, method: "post" },
+  { route: '/api/reminders', handler: _lazy_swIHoU, lazy: true, middleware: false, method: "get" },
   { route: '/api/social/generate', handler: _lazy_rfaZfx, lazy: true, middleware: false, method: "post" },
   { route: '/api/social', handler: _lazy_Z1oZ9j, lazy: true, middleware: false, method: "delete" },
   { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
@@ -5092,6 +5115,7 @@ const handlers = [
   { route: '/api/user', handler: _lazy_24ztMZ, lazy: true, middleware: false, method: "put" },
   { route: '/api/user/tour', handler: _lazy_q1wdXI, lazy: true, middleware: false, method: "post" },
   { route: '/api/user/voice', handler: _lazy_5mZRNa, lazy: true, middleware: false, method: "post" },
+  { route: '/api/voice/note', handler: _lazy_aU6sq3, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_mqdDEE, lazy: true, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _z1ZgpX, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _QEBMFR, lazy: false, middleware: false, method: "get" },
@@ -5491,7 +5515,7 @@ const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 const UserDoc$1 = UserModelImport;
 const Lead$a = schemaImport;
 const Campaign$5 = CampaignModelImport;
-const Home$5 = HomeModel;
+const Home$7 = HomeModel;
 const stripe$2 = new Stripe(process.env.STRIPE_SECRET_KEY);
 const delete_delete = defineEventHandler(async (event) => {
   try {
@@ -5510,7 +5534,7 @@ const delete_delete = defineEventHandler(async (event) => {
     await Promise.all([
       Lead$a.deleteMany({ userId: user._id }),
       Campaign$5.deleteMany({ userId: user._id }),
-      Home$5.deleteMany({ userId: user._id })
+      Home$7.deleteMany({ userId: user._id })
     ]);
     await UserDoc$1.deleteOne({ _id: user._id });
   } catch (error) {
@@ -5528,12 +5552,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$9 = UserModelImport;
-const bodySchema$q = z.object({
+const bodySchema$t = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$q.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$t.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5572,13 +5596,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$8 = UserModelImport;
-const bodySchema$p = z.object({
+const bodySchema$s = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$p.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$s.parse);
   try {
     await connectDB();
     const user = await User$8.findOne({ email });
@@ -5632,13 +5656,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$7 = UserModelImport;
-const bodySchema$o = z.object({
+const bodySchema$r = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$o.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$r.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -5661,7 +5685,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$n = z.object({
+const bodySchema$q = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5670,7 +5694,7 @@ const bodySchema$n = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$n.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$q.parse);
   try {
     await connectDB();
     const user = await User$6.findOne({ email });
@@ -5711,7 +5735,7 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const index_get$g = defineEventHandler(async (event) => {
+const index_get$i = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) {
@@ -5725,18 +5749,18 @@ const index_get$g = defineEventHandler(async (event) => {
   return briefing;
 });
 
-const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$j = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$g
+  default: index_get$i
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$m = z.object({
+const bodySchema$p = z.object({
   _id: z.string()
 });
 const index_delete$4 = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$m.parse);
+    const body = await readValidatedBody(event, bodySchema$p.parse);
     await Campaign$4.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -5753,15 +5777,15 @@ const index_delete$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$3 = CampaignModelImport;
-const index_get$e = defineEventHandler(async (event) => {
+const index_get$g = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
   const data = await Campaign$3.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$f = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$e
+  default: index_get$g
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$2 = CampaignModelImport;
@@ -5816,7 +5840,7 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const bodySchema$l = z.object({
+const bodySchema$o = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -5825,7 +5849,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$l.parse);
+  const body = await readValidatedBody(event, bodySchema$o.parse);
   try {
     await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
@@ -5843,14 +5867,14 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$k = z.object({
+const bodySchema$n = z.object({
   _id: z.string(),
   varyWording: z.boolean()
 });
 const vary_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, varyWording } = await readValidatedBody(event, bodySchema$k.parse);
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$n.parse);
   const res = await Campaign.updateOne(
     { _id, userId: user._id },
     { $set: { varyWording } }
@@ -5979,8 +6003,8 @@ const documentSchema = new Schema({
 documentSchema.index({ userId: 1, homeId: 1 });
 const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
 
-const Doc$5 = DocumentModel;
-const bodySchema$j = z.object({
+const Doc$7 = DocumentModel;
+const bodySchema$m = z.object({
   deadlineId: z.string(),
   action: z.enum(["confirm", "dismiss", "complete", "reopen"]),
   // Corrections — the realtor may fix a misread date or reprioritise.
@@ -5992,7 +6016,7 @@ const deadline_post = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { deadlineId, action, date, label, priority } = await readValidatedBody(event, bodySchema$j.parse);
+  const { deadlineId, action, date, label, priority } = await readValidatedBody(event, bodySchema$m.parse);
   const set = {};
   if (action === "confirm") set["deadlines.$.confirmed"] = true;
   if (action === "dismiss") set["deadlines.$.dismissed"] = true;
@@ -6010,7 +6034,7 @@ const deadline_post = defineEventHandler(async (event) => {
   }
   if (label) set["deadlines.$.label"] = label;
   if (priority) set["deadlines.$.priority"] = priority;
-  const res = await Doc$5.updateOne(
+  const res = await Doc$7.updateOne(
     { _id: (_a = event.context.params) == null ? void 0 : _a.id, userId: user._id, "deadlines._id": deadlineId },
     { $set: set }
   );
@@ -6124,13 +6148,13 @@ async function fetchAsBase64(key) {
   }
 }
 
-const Doc$4 = DocumentModel;
+const Doc$6 = DocumentModel;
 const delete_post$2 = defineEventHandler(async (event) => {
   var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$4.findOne({ _id: id, userId: user._id }).lean();
+  const doc = await Doc$6.findOne({ _id: id, userId: user._id }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
   const liveDeadlines = ((_b = doc.deadlines) != null ? _b : []).filter(
     (d) => d.confirmed && !d.dismissed && !d.completed
@@ -6144,7 +6168,7 @@ const delete_post$2 = defineEventHandler(async (event) => {
       console.error("[document] could not remove stored file for", id);
     }
   }
-  await Doc$4.deleteOne({ _id: id, userId: user._id });
+  await Doc$6.deleteOne({ _id: id, userId: user._id });
   if (!fileRemoved) {
     console.warn(`[document] record ${id} deleted but its file remains in storage.`);
   }
@@ -6292,22 +6316,22 @@ async function readDocument(base64, mime, filename) {
   }
 }
 
-const Doc$3 = DocumentModel;
+const Doc$5 = DocumentModel;
 const read_post = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$3.findOne({ _id: id, userId: user._id }).lean();
+  const doc = await Doc$5.findOne({ _id: id, userId: user._id }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
-  await Doc$3.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
+  await Doc$5.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
   const run = async () => {
     try {
       const file = await fetchAsBase64(doc.storageKey);
       if (!file) throw new Error("Could not read the file from storage.");
       const reading = await readDocument(file.data, file.mime || doc.mime, doc.filename);
       if (!reading) throw new Error("The document could not be read.");
-      await Doc$3.updateOne({ _id: id }, {
+      await Doc$5.updateOne({ _id: id }, {
         $set: {
           docType: reading.docType,
           summary: reading.summary,
@@ -6337,7 +6361,7 @@ const read_post = defineEventHandler(async (event) => {
       } else if (/storage/i.test(msg)) {
         reason = "We could not open that file. Try uploading it again.";
       }
-      await Doc$3.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
+      await Doc$5.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
     }
   };
   event.waitUntil ? event.waitUntil(run()) : run();
@@ -6349,8 +6373,95 @@ const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: read_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Doc$2 = DocumentModel;
-const bodySchema$i = z.object({
+const Doc$4 = DocumentModel;
+const Home$6 = HomeModel;
+const bodySchema$l = z.object({
+  question: z.string().min(3).max(500),
+  homeId: z.string().optional(),
+  leadId: z.string().optional()
+});
+const ask_post = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { question, homeId, leadId } = await readValidatedBody(event, bodySchema$l.parse);
+  if (!process.env.OPENAI_API_KEY) {
+    throw createError({ statusCode: 503, message: "Answering is not configured yet." });
+  }
+  const filter = { userId: user._id };
+  if (homeId) filter.homeId = homeId;
+  if (leadId) filter.leadId = leadId;
+  const docs = await Doc$4.find(filter, {
+    filename: 1,
+    docType: 1,
+    summary: 1,
+    deadlines: 1,
+    homeId: 1
+  }).limit(40).lean();
+  if (!docs.length) {
+    return { answer: "There are no documents here yet, so there is nothing for me to check.", sources: [] };
+  }
+  const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
+  const homes = homeIds.length ? await Home$6.find({ _id: { $in: homeIds }, userId: user._id }, { name: 1, address: 1 }).lean() : [];
+  const homeById = new Map(homes.map((h) => [String(h._id), h]));
+  const context = docs.map((d) => {
+    var _a2;
+    const home = d.homeId ? homeById.get(String(d.homeId)) : null;
+    const dates = ((_a2 = d.deadlines) != null ? _a2 : []).filter((x) => !x.dismissed).map((x) => {
+      const when = new Date(x.date).toISOString().slice(0, 10);
+      const state = x.completed ? "DONE" : x.confirmed ? "confirmed" : "unconfirmed";
+      return `  - ${x.label}: ${when} (${state})`;
+    }).join("\n");
+    return [
+      `DOCUMENT: ${d.docType || "Unknown type"} \u2014 ${d.filename}`,
+      home ? `PROPERTY: ${home.address || home.name}` : "",
+      d.summary ? `SUMMARY: ${d.summary}` : "",
+      dates ? `DATES:
+${dates}` : "  (no dates recorded)"
+    ].filter(Boolean).join("\n");
+  }).join("\n\n");
+  const prompt = [
+    `A real estate agent is asking about their own documents. Answer from the`,
+    `information below and nothing else.`,
+    ``,
+    `Today: ${(/* @__PURE__ */ new Date()).toISOString().slice(0, 10)}`,
+    ``,
+    context,
+    ``,
+    `QUESTION: ${question}`,
+    ``,
+    `RULES`,
+    `- Answer in one or two sentences. They are often driving or between showings.`,
+    `- Give the actual date AND how far away it is ("March 14, that's Tuesday").`,
+    `- If the answer isn't in the information above, say so plainly and name`,
+    `  which document they should open. NEVER guess a date \u2014 acting on a wrong`,
+    `  one costs them the deal.`,
+    `- If a date is marked unconfirmed, say that it still needs checking.`,
+    `- Do not give legal advice or interpret what a clause means.`
+  ].join("\n");
+  try {
+    const answer = await useOpenAi(
+      [{ role: "user", content: prompt }],
+      { maxTokens: 500, temperature: 0.3 }
+    );
+    if (!answer) throw new Error("empty response");
+    return {
+      answer,
+      sources: docs.map((d) => ({ id: String(d._id), filename: d.filename, docType: d.docType }))
+    };
+  } catch (err) {
+    console.error("[ask] failed:", ((_b = (_a = err == null ? void 0 : err.data) == null ? void 0 : _a.error) == null ? void 0 : _b.message) || (err == null ? void 0 : err.message));
+    throw createError({ statusCode: 502, message: "Could not answer that just now. Please try again." });
+  }
+});
+
+const ask_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: ask_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Doc$3 = DocumentModel;
+const bodySchema$k = z.object({
   filename: z.string().min(1),
   storageKey: z.string().min(1),
   mime: z.string().default(""),
@@ -6361,8 +6472,8 @@ const bodySchema$i = z.object({
 const create_post$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const body = await readValidatedBody(event, bodySchema$i.parse);
-  const doc = await Doc$2.create({
+  const body = await readValidatedBody(event, bodySchema$k.parse);
+  const doc = await Doc$3.create({
     userId: user._id,
     filename: body.filename,
     storageKey: body.storageKey,
@@ -6380,8 +6491,8 @@ const create_post$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: create_post$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Doc$1 = DocumentModel;
-const Home$4 = HomeModel;
+const Doc$2 = DocumentModel;
+const Home$5 = HomeModel;
 const Lead$8 = schemaImport;
 async function buildDeadlineBriefing(userId, horizonDays = 14) {
   var _a, _b, _c, _d, _e;
@@ -6390,14 +6501,14 @@ async function buildDeadlineBriefing(userId, horizonDays = 14) {
   start.setHours(0, 0, 0, 0);
   const horizon = new Date(start);
   horizon.setDate(horizon.getDate() + horizonDays);
-  const docs = await Doc$1.find(
+  const docs = await Doc$2.find(
     { userId, "deadlines.confirmed": true },
     { filename: 1, deadlines: 1, homeId: 1, leadId: 1, docType: 1 }
   ).lean();
   const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
   const leadIds = [...new Set(docs.map((d) => d.leadId).filter(Boolean).map(String))];
   const [homes, leads] = await Promise.all([
-    homeIds.length ? Home$4.find({ _id: { $in: homeIds }, userId }, { name: 1, address: 1 }).lean() : Promise.resolve([]),
+    homeIds.length ? Home$5.find({ _id: { $in: homeIds }, userId }, { name: 1, address: 1 }).lean() : Promise.resolve([]),
     leadIds.length ? Lead$8.find({ _id: { $in: leadIds }, userId }, { name: 1, email: 1 }).lean() : Promise.resolve([])
   ]);
   const homeById = new Map(homes.map((h) => [String(h._id), h]));
@@ -6495,30 +6606,30 @@ const diagnose_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: diagnose_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Doc = DocumentModel;
-const index_get$c = defineEventHandler(async (event) => {
+const Doc$1 = DocumentModel;
+const index_get$e = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const q = getQuery$1(event);
   const filter = { userId: user._id };
   if (q.homeId) filter.homeId = q.homeId;
   if (q.leadId) filter.leadId = q.leadId;
-  return Doc.find(filter).sort({ createdAt: -1 }).limit(200).lean();
+  return Doc$1.find(filter).sort({ createdAt: -1 }).limit(200).lean();
 });
 
-const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$f = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$c
+  default: index_get$e
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Home$3 = HomeModel;
+const Home$4 = HomeModel;
 const Lead$7 = schemaImport;
-const index_get$a = defineEventHandler(async (event) => {
+const index_get$c = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const home = await Home$3.findOne({ _id: id, userId: user._id }).lean();
+  const home = await Home$4.findOne({ _id: id, userId: user._id }).lean();
   if (!home) throw createError({ statusCode: 404, message: "Property not found." });
   const leads = await Lead$7.find({
     userId: user._id,
@@ -6530,13 +6641,13 @@ const index_get$a = defineEventHandler(async (event) => {
   return { home, leads };
 });
 
-const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$a
+  default: index_get$c
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$6 = HomeModel;
-const bodySchema$h = z.object({
+const bodySchema$j = z.object({
   name: z.string().nullish(),
   // The address is the only field that genuinely matters — it's what gets
   // attached to a captured lead so the realtor knows which listing it came from.
@@ -6546,7 +6657,7 @@ const bodySchema$h = z.object({
   status: z.enum(["active", "pending", "sold"]).optional()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$h.parse);
+  const body = await readValidatedBody(event, bodySchema$j.parse);
   const user = await loggedInUser(event);
   try {
     const created = await Lead$6.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -6565,13 +6676,13 @@ const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: create_post$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Home$2 = HomeModel;
-const bodySchema$g = z.object({ _id: z.string() });
+const Home$3 = HomeModel;
+const bodySchema$i = z.object({ _id: z.string() });
 const delete_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id } = await readValidatedBody(event, bodySchema$g.parse);
-  const res = await Home$2.deleteOne({ _id, userId: user._id });
+  const { _id } = await readValidatedBody(event, bodySchema$i.parse);
+  const res = await Home$3.deleteOne({ _id, userId: user._id });
   if (res.deletedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
   }
@@ -6583,20 +6694,20 @@ const delete_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: delete_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Home$1 = HomeModel;
-const index_get$8 = defineEventHandler(async (event) => {
+const Home$2 = HomeModel;
+const index_get$a = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
-  const data = await Home$1.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const data = await Home$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$8
+  default: index_get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Home = HomeModel;
-const bodySchema$f = z.object({
+const Home$1 = HomeModel;
+const bodySchema$h = z.object({
   _id: z.string(),
   name: z.string().nullish(),
   address: z.string().min(1),
@@ -6607,8 +6718,8 @@ const bodySchema$f = z.object({
 const update_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, ...fields } = await readValidatedBody(event, bodySchema$f.parse);
-  const res = await Home.updateOne({ _id, userId: user._id }, { $set: fields });
+  const { _id, ...fields } = await readValidatedBody(event, bodySchema$h.parse);
+  const res = await Home$1.updateOne({ _id, userId: user._id }, { $set: fields });
   if (res.matchedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
   }
@@ -6738,7 +6849,7 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$4 = schemaImport;
-const index_get$6 = defineEventHandler(async (event) => {
+const index_get$8 = defineEventHandler(async (event) => {
   try {
     const id = getRouterParam(event, "id");
     const data = await Lead$4.findById(id).lean();
@@ -6752,13 +6863,13 @@ const index_get$6 = defineEventHandler(async (event) => {
   }
 });
 
-const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$6
+  default: index_get$8
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$3 = schemaImport;
-const bodySchema$e = z.object({
+const bodySchema$g = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -6781,7 +6892,7 @@ const bodySchema$e = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$e.parse);
+  const body = await readValidatedBody(event, bodySchema$g.parse);
   try {
     const existing = await Lead$3.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
@@ -6854,7 +6965,7 @@ function useCleanString(str) {
 
 const LeadModel$4 = schemaImport;
 const resend$1 = new Resend(process.env.RESEND_KEY);
-const bodySchema$d = z.object({
+const bodySchema$f = z.object({
   // The (possibly realtor-edited) message body to send.
   message: z.string().min(1),
   // Optional custom subject; defaults to a friendly follow-up line.
@@ -6867,7 +6978,7 @@ const sendMessage_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session expired." });
   }
-  const { message, subject } = await readValidatedBody(event, bodySchema$d.parse);
+  const { message, subject } = await readValidatedBody(event, bodySchema$f.parse);
   const lead = await LeadModel$4.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
@@ -6930,7 +7041,7 @@ function customGhostFormUrl({
 }
 
 const LeadModel$3 = schemaImport;
-const bodySchema$c = z.object({
+const bodySchema$e = z.object({
   intent: z.enum(["buy", "sell"]).optional()
 });
 const sendQuestionnaire_post = defineEventHandler(async (event) => {
@@ -6938,7 +7049,7 @@ const sendQuestionnaire_post = defineEventHandler(async (event) => {
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { intent } = await readValidatedBody(event, bodySchema$c.parse);
+  const { intent } = await readValidatedBody(event, bodySchema$e.parse);
   const lead = await LeadModel$3.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
@@ -7000,7 +7111,7 @@ const sendQuestionnaire_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$2 = schemaImport;
-const bodySchema$b = z.object({
+const bodySchema$d = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -7021,7 +7132,7 @@ const bodySchema$b = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$b.parse);
+  const body = await readValidatedBody(event, bodySchema$d.parse);
   const user = await loggedInUser(event);
   try {
     await Lead$2.create({ userId: user == null ? void 0 : user._id, ...body });
@@ -7040,7 +7151,7 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Lead$1 = schemaImport;
-const bodySchema$a = z.object({
+const bodySchema$c = z.object({
   leads: z.array(z.object({
     name: z.string().optional(),
     email: z.string(),
@@ -7057,7 +7168,7 @@ const bodySchema$a = z.object({
 const import_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$a.parse);
+  const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$c.parse);
   const emails = leads.map((l) => l.email.toLowerCase());
   const existing = await Lead$1.find(
     { userId: user._id, email: { $in: emails } },
@@ -7128,7 +7239,7 @@ const selection_status_lead = [
 ];
 
 const Lead = schemaImport;
-const index_get$4 = defineEventHandler(async (event) => {
+const index_get$6 = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
   const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   const findLeadStatus = selection_status_lead.map((item) => {
@@ -7145,9 +7256,9 @@ const index_get$4 = defineEventHandler(async (event) => {
   };
 });
 
-const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$4
+  default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const tiers_get = defineEventHandler(async (event) => {
@@ -7238,7 +7349,7 @@ const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const LeadModel$1 = schemaImport;
-const bodySchema$9 = z.object({
+const bodySchema$b = z.object({
   answers: z.record(z.string(), z.union([z.string(), z.number()]))
 });
 const _id__post = defineEventHandler(async (event) => {
@@ -7251,7 +7362,7 @@ const _id__post = defineEventHandler(async (event) => {
   if (!parsed) {
     throw createError({ statusCode: 401, message: "This link is not valid or has expired." });
   }
-  const { answers } = await readValidatedBody(event, bodySchema$9.parse);
+  const { answers } = await readValidatedBody(event, bodySchema$b.parse);
   await connectDB();
   const lead = await LeadModel$1.findById(parsed.leadId);
   if (!lead) throw createError({ statusCode: 404, message: "We could not find that record." });
@@ -7292,7 +7403,121 @@ const _id__post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: _id__post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const bodySchema$8 = z.object({
+const reminderSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  text: { type: String, required: true },
+  // "Call the Chens about the inspection"
+  dueAt: { type: Date, required: true, index: true },
+  /** Optional context, when the note mentioned one. */
+  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
+  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
+  priority: { type: String, enum: ["high", "medium", "low"], default: "medium" },
+  /**
+   * Where this came from. A spoken reminder is a transcription of a
+   * transcription — the AI heard what the browser heard — so it starts
+   * unconfirmed for the same reason extracted dates do. Mishearing "Thursday"
+   * as "Tuesday" is a missed call.
+   */
+  source: { type: String, enum: ["voice", "typed"], default: "typed" },
+  confirmed: { type: Boolean, default: false },
+  /** The exact words spoken, so they can check what we heard. */
+  heardAs: { type: String, default: "" },
+  completed: { type: Boolean, default: false },
+  completedAt: Date,
+  dismissed: { type: Boolean, default: false }
+}, { timestamps: true });
+reminderSchema.index({ userId: 1, dueAt: 1, completed: 1 });
+const ReminderModel = mongoose.models.Reminder || mongoose.model("Reminder", reminderSchema);
+
+const Reminder$2 = ReminderModel;
+const bodySchema$a = z.object({
+  action: z.enum(["confirm", "complete", "dismiss", "reopen"]),
+  dueAt: z.string().optional(),
+  text: z.string().max(200).optional()
+});
+const index_post = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { action, dueAt, text } = await readValidatedBody(event, bodySchema$a.parse);
+  const set = {};
+  if (action === "confirm") set.confirmed = true;
+  if (action === "complete") {
+    set.completed = true;
+    set.completedAt = /* @__PURE__ */ new Date();
+  }
+  if (action === "reopen") {
+    set.completed = false;
+    set.completedAt = null;
+  }
+  if (action === "dismiss") set.dismissed = true;
+  if (dueAt && !Number.isNaN(Date.parse(dueAt))) {
+    set.dueAt = new Date(dueAt);
+    set.confirmed = true;
+  }
+  if (text) {
+    set.text = text;
+    set.confirmed = true;
+  }
+  const res = await Reminder$2.updateOne(
+    { _id: (_a = event.context.params) == null ? void 0 : _a.id, userId: user._id },
+    { $set: set }
+  );
+  if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Reminder not found." });
+  return { success: true };
+});
+
+const index_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Reminder$1 = ReminderModel;
+const Home = HomeModel;
+const index_get$4 = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const horizon = Number((_a = getQuery$1(event).horizon) != null ? _a : 14);
+  const start = /* @__PURE__ */ new Date();
+  start.setHours(0, 0, 0, 0);
+  const until = new Date(start);
+  until.setDate(until.getDate() + horizon);
+  const items = await Reminder$1.find({
+    userId: user._id,
+    completed: false,
+    dismissed: false,
+    dueAt: { $lte: until }
+    // overdue included — no lower bound
+  }).sort({ dueAt: 1 }).limit(100).lean();
+  const homeIds = [...new Set(items.map((r) => r.homeId).filter(Boolean).map(String))];
+  const homes = homeIds.length ? await Home.find({ _id: { $in: homeIds }, userId: user._id }, { name: 1, address: 1 }).lean() : [];
+  const homeById = new Map(homes.map((h) => [String(h._id), h]));
+  return items.map((r) => {
+    var _a2, _b;
+    const home = r.homeId ? homeById.get(String(r.homeId)) : null;
+    return {
+      _id: String(r._id),
+      text: r.text,
+      dueAt: r.dueAt,
+      priority: r.priority,
+      confirmed: r.confirmed,
+      source: r.source,
+      heardAs: r.heardAs,
+      propertyAddress: (_a2 = home == null ? void 0 : home.address) != null ? _a2 : "",
+      propertyName: (_b = home == null ? void 0 : home.name) != null ? _b : "",
+      homeId: r.homeId ? String(r.homeId) : void 0,
+      daysUntil: Math.round((new Date(r.dueAt).setHours(0, 0, 0, 0) - start.getTime()) / 864e5)
+    };
+  });
+});
+
+const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$4
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const bodySchema$9 = z.object({
   platform: z.enum(["facebook", "instagram", "x"]),
   topic: z.string().default("personal"),
   details: z.string().optional(),
@@ -7301,7 +7526,7 @@ const bodySchema$8 = z.object({
 const generate_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$8.parse);
+  const { platform, topic, details, count } = await readValidatedBody(event, bodySchema$9.parse);
   const { posts, source } = await generateSocialPosts(
     platform,
     topic,
@@ -7354,12 +7579,12 @@ const socialPostSchema = new Schema({
 const SocialPostModel = mongoose.models.SocialPost || mongoose.model("SocialPost", socialPostSchema);
 
 const Social = SocialPostModel;
-const bodySchema$7 = z.object({
+const bodySchema$8 = z.object({
   _id: z.string()
 });
 const index_delete = defineEventHandler(async (event) => {
   try {
-    const body = await readValidatedBody(event, bodySchema$7.parse);
+    const body = await readValidatedBody(event, bodySchema$8.parse);
     await Social.deleteOne({ _id: body._id });
   } catch (error) {
     console.log(error);
@@ -7396,7 +7621,7 @@ const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost$1 = SocialPostModel;
-const bodySchema$6 = z.object({
+const bodySchema$7 = z.object({
   platform: z.enum(["facebook", "instagram", "x"]),
   topic: z.string().default("general"),
   body: z.string().min(1),
@@ -7407,7 +7632,7 @@ const bodySchema$6 = z.object({
 const save_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const data = await readValidatedBody(event, bodySchema$6.parse);
+  const data = await readValidatedBody(event, bodySchema$7.parse);
   const created = await SocialPost$1.create({ userId: user._id, ...data });
   return { success: true, _id: String(created._id) };
 });
@@ -7418,7 +7643,7 @@ const save_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost = SocialPostModel;
-const bodySchema$5 = z.object({
+const bodySchema$6 = z.object({
   _id: z.string(),
   status: z.enum(["draft", "approved", "posted", "discarded"]),
   body: z.string().optional()
@@ -7426,7 +7651,7 @@ const bodySchema$5 = z.object({
 const status_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, status, body } = await readValidatedBody(event, bodySchema$5.parse);
+  const { _id, status, body } = await readValidatedBody(event, bodySchema$6.parse);
   const update = { status };
   if (typeof body === "string" && body.trim()) update.body = body.trim();
   if (status === "posted") update.postedAt = /* @__PURE__ */ new Date();
@@ -7690,7 +7915,7 @@ const ____key__put$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: ____key__put
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const bodySchema$4 = z.object({
+const bodySchema$5 = z.object({
   filename: z.string().min(1),
   contentType: z.string().min(1),
   bytes: z.number().int().positive(),
@@ -7709,7 +7934,7 @@ const ALLOWED = /* @__PURE__ */ new Set([
 const sign_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { filename, contentType, bytes, scope } = await readValidatedBody(event, bodySchema$4.parse);
+  const { filename, contentType, bytes, scope } = await readValidatedBody(event, bodySchema$5.parse);
   if (!ALLOWED.has(contentType)) {
     throw createError({
       statusCode: 400,
@@ -7731,7 +7956,7 @@ const sign_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 
 const User$5 = UserModelImport;
 const hex = z.string().regex(/^#[0-9A-Fa-f]{6}$/);
-const bodySchema$3 = z.object({
+const bodySchema$4 = z.object({
   theme: z.enum(["light", "dark", "accent", "custom"]).optional(),
   bg: hex.optional(),
   fg: hex.optional(),
@@ -7743,7 +7968,7 @@ const bodySchema$3 = z.object({
 const cardStyle_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const style = await readValidatedBody(event, bodySchema$3.parse);
+  const style = await readValidatedBody(event, bodySchema$4.parse);
   await User$5.updateOne(
     { _id: user._id },
     { $set: Object.fromEntries(Object.entries(style).map(([k, v]) => [`cardStyle.${k}`, v])) }
@@ -7774,7 +7999,7 @@ const headshot_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineP
 const Asset = AssetModel;
 const User$3 = UserModelImport;
 const MAX_BASE64 = 4e5;
-const bodySchema$2 = z.object({
+const bodySchema$3 = z.object({
   // data URL from the client-side canvas compressor
   image: z.string().min(50),
   width: z.number().optional(),
@@ -7783,7 +8008,7 @@ const bodySchema$2 = z.object({
 const headshot_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { image, width, height } = await readValidatedBody(event, bodySchema$2.parse);
+  const { image, width, height } = await readValidatedBody(event, bodySchema$3.parse);
   const match = /^data:(image\/(?:jpeg|png|webp));base64,(.+)$/.exec(image);
   if (!match) {
     throw createError({
@@ -7840,7 +8065,7 @@ const index_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$2 = UserModelImport;
-const bodySchema$1 = z.object({
+const bodySchema$2 = z.object({
   name: z.string().nullable(),
   company: z.string().nullable(),
   phone: z.string().nullable(),
@@ -7850,7 +8075,7 @@ const bodySchema$1 = z.object({
   cold_lead_after_days: z.string().nullable()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { name, company, phone, email, region, calendar_link, cold_lead_after_days } = await readValidatedBody(event, bodySchema$1.parse);
+  const { name, company, phone, email, region, calendar_link, cold_lead_after_days } = await readValidatedBody(event, bodySchema$2.parse);
   console.log(typeof cold_lead_after_days);
   const obj = {
     name,
@@ -7898,7 +8123,7 @@ const tour_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User = UserModelImport;
-const bodySchema = z.object({
+const bodySchema$1 = z.object({
   tone: z.enum(["warm", "straight", "playful", "polished"]).optional(),
   about: z.string().max(500).optional(),
   focus: z.string().max(300).optional(),
@@ -7911,7 +8136,7 @@ const bodySchema = z.object({
 const voice_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const voice = await readValidatedBody(event, bodySchema.parse);
+  const voice = await readValidatedBody(event, bodySchema$1.parse);
   await User.updateOne(
     { _id: user._id },
     { $set: Object.fromEntries(Object.entries(voice).map(([k, v]) => [`voice.${k}`, v])) }
@@ -7922,6 +8147,206 @@ const voice_post = defineEventHandler(async (event) => {
 const voice_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: voice_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const voiceNoteSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  transcript: { type: String, required: true },
+  /** What the AI decided this was. */
+  intent: {
+    type: String,
+    enum: ["note", "question", "reminder", "mixed", "unclear"],
+    default: "note"
+  },
+  /** Its answer, when the note was a question. */
+  answer: { type: String, default: "" },
+  /** Reminders created from it. */
+  reminderIds: [{ type: Schema.Types.ObjectId, ref: "Reminder" }],
+  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
+  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
+  status: { type: String, enum: ["processing", "ready", "failed"], default: "processing" },
+  failureReason: { type: String, default: "" }
+}, { timestamps: true });
+const VoiceNoteModel = mongoose.models.VoiceNote || mongoose.model("VoiceNote", voiceNoteSchema);
+
+function buildIntentPrompt(transcript, today, context) {
+  return [
+    `A real estate agent spoke this into their phone. Work out what they wanted.`,
+    ``,
+    `THEY SAID: "${transcript}"`,
+    `TODAY: ${today}`,
+    context ? `
+THEIR CURRENT WORK:
+${context}` : "",
+    ``,
+    `Classify it as ONE of:`,
+    `  note     \u2014 an observation to keep. "Buyers loved the kitchen."`,
+    `  question \u2014 they want an answer. "When's the inspection deadline?"`,
+    `  reminder \u2014 they want a nudge later. "Remind me to call them Thursday."`,
+    `  mixed    \u2014 a note AND a reminder, or a note AND a question.`,
+    `  unclear  \u2014 you genuinely can't tell.`,
+    ``,
+    `FOR REMINDERS, extract each one:`,
+    `  text     \u2014 what to do, in their words, as an instruction.`,
+    `             "Call the Chens about the inspection" \u2014 not "reminder to call".`,
+    `  dueAt    \u2014 ISO YYYY-MM-DD. Resolve relative words against TODAY:`,
+    `             "tomorrow", "Thursday", "next week", "in three days".`,
+    `             If NO time was given at all, use tomorrow and say so in heardAs.`,
+    `  priority \u2014 high if they said urgent/important/first thing, else medium.`,
+    `  heardAs  \u2014 the exact fragment you took it from, VERBATIM. This is how`,
+    `             they check whether you heard the day right.`,
+    ``,
+    `RULES`,
+    `- Do NOT invent a reminder from an offhand remark. "I should probably`,
+    `  follow up sometime" is a note, not a reminder. Only create one when they`,
+    `  clearly asked to be reminded or named a task and a time.`,
+    `- Do NOT answer the question here \u2014 just identify it. Something else`,
+    `  answers it against their real data.`,
+    `- Keep the note in THEIR words. Tidy the grammar, don't rewrite the`,
+    `  meaning, and never add detail they didn't say.`,
+    `- Speech-to-text mishears names and streets. If a word looks garbled,`,
+    `  leave it as heard rather than guessing at a correction.`,
+    ``,
+    `Return ONLY JSON, no fence:`,
+    `{"intent":"mixed","note":"...","question":"...","reminders":[{"text":"...",`,
+    `"dueAt":"YYYY-MM-DD","priority":"medium","heardAs":"..."}]}`
+  ].filter(Boolean).join("\n");
+}
+function plausibleDate(iso, today = /* @__PURE__ */ new Date()) {
+  const t = Date.parse(iso);
+  if (Number.isNaN(t)) return false;
+  const days = Math.round((t - today.setHours(0, 0, 0, 0)) / 864e5);
+  return days >= 0 && days <= 365;
+}
+function parseAnalysis(raw) {
+  var _a, _b, _c;
+  try {
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    const s = cleaned.indexOf("{"), e = cleaned.lastIndexOf("}");
+    if (s === -1) return null;
+    const p = JSON.parse(cleaned.slice(s, e + 1));
+    const intents = ["note", "question", "reminder", "mixed", "unclear"];
+    return {
+      intent: intents.includes(p.intent) ? p.intent : "note",
+      note: String((_a = p.note) != null ? _a : "").slice(0, 2e3),
+      question: String((_b = p.question) != null ? _b : "").slice(0, 500),
+      reminders: ((_c = p.reminders) != null ? _c : []).map((r) => {
+        var _a2, _b2, _c2;
+        return {
+          text: String((_a2 = r.text) != null ? _a2 : "").slice(0, 200),
+          dueAt: String((_b2 = r.dueAt) != null ? _b2 : ""),
+          priority: ["high", "medium", "low"].includes(r.priority) ? r.priority : "medium",
+          heardAs: String((_c2 = r.heardAs) != null ? _c2 : "").slice(0, 300)
+        };
+      }).filter((r) => r.text && plausibleDate(r.dueAt))
+    };
+  } catch {
+    return null;
+  }
+}
+
+const Note = VoiceNoteModel;
+const Reminder = ReminderModel;
+const Doc = DocumentModel;
+const bodySchema = z.object({
+  transcript: z.string().min(2).max(4e3),
+  homeId: z.string().optional(),
+  leadId: z.string().optional()
+});
+const note_post = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { transcript, homeId, leadId } = await readValidatedBody(event, bodySchema.parse);
+  if (!process.env.OPENAI_API_KEY) {
+    throw createError({ statusCode: 503, message: "Voice notes are not configured yet." });
+  }
+  const note = await Note.create({
+    userId: user._id,
+    transcript,
+    homeId: homeId || void 0,
+    leadId: leadId || void 0,
+    status: "processing"
+  });
+  try {
+    const filter = { userId: user._id };
+    if (homeId) filter.homeId = homeId;
+    if (leadId) filter.leadId = leadId;
+    const docs = await Doc.find(filter, { docType: 1, summary: 1, deadlines: 1 }).limit(20).lean();
+    const context = docs.map((d) => {
+      var _a2;
+      const dates = ((_a2 = d.deadlines) != null ? _a2 : []).filter((x) => !x.dismissed && !x.completed).map((x) => `    ${x.label}: ${new Date(x.date).toISOString().slice(0, 10)}`).join("\n");
+      return [`  ${d.docType || "Document"}`, dates].filter(Boolean).join("\n");
+    }).join("\n");
+    const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+    const raw = await useOpenAi(
+      [{ role: "user", content: buildIntentPrompt(transcript, today, context) }],
+      // Headroom so the JSON can't be cut off mid-object — a truncated
+      // response parses as a failure and silently loses a reminder.
+      // Low temperature because this is extraction, not writing.
+      { maxTokens: 1200, temperature: 0.2 }
+    );
+    const analysis = raw ? parseAnalysis(raw) : null;
+    if (!analysis) throw new Error("could not understand the note");
+    const reminderIds = [];
+    for (const r of analysis.reminders) {
+      const created = await Reminder.create({
+        userId: user._id,
+        text: r.text,
+        dueAt: new Date(r.dueAt),
+        priority: r.priority,
+        homeId: homeId || void 0,
+        leadId: leadId || void 0,
+        source: "voice",
+        confirmed: false,
+        heardAs: r.heardAs
+      });
+      reminderIds.push(created._id);
+    }
+    await Note.updateOne({ _id: note._id }, {
+      $set: {
+        intent: analysis.intent,
+        reminderIds,
+        status: "ready"
+      }
+    });
+    return {
+      noteId: String(note._id),
+      intent: analysis.intent,
+      note: analysis.note,
+      question: analysis.question,
+      reminders: analysis.reminders.map((r, i) => {
+        var _a2;
+        return {
+          _id: String((_a2 = reminderIds[i]) != null ? _a2 : ""),
+          ...r
+        };
+      })
+    };
+  } catch (err) {
+    console.error("[voice] note failed:", ((_b = (_a = err == null ? void 0 : err.data) == null ? void 0 : _a.error) == null ? void 0 : _b.message) || (err == null ? void 0 : err.message));
+    await Note.updateOne({ _id: note._id }, {
+      $set: {
+        status: "failed",
+        // The transcript is saved either way — losing what they said because
+        // the AI struggled would be the worst outcome here.
+        failureReason: "We saved what you said but could not work out what to do with it."
+      }
+    });
+    return {
+      noteId: String(note._id),
+      intent: "note",
+      note: transcript,
+      question: "",
+      reminders: [],
+      degraded: true
+    };
+  }
+});
+
+const note_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: note_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

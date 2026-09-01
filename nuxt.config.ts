@@ -148,7 +148,6 @@ export default defineNuxtConfig({
       bucket: process.env.R2_BUCKET
     },
     // Used by documentRead to extract deadlines.
-    anthropicKey: process.env.ANTHROPIC_API_KEY,
     anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
 
     public: {

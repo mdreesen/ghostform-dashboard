@@ -52,6 +52,9 @@ declare module "nitropack/types" {
     '/api/documents/:id/read': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/[id]/read.post').default>>>>
     }
+    '/api/documents/ask': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/ask.post').default>>>>
+    }
     '/api/documents/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/documents/create.post').default>>>>
     }
@@ -121,6 +124,12 @@ declare module "nitropack/types" {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[id].get').default>>>>
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qualify/[id].post').default>>>>
     }
+    '/api/reminders/:id': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/reminders/[id]/index.post').default>>>>
+    }
+    '/api/reminders': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/reminders/index.get').default>>>>
+    }
     '/api/social/generate': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/generate.post').default>>>>
     }
@@ -169,6 +178,9 @@ declare module "nitropack/types" {
     }
     '/api/user/voice': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/user/voice.post').default>>>>
+    }
+    '/api/voice/note': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/voice/note.post').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>
