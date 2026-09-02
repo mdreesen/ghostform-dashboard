@@ -112,12 +112,38 @@ async function handle(file: File) {
       }
     })
 
-    const put = await fetch(uploadUrl, {
-      method: 'PUT',
-      body: file,
-      headers: { 'Content-Type': file.type || 'application/pdf' }
-    })
-    if (!put.ok) throw new Error(`Upload failed (${put.status})`)
+    let put: Response
+    try {
+      put = await fetch(uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type || 'application/pdf' }
+      })
+    } catch (netErr: any) {
+      /**
+       * A cross-origin PUT that throws (rather than returning a status) is
+       * almost always CORS — the browser blocked it at preflight, so there's
+       * no response to read. "Failed to fetch" is technically accurate and
+       * completely useless.
+       *
+       * R2 buckets ship with NO CORS policy, so this is what every first
+       * upload looks like until one is added. Worth naming.
+       */
+      const isCrossOrigin = /^https?:\/\//.test(uploadUrl) && !uploadUrl.startsWith(location.origin)
+      if (isCrossOrigin) {
+        throw new Error(
+          'Upload was blocked by the browser. The storage bucket needs a CORS policy allowing PUT from this site.'
+        )
+      }
+      throw new Error(netErr?.message || 'Upload failed — check your connection.')
+    }
+
+    if (!put.ok) {
+      // A real response, so we can be specific
+      if (put.status === 403) throw new Error('Upload was rejected — the storage credentials may be wrong or expired.')
+      if (put.status === 413) throw new Error('That file is too large for storage.')
+      throw new Error(`Upload failed (${put.status})`)
+    }
 
     stage.value = 'Saving'
     const { _id } = await $fetch<{ _id: string }>('/api/documents/create', {

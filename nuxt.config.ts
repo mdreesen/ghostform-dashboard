@@ -19,6 +19,24 @@ export default defineNuxtConfig({
      */
     experimental: {
       tasks: true
+    },
+
+    /**
+     * Prerender the app shell.
+     *
+     * The service worker uses `navigateFallback: '/'` so an offline navigation
+     * with unknown query params still resolves. But `/` is server-rendered, so
+     * it was never a file in the build output and never entered the precache
+     * manifest — workbox threw:
+     *
+     *   Uncaught (in promise) non-precached-url: [{"url":"/"}]
+     *
+     * The fallback then did nothing, which quietly disabled offline loading.
+     * Prerendering emits a real index.html for the manifest to reference.
+     */
+    prerender: {
+      routes: ['/'],
+      crawlLinks: false
     }
   },
   modules: [
