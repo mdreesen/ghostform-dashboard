@@ -37,6 +37,7 @@ declare global {
   const date: typeof import('../../app/utils/date').date
   const daysUntil: typeof import('../../app/utils/priority').daysUntil
   const deadlineHeadline: typeof import('../../app/utils/deadlineBriefing').deadlineHeadline
+  const dedupeRuns: typeof import('../../app/composables/useVoiceInput').dedupeRuns
   const defineAppConfig: typeof import('../../node_modules/nuxt/dist/app/nuxt').defineAppConfig
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
@@ -362,6 +363,7 @@ declare module 'vue' {
     readonly date: UnwrapRef<typeof import('../../app/utils/date')['date']>
     readonly daysUntil: UnwrapRef<typeof import('../../app/utils/priority')['daysUntil']>
     readonly deadlineHeadline: UnwrapRef<typeof import('../../app/utils/deadlineBriefing')['deadlineHeadline']>
+    readonly dedupeRuns: UnwrapRef<typeof import('../../app/composables/useVoiceInput')['dedupeRuns']>
     readonly defineAppConfig: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['defineAppConfig']>
     readonly defineAsyncComponent: UnwrapRef<typeof import('vue')['defineAsyncComponent']>
     readonly defineComponent: UnwrapRef<typeof import('vue')['defineComponent']>

@@ -26,6 +26,32 @@ export interface VoiceState {
   error: string
 }
 
+/**
+ * Last-resort guard.
+ *
+ * Speech APIs vary more than the spec implies, and I've now been wrong twice
+ * about which shape they emit. If some browser still slips a repeated run
+ * through, collapse it here rather than putting it in front of a realtor.
+ *
+ * Only collapses runs of 3+ words repeated back to back — short natural
+ * repetition ("no no, the other one") is left alone.
+ */
+export function dedupeRuns(text: string): string {
+  const words = text.split(/\s+/).filter(Boolean)
+  const out: string[] = []
+  for (const w of words) {
+    out.push(w)
+    // Look for the tail repeating the run before it
+    for (let n = 6; n >= 3; n--) {
+      if (out.length < n * 2) continue
+      const a = out.slice(-n).join(' ').toLowerCase()
+      const b = out.slice(-n * 2, -n).join(' ').toLowerCase()
+      if (a === b) { out.splice(-n); break }
+    }
+  }
+  return out.join(' ')
+}
+
 export function useVoiceInput() {
   const listening = ref(false)
   const transcript = ref('')
@@ -61,29 +87,54 @@ export function useVoiceInput() {
 
     recognition.onresult = (event: any) => {
       /**
-       * REBUILD from every result, don't append.
+       * ANDROID CHROME EMITS EACH REVISION AS A NEW FINAL RESULT.
        *
-       * The previous version appended finalised text on each event, starting
-       * from event.resultIndex. That assumes resultIndex advances past results
-       * already handled — and on Android Chrome it often stays at 0, so the
-       * same growing phrase got appended again and again:
+       * Saying "testing this voice reminder" produces results like:
        *
-       *   "remind me remind me to remind me to test remind me to test this…"
+       *   [0] "testing"                     isFinal
+       *   [1] "testing"                     isFinal
+       *   [2] "testing this"                isFinal
+       *   [3] "testing this voice"          isFinal
+       *   [4] "testing this voice reminder" isFinal
        *
-       * Rebuilding from the full results array is idempotent: replaying the
-       * same event twice produces the same string, so it cannot duplicate
-       * however the browser chooses to index things.
+       * Each entry RESTATES the previous one plus a word. Concatenating them —
+       * which is what a straight rebuild does — gives:
+       *
+       *   "testing testing testing this testing this voice testing this voice reminder"
+       *
+       * My previous fix rebuilt instead of appending, which solved the
+       * resultIndex problem but not this one, because the duplication is in
+       * the results array itself.
+       *
+       * So: when a segment extends the previous one, REPLACE it rather than
+       * appending. Genuinely separate phrases (desktop Chrome sends those with
+       * no overlap) still concatenate normally, and repeated words inside a
+       * single segment are left alone.
        */
-      let final = ''
+      const parts: string[] = []
       let partial = ''
+
       for (let i = 0; i < event.results.length; i++) {
         const r = event.results[i]
         if (!r?.[0]) continue
-        if (r.isFinal) final += r[0].transcript + ' '
-        else partial += r[0].transcript
+        const seg = String(r[0].transcript || '').trim()
+        if (!seg) continue
+
+        if (!r.isFinal) { partial = seg; continue }
+
+        // Already covered by what we have
+        const joined = parts.join(' ')
+        if (joined === seg || joined.endsWith(seg)) continue
+
+        // A revision of the previous segment — replace it
+        const prev = parts[parts.length - 1]
+        if (prev && seg.startsWith(prev)) { parts[parts.length - 1] = seg; continue }
+
+        parts.push(seg)
       }
-      transcript.value = final.trim()
-      interim.value = partial.trim()
+
+      transcript.value = parts.join(' ')
+      interim.value = partial
     }
 
     recognition.onerror = (e: any) => {
@@ -131,9 +182,10 @@ export function useVoiceInput() {
 
   onBeforeUnmount(() => { try { recognition?.abort() } catch { /* noop */ } })
 
+
   /** What to show in the field: confirmed text plus whatever is mid-sentence. */
   const displayText = computed(() =>
-    [transcript.value, interim.value].filter(Boolean).join(' ')
+    dedupeRuns([transcript.value, interim.value].filter(Boolean).join(' '))
   )
 
   return { supported, listening, transcript, interim, displayText, error, start, stop, toggle, reset }
