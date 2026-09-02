@@ -117,6 +117,18 @@ declare module "nitropack/types" {
     '/api/leads/tiers': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/tiers.get').default>>>>
     }
+    '/api/push/status': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/status.get').default>>>>
+    }
+    '/api/push/subscribe': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/subscribe.post').default>>>>
+    }
+    '/api/push/test': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/test.post').default>>>>
+    }
+    '/api/push/unsubscribe': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/unsubscribe.post').default>>>>
+    }
     '/api/qr_code/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qr_code/[id].get').default>>>>
     }

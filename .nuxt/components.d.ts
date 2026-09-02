@@ -22,6 +22,7 @@ export const AppDocumentList: typeof import("../app/components/app/DocumentList.
 export const AppDocumentUpload: typeof import("../app/components/app/DocumentUpload.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
 export const AppLeadMessageComposer: typeof import("../app/components/app/LeadMessageComposer.vue")['default']
+export const AppPushSettings: typeof import("../app/components/app/PushSettings.vue")['default']
 export const AppSocialCard: typeof import("../app/components/app/SocialCard.vue")['default']
 export const AppVoiceCapture: typeof import("../app/components/app/VoiceCapture.vue")['default']
 export const AppVoiceDock: typeof import("../app/components/app/VoiceDock.vue")['default']
@@ -245,6 +246,7 @@ export const LazyAppDocumentList: LazyComponent<typeof import("../app/components
 export const LazyAppDocumentUpload: LazyComponent<typeof import("../app/components/app/DocumentUpload.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
 export const LazyAppLeadMessageComposer: LazyComponent<typeof import("../app/components/app/LeadMessageComposer.vue")['default']>
+export const LazyAppPushSettings: LazyComponent<typeof import("../app/components/app/PushSettings.vue")['default']>
 export const LazyAppSocialCard: LazyComponent<typeof import("../app/components/app/SocialCard.vue")['default']>
 export const LazyAppVoiceCapture: LazyComponent<typeof import("../app/components/app/VoiceCapture.vue")['default']>
 export const LazyAppVoiceDock: LazyComponent<typeof import("../app/components/app/VoiceDock.vue")['default']>

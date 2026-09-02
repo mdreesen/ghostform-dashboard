@@ -1,10 +1,12 @@
 import type { Model } from 'mongoose'
-import UserModel from '../../lib/database/models/User'
-import { buildDeadlineBriefing } from './deadlineBriefing'
+// deadlineBriefing lives in app/utils, not server/utils — they are not
+// siblings, which is what broke the build.
+import { buildDeadlineBriefing } from '~/utils/deadlineBriefing'
 import { buildDailyBriefing } from './dailyBriefing'
-import { sendToUser } from './push'
+import { sendToUser } from '~/utils/push';
+import PushSubscriptionModel from '../../lib/database/models/PushSubscription'
 
-const User = UserModel as Model<any>
+const Sub = PushSubscriptionModel as Model<any>
 
 /**
  * The morning push. Called from the daily cron.
@@ -15,9 +17,6 @@ const User = UserModel as Model<any>
  */
 export async function sendMorningPushes(): Promise<{ users: number; sent: number }> {
   // Only users with at least one device registered.
-  const { default: PushSubscriptionModel } = await import('../../lib/database/models/PushSubscription')
-  const Sub = PushSubscriptionModel as Model<any>
-
   const userIds = await Sub.distinct('userId')
   if (!userIds.length) return { users: 0, sent: 0 }
 

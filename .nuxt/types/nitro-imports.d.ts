@@ -150,6 +150,7 @@ declare global {
   const passwordNeedsReHash: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').passwordNeedsReHash
   const promisifyNodeListener: typeof import('../../node_modules/h3').promisifyNodeListener
   const proxyRequest: typeof import('../../node_modules/h3').proxyRequest
+  const pushConfigured: typeof import('../../server/utils/push').pushConfigured
   const questionsFor: typeof import('../../server/utils/qualificationQuestions').questionsFor
   const readBody: typeof import('../../node_modules/h3').readBody
   const readFormData: typeof import('../../node_modules/h3').readFormData
@@ -168,10 +169,12 @@ declare global {
   const send: typeof import('../../node_modules/h3').send
   const sendError: typeof import('../../node_modules/h3').sendError
   const sendIterable: typeof import('../../node_modules/h3').sendIterable
+  const sendMorningPushes: typeof import('../../server/utils/pushBriefing').sendMorningPushes
   const sendNoContent: typeof import('../../node_modules/h3').sendNoContent
   const sendProxy: typeof import('../../node_modules/h3').sendProxy
   const sendRedirect: typeof import('../../node_modules/h3').sendRedirect
   const sendStream: typeof import('../../node_modules/h3').sendStream
+  const sendToUser: typeof import('../../server/utils/push').sendToUser
   const sendWebResponse: typeof import('../../node_modules/h3').sendWebResponse
   const sendWelcomeEmail: typeof import('../../server/utils/welcomeEmail').sendWelcomeEmail
   const serveStatic: typeof import('../../node_modules/h3').serveStatic
@@ -366,6 +369,9 @@ declare global {
   export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
   import('../../server/utils/leadMessageDraft')
   // @ts-ignore
+  export type { PushPayload } from '../../server/utils/push'
+  import('../../server/utils/push')
+  // @ts-ignore
   export type { QualQuestion } from '../../server/utils/qualificationQuestions'
   import('../../server/utils/qualificationQuestions')
   // @ts-ignore
@@ -443,6 +449,8 @@ export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/se
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
 export { buildScorecard, analyseLead } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadAnalysis';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
+export { sendToUser, pushConfigured } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/push';
+export { sendMorningPushes } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/pushBriefing';
 export { BUYER_QUESTIONS, SELLER_QUESTIONS, questionsFor } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualificationQuestions';
 export { createQualifyToken, readQualifyToken } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualifyToken';
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';

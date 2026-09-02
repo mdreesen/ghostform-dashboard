@@ -58,6 +58,7 @@
     "@stripe/stripe-js": "^9.4.0",
     "@types/bcrypt": "^6.0.0",
     "@types/node": "^24.5.2",
+    "@types/web-push": "^3.6.4",
     "baseline-browser-mapping": "^2.9.5",
     "i": "^0.3.7",
     "npm": "^11.19.0",

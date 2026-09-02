@@ -127,6 +127,7 @@ declare global {
   const presignUpload: typeof import('../../app/utils/storage').presignUpload
   const provide: typeof import('vue').provide
   const proxyRefs: typeof import('vue').proxyRefs
+  const pushConfigured: typeof import('../../app/utils/push').pushConfigured
   const reactive: typeof import('vue').reactive
   const reactiveStyle: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').reactiveStyle
   const reactiveTransform: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').reactiveTransform
@@ -139,6 +140,7 @@ declare global {
   const reloadNuxtApp: typeof import('../../node_modules/nuxt/dist/app/composables/chunk').reloadNuxtApp
   const requestIdleCallback: typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback').requestIdleCallback
   const resolveComponent: typeof import('vue').resolveComponent
+  const sendToUser: typeof import('../../app/utils/push').sendToUser
   const setInterval: typeof import('../../node_modules/nuxt/dist/app/compat/interval').setInterval
   const setPageLayout: typeof import('../../node_modules/nuxt/dist/app/composables/router').setPageLayout
   const setResponseStatus: typeof import('../../node_modules/nuxt/dist/app/composables/ssr').setResponseStatus
@@ -201,6 +203,7 @@ declare global {
   const useOverlay: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useOverlay').useOverlay
   const usePWA: typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index').usePWA
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview').usePreviewMode
+  const usePush: typeof import('../../app/composables/usePush').usePush
   const useQrcode: typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode').useQrcode
   const useQrcodeRead: typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode-read').useQrcodeRead
   const useReducedMotion: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').useReducedMotion
@@ -316,6 +319,9 @@ declare global {
   // @ts-ignore
   export type { Priority, PriorityStyle } from '../../app/utils/priority'
   import('../../app/utils/priority')
+  // @ts-ignore
+  export type { PushPayload } from '../../app/utils/push'
+  import('../../app/utils/push')
   // @ts-ignore
   export type { LeadRecord } from '../../app/utils/spreadsheet'
   import('../../app/utils/spreadsheet')
@@ -453,6 +459,7 @@ declare module 'vue' {
     readonly presignUpload: UnwrapRef<typeof import('../../app/utils/storage')['presignUpload']>
     readonly provide: UnwrapRef<typeof import('vue')['provide']>
     readonly proxyRefs: UnwrapRef<typeof import('vue')['proxyRefs']>
+    readonly pushConfigured: UnwrapRef<typeof import('../../app/utils/push')['pushConfigured']>
     readonly reactive: UnwrapRef<typeof import('vue')['reactive']>
     readonly reactiveStyle: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['reactiveStyle']>
     readonly reactiveTransform: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['reactiveTransform']>
@@ -465,6 +472,7 @@ declare module 'vue' {
     readonly reloadNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/chunk')['reloadNuxtApp']>
     readonly requestIdleCallback: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['requestIdleCallback']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
+    readonly sendToUser: UnwrapRef<typeof import('../../app/utils/push')['sendToUser']>
     readonly setInterval: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/interval')['setInterval']>
     readonly setPageLayout: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['setPageLayout']>
     readonly setResponseStatus: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['setResponseStatus']>
@@ -527,6 +535,7 @@ declare module 'vue' {
     readonly useOverlay: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useOverlay')['useOverlay']>
     readonly usePWA: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['usePWA']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
+    readonly usePush: UnwrapRef<typeof import('../../app/composables/usePush')['usePush']>
     readonly useQrcode: UnwrapRef<typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode')['useQrcode']>
     readonly useQrcodeRead: UnwrapRef<typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode-read')['useQrcodeRead']>
     readonly useReducedMotion: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['useReducedMotion']>

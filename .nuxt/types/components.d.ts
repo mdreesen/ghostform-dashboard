@@ -22,6 +22,7 @@ interface _GlobalComponents {
   AppDocumentUpload: typeof import("../../app/components/app/DocumentUpload.vue")['default']
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
   AppLeadMessageComposer: typeof import("../../app/components/app/LeadMessageComposer.vue")['default']
+  AppPushSettings: typeof import("../../app/components/app/PushSettings.vue")['default']
   AppSocialCard: typeof import("../../app/components/app/SocialCard.vue")['default']
   AppVoiceCapture: typeof import("../../app/components/app/VoiceCapture.vue")['default']
   AppVoiceDock: typeof import("../../app/components/app/VoiceDock.vue")['default']
@@ -245,6 +246,7 @@ interface _GlobalComponents {
   LazyAppDocumentUpload: LazyComponent<typeof import("../../app/components/app/DocumentUpload.vue")['default']>
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
   LazyAppLeadMessageComposer: LazyComponent<typeof import("../../app/components/app/LeadMessageComposer.vue")['default']>
+  LazyAppPushSettings: LazyComponent<typeof import("../../app/components/app/PushSettings.vue")['default']>
   LazyAppSocialCard: LazyComponent<typeof import("../../app/components/app/SocialCard.vue")['default']>
   LazyAppVoiceCapture: LazyComponent<typeof import("../../app/components/app/VoiceCapture.vue")['default']>
   LazyAppVoiceDock: LazyComponent<typeof import("../../app/components/app/VoiceDock.vue")['default']>
