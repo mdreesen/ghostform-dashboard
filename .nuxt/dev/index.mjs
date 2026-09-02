@@ -1059,6 +1059,9 @@ const _inlineRuntimeConfig = {
           "maxAge": 31536000
         }
       },
+      "/": {
+        "prerender": true
+      },
       "/_nuxt/builds/meta/**": {
         "headers": {
           "cache-control": "public, max-age=31536000, immutable"
@@ -1068,6 +1071,10 @@ const _inlineRuntimeConfig = {
         "headers": {
           "cache-control": "public, max-age=1, immutable"
         }
+      },
+      "/_payload.json": {
+        "ssr": true,
+        "prerender": true
       }
     }
   },
@@ -3201,6 +3208,12 @@ async function useOpenAi(messages, options) {
     return null;
   }
 }
+
+const useOpenAi$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  openai: openai,
+  useOpenAi: useOpenAi
+}, Symbol.toStringTag, { value: 'Module' }));
 
 function buildPrompt$4(briefing) {
   const { totals, leads } = briefing;
@@ -6471,44 +6484,63 @@ function redact(text) {
   return out;
 }
 async function readDocument(base64, mime, filename) {
-  var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j;
-  const cfg = useRuntimeConfig();
-  const key = cfg.anthropicKey;
-  if (!key) throw new Error("CONFIG: ANTHROPIC_API_KEY is not set.");
+  var _a, _b, _c, _d, _e, _f, _g;
+  const key = process.env.OPENAI_API_KEY;
+  if (!key) throw new Error("CONFIG: OPENAI_API_KEY is not set in .env.");
   const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
   const isPdf = mime === "application/pdf";
-  const content = [{
-    type: isPdf ? "document" : "image",
-    source: { type: "base64", media_type: mime, data: base64 }
-  }, {
-    type: "text",
-    text: buildPrompt(filename, today)
-  }];
+  let messages;
+  if (isPdf) {
+    let text = "";
+    try {
+      const { extractText, getDocumentProxy } = await import('file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/unpdf/dist/index.mjs');
+      const bytes = Uint8Array.from(Buffer.from(base64, "base64"));
+      const pdf = await getDocumentProxy(bytes);
+      const res = await extractText(pdf, { mergePages: true });
+      text = String(res.text || "").trim();
+    } catch (err) {
+      console.error("[document] pdf text extraction failed:", err == null ? void 0 : err.message);
+      throw new Error("PDF: could not read that PDF.");
+    }
+    if (text.length < 120) {
+      throw new Error(
+        "SCANNED: that PDF has no readable text \u2014 it looks like a scan. Take a photo of the pages instead and upload that."
+      );
+    }
+    messages = [{
+      role: "user",
+      content: `${buildPrompt(filename, today)}
+
+DOCUMENT TEXT:
+"""
+${text.slice(0, 6e4)}
+"""`
+    }];
+  } else {
+    messages = [{
+      role: "user",
+      content: [
+        { type: "text", text: buildPrompt(filename, today) },
+        { type: "image_url", image_url: { url: `data:${mime};base64,${base64}` } }
+      ]
+    }];
+  }
   try {
-    const res = await $fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        // PDF document blocks require this beta header. Without it the API
-        // rejects the request, which surfaced as "we could not find dates" —
-        // blaming the document for a header problem.
-        ...isPdf ? { "anthropic-beta": "pdfs-2024-09-25" } : {},
-        "content-type": "application/json"
-      },
-      body: {
-        model: cfg.anthropicModel,
-        max_tokens: 2e3,
-        messages: [{ role: "user", content }]
-      }
+    const { openai } = await Promise.resolve().then(function () { return useOpenAi$1; });
+    const res = await openai.chat.completions.create({
+      model: process.env.OPENAI_MODEL || "gpt-4o-mini",
+      max_tokens: 2e3,
+      temperature: 0.1,
+      // extraction, not writing
+      messages
     });
-    const raw = (_b = (_a = res == null ? void 0 : res.content) == null ? void 0 : _a.find((b) => b.type === "text")) == null ? void 0 : _b.text;
+    const raw = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
     if (!raw) throw new Error("MODEL: the API returned no text.");
     const cleaned = raw.replace(/```json|```/g, "").trim();
-    const s = cleaned.indexOf("{"), e = cleaned.lastIndexOf("}");
-    if (s === -1) throw new Error("MODEL: response was not JSON.");
-    const parsed = JSON.parse(cleaned.slice(s, e + 1));
-    const deadlines = ((_c = parsed.deadlines) != null ? _c : []).map((d) => {
+    const a = cleaned.indexOf("{"), b = cleaned.lastIndexOf("}");
+    if (a === -1) throw new Error("MODEL: response was not JSON.");
+    const parsed = JSON.parse(cleaned.slice(a, b + 1));
+    const deadlines = ((_d = parsed.deadlines) != null ? _d : []).map((d) => {
       var _a2, _b2, _c2, _d2;
       return {
         label: redact(String((_a2 = d.label) != null ? _a2 : "")).slice(0, 120),
@@ -6519,21 +6551,16 @@ async function readDocument(base64, mime, filename) {
       };
     }).filter((d) => d.label && !Number.isNaN(Date.parse(d.date)));
     return {
-      docType: redact(String((_d = parsed.docType) != null ? _d : "")).slice(0, 60),
-      summary: redact(String((_e = parsed.summary) != null ? _e : "")).slice(0, 600),
+      docType: redact(String((_e = parsed.docType) != null ? _e : "")).slice(0, 60),
+      summary: redact(String((_f = parsed.summary) != null ? _f : "")).slice(0, 600),
       deadlines
     };
   } catch (err) {
-    const detail = ((_g = (_f = err == null ? void 0 : err.data) == null ? void 0 : _f.error) == null ? void 0 : _g.message) || ((_j = (_i = (_h = err == null ? void 0 : err.response) == null ? void 0 : _h._data) == null ? void 0 : _i.error) == null ? void 0 : _j.message) || (err == null ? void 0 : err.message);
-    console.error("[document] read failed:", {
-      status: (err == null ? void 0 : err.status) || (err == null ? void 0 : err.statusCode),
-      detail,
-      model: cfg.anthropicModel,
-      isPdf
-    });
-    if (String(detail).match(/beta|pdf/i)) throw new Error(`PDF: ${detail}`);
-    if ((err == null ? void 0 : err.status) === 401 || (err == null ? void 0 : err.statusCode) === 401) throw new Error("CONFIG: the API key was rejected.");
-    if ((err == null ? void 0 : err.status) === 429 || (err == null ? void 0 : err.statusCode) === 429) throw new Error("RATE: too many requests.");
+    const detail = ((_g = err == null ? void 0 : err.error) == null ? void 0 : _g.message) || (err == null ? void 0 : err.message);
+    console.error("[document] read failed:", { status: err == null ? void 0 : err.status, detail, isPdf });
+    if (String(detail).startsWith("SCANNED:") || String(detail).startsWith("PDF:")) throw err;
+    if ((err == null ? void 0 : err.status) === 401) throw new Error("CONFIG: the OpenAI key was rejected.");
+    if ((err == null ? void 0 : err.status) === 429) throw new Error("RATE: too many requests.");
     throw new Error(`MODEL: ${detail || "unknown error"}`);
   }
 }
@@ -6578,6 +6605,8 @@ const read_post = defineEventHandler(async (event) => {
         reason = "Document reading is not configured yet. This is on us \u2014 the AI key is missing or rejected.";
       } else if (msg.startsWith("RATE:")) {
         reason = "Too many requests right now. Wait a minute and try reading it again.";
+      } else if (msg.startsWith("SCANNED:")) {
+        reason = "That PDF is a scan with no readable text. Take a photo of the pages and upload that instead.";
       } else if (msg.startsWith("PDF:")) {
         reason = "We could not open that PDF. If it is a scan, try a photo of the pages instead.";
       } else if (/storage/i.test(msg)) {

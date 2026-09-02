@@ -102,59 +102,98 @@ export async function readDocument(
   mime: string,
   filename: string
 ): Promise<DocumentReading | null> {
-  const cfg = useRuntimeConfig()
-  const key = cfg.anthropicKey as string
-  if (!key) throw new Error('CONFIG: ANTHROPIC_API_KEY is not set.')
+  /**
+   * OPENAI DOESN'T ACCEPT PDFs THE WAY ANTHROPIC DOES.
+   *
+   * Anthropic takes a PDF as a `document` block and reads it natively.
+   * OpenAI's chat API has no equivalent — it takes text or images. So:
+   *
+   *   PDF   -> extract the text, send the text
+   *   Image -> send as a vision input (gpt-4o-mini handles this)
+   *
+   * Text extraction is actually the better path for contracts: it's faster
+   * and cheaper than vision, and title companies produce text PDFs. The gap
+   * is SCANNED contracts, which have no text layer — those are detected and
+   * the realtor is told to photograph the pages instead, which routes through
+   * the vision path and works.
+   */
+  const key = process.env.OPENAI_API_KEY
+  if (!key) throw new Error('CONFIG: OPENAI_API_KEY is not set in .env.')
 
   const today = new Date().toISOString().slice(0, 10)
-
-  // PDFs go as a document block; images as an image block.
   const isPdf = mime === 'application/pdf'
-  const content: any[] = [{
-    type: isPdf ? 'document' : 'image',
-    source: { type: 'base64', media_type: mime, data: base64 }
-  }, {
-    type: 'text',
-    text: buildPrompt(filename, today)
-  }]
+
+  let messages: any[]
+
+  if (isPdf) {
+    let text = ''
+    try {
+      const { extractText, getDocumentProxy } = await import('unpdf')
+      const bytes = Uint8Array.from(Buffer.from(base64, 'base64'))
+      const pdf = await getDocumentProxy(bytes)
+      const res = await extractText(pdf, { mergePages: true })
+      text = String(res.text || '').trim()
+    } catch (err: any) {
+      console.error('[document] pdf text extraction failed:', err?.message)
+      throw new Error('PDF: could not read that PDF.')
+    }
+
+    // A scanned page yields almost nothing. Say so plainly rather than
+    // sending an empty prompt and returning "no dates found", which would
+    // look like the document had none.
+    if (text.length < 120) {
+      throw new Error(
+        'SCANNED: that PDF has no readable text — it looks like a scan. ' +
+        'Take a photo of the pages instead and upload that.'
+      )
+    }
+
+    messages = [{
+      role: 'user',
+      content: `${buildPrompt(filename, today)}
+
+DOCUMENT TEXT:
+"""
+${text.slice(0, 60000)}
+"""`
+    }]
+  } else {
+    // Images go straight to vision
+    messages = [{
+      role: 'user',
+      content: [
+        { type: 'text', text: buildPrompt(filename, today) },
+        { type: 'image_url', image_url: { url: `data:${mime};base64,${base64}` } }
+      ]
+    }]
+  }
 
   try {
-    const res = await $fetch<any>('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': key,
-        'anthropic-version': '2023-06-01',
-        // PDF document blocks require this beta header. Without it the API
-        // rejects the request, which surfaced as "we could not find dates" —
-        // blaming the document for a header problem.
-        ...(isPdf ? { 'anthropic-beta': 'pdfs-2024-09-25' } : {}),
-        'content-type': 'application/json'
-      },
-      body: {
-        model: cfg.anthropicModel,
-        max_tokens: 2000,
-        messages: [{ role: 'user', content }]
-      }
+    const { openai } = await import('~/utils/ai/openAi/useOpenAi')
+    const res = await openai.chat.completions.create({
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+      max_tokens: 2000,
+      temperature: 0.1,          // extraction, not writing
+      messages
     })
 
-    const raw = res?.content?.find((b: any) => b.type === 'text')?.text
+    const raw = res?.choices?.[0]?.message?.content
     if (!raw) throw new Error('MODEL: the API returned no text.')
 
     const cleaned = raw.replace(/```json|```/g, '').trim()
-    const s = cleaned.indexOf('{'), e = cleaned.lastIndexOf('}')
-    if (s === -1) throw new Error('MODEL: response was not JSON.')
+    const a = cleaned.indexOf('{'), b = cleaned.lastIndexOf('}')
+    if (a === -1) throw new Error('MODEL: response was not JSON.')
 
-    const parsed = JSON.parse(cleaned.slice(s, e + 1))
+    const parsed = JSON.parse(cleaned.slice(a, b + 1))
 
     const deadlines: ExtractedDeadline[] = (parsed.deadlines ?? [])
       .map((d: any) => ({
         label: redact(String(d.label ?? '')).slice(0, 120),
         date: String(d.date ?? ''),
         sourceText: redact(String(d.sourceText ?? '')).slice(0, 400),
-        priority: ['high','medium','low'].includes(d.priority) ? d.priority : 'medium',
+        priority: ['high', 'medium', 'low'].includes(d.priority) ? d.priority : 'medium',
         reason: redact(String(d.reason ?? '')).slice(0, 160)
       }))
-      // Drop anything without a parseable date rather than storing garbage.
       .filter((d: ExtractedDeadline) => d.label && !Number.isNaN(Date.parse(d.date)))
 
     return {
@@ -163,20 +202,11 @@ export async function readDocument(
       deadlines
     }
   } catch (err: any) {
-    // Log the FULL error. Swallowing it is why this looked like a document
-    // problem when it was a missing header.
-    const detail = err?.data?.error?.message || err?.response?._data?.error?.message || err?.message
-    console.error('[document] read failed:', {
-      status: err?.status || err?.statusCode,
-      detail,
-      model: cfg.anthropicModel,
-      isPdf
-    })
-    // Re-throw with a tagged message so the endpoint can tell the user
-    // something specific instead of a generic fallback.
-    if (String(detail).match(/beta|pdf/i)) throw new Error(`PDF: ${detail}`)
-    if (err?.status === 401 || err?.statusCode === 401) throw new Error('CONFIG: the API key was rejected.')
-    if (err?.status === 429 || err?.statusCode === 429) throw new Error('RATE: too many requests.')
+    const detail = err?.error?.message || err?.message
+    console.error('[document] read failed:', { status: err?.status, detail, isPdf })
+    if (String(detail).startsWith('SCANNED:') || String(detail).startsWith('PDF:')) throw err
+    if (err?.status === 401) throw new Error('CONFIG: the OpenAI key was rejected.')
+    if (err?.status === 429) throw new Error('RATE: too many requests.')
     throw new Error(`MODEL: ${detail || 'unknown error'}`)
   }
 }

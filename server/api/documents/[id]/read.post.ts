@@ -66,6 +66,10 @@ export default defineEventHandler(async (event) => {
         reason = 'Document reading is not configured yet. This is on us — the AI key is missing or rejected.'
       } else if (msg.startsWith('RATE:')) {
         reason = 'Too many requests right now. Wait a minute and try reading it again.'
+      } else if (msg.startsWith('SCANNED:')) {
+        // A scan has no text layer. Photographing the pages routes through
+        // the vision path instead, which does work.
+        reason = 'That PDF is a scan with no readable text. Take a photo of the pages and upload that instead.'
       } else if (msg.startsWith('PDF:')) {
         reason = 'We could not open that PDF. If it is a scan, try a photo of the pages instead.'
       } else if (/storage/i.test(msg)) {
