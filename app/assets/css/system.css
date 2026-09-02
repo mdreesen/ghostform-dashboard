@@ -1,3 +1,19 @@
+/* ============================================================================
+   GHOSTFORM — SPACING & RESPONSIVE SYSTEM
+   ============================================================================
+   Audit before writing this:
+     93 distinct spacing values
+     only 25 of 62 components had ANY responsive rules
+     page padding used px-3, px-4, px-5, px-6 and px-7
+
+   That's the reason the app feels uneven — not the colours. Space is doing
+   different things in different places for no reason, and two thirds of the
+   components were designed at desktop width only.
+
+   COLOUR ROLES (see theme.css): ink = actions, moss = accent/confirmed,
+   rust = alerts only.
+   ============================================================================ */
+
 :root {
   /* One scale. Everything vertical lands on it. */
   --s1: 8px;
@@ -14,23 +30,43 @@
   --measure: 68ch;
 }
 
+/* ---------- Layout shell ----------
+   The gutter lives HERE, in the layout, not in each page. It was
+   px-6 sm:px-10 lg:px-12 — three stepped values that jump at breakpoints.
+   clamp() moves it smoothly, so there's no width where the page suddenly
+   feels cramped or loose. */
+/* The navbar is position:fixed, so the shell has to clear it explicitly.
+   I'd replaced a flat pt-24 (96px) with clamp(56px, 9vw, 96px) — which
+   resolves to 56px on a phone against a ~67px navbar, putting the eyebrow
+   11px UNDERNEATH it. It only cleared above ~1024px.
+
+   Deriving the top padding from the navbar height means the two can't drift
+   apart again: change the navbar's padding and this follows. */
 :root {
   --nav-h: 72px;              /* measured in-browser, not estimated */
   --nav-clear: var(--s3);     /* breathing room below it */
 }
 
+/* The voice dock is fixed bottom-right. Give the page enough bottom padding
+   that the last row of content isn't sitting underneath it. */
 :root { --dock-clear: 84px; }
 
 .gf-shell {
   padding-inline: var(--gutter);
+  /* env() must be added here too — the navbar grows by the safe-area inset on
+     notched devices, and a fixed 72px would put content back under it. */
   padding-top: calc(var(--nav-h) + var(--nav-clear) + env(safe-area-inset-top, 0px));
   padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--dock-clear));
 }
 
+/* Desktop gets more air below the bar — there's room for it, and the page
+   reads better with the heading further from the chrome. */
 @media (min-width: 1024px) {
   .gf-shell { padding-top: calc(var(--nav-h) + var(--s5) + env(safe-area-inset-top, 0px)); }
 }
 
+/* Anchor links and in-page jumps land below the fixed bar rather than
+   underneath it. */
 :target { scroll-margin-top: calc(var(--nav-h) + var(--s2)); }
 
 /* Full-bleed sections inside the shell break out and re-pad themselves */
@@ -226,7 +262,11 @@
   right: 0;
   z-index: 50;
   background: var(--paper, #F7F4EF);
-  transform: translateZ(0);
+  /* NO transform here.
+     translateZ(0) fixed the iPad shift but caused a worse bug: it put the
+     navbar into the same 3D compositing comparison as .gf-stage's perspective
+     children, and iOS then painted them OVER it — the bar vanished on scroll.
+     The stacking fix below solves the original problem without it. */
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   /* iPhone notch / iPad rounded corners */
@@ -239,4 +279,20 @@
     background: color-mix(in srgb, var(--paper, #F7F4EF) 85%, transparent);
     backdrop-filter: blur(10px);
   }
+}
+
+/* ---------- Stacking ----------
+   `.gf-stage` sets `perspective`, so its `.gf-depth` children live in a 3D
+   rendering context. Without a stacking context of its own, those transformed
+   children compete with the fixed navbar directly — and iOS orders by
+   z-position rather than z-index, painting them over the bar. That's what made
+   the navbar vanish on scroll.
+
+   Removing translateZ(0) from the navbar was enough in Chromium. iOS is
+   stricter about 3D contexts, so this confines the whole thing beneath the
+   navbar regardless of how deep the transforms go. */
+.gf-stage {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
 }
