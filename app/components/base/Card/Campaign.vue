@@ -119,7 +119,7 @@ const useDelete = async () => {
                         : 'Sent word-for-word as you wrote it, every time.' }}
                     <button
                         :disabled="togglingVary"
-                        class="text-[#B5563A] hover:underline disabled:opacity-40"
+                        class="text-[#4C5741] hover:underline disabled:opacity-40"
                         @click="useVaryToggle"
                     >{{ varying ? 'Send it verbatim instead' : 'Let it vary' }}</button>
                 </p>

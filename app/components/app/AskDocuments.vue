@@ -53,12 +53,12 @@ async function ask() {
 <template>
   <div>
     <div class="flex items-baseline justify-between gap-3 mb-2">
-      <p class="gf-eyebrow">Ask about these documents</p>
+      <p class="h-label">Ask about these documents</p>
       <button
         v-if="supported"
         type="button"
         class="flex items-center gap-1.5 gf-label transition-colors"
-        :class="listening ? 'text-[#B5563A]' : 'text-[#A9A39A] hover:text-[#1F1B16]'"
+        :class="listening ? 'text-[#4C5741]' : 'text-[#A9A39A] hover:text-[#1F1B16]'"
         @click="toggle"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" :fill="listening ? 'currentColor' : 'none'"
@@ -70,16 +70,16 @@ async function ask() {
       </button>
     </div>
 
-    <div class="flex gap-2">
+    <div class="flex flex-col sm:flex-row gap-2">
       <input
         v-model="question"
         class="flex-1 bg-[#F7F4EF] border px-3.5 py-2.5 gf-body focus:outline-none transition-colors"
-        :class="listening ? 'border-[#B5563A]' : 'border-[#DDD6C9] focus:border-[#B5563A]'"
+        :class="listening ? 'border-[#4C5741]' : 'border-[#DDD6C9] focus:border-[#4C5741]'"
         placeholder="When's the inspection deadline?"
         @keyup.enter="ask"
       />
       <button
-        class="px-5 py-2.5 bg-[#B5563A] text-[#F7F4EF] gf-label uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40 whitespace-nowrap"
+        class="px-5 py-2.5 bg-[#1F1B16] text-[#F7F4EF] gf-label uppercase tracking-[0.1em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40 whitespace-nowrap"
         :disabled="asking || question.trim().length < 3"
         @click="ask"
       >
@@ -100,7 +100,7 @@ async function ask() {
       </button>
     </div>
 
-    <div v-if="answer" class="mt-4 p-4 bg-[#EFEAE0] border-l-2 border-[#B5563A]">
+    <div v-if="answer" class="mt-4 p-4 bg-[#E9EDE3] border-l-2 border-[#4C5741]">
       <p class="gf-body leading-relaxed">{{ answer }}</p>
       <p class="gf-label gf-muted mt-2.5">
         From what's been extracted and confirmed — open the document to check anything critical.

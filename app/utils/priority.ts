@@ -97,8 +97,36 @@ export function isHighStakes(assigned: Priority): boolean {
   return assigned === 'high'
 }
 
+/**
+ * Parse a date-only string as LOCAL midnight, not UTC.
+ *
+ * THE BUG THIS FIXES: the AI returns dates as "2026-09-02" with no time, and
+ * `new Date("2026-09-02")` parses that as UTC midnight per the JS spec. In
+ * Montana (UTC-6) that is 6pm the PREVIOUS day, so a reminder set for today
+ * displayed as "Overdue since yesterday".
+ *
+ * Anything with a time component is left alone — only bare dates are affected.
+ */
+export function localDate(value: Date | string): Date {
+  if (value instanceof Date) return value
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value).trim())
+  if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]))
+  return new Date(value)
+}
+
+/**
+ * Format for an <input type="date">, which wants YYYY-MM-DD in LOCAL terms.
+ * toISOString() converts to UTC first, so an evening date could pre-fill the
+ * picker with the previous day — the same off-by-one in reverse.
+ */
+export function toDateInput(value: Date | string): string {
+  const d = localDate(value)
+  const p = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`
+}
+
 export function daysUntil(date: Date | string): number | null {
-  const t = new Date(date).getTime()
+  const t = localDate(date).getTime()
   if (Number.isNaN(t)) return null
   const start = new Date(); start.setHours(0, 0, 0, 0)
   return Math.round((new Date(t).setHours(0, 0, 0, 0) - start.getTime()) / 86400000)
@@ -114,7 +142,7 @@ export function whenLabel(date: Date | string): string {
   if (d === 1) return 'Tomorrow'
   if (d <= 7) return `In ${d} days`
   if (d <= 14) return 'Next week'
-  return new Date(date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
+  return localDate(date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })
 }
 
 /** Sort for the daily list: overdue first, then soonest, then priority. */

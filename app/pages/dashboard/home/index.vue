@@ -71,7 +71,7 @@ async function remove(home: any) {
 
     <!-- Head -->
     <header class="mb-16 pt-4">
-      <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">Properties</p>
+      <p class="h-label mb-5 gf-rise" style="--d:.05s">Properties</p>
 
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
@@ -102,7 +102,7 @@ async function remove(home: any) {
         <input
           v-model="search"
           placeholder="Search by address, nickname or owner…"
-          class="w-full sm:max-w-xs bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors"
+          class="w-full sm:max-w-xs bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741] transition-colors"
         />
 
         <div class="flex gap-2">
@@ -111,7 +111,7 @@ async function remove(home: any) {
             :key="s"
             class="px-4 py-2.5 text-[11px] uppercase tracking-[0.1em] border transition-colors"
             :class="statusFilter === s
-              ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]'
+              ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]'
               : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
             @click="statusFilter = s"
           >
@@ -133,7 +133,7 @@ async function remove(home: any) {
             <div class="flex flex-wrap items-baseline gap-3 mb-1.5">
               <NuxtLink
                 :to="`/dashboard/home/${home._id}`"
-                class="font-display text-[21px] font-semibold tracking-tight hover:text-[#B5563A] transition-colors"
+                class="font-display text-[21px] font-semibold tracking-tight hover:text-[#4C5741] transition-colors"
               >
                 {{ home.name || home.address }}
               </NuxtLink>
@@ -156,7 +156,7 @@ async function remove(home: any) {
             <select
               :value="home.status || 'active'"
               :disabled="busyId === home._id"
-              class="flex-1 sm:flex-initial bg-[#F7F4EF] border border-[#DDD6C9] px-3 py-2.5 text-[11px] uppercase tracking-[0.1em] text-[#8A847C] focus:outline-none focus:border-[#B5563A] disabled:opacity-40"
+              class="flex-1 sm:flex-initial bg-[#F7F4EF] border border-[#DDD6C9] px-3 py-2.5 text-[11px] uppercase tracking-[0.1em] text-[#8A847C] focus:outline-none focus:border-[#4C5741] disabled:opacity-40"
               @change="setStatus(home, ($event.target as HTMLSelectElement).value)"
             >
               <option value="active">Active</option>
@@ -167,14 +167,14 @@ async function remove(home: any) {
 
             <NuxtLink
               :to="`/dashboard/home/${home._id}`"
-              class="flex-1 sm:flex-initial text-center px-4 py-2.5 border border-[#B5563A] text-[#B5563A] text-[11px] uppercase tracking-[0.1em] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors whitespace-nowrap"
+              class="flex-1 sm:flex-initial text-center px-4 py-2.5 border border-[#B5563A] text-[#B5563A] text-[11px] uppercase tracking-[0.1em] hover:bg-[#1F1B16] hover:text-[#F7F4EF] transition-colors whitespace-nowrap"
             >
               Open
             </NuxtLink>
 
             <button
               :disabled="busyId === home._id"
-              class="px-4 py-2.5 border border-[#DDD6C9] text-[#A9A39A] text-[11px] uppercase tracking-[0.1em] hover:border-[#B5563A] hover:text-[#B5563A] transition-colors disabled:opacity-40 whitespace-nowrap"
+              class="px-4 py-2.5 border border-[#DDD6C9] text-[#A9A39A] text-[11px] uppercase tracking-[0.1em] hover:border-[#4C5741] hover:text-[#4C5741] transition-colors disabled:opacity-40 whitespace-nowrap"
               @click="remove(home)"
             >
               Remove

@@ -246,7 +246,7 @@ defineExpose({ start })
           class="absolute bg-[#F7F4EF] border border-[#DDD6C9] shadow-2xl p-6 w-[calc(100vw-32px)]"
           :style="tipStyle"
         >
-          <p class="gf-eyebrow mb-2.5">
+          <p class="h-label mb-2.5">
             Step {{ index + 1 }} of {{ steps.length }}
           </p>
 
@@ -285,7 +285,7 @@ defineExpose({ start })
                 Back
               </button>
               <button
-                class="px-5 py-2.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830] transition-colors"
+                class="px-5 py-2.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:opacity-[0.86] transition-colors"
                 @click="next"
               >
                 {{ isLast ? 'Finish' : 'Next' }}

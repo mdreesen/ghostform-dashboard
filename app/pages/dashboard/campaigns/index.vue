@@ -70,7 +70,7 @@ const saveCampaignTemplate = async () => {
 
     <!-- ── Page head ─────────────────────────────────────────── -->
     <header class="mb-20 pt-4">
-      <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">Follow-up on autopilot</p>
+      <p class="h-label mb-5 gf-rise" style="--d:.05s">Follow-up on autopilot</p>
       <h1 class="gf-display text-[clamp(34px,4.6vw,58px)] max-w-[16ch] mb-4 gf-rise" style="--d:.12s">
         Stay in touch without remembering to.
       </h1>
@@ -89,7 +89,7 @@ const saveCampaignTemplate = async () => {
     <!-- ── 01 Running ────────────────────────────────────────── -->
     <section class="gf-depth mb-24">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">01 — Running</span>
+        <span class="h-label">01 — Running</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Your campaigns</span>
         <span class="text-[13px] text-[#A9A39A] tabular-nums">{{ useCampaigns.length }}</span>
       </div>
@@ -108,7 +108,7 @@ const saveCampaignTemplate = async () => {
     <!-- ── 02 New campaign ───────────────────────────────────── -->
     <section class="gf-depth">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">02 — New</span>
+        <span class="h-label">02 — New</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Build a campaign</span>
       </div>
 
@@ -116,7 +116,7 @@ const saveCampaignTemplate = async () => {
 
         <!-- Who and when -->
         <div class="space-y-6 bg-[#EFEAE0] border border-[#DDD6C9] p-7 h-fit">
-          <p class="gf-eyebrow">Who and when</p>
+          <p class="h-label">Who and when</p>
 
           <UFormField label="Name it (just for you)">
             <UInput v-model="form.title" placeholder="Monday check-in" class="w-full" />
@@ -152,7 +152,7 @@ const saveCampaignTemplate = async () => {
 
         <!-- What it says -->
         <div class="lg:col-span-2 space-y-6 bg-[#EFEAE0] border border-[#DDD6C9] p-7">
-          <p class="gf-eyebrow">What it says</p>
+          <p class="h-label">What it says</p>
 
           <UFormField label="Subject line">
             <UInput v-model="form.subject" placeholder="Checking in on your home search" class="w-full" />
@@ -170,7 +170,7 @@ const saveCampaignTemplate = async () => {
             <button
               type="submit"
               :disabled="isSaving || !form.subject || !form.messageBody"
-              class="px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              class="px-6 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:opacity-[0.86] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {{ isSaving ? 'Saving…' : 'Save & start' }}
             </button>

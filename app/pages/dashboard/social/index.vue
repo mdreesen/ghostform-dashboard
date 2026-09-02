@@ -165,7 +165,7 @@ const useDelete = async (post) => {
 
     <!-- Head -->
     <header class="mb-16 pt-4">
-      <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">Social</p>
+      <p class="h-label mb-5 gf-rise" style="--d:.05s">Social</p>
       <h1 class="gf-display text-[clamp(34px,4.6vw,58px)] max-w-[16ch] mb-4 gf-rise" style="--d:.12s">
         Posts written the way you talk.
       </h1>
@@ -187,7 +187,7 @@ const useDelete = async (post) => {
           </p>
         </div>
         <NuxtLink to="/dashboard/profile#voice"
-          class="shrink-0 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors text-center">
+          class="shrink-0 px-6 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors text-center">
           Set up my voice
         </NuxtLink>
       </div>
@@ -196,17 +196,17 @@ const useDelete = async (post) => {
     <!-- 01 Write -->
     <section class="gf-depth mb-20">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">01 — Write</span>
+        <span class="h-label">01 — Write</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">What's this about?</span>
       </div>
 
       <div class="grid lg:grid-cols-3 gap-6 mb-8">
         <div>
-          <label class="gf-eyebrow block mb-3">Where it's going</label>
+          <label class="h-label block mb-3">Where it's going</label>
           <div class="flex gap-2">
             <button v-for="p in platforms" :key="p.value"
               class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors" :class="platform === p.value
-                ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]'
+                ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]'
                 : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'" @click="platform = p.value">
               {{ p.label }}
             </button>
@@ -214,22 +214,22 @@ const useDelete = async (post) => {
         </div>
 
         <div>
-          <label class="gf-eyebrow block mb-3">Topic</label>
+          <label class="h-label block mb-3">Topic</label>
           <select v-model="topic"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors">
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741] transition-colors">
             <option v-for="t in topics" :key="t.value" :value="t.value">{{ t.label }}</option>
           </select>
         </div>
 
         <div>
-          <label class="gf-eyebrow block mb-3">Anything specific? (optional)</label>
+          <label class="h-label block mb-3">Anything specific? (optional)</label>
           <input v-model="details" placeholder="Saturday 11–1, the cabin on Whitefish Stage"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A] transition-colors" />
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741] transition-colors" />
         </div>
       </div>
 
       <button :disabled="generating"
-        class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
+        class="px-7 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40"
         @click="generate">
         {{ generating ? 'Writing…' : 'Write me 3 posts' }}
       </button>
@@ -242,7 +242,7 @@ const useDelete = async (post) => {
 
         <div v-for="(d, i) in drafts" :key="i" class="border border-[#DDD6C9] bg-[#EFEAE0] p-6">
           <textarea v-model="d.edited" :rows="platform === 'x' ? 3 : 6"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]" />
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#4C5741]" />
 
           <div class="flex flex-wrap items-center justify-between gap-4 mt-3">
             <div class="text-[12px] text-[#A9A39A] space-y-1">
@@ -260,7 +260,7 @@ const useDelete = async (post) => {
                 {{ copiedIdx === i ? 'Copied' : 'Copy' }}
               </button>
               <button
-                class="px-5 py-2.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830] transition-colors"
+                class="px-5 py-2.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:opacity-[0.86] transition-colors"
                 @click="approve(d)">
                 Keep it
               </button>
@@ -273,7 +273,7 @@ const useDelete = async (post) => {
     <!-- 02 Image -->
     <section class="gf-depth mb-20">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">02 — Image</span>
+        <span class="h-label">02 — Image</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Make something to post with it</span>
       </div>
 
@@ -293,7 +293,7 @@ const useDelete = async (post) => {
     <!-- 03 Queue -->
     <section class="gf-depth mb-20">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">03 — Ready</span>
+        <span class="h-label">03 — Ready</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Approved and waiting</span>
         <span class="text-[13px] text-[#A9A39A] tabular-nums">{{ queue?.approved?.length ?? 0 }}</span>
       </div>
@@ -302,7 +302,7 @@ const useDelete = async (post) => {
         <div v-for="post in queue.approved" :key="post._id"
           class="border border-[#DDD6C9] p-6 flex flex-col lg:flex-row lg:items-start gap-6 justify-between">
           <div class="min-w-0 flex-1">
-            <p class="gf-eyebrow mb-2.5">{{ post.platform }}</p>
+            <p class="h-label mb-2.5">{{ post.platform }}</p>
             <p class="text-[15px] leading-relaxed whitespace-pre-line">{{ post.body }}</p>
             <p v-if="post.hashtags" class="text-[13px] text-[#A9A39A] mt-2.5">{{ post.hashtags }}</p>
           </div>
@@ -341,7 +341,7 @@ const useDelete = async (post) => {
     <!-- 04 History -->
     <section v-if="queue?.posted?.length" class="gf-depth">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">04 — History</span>
+        <span class="h-label">04 — History</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">Already posted</span>
       </div>
       <div class="space-y-3">

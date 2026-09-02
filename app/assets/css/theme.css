@@ -1,0 +1,173 @@
+/* ============================================================================
+   GHOSTFORM — WARM BASE, DISCIPLINED COLOUR
+   ============================================================================
+   Keeps the cream. Changes what the colours MEAN.
+
+   THE PROBLEM WITH TERRACOTTA AS THE ACCENT:
+   It was doing two jobs — brand identity AND alerts. The primary button, the
+   section markers and an overdue deadline were all #B5563A. When the only red
+   on screen is a missed contingency, red means something; when it's also every
+   button, it means nothing, and a realtor learns to scan past it.
+
+   THE FIX: three roles, three colours.
+     INK    — actions and structure. Buttons, headings, the brand mark.
+     MOSS   — the warm accent. Section markers, confirmed states, the signature.
+     RUST   — alerts ONLY. Overdue, destructive, genuinely wrong.
+
+   Moss green on cream is deeply Danish — Carl Hansen, old enamel signage — so
+   the warmth survives. Rust is still in the palette, just demoted to the one
+   job it's actually good at.
+   ============================================================================ */
+
+:root {
+  /* Surfaces — unchanged. This is the warmth, and it stays. */
+  --paper:     #F7F4EF;
+  --paper-2:   #EFEAE0;
+  --paper-3:   #E5DFD2;
+  --hair:      #DDD6C9;
+  --hair-2:    #C7BFAF;
+
+  /* Ink — now the primary action colour */
+  --ink:       #1F1B16;
+  --ink-2:     #6B655C;
+  --ink-3:     #A9A39A;
+
+  /* Moss — the warm accent, promoted from a minor role */
+  --moss:      #4C5741;
+  --moss-2:    #67735A;   /* hover */
+  --moss-tint: #E9EDE3;   /* backgrounds, confirmed rows */
+
+  /* Rust — alerts only. Not a brand colour any more. */
+  --rust:      #A8452C;
+  --rust-tint: #F6E7E2;
+
+  /* Amber — the middle state */
+  --amber:     #9A7B2E;
+  --amber-tint:#F5EEDD;
+
+  --s1: 8px; --s2: 16px; --s3: 24px; --s4: 40px; --s5: 64px; --s6: 96px;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Type — Fraunces stays. It's the personality. ---------- */
+.h-display {
+  font-family: 'Fraunces', Georgia, serif; font-weight: 600;
+  font-size: clamp(30px, 4vw, 42px); line-height: 1.1; letter-spacing: -0.022em;
+}
+.h-title { font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 21px; letter-spacing: -0.014em; line-height: 1.25; }
+.h-lead  { font-size: 17px; line-height: 1.65; color: var(--ink-2); max-width: 56ch; }
+.h-body  { font-size: 15px; line-height: 1.6; }
+.h-meta  { font-size: 13px; line-height: 1.5; color: var(--ink-2); }
+
+/* Section markers become MOSS, not rust. This is the single biggest change —
+   there are ~100 of these, and every one was competing with real alerts. */
+.h-label {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--moss);
+}
+
+/* ---------- Buttons ---------- */
+/* Primary is INK. A terracotta button next to a terracotta alert taught people
+   the colour was decorative. */
+.h-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ink); color: var(--paper);
+  border: 1px solid var(--ink); border-radius: 2px;
+  padding: 11px 20px; font-size: 13.5px; font-weight: 500;
+  font-family: inherit; cursor: pointer;
+  transition: opacity .16s ease;
+}
+.h-btn:hover { opacity: .86; }
+
+/* Positive / confirming actions get moss */
+.h-btn-go {
+  background: transparent; color: var(--moss); border-color: var(--moss);
+}
+.h-btn-go:hover { background: var(--moss); color: var(--paper); opacity: 1; }
+
+.h-btn-quiet { background: transparent; color: var(--ink-2); border-color: var(--hair-2); }
+.h-btn-quiet:hover { color: var(--ink); border-color: var(--ink); opacity: 1; }
+
+/* Destructive is the ONLY place rust appears as a button */
+.h-btn-alert { background: transparent; color: var(--rust); border-color: var(--rust); }
+.h-btn-alert:hover { background: var(--rust); color: var(--paper); opacity: 1; }
+
+/* ---------- Surfaces ---------- */
+.h-card { background: var(--paper); border: 1px solid var(--hair); border-radius: 2px; }
+.h-inset { background: var(--paper-2); border: 1px solid var(--hair); }
+.h-row { padding: var(--s3) 0; border-bottom: 1px solid var(--hair); }
+.h-rule { height: 1px; background: var(--hair); border: 0; }
+
+/* ---------- Status ----------
+   Three states, three colours, three shapes. Colour is never the only signal. */
+.h-pip { width: 8px; height: 8px; display: inline-block; flex-shrink: 0; }
+.h-pip-alert { background: var(--rust); }                        /* overdue */
+.h-pip-soon  { background: transparent; border: 1.5px solid var(--amber); }
+.h-pip-ok    { background: transparent; border: 1.5px solid var(--moss); }
+.h-pip-done  { background: var(--moss); }
+
+/* Row tints, so a scan reads before any text does */
+.h-row-alert { border-left: 2px solid var(--rust); background: var(--rust-tint); }
+.h-row-soon  { border-left: 2px solid var(--amber); background: var(--amber-tint); }
+.h-row-done  { border-left: 2px solid var(--moss); background: var(--moss-tint); }
+
+/* ---------- Numbers ---------- */
+.h-num {
+  font-family: 'Fraunces', Georgia, serif; font-weight: 600; font-size: 34px;
+  font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+}
+
+.h-input {
+  width: 100%; background: var(--paper); border: 1px solid var(--hair);
+  border-radius: 2px; padding: 11px 14px; font-size: 15px;
+  font-family: inherit; color: var(--ink); outline: none;
+  transition: border-color .16s ease;
+}
+.h-input:focus { border-color: var(--moss); }
+
+:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+
+
+/* ============================================================================
+   NUXT UI DEFAULTS
+   ============================================================================
+   Nuxt UI ships assuming a dark surface. On a cream page that produced white
+   header text on cream — invisible — and a solid rust block for the active
+   pagination page, which read as an error rather than a selection.
+
+   Setting the palette here means components we haven't themed individually
+   (UCard, USelect, UModal) inherit sensible colours instead of each needing
+   its own :ui override.
+   ============================================================================ */
+:root {
+  --ui-bg:            #F7F4EF;
+  --ui-bg-elevated:   #EFEAE0;
+  --ui-bg-accented:   #E5DFD2;
+  --ui-border:        #DDD6C9;
+  --ui-border-accented: #C7BFAF;
+
+  --ui-text:          #1F1B16;
+  --ui-text-muted:    #6B655C;
+  --ui-text-dimmed:   #A9A39A;
+  --ui-text-highlighted: #1F1B16;
+
+  /* Primary is INK, so a selected page or active tab reads as a selection
+     rather than an alert. */
+  --ui-primary:       #1F1B16;
+  --ui-secondary:     #4C5741;
+  --ui-success:       #4C5741;
+  --ui-warning:       #9A7B2E;
+  --ui-error:         #B5563A;
+}
+
+/* Belt and braces — table headers were the visible failure. */
+table thead th { color: #6B655C; }
+table tbody td { color: #1F1B16; }

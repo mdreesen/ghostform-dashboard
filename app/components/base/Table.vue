@@ -185,13 +185,23 @@ const pagination = ref({
           placeholder="Filter emails..."
           @update:model-value="table?.tableApi?.getColumn('email')?.setFilterValue($event)" />
       </div>
+      <!-- Nuxt UI's defaults assume a dark surface — headers came out white on
+           cream and were invisible. Every slot is themed explicitly. -->
       <UTable ref="table" v-model:pagination="pagination" v-model:column-filters="columnFilters" :data="data"
         :columns="columns" :pagination-options="{
           getPaginationRowModel: getPaginationRowModel()
-        }" class="flex-1">
+        }" class="flex-1"
+        :ui="{
+          base: 'min-w-full',
+          thead: 'border-b border-[#DDD6C9]',
+          tbody: 'divide-y divide-[#DDD6C9]',
+          th: 'text-left px-4 py-3 text-[11px] uppercase tracking-[0.12em] font-semibold text-[#6B655C]',
+          td: 'px-4 py-4 text-[14.5px] text-[#1F1B16]',
+          tr: 'hover:bg-[#EFEAE0]/60 transition-colors'
+        }">
         <template #name-cell="{ row }">
           <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
-            class="text-[#B5563A] hover:text-[#8f4229] underline underline-offset-2 font-medium">
+            class="text-[#1F1B16] hover:text-[#4C5741] underline underline-offset-2 decoration-[#C7BFAF] hover:decoration-[#4C5741] font-medium transition-colors">
             {{ row.original?.name ? row.original?.name : 'Not Specified' }}
           </NuxtLink>
         </template>
@@ -213,7 +223,12 @@ const pagination = ref({
         <UPagination :page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
           :items-per-page="table?.tableApi?.getState().pagination.pageSize"
           :total="table?.tableApi?.getFilteredRowModel().rows.length"
-          @update:page="(p) => table?.tableApi?.setPageIndex(p - 1)" />
+          @update:page="(p) => table?.tableApi?.setPageIndex(p - 1)"
+          :ui="{
+            list: 'flex items-center gap-1',
+            label: 'text-[13px]'
+          }"
+          :active-color="'neutral'" :color="'neutral'" :variant="'outline'" />
       </div>
     </div>
   </div>

@@ -99,7 +99,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
 <template>
   <div>
-    <div class="max-w-4xl mx-auto py-10 flex flex-col gap-8">
+    <div class="gf-page py-10 flex flex-col gap-8">
 
       <!-- Header -->
       <header class="pb-8 border-b border-gray-700">
@@ -107,7 +107,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       </header>
 
       <div>
-        <main class="max-w-4xl mx-auto relative z-10">
+        <main class="gf-page relative z-10">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <section class="lg:col-span-4 space-y-6">
               <div class="backdrop-blur-xl bg-white/1 border border-white/6 rounded-4xl p-6 space-y-4">
@@ -227,7 +227,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
            (rather than pasting a URL) keeps the image same-origin, which is
            what stops the social-card canvas from being tainted on export. -->
       <div id="photo" class="mb-10 pb-10 border-b border-[#DDD6C9]">
-        <p class="gf-eyebrow mb-3">Your photo</p>
+        <p class="h-label mb-3">Your photo</p>
         <p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]">
           Appears on your campaign emails and on any social cards you make.
           We'll crop it to a square for you.
@@ -239,7 +239,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
       <!-- Voice profile: drives how AI writes their social posts -->
       <div id="voice" class="mb-10 pb-10 border-b border-[#DDD6C9]">
-        <p class="gf-eyebrow mb-3">Your voice</p>
+        <p class="h-label mb-3">Your voice</p>
         <p class="text-[14px] text-[#8A847C] leading-relaxed mb-7 max-w-[56ch]">
           This is what makes your social posts sound like you instead of like
           every other agent. The samples box matters most — paste a couple of
@@ -248,9 +248,9 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
         <div class="grid sm:grid-cols-2 gap-6 mb-6">
           <div>
-            <label class="gf-eyebrow block mb-3">How you come across</label>
+            <label class="h-label block mb-3">How you come across</label>
             <select v-model="voice.tone"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]">
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]">
               <option value="warm">Warm and neighbourly</option>
               <option value="straight">Plain and direct</option>
               <option value="playful">Light and a bit funny</option>
@@ -258,9 +258,9 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
             </select>
           </div>
           <div>
-            <label class="gf-eyebrow block mb-3">Emoji</label>
+            <label class="h-label block mb-3">Emoji</label>
             <select v-model="voice.emoji"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]">
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]">
               <option value="none">None</option>
               <option value="some">A few</option>
               <option value="lots">Plenty</option>
@@ -270,37 +270,37 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
         <div class="space-y-6">
           <div>
-            <label class="gf-eyebrow block mb-3">A bit about you</label>
+            <label class="h-label block mb-3">A bit about you</label>
             <textarea v-model="voice.about" placeholder="Grew up here, two kids, spend every free weekend on the lake"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
           </div>
           <div>
-            <label class="gf-eyebrow block mb-3">What you want to be known for</label>
+            <label class="h-label block mb-3">What you want to be known for</label>
             <input v-model="voice.focus" placeholder="First-time buyers, and knowing every back road in the valley"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
           </div>
           <div>
-            <label class="gf-eyebrow block mb-3">Words to avoid</label>
+            <label class="h-label block mb-3">Words to avoid</label>
             <input v-model="voice.avoid" placeholder="dream home, don't miss out, hustle"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
           </div>
           <div>
-            <label class="gf-eyebrow block mb-3">Paste a couple of your real posts</label>
+            <label class="h-label block mb-3">Paste a couple of your real posts</label>
             <textarea v-model="voice.samples" rows="7"
               placeholder="Paste two or three posts you've written before. This teaches it your rhythm better than anything else here."
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]" />
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#4C5741]" />
           </div>
         </div>
 
         <button :disabled="savingVoice"
-          class="mt-7 px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
+          class="mt-7 px-6 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40"
           @click="saveVoice">
           {{ savingVoice ? 'Saving…' : 'Save my voice' }}
         </button>
       </div>
 
       <!-- Action Button Example -->
-      <div class="flex flex-col mt-4 pt-8 border-t border-gray-700 text-gray-400">
+      <div class="flex flex-col mt-4 pt-8 border-t border-[#DDD6C9] text-[#8A847C]">
         <span>Date: {{ formatDate() }}</span>
         <span>Time zone: {{ timeZone() }}</span>
         <span>Version: {{ packageJson.version }}</span>
@@ -309,7 +309,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
 
       <!-- Action Button Example -->
       <div class="flex flex-col gap-8 mt-10 pt-8 border-t border-gray-700">
-        <p class="gf-eyebrow mb-3">Getting started</p>
+        <p class="h-label mb-3">Getting started</p>
         <p class="text-[14px] text-[#8A847C] leading-relaxed mb-5 max-w-[52ch]">
           Run the two-minute walkthrough again if you want a refresher on where
           everything lives.

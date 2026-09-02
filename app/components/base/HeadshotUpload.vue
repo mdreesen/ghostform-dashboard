@@ -154,7 +154,7 @@ async function remove() {
         <button
           v-if="shown"
           :disabled="removing"
-          class="px-5 py-3 border border-[#DDD6C9] text-[11px] uppercase tracking-[0.1em] text-[#A9A39A] hover:border-[#B5563A] hover:text-[#B5563A] transition-colors disabled:opacity-40"
+          class="px-5 py-3 border border-[#DDD6C9] text-[11px] uppercase tracking-[0.1em] text-[#A9A39A] hover:border-[#4C5741] hover:text-[#4C5741] transition-colors disabled:opacity-40"
           @click="remove"
         >
           Remove

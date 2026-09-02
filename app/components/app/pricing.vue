@@ -70,13 +70,13 @@ const asFeature = (f: any) => (typeof f === 'string' ? { text: f, upgrade: false
         :class="[
           'relative p-8 transition-all duration-500 border max-w-sm w-full flex flex-col',
           tier.highlighted
-            ? 'bg-[#F7F4EF] border-[#B5563A] lg:scale-105 z-10'
+            ? 'bg-[#F7F4EF] border-[#1F1B16] lg:scale-105 z-10'
             : 'bg-[#EFEAE0] border-[#DDD6C9] hover:border-[#A9A39A]'
         ]"
       >
         <div
           v-if="tier.highlighted"
-          class="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#B5563A] text-[#F7F4EF] text-[10px] font-semibold uppercase tracking-[0.14em] px-4 py-1 rounded-full"
+          class="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#1F1B16] text-[#F7F4EF] text-[10px] font-semibold uppercase tracking-[0.14em] px-4 py-1 rounded-full"
         >
           Most Popular
         </div>
@@ -109,7 +109,7 @@ const asFeature = (f: any) => (typeof f === 'string' ? { text: f, upgrade: false
               xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
               fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
               class="mt-1 shrink-0"
-              :stroke="asFeature(feature).upgrade ? '#B5563A' : '#A9A39A'"
+              :stroke="asFeature(feature).upgrade ? '#4C5741' : '#A9A39A'"
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
@@ -122,7 +122,7 @@ const asFeature = (f: any) => (typeof f === 'string' ? { text: f, upgrade: false
             :class="[
               'w-full py-4 text-[11px] uppercase tracking-[0.12em] font-semibold transition-colors active:scale-[0.98]',
               tier.highlighted
-                ? 'bg-[#B5563A] text-[#F7F4EF] hover:bg-[#9d4830]'
+                ? 'bg-[#1F1B16] text-[#F7F4EF] hover:opacity-[0.86]'
                 : 'bg-transparent text-[#1F1B16] hover:bg-[#DDD6C9] border border-[#A9A39A]'
             ]"
           >
@@ -135,7 +135,7 @@ const asFeature = (f: any) => (typeof f === 'string' ? { text: f, upgrade: false
             :class="[
               'w-full py-4 text-[11px] uppercase tracking-[0.12em] font-semibold transition-colors active:scale-[0.98]',
               tier.highlighted
-                ? 'bg-[#B5563A] text-[#F7F4EF] hover:bg-[#9d4830]'
+                ? 'bg-[#1F1B16] text-[#F7F4EF] hover:opacity-[0.86]'
                 : 'bg-transparent text-[#1F1B16] hover:bg-[#DDD6C9] border border-[#A9A39A]'
             ]"
           >

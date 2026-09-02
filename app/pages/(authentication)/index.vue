@@ -81,13 +81,13 @@ useMotion(formRef, { ...formVarient() });
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Email" />
               <input id="email" type="email" v-model="credentials.email" placeholder="Email" required
-              class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+              class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Password" />
               <input id="password" type="password" v-model="credentials.password" placeholder="Password" required
-              class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+              class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }"
@@ -106,13 +106,13 @@ useMotion(formRef, { ...formVarient() });
                         <div v-motion="{ ...inputVarient() }">
                           <baseLabel text="Email" />
                           <input id="email" type="email" v-model="input.email" placeholder="Email" required
-                          class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                          class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div v-motion="{ ...inputVarient() }">
                           <baseLabel text="Question" />
                           <input id="question" type="text" v-model="input.question" placeholder="What is 4 + 3" required
-                          class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                          class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div class="flex flex-col gap-8 pb-4">

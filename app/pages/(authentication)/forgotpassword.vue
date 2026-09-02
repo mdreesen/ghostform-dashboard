@@ -81,18 +81,18 @@ useMotion(formRef, { ...formVarient() });
           <div v-motion="{ ...inputVarient() }">
             <baseLabel text="Email" />
             <input id="email" type="email" v-model="credentials.email" placeholder="Email" required
-              class="w-full border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-[#F7F4EF] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B5563A]" />
+              class="w-full border border-[#DDD6C9] bg-[#F7F4EF] py-3 px-4 text-lg text-[#1F1B16] transition-all duration-300 ease-in-out focus:outline-none focus:ring-1 focus:ring-[#4C5741]" />
           </div>
 
           <div v-motion="{ ...inputVarient() }">
             <baseLabel text="Password" />
             <input id="password" type="password" v-model="credentials.password" placeholder="Password" required
-              class="w-full border border-gray-600 bg-gray-700/50 py-3 px-4 text-lg text-[#F7F4EF] transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#B5563A]" />
+              class="w-full border border-[#DDD6C9] bg-[#F7F4EF] py-3 px-4 text-lg text-[#1F1B16] transition-all duration-300 ease-in-out focus:outline-none focus:ring-1 focus:ring-[#4C5741]" />
           </div>
 
           <div v-motion="{ ...inputVarient() }">
             <button type="submit" :disabled="isLoading"
-              :class="`${isLoading ? 'bg-linear-to-r from-gray-500 to-gray-600' : 'bg-[#B5563A] hover:bg-[#8f4229] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#B5563A] focus:ring-offset-2 focus:ring-offset-[#F7F4EF]'} w-full py-3 text-lg font-semibold text-[#F7F4EF] transition-all duration-300 ease-in-out`">
+              :class="`${isLoading ? 'bg-linear-to-r from-gray-500 to-gray-600' : 'bg-[#B5563A] hover:bg-[#8f4229] hover:scale-[1.02] focus:outline-none focus:ring-1 focus:ring-[#4C5741] focus:ring-offset-2 focus:ring-offset-[#F7F4EF]'} w-full py-3 text-lg font-semibold text-[#F7F4EF] transition-all duration-300 ease-in-out`">
               {{ isLoading ? 'Logging In...' : 'Log In' }}
             </button>
           </div>

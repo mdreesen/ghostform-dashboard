@@ -12,7 +12,7 @@ const authenticated = computed(() => user ? true : navigateTo(`/login`));
 </script>
 
 <template>
-    <main class="bg-[#F7F4EF] text-[#1F1B16] selection:bg-[#B5563A]/15 min-h-screen">
+    <main class="bg-[#F7F4EF] text-[#1F1B16] selection:bg-[#4C5741]/15 min-h-screen">
         <template v-if="authenticated">
             <baseNavBar />
 
@@ -20,7 +20,7 @@ const authenticated = computed(() => user ? true : navigateTo(`/login`));
               <baseTour :auto="!user?.tour_completed" />
             </ClientOnly>
 
-            <div class="gf-stage pt-24 pb-28 px-6 sm:px-10 lg:px-12">
+            <div class="gf-stage gf-shell">
                 <slot />
             </div>
         </template>

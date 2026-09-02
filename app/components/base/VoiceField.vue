@@ -40,7 +40,7 @@ watch(displayText, (t) => {
         v-if="supported"
         type="button"
         class="flex items-center gap-1.5 gf-label transition-colors"
-        :class="listening ? 'text-[#B5563A]' : 'text-[#A9A39A] hover:text-[#1F1B16]'"
+        :class="listening ? 'text-[#4C5741]' : 'text-[#A9A39A] hover:text-[#1F1B16]'"
         @click="toggle"
       >
         <!-- Filled while listening, outline when idle — readable without colour -->
@@ -58,11 +58,11 @@ watch(displayText, (t) => {
       :rows="rows"
       :placeholder="placeholder"
       class="w-full bg-[#F7F4EF] border px-3.5 py-2.5 gf-body resize-none focus:outline-none transition-colors"
-      :class="listening ? 'border-[#B5563A]' : 'border-[#DDD6C9] focus:border-[#B5563A]'"
+      :class="listening ? 'border-[#4C5741]' : 'border-[#DDD6C9] focus:border-[#4C5741]'"
       @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
     />
 
-    <p v-if="listening" class="gf-label text-[#B5563A] mt-1.5">
+    <p v-if="listening" class="gf-label text-[#4C5741] mt-1.5">
       Speak naturally — you can edit it after.
     </p>
     <p v-else-if="error" class="gf-label text-[#B5563A] mt-1.5">{{ error }}</p>

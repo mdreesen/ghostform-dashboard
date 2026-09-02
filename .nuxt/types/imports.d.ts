@@ -87,6 +87,7 @@ declare global {
   const isVue3: typeof import('../../node_modules/nuxt/dist/app/compat/vue-demi').isVue3
   const itemVarient: typeof import('../../app/utils/varients').itemVarient
   const loadPayload: typeof import('../../node_modules/nuxt/dist/app/composables/payload').loadPayload
+  const localDate: typeof import('../../app/utils/priority').localDate
   const loggedInUser: typeof import('../../app/utils/loggedInUser').default
   const mapRows: typeof import('../../app/utils/leadImport').mapRows
   const markRaw: typeof import('vue').markRaw
@@ -146,6 +147,7 @@ declare global {
   const showError: typeof import('../../node_modules/nuxt/dist/app/composables/error').showError
   const sortDeadlines: typeof import('../../app/utils/priority').sortDeadlines
   const timeZone: typeof import('../../app/utils/date').timeZone
+  const toDateInput: typeof import('../../app/utils/priority').toDateInput
   const toRaw: typeof import('vue').toRaw
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
@@ -410,6 +412,7 @@ declare module 'vue' {
     readonly isVue3: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/vue-demi')['isVue3']>
     readonly itemVarient: UnwrapRef<typeof import('../../app/utils/varients')['itemVarient']>
     readonly loadPayload: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['loadPayload']>
+    readonly localDate: UnwrapRef<typeof import('../../app/utils/priority')['localDate']>
     readonly loggedInUser: UnwrapRef<typeof import('../../app/utils/loggedInUser')['default']>
     readonly mapRows: UnwrapRef<typeof import('../../app/utils/leadImport')['mapRows']>
     readonly markRaw: UnwrapRef<typeof import('vue')['markRaw']>
@@ -469,6 +472,7 @@ declare module 'vue' {
     readonly showError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['showError']>
     readonly sortDeadlines: UnwrapRef<typeof import('../../app/utils/priority')['sortDeadlines']>
     readonly timeZone: UnwrapRef<typeof import('../../app/utils/date')['timeZone']>
+    readonly toDateInput: UnwrapRef<typeof import('../../app/utils/priority')['toDateInput']>
     readonly toRaw: UnwrapRef<typeof import('vue')['toRaw']>
     readonly toRef: UnwrapRef<typeof import('vue')['toRef']>
     readonly toRefs: UnwrapRef<typeof import('vue')['toRefs']>

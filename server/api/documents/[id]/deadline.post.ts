@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { Model } from 'mongoose'
 import DocumentModel from '../../../../lib/database/models/Document'
+import { localDate } from '~/utils/priority'
 import loggedInUser from '~/utils/loggedInUser'
 
 const Doc = DocumentModel as Model<any>
@@ -29,7 +30,7 @@ export default defineEventHandler(async (event) => {
 
   // A correction implies confirmation — you wouldn't fix a date you're ignoring.
   if (date && !Number.isNaN(Date.parse(date))) {
-    set['deadlines.$.date'] = new Date(date)
+    set['deadlines.$.date'] = localDate(date)
     set['deadlines.$.confirmed'] = true
   }
   if (label) set['deadlines.$.label'] = label

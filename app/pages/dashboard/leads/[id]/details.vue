@@ -137,7 +137,7 @@ async function markContacted() {
     <!-- ── Head ──────────────────────────────────────────────── -->
     <header class="mb-16 pt-4">
       <NuxtLink to="/dashboard/leads"
-        class="gf-eyebrow inline-block mb-6 hover:text-[#B5563A] transition-colors gf-rise" style="--d:.04s">
+        class="h-label inline-block mb-6 hover:text-[#4C5741] transition-colors gf-rise" style="--d:.04s">
         ← All leads
       </NuxtLink>
 
@@ -148,7 +148,7 @@ async function markContacted() {
           </h1>
           <div class="flex flex-wrap items-center gap-3 text-[13px] text-[#8A847C]">
             <span class="inline-flex items-center gap-2">
-              <span class="w-[7px] h-[7px] bg-[#B5563A]" />
+              <span class="w-[7px] h-[7px] bg-[#1F1B16]" />
               <span class="uppercase tracking-[0.14em] text-[10.5px]">{{ lead?.status }}</span>
             </span>
             <span class="text-[#DDD6C9]">·</span>
@@ -162,7 +162,7 @@ async function markContacted() {
               :lead-phone="lead?.phone" />
           </ClientOnly>
           <button :disabled="marking"
-            class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
+            class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#1F1B16] text-[#1F1B16] hover:bg-[#1F1B16] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
             @click="markContacted">
             {{ marking ? 'Saving…' : 'Contacted' }}
           </button>
@@ -179,12 +179,12 @@ async function markContacted() {
         <div v-if="lead.qualification && lead.qualification?.answers"
           class="flex flex-col gap-4">
           <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-            <span class="gf-eyebrow">Qualifying</span>
+            <span class="h-label">Qualifying</span>
             <span class="font-display text-[25px] font-semibold tracking-tight">How serious are they?</span>
           </div>
 
           <div class="flex flex-col">
-            <span class="gf-eyebrow">Lead is looking to {{ lead.qualification.intent }}</span>
+            <span class="h-label">Lead is looking to {{ lead.qualification.intent }}</span>
             <span class="font-display text-[25px] font-semibold tracking-tight">Qualifying Details</span>
           </div>
           <div>
@@ -302,7 +302,7 @@ async function markContacted() {
         </div>
 
         <div v-if="lead.qualification?.sentAt && !lead.qualification.answers" class="flex flex-col gap-2">
-          <span class="gf-eyebrow">Sent detailed questions</span>
+          <span class="h-label">Sent detailed questions</span>
           <span class="font-display text-[25px] font-semibold tracking-tight">Awaiting detailed response</span>
         </div>
       </div>
@@ -318,13 +318,13 @@ async function markContacted() {
 
         <div class="flex flex-wrap items-center gap-3">
           <select v-model="intent"
-            class="bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[14px] focus:outline-none focus:border-[#B5563A]">
+            class="bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[14px] focus:outline-none focus:border-[#4C5741]">
             <option value="buy">Buyer questions</option>
             <option value="sell">Seller questions</option>
           </select>
 
           <button :disabled="sendingQuestionnaire || !lead?.email"
-            class="px-6 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            class="px-6 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             @click="sendQuestionnaire">
             {{ sendingQuestionnaire ? 'Sending…' : 'Send questionnaire' }}
           </button>
@@ -354,14 +354,14 @@ async function markContacted() {
         <!-- Scorecard -->
         <div v-if="analysis" class="grid sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9] mb-8">
           <div class="bg-[#F7F4EF] p-7">
-            <p class="gf-eyebrow mb-3">Readiness</p>
+            <p class="h-label mb-3">Readiness</p>
             <p class="font-display text-[42px] font-semibold leading-none tabular-nums">
               {{ analysis.scorecard.readiness }}<span class="text-[18px] text-[#A9A39A]">/100</span>
             </p>
             <p class="text-[13px] text-[#8A847C] mt-2">{{ analysis.scorecard.readinessLabel }}</p>
           </div>
           <div class="bg-[#F7F4EF] p-7">
-            <p class="gf-eyebrow mb-3">Financing</p>
+            <p class="h-label mb-3">Financing</p>
             <p class="font-display text-[26px] font-semibold capitalize"
               :class="analysis.scorecard.financingRisk === 'high' ? 'text-[#B5563A]' : ''">
               {{ analysis.scorecard.financingRisk }}
@@ -373,7 +373,7 @@ async function markContacted() {
             </p>
           </div>
           <div class="bg-[#F7F4EF] p-7">
-            <p class="gf-eyebrow mb-3">Answered</p>
+            <p class="h-label mb-3">Answered</p>
             <p class="font-display text-[42px] font-semibold leading-none tabular-nums">{{ answeredCount }}</p>
             <p class="text-[13px] text-[#8A847C] mt-2">questions completed</p>
           </div>
@@ -381,14 +381,14 @@ async function markContacted() {
 
         <!-- The read -->
         <div v-if="analysis?.read" class="bg-[#EFEAE0] border border-[#DDD6C9] p-7 mb-6">
-          <p class="gf-eyebrow mb-3">The read</p>
+          <p class="h-label mb-3">The read</p>
           <p class="text-[15px] leading-[1.75] max-w-[70ch]">{{ analysis.read }}</p>
         </div>
 
         <!-- Signals & gaps -->
         <div class="grid sm:grid-cols-2 gap-6 mb-6">
           <div v-if="analysis?.scorecard?.signals?.length">
-            <p class="gf-eyebrow mb-3">What stands out</p>
+            <p class="h-label mb-3">What stands out</p>
             <ul class="space-y-2.5">
               <li v-for="s in analysis?.scorecard.signals" :key="s" class="flex gap-3 text-[13.5px] leading-relaxed">
                 <span class="w-1.5 h-1.5 bg-[#B5563A] mt-2 shrink-0" />
@@ -397,7 +397,7 @@ async function markContacted() {
             </ul>
           </div>
           <div v-if="analysis?.scorecard?.gaps?.length">
-            <p class="gf-eyebrow mb-3">Still unknown</p>
+            <p class="h-label mb-3">Still unknown</p>
             <ul class="space-y-2.5">
               <li v-for="g in analysis?.scorecard.gaps" :key="g"
                 class="flex gap-3 text-[13.5px] leading-relaxed text-[#8A847C]">
@@ -410,7 +410,7 @@ async function markContacted() {
 
         <!-- Next steps -->
         <div v-if="analysis?.nextSteps?.length" class="border-t border-[#DDD6C9] pt-6 mb-6">
-          <p class="gf-eyebrow mb-4">Do this next</p>
+          <p class="h-label mb-4">Do this next</p>
           <ol class="space-y-3">
             <li v-for="(n, i) in analysis.nextSteps" :key="n" class="flex gap-4 text-[14.5px] leading-relaxed">
               <span
@@ -427,21 +427,21 @@ async function markContacted() {
     <!-- ── Contact ───────────────────────────────────────────── -->
     <section class="gf-depth mb-20">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">01 — Contact</span>
+        <span class="h-label">01 — Contact</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">How to reach them</span>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9]">
         <div class="bg-[#F7F4EF] p-7">
-          <p class="gf-eyebrow mb-3">Email</p>
+          <p class="h-label mb-3">Email</p>
           <baseMessage :label="lead?.email" message_type="mailto" communication_type="email" />
         </div>
         <div class="bg-[#F7F4EF] p-7">
-          <p class="gf-eyebrow mb-3">Phone</p>
+          <p class="h-label mb-3">Phone</p>
           <baseMessage :label="lead?.phone" message_type="sms" communication_type="phone" />
         </div>
         <div class="bg-[#F7F4EF] p-7">
-          <p class="gf-eyebrow mb-3">Prefers</p>
+          <p class="h-label mb-3">Prefers</p>
           <p class="text-[15px]">{{ lead?.best_communication_method || 'Not specified' }}</p>
         </div>
       </div>
@@ -450,7 +450,7 @@ async function markContacted() {
     <!-- ── 02 What they told us ──────────────────────────────── -->
     <section class="gf-depth mb-20">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">02 — Submission</span>
+        <span class="h-label">02 — Submission</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">What they told you</span>
       </div>
 
@@ -459,7 +459,7 @@ async function markContacted() {
           <div v-if="facts.length">
             <div v-for="f in facts" :key="f.label"
               class="flex justify-between items-baseline gap-6 border-b border-[#DDD6C9] py-3.5">
-              <span class="gf-eyebrow">{{ f.label }}</span>
+              <span class="h-label">{{ f.label }}</span>
               <span class="font-display text-[17px] font-semibold text-right">{{ f.value }}</span>
             </div>
           </div>
@@ -468,13 +468,13 @@ async function markContacted() {
           </p>
 
           <div v-if="lead?.address" class="mt-8">
-            <p class="gf-eyebrow mb-3">Address</p>
+            <p class="h-label mb-3">Address</p>
             <baseMaps :address="lead?.address" />
           </div>
         </div>
 
         <div class="lg:col-span-5">
-          <p class="gf-eyebrow mb-3">Notes</p>
+          <p class="h-label mb-3">Notes</p>
           <div class="bg-[#EFEAE0] border border-[#DDD6C9] p-7">
             <p class="text-[14.5px] leading-relaxed">
               {{ lead?.notes || 'No notes yet.' }}
@@ -488,7 +488,7 @@ async function markContacted() {
     <!-- <ClientOnly>
       <section v-if="lead?.ai_analysis" class="gf-depth">
         <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-          <span class="gf-eyebrow">03 — Analysis</span>
+          <span class="h-label">03 — Analysis</span>
           <span class="font-display text-[25px] font-semibold tracking-tight">The read on this lead</span>
         </div>
         <div class="bg-[#EFEAE0] border border-[#DDD6C9] p-9 relative">
@@ -502,7 +502,7 @@ async function markContacted() {
 
     <!-- Documents for this lead — offers, pre-approvals, disclosures -->
     <section class="mt-14 pt-10 border-t border-[#DDD6C9]">
-      <p class="gf-eyebrow mb-2">Documents</p>
+      <p class="h-label mb-2">Documents</p>
       <p class="text-[13.5px] text-[#8A847C] leading-relaxed max-w-[54ch] mb-6">
         Add a contract or pre-approval and we'll pull out the dates you need to
         watch. You confirm each one before it becomes a reminder.

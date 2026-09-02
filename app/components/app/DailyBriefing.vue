@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PRIORITIES, effectivePriority, whenLabel } from '~/utils/priority'
+import { PRIORITIES, effectivePriority, whenLabel, toDateInput } from '~/utils/priority'
 
 
 interface BriefingLead {
@@ -238,7 +238,7 @@ const deadlineGroups = computed(() => {
 
 function beginReschedule(d: any) {
   reschedule.value = d.deadlineId
-  newDate.value = new Date(d.date).toISOString().slice(0, 10)
+  newDate.value = toDateInput(d.date)
 }
 </script>
 
@@ -246,7 +246,7 @@ function beginReschedule(d: any) {
   <div class="w-full">
     <!-- Section header -->
     <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-      <span class="gf-eyebrow">01 — Today</span>
+      <span class="h-label">01 — Today</span>
       <span class="font-display gf-title font-semibold tracking-tight">Who to reach</span>
     </div>
 
@@ -267,7 +267,7 @@ function beginReschedule(d: any) {
     <!-- Document deadlines. Above the leads deliberately — a contingency
          expiring today can't wait for the call list. -->
     <section v-if="urgentDeadlines.length" class="mb-11">
-      <p class="gf-eyebrow mb-4">Deadlines</p>
+      <p class="h-label mb-4">Deadlines</p>
 
       <!-- Grouped by property. A realtor holds a deal in their head as an
            address, so three deadlines on one house should read as one block
@@ -280,7 +280,7 @@ function beginReschedule(d: any) {
           <NuxtLink
             v-if="group.homeId"
             :to="`/dashboard/home/${group.homeId}`"
-            class="font-display gf-lead font-semibold tracking-tight hover:text-[#B5563A] transition-colors truncate"
+            class="font-display gf-lead font-semibold tracking-tight hover:text-[#4C5741] transition-colors truncate"
           >
             {{ group.subject }}
           </NuxtLink>
@@ -304,7 +304,7 @@ function beginReschedule(d: any) {
             }"
           />
           <div class="min-w-0 flex-1">
-            <div class="flex flex-wrap items-baseline gap-x-2.5">
+            <div class="flex flex-wrap items-baseline gap-x-2.5 gf-truncate">
               <p class="gf-body leading-snug">{{ d.label }}</p>
               <span
                 class="gf-meta font-semibold shrink-0"
@@ -324,10 +324,10 @@ function beginReschedule(d: any) {
             <div v-if="reschedule === d.deadlineId" class="flex flex-wrap items-center gap-2 mt-2.5">
               <input
                 v-model="newDate" type="date"
-                class="bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-1.5 gf-meta focus:outline-none focus:border-[#B5563A]"
+                class="bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-1.5 gf-meta focus:outline-none focus:border-[#4C5741]"
               />
               <button
-                class="gf-meta font-semibold text-[#B5563A] hover:underline disabled:opacity-40"
+                class="gf-meta font-semibold text-[#4C5741] hover:underline disabled:opacity-40"
                 :disabled="busyDeadline === d.deadlineId"
                 @click="actOnDeadline(d, 'confirm', { date: newDate })"
               >
@@ -338,7 +338,7 @@ function beginReschedule(d: any) {
               </button>
             </div>
 
-            <div v-else class="flex flex-wrap items-center gap-3 mt-2">
+            <div v-else class="gf-row-actions mt-2">
               <button
                 class="gf-label uppercase tracking-[0.08em] font-semibold px-3 py-1.5 border border-[#5A6349] text-[#5A6349] hover:bg-[#5A6349] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
                 :disabled="busyDeadline === d.deadlineId"
@@ -362,10 +362,10 @@ function beginReschedule(d: any) {
          are a different kind of obligation, but in the same place because the
          realtor shouldn't have to look twice. -->
     <section v-if="reminders.length" class="mb-11">
-      <p class="gf-eyebrow mb-4">Reminders</p>
+      <p class="h-label mb-4">Reminders</p>
       <div
         v-for="r in reminders" :key="r._id"
-        class="flex items-start gap-3.5 py-3.5 border-t border-[#DDD6C9] last:border-b"
+        class="gf-row"
       >
         <span
           class="w-2.5 h-2.5 mt-1.5 shrink-0"
@@ -375,7 +375,7 @@ function beginReschedule(d: any) {
           }"
         />
         <div class="min-w-0 flex-1">
-          <div class="flex flex-wrap items-baseline gap-x-2.5">
+          <div class="flex flex-wrap items-baseline gap-x-2.5 gf-truncate">
             <p class="gf-body leading-snug">{{ r.text }}</p>
             <span class="gf-meta font-semibold" :style="{ color: r.daysUntil <= 0 ? '#C0392B' : '#C08A2E' }">
               {{ whenLabel(r.dueAt) }}
@@ -388,7 +388,7 @@ function beginReschedule(d: any) {
             <template v-if="!r.confirmed"> · not confirmed yet</template>
           </p>
 
-          <div class="flex flex-wrap items-center gap-3 mt-2">
+          <div class="gf-row-actions mt-2">
             <button
               class="gf-label uppercase tracking-[0.08em] font-semibold px-3 py-1.5 border border-[#5A6349] text-[#5A6349] hover:bg-[#5A6349] hover:text-[#F7F4EF] transition-colors disabled:opacity-40"
               :disabled="busyReminder === r._id"
@@ -421,7 +421,7 @@ function beginReschedule(d: any) {
       >
         <!-- rust bar grows on hover -->
         <span
-          class="absolute left-0 top-0 bottom-0 w-0.5 bg-[#B5563A] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center"
+          class="absolute left-0 top-0 bottom-0 w-0.5 bg-[#4C5741] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center"
         />
 
         <span class="gf-ref hidden sm:block gf-label tracking-[0.1em] text-[#A9A39A] tabular-nums">
@@ -436,7 +436,7 @@ function beginReschedule(d: any) {
         </span>
 
         <NuxtLink :to="`/dashboard/leads/${lead._id}/details`" class="gf-main min-w-0">
-          <p class="font-display gf-lead font-semibold tracking-tight mb-0.5 truncate group-hover:text-[#B5563A] transition-colors">
+          <p class="font-display gf-lead font-semibold tracking-tight mb-0.5 truncate group-hover:text-[#4C5741] transition-colors">
             {{ lead.name }}
           </p>
           <p class="gf-meta text-[#8A847C] truncate">
@@ -456,7 +456,7 @@ function beginReschedule(d: any) {
           />
           <button
             :disabled="marking.has(lead._id)"
-            class="gf-label uppercase tracking-[0.1em] px-4 py-2.5 border border-[#B5563A] text-[#B5563A] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+            class="gf-label uppercase tracking-[0.1em] px-4 py-2.5 border border-[#1F1B16] text-[#1F1B16] hover:bg-[#1F1B16] hover:text-[#F7F4EF] transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
             @click="markContacted(lead)"
           >
             {{ marking.has(lead._id) ? 'Saving…' : 'Contacted' }}
@@ -466,7 +466,7 @@ function beginReschedule(d: any) {
 
       <button
         v-if="briefing.leads.length > VISIBLE_LIMIT"
-        class="mt-8 gf-eyebrow hover:text-[#B5563A] transition-colors"
+        class="mt-8 gf-eyebrow hover:text-[#4C5741] transition-colors"
         @click="showAll = !showAll"
       >
         {{ showAll ? '— Show less' : `— Show all ${briefing.leads.length}` }}

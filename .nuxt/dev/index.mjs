@@ -5982,6 +5982,13 @@ const documentSchema = new Schema({
 documentSchema.index({ userId: 1, homeId: 1 });
 const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
 
+function localDate(value) {
+  if (value instanceof Date) return value;
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value).trim());
+  if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return new Date(value);
+}
+
 const Doc$7 = DocumentModel;
 const bodySchema$m = z.object({
   deadlineId: z.string(),
@@ -6008,7 +6015,7 @@ const deadline_post = defineEventHandler(async (event) => {
     set["deadlines.$.completedAt"] = null;
   }
   if (date && !Number.isNaN(Date.parse(date))) {
-    set["deadlines.$.date"] = new Date(date);
+    set["deadlines.$.date"] = localDate(date);
     set["deadlines.$.confirmed"] = true;
   }
   if (label) set["deadlines.$.label"] = label;
@@ -6317,7 +6324,7 @@ const read_post = defineEventHandler(async (event) => {
           // confirmed:false — these are proposals, not reminders.
           deadlines: reading.deadlines.map((d) => ({
             label: d.label,
-            date: new Date(d.date),
+            date: localDate(d.date),
             sourceText: d.sourceText,
             priority: d.priority,
             confirmed: false,
@@ -7431,7 +7438,7 @@ const index_post = defineEventHandler(async (event) => {
   }
   if (action === "dismiss") set.dismissed = true;
   if (dueAt && !Number.isNaN(Date.parse(dueAt))) {
-    set.dueAt = new Date(dueAt);
+    set.dueAt = localDate(dueAt);
     set.confirmed = true;
   }
   if (text) {
@@ -8272,7 +8279,7 @@ const note_post = defineEventHandler(async (event) => {
       const created = await Reminder.create({
         userId: user._id,
         text: r.text,
-        dueAt: new Date(r.dueAt),
+        dueAt: localDate(r.dueAt),
         priority: r.priority,
         homeId: homeId || void 0,
         leadId: leadId || void 0,

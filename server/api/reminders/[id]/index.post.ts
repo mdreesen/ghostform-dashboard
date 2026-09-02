@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import type { Model } from 'mongoose'
 import ReminderModel from '../../../../lib/database/models/Reminder'
+import { localDate } from '~/utils/priority'
 import loggedInUser from '~/utils/loggedInUser'
 
 const Reminder = ReminderModel as Model<any>
@@ -25,7 +26,7 @@ export default defineEventHandler(async (event) => {
   if (action === 'dismiss') set.dismissed = true
 
   // Correcting implies confirming — you wouldn't fix a time you're ignoring.
-  if (dueAt && !Number.isNaN(Date.parse(dueAt))) { set.dueAt = new Date(dueAt); set.confirmed = true }
+  if (dueAt && !Number.isNaN(Date.parse(dueAt))) { set.dueAt = localDate(dueAt); set.confirmed = true }
   if (text) { set.text = text; set.confirmed = true }
 
   const res = await Reminder.updateOne(
