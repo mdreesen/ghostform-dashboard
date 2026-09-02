@@ -19,6 +19,24 @@ export default defineNuxtConfig({
      */
     experimental: {
       tasks: true
+    },
+
+    /**
+     * Prerender the app shell.
+     *
+     * The service worker uses `navigateFallback: '/'` so an offline navigation
+     * with unknown query params still resolves. But `/` is server-rendered, so
+     * it was never a file in the build output and never entered the precache
+     * manifest — workbox threw:
+     *
+     *   Uncaught (in promise) non-precached-url: [{"url":"/"}]
+     *
+     * The fallback then did nothing, which quietly disabled offline loading.
+     * Prerendering emits a real index.html for the manifest to reference.
+     */
+    prerender: {
+      routes: ['/'],
+      crawlLinks: false
     }
   },
   modules: [
@@ -70,8 +88,6 @@ export default defineNuxtConfig({
       theme_color: '#09090B', // Matches your background_color layout variables
       background_color: '#09090B',
       display: 'standalone', // Essential for forcing native mobile-app view wrapper
-      start_url: '/',
-      scope: '/',
       icons: [
         {
           src: '/images/maskable-icon.png',
@@ -109,52 +125,14 @@ export default defineNuxtConfig({
       clientsClaim: true,
       skipWaiting: true,
       globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
-
-      // ── THE KEY TO OFFLINE LOADING ─────────────────────────────────
-      // The form is always opened with unique query params, e.g.
-      //   /?category=realtor&id=...&company_email=<hash>&...
-      // Precached entries are keyed by full URL, so that request never
-      // matches a cache entry and the page fails to open offline.
-      // navigateFallback tells the service worker: for ANY navigation
-      // request it can't otherwise satisfy, serve the cached app shell.
-      // The query string is then read by the app as normal.
-      /**
-       * NO navigateFallback.
-       *
-       * It pointed at '/', which isn't a precached file — workbox threw
-       * `non-precached-url` on every load. The obvious fix (prerender '/')
-       * BROKE THE BUILD, because auth.global.ts redirects '/' to '/login'
-       * when there's no session, and prerendering runs without one.
-       *
-       * The runtimeCaching NetworkFirst rule below already serves cached
-       * navigations offline, which covers the real case: a form that has been
-       * opened once. A first-ever offline open was never going to work
-       * regardless — there'd be nothing cached to serve.
-       */
-      // Never hijack API calls with the shell — they must fail honestly
-      // so the offline queue can catch them.
+      'navigateFallback': '/login',
+      navigateFallbackDenylist: [/^\/api\//],
 
       runtimeCaching: [
         {
-          /**
-           * Navigation caching, scoped to the CAPTURE FORM only.
-           *
-           * This previously matched every navigation, including /login and the
-           * whole dashboard. A service worker that intercepts every page load
-           * is a single point of failure for the entire site — and it became
-           * one: a bad navigateFallback left the installed worker throwing on
-           * navigation, so pages rendered blank with no console error, and a
-           * corrected deploy couldn't take over because the broken worker was
-           * still in control.
-           *
-           * Offline only matters for the capture form. The dashboard needs a
-           * network anyway — it has nothing useful to show without one.
-           */
-          urlPattern: ({ request, url }) =>
-            request.mode === 'navigate' &&
-            !url.pathname.startsWith('/dashboard') &&
-            !url.pathname.startsWith('/login') &&
-            !url.pathname.startsWith('/signup'),
+          // The document itself: serve from network when possible so config
+          // changes land, but fall back to cache the moment signal drops.
+          urlPattern: ({ request }) => request.mode === 'navigate',
           handler: 'NetworkFirst',
           options: {
             cacheName: 'ghostform-pages',

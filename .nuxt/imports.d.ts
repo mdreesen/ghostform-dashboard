@@ -67,3 +67,4 @@ export { useToast } from '../node_modules/@nuxt/ui/dist/runtime/composables/useT
 export { useTour } from '../node_modules/@nuxt/ui/dist/runtime/composables/useTour';
 export { usePWA, useTransparentPwaIcon, useMaskablePwaIcon, useFaviconPwaIcon, useApplePwaIcon, useAppleSplashScreenPwaIcon } from '../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index';
 export { useUserSession } from '../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session';
+export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
