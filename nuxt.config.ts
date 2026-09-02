@@ -7,36 +7,8 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css", "~/assets/css/theme.css", "~/assets/css/system.css"],
 
   nitro: {
-    /**
-     * Nitro tasks are EXPERIMENTAL and must be enabled explicitly. Without
-     * this, defineTask() files under server/tasks are never registered, and
-     * runTask('lead:reminders') throws:
-     *
-     *   H3Error: Task `lead:reminders` is not available!
-     *
-     * The task file and vercel.json were both correct — only the flag was
-     * missing, which is why it failed at run time rather than at build.
-     */
     experimental: {
       tasks: true
-    },
-
-    /**
-     * Prerender the app shell.
-     *
-     * The service worker uses `navigateFallback: '/'` so an offline navigation
-     * with unknown query params still resolves. But `/` is server-rendered, so
-     * it was never a file in the build output and never entered the precache
-     * manifest — workbox threw:
-     *
-     *   Uncaught (in promise) non-precached-url: [{"url":"/"}]
-     *
-     * The fallback then did nothing, which quietly disabled offline loading.
-     * Prerendering emits a real index.html for the manifest to reference.
-     */
-    prerender: {
-      routes: ['/'],
-      crawlLinks: false
     }
   },
   modules: [
@@ -127,19 +99,6 @@ export default defineNuxtConfig({
       clientsClaim: true,
       skipWaiting: true,
       globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
-
-      // ── THE KEY TO OFFLINE LOADING ─────────────────────────────────
-      // The form is always opened with unique query params, e.g.
-      //   /?category=realtor&id=...&company_email=<hash>&...
-      // Precached entries are keyed by full URL, so that request never
-      // matches a cache entry and the page fails to open offline.
-      // navigateFallback tells the service worker: for ANY navigation
-      // request it can't otherwise satisfy, serve the cached app shell.
-      // The query string is then read by the app as normal.
-      navigateFallback: '/',
-      // Never hijack API calls with the shell — they must fail honestly
-      // so the offline queue can catch them.
-      navigateFallbackDenylist: [/^\/api\//],
 
       runtimeCaching: [
         {
