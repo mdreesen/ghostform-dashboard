@@ -1,6 +1,7 @@
 import type { Model } from 'mongoose'
 import DocumentModel from '../../../../lib/database/models/Document'
 import { readDocument } from '~/utils/documentRead';
+import { localDate } from '~/utils/priority'
 // Explicit, not auto-imported. Nitro auto-imports server/utils, but that
 // didn't resolve here — and an explicit import fails at BUILD if the file is
 // missing, rather than silently at runtime when a realtor uploads a contract.
@@ -44,7 +45,7 @@ export default defineEventHandler(async (event) => {
           // confirmed:false — these are proposals, not reminders.
           deadlines: reading.deadlines.map((d) => ({
             label: d.label,
-            date: new Date(d.date),
+            date: localDate(d.date),
             sourceText: d.sourceText,
             priority: d.priority,
             confirmed: false,

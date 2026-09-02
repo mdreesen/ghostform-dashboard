@@ -24,10 +24,23 @@ export default defineEventHandler(async (event) => {
       ...taskResult 
     }
   } catch (error: any) {
-    console.error('Vercel Cron automation step crashed:', error)
-    throw createError({ 
-      statusCode: 500, 
-      message: error.message || 'Internal task handler fault.' 
+    const msg = String(error?.message || '')
+
+    // "Task is not available" means Nitro never registered it, which is a
+    // CONFIG problem, not a failure inside the task. Saying so directly saves
+    // hunting through task code that was never reached.
+    if (/is not available/i.test(msg)) {
+      console.error('[cron] Task not registered. Check nitro.experimental.tasks is true in nuxt.config.ts.')
+      throw createError({
+        statusCode: 500,
+        message: 'Task not registered — nitro.experimental.tasks must be enabled.'
+      })
+    }
+
+    console.error('[cron] task failed:', msg, error?.stack)
+    throw createError({
+      statusCode: 500,
+      message: msg || 'Internal task handler fault.'
     })
   }
 })

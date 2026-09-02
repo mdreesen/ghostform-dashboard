@@ -52,14 +52,14 @@ async function handler() {
               <div>
                 <baseLabel text="Company Name" />
                 <input v-model="credentials.company" type="text" placeholder="e.g. Company name" required
-                  class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                  class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
               </div>
 
               <div>
                 <span class="text-[10px] text-[#8A847C] font-bold uppercase tracking-widest ml-1 mb-2 block">Primary
                   Category</span>
                 <select v-model="credentials.category"
-                  class="w-full bg-white/60 text-[#8A847C] border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis">
+                  class="w-full bg-white/60 text-[#8A847C] border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis">
                   <option value="realtor">Realtor</option>
                   <!-- <option value="construction">Construction</option> -->
                 </select>
@@ -69,20 +69,20 @@ async function handler() {
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Email" />
               <input id="email" type="email" v-model="credentials.email" placeholder="Email" required
-                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Password" />
               <input id="password" type="password" v-model="credentials.password" placeholder="Password" required
-                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }">
               <baseLabel text="Confirm password" />
               <input id="confirm_password" type="password" v-model="credentials.confirm_password" placeholder="Password"
                 required
-                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
             </div>
 
             <div v-motion="{ ...inputVarient() }" class="flex items-center space-x-2">
@@ -109,7 +109,7 @@ async function handler() {
           </form>
 
           <p class="text-center text-xs text-[#8A847C]">
-            Already have an account? <NuxtLink to="/login" class="text-[#B5563A] hover:underline">Access Login
+            Already have an account? <NuxtLink to="/login" class="text-[#4C5741] hover:underline">Access Login
             </NuxtLink>
           </p>
         </div>

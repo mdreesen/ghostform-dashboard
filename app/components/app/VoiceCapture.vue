@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { localDate, toDateInput } from '~/utils/priority'
 /**
  * Voice capture with confirmation.
  *
@@ -87,7 +88,7 @@ async function actOnReminder(r: any, action: string, extra: Record<string, any> 
 
 function beginEdit(r: any) {
   editing.value = r._id
-  editDate.value = new Date(r.dueAt).toISOString().slice(0, 10)
+  editDate.value = toDateInput(r.dueAt)
 }
 
 const liveReminders = computed(() => (result.value?.reminders ?? []).filter((r: any) => !r.dismissed))
@@ -117,9 +118,9 @@ const INTENT_LABEL: Record<string, string> = {
     </button>
 
     <!-- Panel -->
-    <div v-else class="border border-[#DDD6C9] p-5">
+    <div v-else class="border border-[#DDD6C9] p-4 sm:p-5">
       <div class="flex items-baseline justify-between gap-4 mb-4">
-        <p class="gf-eyebrow">Voice note</p>
+        <p class="h-label">Voice note</p>
         <button class="gf-meta text-[#A9A39A] hover:text-[#1F1B16]" @click="closePanel">Close</button>
       </div>
 
@@ -129,7 +130,7 @@ const INTENT_LABEL: Record<string, string> = {
           <button
             v-if="supported"
             class="shrink-0 w-11 h-11 flex items-center justify-center border transition-colors"
-            :class="listening ? 'bg-[#B5563A] border-[#B5563A] text-[#F7F4EF]' : 'border-[#DDD6C9] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16]'"
+            :class="listening ? 'bg-[#4C5741] border-[#4C5741] text-[#F7F4EF]' : 'border-[#DDD6C9] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16]'"
             @click="toggle"
           >
             <svg width="17" height="17" viewBox="0 0 24 24" :fill="listening ? 'currentColor' : 'none'"
@@ -142,21 +143,21 @@ const INTENT_LABEL: Record<string, string> = {
             v-model="text"
             rows="3"
             class="flex-1 bg-[#F7F4EF] border px-3.5 py-2.5 gf-body resize-none focus:outline-none transition-colors"
-            :class="listening ? 'border-[#B5563A]' : 'border-[#DDD6C9] focus:border-[#B5563A]'"
+            :class="listening ? 'border-[#4C5741]' : 'border-[#DDD6C9] focus:border-[#4C5741]'"
             :placeholder="supported ? 'Tap the mic, or type it' : 'Type your note'"
           />
         </div>
 
-        <p v-if="listening" class="gf-label text-[#B5563A] mb-3">
+        <p v-if="listening" class="gf-label mb-3" style="color:#4C5741">
           Listening — say what you need, then tap the mic again.
         </p>
-        <p v-else-if="voiceError" class="gf-label text-[#B5563A] mb-3">{{ voiceError }}</p>
+        <p v-else-if="voiceError" class="gf-label mb-3" style="color:#4C5741">{{ voiceError }}</p>
         <p v-else class="gf-label gf-muted mb-3">
           Notes, questions and reminders all work. "Remind me to call the Chens Thursday."
         </p>
 
         <button
-          class="px-5 py-2.5 bg-[#B5563A] text-[#F7F4EF] gf-label uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830] disabled:opacity-40"
+          class="px-5 py-2.5 bg-[#1F1B16] text-[#F7F4EF] gf-label uppercase tracking-[0.1em] font-semibold hover:opacity-[0.86] disabled:opacity-40"
           :disabled="sending || text.trim().length < 2"
           @click="send"
         >
@@ -167,7 +168,7 @@ const INTENT_LABEL: Record<string, string> = {
       <!-- 2 · What we understood -->
       <template v-else>
         <p class="gf-meta mb-1">{{ INTENT_LABEL[result.intent] || 'Saved' }}</p>
-        <p v-if="result.degraded" class="gf-label text-[#B5563A] mb-3">
+        <p v-if="result.degraded" class="gf-label mb-3" style="color:#4C5741">
           We saved what you said but couldn't work out what to do with it.
         </p>
 
@@ -178,7 +179,7 @@ const INTENT_LABEL: Record<string, string> = {
         <!-- Answer, if it was a question -->
         <div v-if="result.question" class="mb-4">
           <p class="gf-label gf-muted mb-1.5">You asked: "{{ result.question }}"</p>
-          <div class="p-3.5 border-l-2 border-[#B5563A] bg-[#EFEAE0]">
+          <div class="p-3.5 border-l-2 border-[#4C5741] bg-[#E9EDE3]">
             <p v-if="answering" class="gf-body text-[#8A847C]">Checking your documents…</p>
             <p v-else class="gf-body leading-relaxed">{{ answer }}</p>
           </div>
@@ -196,7 +197,7 @@ const INTENT_LABEL: Record<string, string> = {
           >
             <p class="gf-body">{{ r.text }}</p>
             <p class="gf-meta mt-0.5">
-              {{ new Date(r.dueAt).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' }) }}
+              {{ localDate(r.dueAt).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' }) }}
             </p>
             <!-- The exact words, so they can check we heard the day right -->
             <p v-if="r.heardAs" class="gf-label gf-muted italic mt-1.5">
@@ -205,8 +206,8 @@ const INTENT_LABEL: Record<string, string> = {
 
             <div v-if="editing === r._id" class="flex flex-wrap items-center gap-2 mt-2.5">
               <input v-model="editDate" type="date"
-                class="bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-1.5 gf-meta focus:outline-none focus:border-[#B5563A]" />
-              <button class="gf-meta font-semibold text-[#B5563A]" @click="actOnReminder(r, 'confirm', { dueAt: editDate })">Save</button>
+                class="bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-1.5 gf-meta focus:outline-none focus:border-[#4C5741]" />
+              <button class="gf-meta font-semibold text-[#4C5741]" @click="actOnReminder(r, 'confirm', { dueAt: editDate })">Save</button>
               <button class="gf-meta text-[#8A847C]" @click="editing = null">Cancel</button>
             </div>
             <div v-else-if="!r.confirmed" class="flex flex-wrap items-center gap-3 mt-2.5">
@@ -223,9 +224,9 @@ const INTENT_LABEL: Record<string, string> = {
           </div>
         </div>
 
-        <div class="flex gap-3">
+        <div class="gf-row-actions">
           <button
-            class="px-5 py-2.5 bg-[#B5563A] text-[#F7F4EF] gf-label uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830]"
+            class="px-5 py-2.5 bg-[#1F1B16] text-[#F7F4EF] gf-label uppercase tracking-[0.1em] font-semibold hover:opacity-[0.86]"
             @click="openPanel"
           >
             Add another

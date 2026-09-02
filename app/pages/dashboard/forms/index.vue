@@ -68,7 +68,7 @@ const formFunnels = computed(() => [
 
     <!-- ── Page head ─────────────────────────────────────────── -->
     <header class="mb-20 pt-4">
-      <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">Capture</p>
+      <p class="h-label mb-5 gf-rise" style="--d:.05s">Capture</p>
 
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
@@ -90,7 +90,7 @@ const formFunnels = computed(() => [
     <!-- ── The forms ─────────────────────────────────────────── -->
     <section v-for="(item, i) in formFunnels" :key="item.id" class="gf-depth mb-16" :style="`--d:${0.05 * i}s`">
       <div class="flex flex-wrap items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">{{ String(i + 1).padStart(2, '0') }} — Form</span>
+        <span class="h-label">{{ String(i + 1).padStart(2, '0') }} — Form</span>
         <span class="font-display text-[25px] font-semibold tracking-tight">{{ item.label }}</span>
         <span class="text-[10.5px] uppercase tracking-[0.14em] text-[#A9A39A]">{{ item.badge }}</span>
       </div>

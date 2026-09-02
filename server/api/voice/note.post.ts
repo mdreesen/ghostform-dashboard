@@ -4,6 +4,8 @@ import VoiceNoteModel from '../../../lib/database/models/VoiceNote'
 import ReminderModel from '../../../lib/database/models/Reminder'
 import DocumentModel from '../../../lib/database/models/Document'
 import { buildIntentPrompt, parseAnalysis } from '~/utils/voiceIntent'
+// Parses 'YYYY-MM-DD' as local midnight — see the note in priority.ts.
+import { localDate } from '~/utils/priority'
 import { useOpenAi } from '~/utils/ai/openAi/useOpenAi'
 import loggedInUser from '~/utils/loggedInUser'
 
@@ -92,7 +94,7 @@ export default defineEventHandler(async (event) => {
       const created = await Reminder.create({
         userId: user._id,
         text: r.text,
-        dueAt: new Date(r.dueAt),
+        dueAt: localDate(r.dueAt),
         priority: r.priority,
         homeId: homeId || undefined,
         leadId: leadId || undefined,

@@ -85,9 +85,9 @@ async function runImport() {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto">
+  <div class="gf-measure-page">
     <header class="mb-12 pt-4">
-      <NuxtLink to="/dashboard/leads" class="gf-eyebrow inline-block mb-5 hover:text-[#B5563A] transition-colors">
+      <NuxtLink to="/dashboard/leads" class="h-label inline-block mb-5 hover:text-[#4C5741] transition-colors">
         ← Leads
       </NuxtLink>
       <h1 class="gf-display text-[clamp(30px,4vw,44px)] mb-4">Bring your leads across.</h1>
@@ -111,7 +111,7 @@ async function runImport() {
       </div>
 
       <div class="mt-8 p-5 bg-[#EFEAE0] border border-[#DDD6C9]">
-        <p class="gf-eyebrow mb-2.5">What we need</p>
+        <p class="h-label mb-2.5">What we need</p>
         <p class="text-[13.5px] text-[#8A847C] leading-relaxed">
           An email address for each lead — that's what makes them contactable,
           and rows without one can't be imported. Everything else is optional
@@ -123,7 +123,7 @@ async function runImport() {
     <!-- 2 · Mapping -->
     <section v-else-if="step === 'map'">
       <div class="flex items-baseline justify-between mb-6">
-        <p class="gf-eyebrow">Check the columns</p>
+        <p class="h-label">Check the columns</p>
         <button class="text-[12.5px] text-[#8A847C] hover:text-[#1F1B16]" @click="step = 'file'">
           Choose a different file
         </button>
@@ -149,7 +149,7 @@ async function runImport() {
           </div>
           <select
             v-model="mapping[i]"
-            class="bg-[#F7F4EF] border border-[#DDD6C9] px-3 py-2.5 text-[13.5px] focus:outline-none focus:border-[#B5563A]"
+            class="bg-[#F7F4EF] border border-[#DDD6C9] px-3 py-2.5 text-[13.5px] focus:outline-none focus:border-[#4C5741]"
           >
             <option v-for="f in FIELDS" :key="String(f.value)" :value="f.value">{{ f.label }}</option>
           </select>
@@ -164,7 +164,7 @@ async function runImport() {
       </div>
 
       <div v-else-if="preview" class="mb-8">
-        <p class="gf-eyebrow mb-4">What will happen</p>
+        <p class="h-label mb-4">What will happen</p>
         <div class="grid sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9] mb-5">
           <div class="bg-[#F7F4EF] p-5">
             <p class="font-display text-[30px] leading-none">{{ preview.ready.length }}</p>
@@ -195,7 +195,7 @@ async function runImport() {
           </ul>
         </details>
 
-        <p class="gf-eyebrow mb-3">If a lead is already in your database</p>
+        <p class="h-label mb-3">If a lead is already in your database</p>
         <div class="flex gap-2.5">
           <button
             v-for="opt in [
@@ -213,7 +213,7 @@ async function runImport() {
       </div>
 
       <button
-        class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
+        class="px-7 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40"
         :disabled="importing || !hasEmail || !preview?.ready.length"
         @click="runImport"
       >

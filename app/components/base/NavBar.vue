@@ -52,7 +52,7 @@ watch(() => route.path, () => { open.value = false; });
           {{ link.label }}
           <span
             v-if="isActive(link.to)"
-            class="absolute left-0 right-0 -bottom-0.5 h-px bg-[#B5563A]"
+            class="absolute left-0 right-0 -bottom-0.5 h-px bg-[#1F1B16]"
           />
         </NuxtLink>
         <img v-if="user?.headshot_url" :src="user?.headshot_url" :alt="user?.name"

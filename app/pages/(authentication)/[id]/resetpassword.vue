@@ -70,14 +70,14 @@ useMotion(formRef, { ...formVarient() });
                             <baseLabel text="Password" />
                             <input id="password" type="password" v-model="input.password" placeholder="Password"
                                 required
-                                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div v-motion="{ ...inputVarient() }">
                             <baseLabel text="Confirm Password" />
                             <input id="password" type="password" v-model="input.confirm_password"
                                 placeholder="Confirm Password" required
-                                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#B5563A] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
+                                class="w-full bg-white/60 border border-[#DDD6C9] px-5 py-3 text-sm focus:outline-none focus:border-[#4C5741] transition-colors placeholder:text-[#A9A39A] text-ellipsis" />
                         </div>
 
                         <div v-motion="{ ...inputVarient() }">
@@ -93,7 +93,7 @@ useMotion(formRef, { ...formVarient() });
                     <!-- Signup Link -->
                     <div class="text-center" v-motion="{ ...inputVarient() }">
                         <p class="text-center text-xs text-[#8A847C]">
-                            Already have an account? <NuxtLink to="/login" class="text-[#B5563A] hover:underline">Access
+                            Already have an account? <NuxtLink to="/login" class="text-[#4C5741] hover:underline">Access
                                 Login
                             </NuxtLink>
                         </p>

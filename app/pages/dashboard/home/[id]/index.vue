@@ -64,9 +64,9 @@ async function setStatus(status: string) {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto">
+  <div class="gf-measure-page-wide">
     <header class="pt-4 mb-12">
-      <NuxtLink to="/dashboard/home" class="gf-eyebrow inline-block mb-6 hover:text-[#B5563A] transition-colors">
+      <NuxtLink to="/dashboard/home" class="h-label inline-block mb-6 hover:text-[#4C5741] transition-colors">
         ← Properties
       </NuxtLink>
 
@@ -105,7 +105,7 @@ async function setStatus(status: string) {
       <!-- ── Details ── -->
       <section class="mb-14">
         <div class="flex items-baseline justify-between mb-5">
-          <p class="gf-eyebrow">Details</p>
+          <p class="h-label">Details</p>
           <button class="gf-meta text-[#8A847C] hover:text-[#1F1B16]" @click="editing = !editing">
             {{ editing ? 'Cancel' : 'Edit' }}
           </button>
@@ -128,23 +128,23 @@ async function setStatus(status: string) {
           <div class="grid sm:grid-cols-2 gap-5">
             <div>
               <label class="block gf-meta text-[#8A847C] mb-2">Name</label>
-              <input v-model="form.name" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#B5563A]" />
+              <input v-model="form.name" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#4C5741]" />
             </div>
             <div>
               <label class="block gf-meta text-[#8A847C] mb-2">Owner</label>
-              <input v-model="form.owner" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#B5563A]" />
+              <input v-model="form.owner" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#4C5741]" />
             </div>
           </div>
           <div>
             <label class="block gf-meta text-[#8A847C] mb-2">Address</label>
-            <input v-model="form.address" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#B5563A]" />
+            <input v-model="form.address" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body focus:outline-none focus:border-[#4C5741]" />
           </div>
           <div>
             <label class="block gf-meta text-[#8A847C] mb-2">Notes</label>
-            <textarea v-model="form.notes" rows="4" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body resize-none focus:outline-none focus:border-[#B5563A]" />
+            <textarea v-model="form.notes" rows="4" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-3.5 py-2.5 gf-body resize-none focus:outline-none focus:border-[#4C5741]" />
           </div>
           <button
-            class="px-6 py-3 bg-[#B5563A] text-[#F7F4EF] gf-label uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] disabled:opacity-40"
+            class="px-6 py-3 bg-[#1F1B16] text-[#F7F4EF] gf-label uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] disabled:opacity-40"
             :disabled="saving" @click="save"
           >
             {{ saving ? 'Saving…' : 'Save changes' }}
@@ -154,12 +154,11 @@ async function setStatus(status: string) {
 
       <!-- ── Documents ── -->
       <section class="mb-14">
-        <p class="gf-eyebrow mb-2">Documents</p>
+        <p class="h-label mb-2">Documents</p>
         <p class="gf-meta text-[#8A847C] leading-relaxed max-w-[56ch] mb-6">
           Contracts, inspections, disclosures. We'll pull out the dates that
           matter and you confirm each one before it becomes a reminder.
         </p>
-        <div class="mb-6"><appVoiceCapture :home-id="id" /></div>
         <appAskDocuments :home-id="id" class="mb-8" />
         <appDocumentUpload :home-id="id" class="mb-2"  />
         <appDocumentList :home-id="id" />
@@ -167,7 +166,7 @@ async function setStatus(status: string) {
 
       <!-- ── Interested leads ── -->
       <section class="mb-14">
-        <p class="gf-eyebrow mb-2">Interested</p>
+        <p class="h-label mb-2">Interested</p>
         <p class="gf-meta text-[#8A847C] leading-relaxed max-w-[56ch] mb-6">
           Anyone who enquired about this property, including open-house sign-ins.
         </p>
@@ -197,11 +196,11 @@ async function setStatus(status: string) {
 
       <!-- ── Marketing ── -->
       <section class="pb-16">
-        <p class="gf-eyebrow mb-5">Marketing</p>
+        <p class="h-label mb-5">Marketing</p>
         <div class="flex flex-wrap gap-2.5">
           <NuxtLink
             to="/dashboard/forms"
-            class="px-5 py-3 border border-[#B5563A] text-[#B5563A] gf-label uppercase tracking-[0.1em] hover:bg-[#B5563A] hover:text-[#F7F4EF] transition-colors"
+            class="px-5 py-3 border border-[#B5563A] text-[#B5563A] gf-label uppercase tracking-[0.1em] hover:bg-[#1F1B16] hover:text-[#F7F4EF] transition-colors"
           >
             Make a QR code
           </NuxtLink>

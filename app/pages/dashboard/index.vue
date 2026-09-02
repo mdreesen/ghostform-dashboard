@@ -58,13 +58,13 @@ const activeLeads = computed(() =>
   <div class="max-w-[1240px] mx-auto">
 
     <!-- ── Hero with the 3D terrain ─────────────────────────── -->
-    <section class="gf-hero relative -mx-6 sm:-mx-10 lg:-mx-12 px-6 sm:px-10 lg:px-12 mb-24">
+    <section class="gf-hero relative gf-bleed mb-24">
       <ClientOnly>
         <baseTerrain />
       </ClientOnly>
 
       <div class="relative z-[2] py-16 sm:py-24">
-        <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">
+        <p class="h-label mb-5 gf-rise" style="--d:.05s">
           {{ today }}<template v-if="firstName"> — Hello, {{ firstName }}</template>
         </p>
         <h1
@@ -82,8 +82,6 @@ const activeLeads = computed(() =>
 
     <!-- ── 01 Who to reach ──────────────────────────────────── -->
     <section class="gf-depth mb-28" style="--d:.05s" data-tour="briefing">
-      <!-- Capture a note from the morning screen, where they already are. -->
-      <div class="mb-8"><appVoiceCapture /></div>
 
       <ClientOnly>
         <appDailyBriefing />
@@ -93,21 +91,21 @@ const activeLeads = computed(() =>
     <!-- ── Stats ────────────────────────────────────────────── -->
     <section class="gf-depth mb-28 grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9]">
       <div class="bg-[#F7F4EF] p-8 transition-transform duration-500 hover:translate-z-6">
-        <p class="gf-eyebrow mb-4">Active leads</p>
+        <p class="h-label mb-4">Active leads</p>
         <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
           <span :data-count="activeLeads">0</span>
         </p>
         <p class="gf-meta text-[#8A847C] mt-2.5">Not closed or archived</p>
       </div>
       <div class="bg-[#F7F4EF] p-8">
-        <p class="gf-eyebrow mb-4">Needing attention</p>
+        <p class="h-label mb-4">Needing attention</p>
         <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
           <span :data-count="briefing?.totals?.total ?? 0">0</span>
         </p>
         <p class="gf-meta text-[#8A847C] mt-2.5">Surfaced in today’s briefing</p>
       </div>
       <div class="bg-[#F7F4EF] p-8">
-        <p class="gf-eyebrow mb-4">Going cold</p>
+        <p class="h-label mb-4">Going cold</p>
         <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
           <span :data-count="briefing?.totals?.cold ?? 0">0</span>
         </p>
@@ -118,7 +116,7 @@ const activeLeads = computed(() =>
     <!-- ── 02 Pipeline ──────────────────────────────────────── -->
     <section class="gf-depth mb-28">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">02 — Pipeline</span>
+        <span class="h-label">02 — Pipeline</span>
         <span class="font-display gf-title font-semibold tracking-tight">Where everyone stands</span>
       </div>
 
@@ -134,7 +132,7 @@ const activeLeads = computed(() =>
           <p class="gf-label uppercase tracking-[0.14em] text-[#8A847C]">{{ stage.label }}</p>
           <div class="h-0.5 bg-[#DDD6C9] mt-4 overflow-hidden">
             <i
-              class="gf-bar block h-full bg-[#B5563A] origin-left"
+              class="gf-bar block h-full bg-[#4C5741] origin-left"
               :style="{ '--w': stage.ratio, '--bd': `${0.1 * i}s` }"
             />
           </div>
@@ -145,7 +143,7 @@ const activeLeads = computed(() =>
     <!-- ── 03 Charts ────────────────────────────────────────── -->
     <section class="gf-depth mb-28">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">03 — Trend</span>
+        <span class="h-label">03 — Trend</span>
         <span class="font-display gf-title font-semibold tracking-tight">Leads over time</span>
       </div>
       <ClientOnly>
@@ -163,7 +161,7 @@ const activeLeads = computed(() =>
     <!-- ── 04 All leads ─────────────────────────────────────── -->
     <section class="gf-depth">
       <div class="flex items-baseline gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
-        <span class="gf-eyebrow">04 — Everyone</span>
+        <span class="h-label">04 — Everyone</span>
         <span class="font-display gf-title font-semibold tracking-tight">All leads</span>
       </div>
       <ClientOnly>

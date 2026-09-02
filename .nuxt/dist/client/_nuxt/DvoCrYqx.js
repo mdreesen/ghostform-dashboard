@@ -1,1 +1,0 @@
-import{u as o}from"./DL_zEq0-.js";import{e as r,z as s,c as n,S as _,o as c}from"./BoxVKM5b.js";const i=r({__name:"form",async setup(l){let e,t;return[e,t]=s(()=>o("/api/user",{key:"get_user",lazy:!0},"$CMfEJoZiRU")),await e,t(),(a,m)=>(c(),n("main",null,[_(a.$slots,"default")]))}});export{i as default};

@@ -162,9 +162,9 @@ async function handle(file: File) {
     <input ref="input" type="file" :accept="ACCEPT" class="hidden" @change="onPick" />
 
     <div
-      class="w-full border border-dashed py-9 px-5 text-center cursor-pointer transition-colors"
+      class="w-full border border-dashed py-7 sm:py-9 px-4 sm:px-5 text-center cursor-pointer transition-colors"
       :class="[
-        dragging ? 'border-[#B5563A] bg-[#B5563A]/5' : 'border-[#DDD6C9] hover:border-[#A9A39A]',
+        dragging ? 'border-[#4C5741] bg-[#4C5741]/6' : 'border-[#DDD6C9] hover:border-[#A9A39A]',
         busy ? 'cursor-default opacity-70' : ''
       ]"
       @dragenter.prevent="onDragEnter"

@@ -140,7 +140,7 @@ async function copyMessage() {
 <template>
   <div class="inline-block">
     <button
-      class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#DDD6C9] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors whitespace-nowrap"
+      class="gf-pair-btn border-[#C7BFAF] text-[#1F1B16] hover:border-[#1F1B16] hover:bg-[#EFEAE0]"
       @click="openComposer"
     >
       Draft
@@ -154,7 +154,7 @@ async function copyMessage() {
           <div class="relative w-full max-w-lg bg-[#F7F4EF] border border-[#DDD6C9] p-7 shadow-xl">
             <div class="flex items-center justify-between mb-4">
               <div>
-                <p class="gf-eyebrow">AI Message</p>
+                <p class="h-label">AI Message</p>
                 <h2 class="font-display text-[22px] font-semibold tracking-tight">
                   Message {{ leadName || 'lead' }}
                 </h2>
@@ -168,7 +168,7 @@ async function copyMessage() {
             <div class="flex gap-2 mb-3">
               <button
                 class="text-[11px] uppercase tracking-[0.1em] px-3.5 py-2 border transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                :class="channel === 'sms' ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'bg-transparent border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+                :class="channel === 'sms' ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]' : 'bg-transparent border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
                 :disabled="!hasPhone"
                 :title="hasPhone ? '' : 'No phone number on file for this lead'"
                 @click="channel = 'sms'"
@@ -177,7 +177,7 @@ async function copyMessage() {
               </button>
               <button
                 class="text-[11px] uppercase tracking-[0.1em] px-3.5 py-2 border transition-colors"
-                :class="channel === 'email' ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'bg-transparent border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+                :class="channel === 'email' ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]' : 'bg-transparent border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
                 @click="channel = 'email'"
               >
                 Email
@@ -197,7 +197,7 @@ async function copyMessage() {
               v-if="channel === 'email'"
               v-model="subject"
               placeholder="Subject"
-              class="w-full bg-white/60 border border-[#DDD6C9] px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-[#B5563A]"
+              class="w-full bg-white/60 border border-[#DDD6C9] px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-[#4C5741]"
             />
 
             <!-- Editable draft -->
@@ -205,7 +205,7 @@ async function copyMessage() {
               v-model="message"
               :rows="channel === 'sms' ? 4 : 8"
               :placeholder="generating ? 'Writing a draft…' : 'Your message'"
-              class="w-full bg-white/60 border border-[#DDD6C9] px-4 py-3.5 text-sm resize-none focus:outline-none focus:border-[#B5563A] leading-relaxed"
+              class="w-full bg-white/60 border border-[#DDD6C9] px-4 py-3.5 text-sm resize-none focus:outline-none focus:border-[#4C5741] leading-relaxed"
             />
 
             <div class="flex items-baseline justify-between gap-4 mt-2.5">
@@ -215,7 +215,7 @@ async function copyMessage() {
                   : 'Template draft — edit before sending.' }}
               </p>
               <button
-                class="text-[11px] uppercase tracking-[0.1em] text-[#8A847C] hover:text-[#B5563A] transition-colors shrink-0"
+                class="text-[11px] uppercase tracking-[0.1em] text-[#8A847C] hover:text-[#4C5741] transition-colors shrink-0"
                 @click="copyMessage"
               >
                 {{ copied ? 'Copied' : 'Copy' }}
@@ -239,7 +239,7 @@ async function copyMessage() {
 
               <button
                 v-if="channel === 'sms'"
-                class="flex-1 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                class="flex-1 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:opacity-[0.86] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 :disabled="sending || generating || !message.trim() || !hasPhone"
                 @click="openMessages"
               >
@@ -248,7 +248,7 @@ async function copyMessage() {
 
               <button
                 v-else
-                class="flex-1 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                class="flex-1 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] hover:opacity-[0.86] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 :disabled="sending || generating || !message.trim()"
                 @click="sendEmail"
               >

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PRIORITIES, effectivePriority, isHighStakes, whenLabel, sortDeadlines } from '~/utils/priority'
+import { PRIORITIES, effectivePriority, isHighStakes, whenLabel, sortDeadlines, toDateInput } from '~/utils/priority'
 
 /**
  * Documents and their extracted deadlines.
@@ -103,7 +103,7 @@ async function act(docId: string, deadlineId: string, action: string, extra: Rec
 
 function beginEdit(d: any) {
   editing.value = d._id
-  editDate.value = new Date(d.date).toISOString().slice(0, 10)
+  editDate.value = toDateInput(d.date)
 }
 
 async function saveEdit(docId: string, d: any) {
@@ -123,7 +123,7 @@ defineExpose({ refresh })
 
     <div v-for="doc in list" :key="doc._id" class="border-t border-[#DDD6C9] py-6">
       <!-- Document header -->
-      <div class="flex items-start justify-between gap-4 mb-1.5">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-1.5">
         <div class="min-w-0">
           <p class="text-[15px] font-semibold truncate">{{ doc.filename }}</p>
           <p class="text-[12.5px] text-[#8A847C]">
@@ -142,7 +142,7 @@ defineExpose({ refresh })
           </span>
           <button
             v-if="confirmingDelete !== doc._id"
-            class="text-[12px] text-[#A9A39A] hover:text-[#B5563A] transition-colors"
+            class="text-[12px] text-[#A9A39A] hover:text-[#4C5741] transition-colors"
             @click="confirmingDelete = doc._id"
           >
             Remove
@@ -170,7 +170,7 @@ defineExpose({ refresh })
         </p>
         <div class="flex gap-2.5">
           <button
-            class="px-4 py-2 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:bg-[#9d4830] disabled:opacity-40"
+            class="px-4 py-2 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.1em] font-semibold hover:opacity-[0.86] disabled:opacity-40"
             :disabled="deleting"
             @click="removeDoc(doc)"
           >
@@ -237,11 +237,11 @@ defineExpose({ refresh })
           </div>
 
           <!-- Unconfirmed: confirm, correct, or dismiss -->
-          <div v-if="!d.confirmed && !d.completed" class="flex flex-wrap items-center gap-2 mt-3.5">
+          <div v-if="!d.confirmed && !d.completed" class="gf-row-actions mt-3.5">
             <template v-if="editing === d._id">
               <input v-model="editDate" type="date"
                 class="bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-1.5 text-[13px]" />
-              <button class="text-[12px] font-semibold text-[#B5563A]" @click="saveEdit(doc._id, d)">Save</button>
+              <button class="text-[12px] font-semibold text-[#4C5741]" @click="saveEdit(doc._id, d)">Save</button>
               <button class="text-[12px] text-[#8A847C]" @click="editing = null">Cancel</button>
             </template>
             <template v-else>

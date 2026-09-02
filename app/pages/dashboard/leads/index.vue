@@ -30,7 +30,7 @@ const neverContacted = computed(() =>
 
     <!-- ── Page head ─────────────────────────────────────────── -->
     <header class="mb-20 pt-4">
-      <p class="gf-eyebrow mb-5 gf-rise" style="--d:.05s">The archive</p>
+      <p class="h-label mb-5 gf-rise" style="--d:.05s">The archive</p>
 
       <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
         <div>
@@ -65,7 +65,7 @@ const neverContacted = computed(() =>
     >
       <div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
         <div class="flex items-baseline gap-4">
-          <span class="gf-eyebrow">{{ String(Number(i) + 1).padStart(2, '0') }} — Stage</span>
+          <span class="h-label">{{ String(Number(i) + 1).padStart(2, '0') }} — Stage</span>
           <span class="font-display text-[25px] font-semibold tracking-tight">
             {{ capitalizeFirstLetter(item.label) }}
           </span>
@@ -85,7 +85,7 @@ const neverContacted = computed(() =>
     <section class="gf-depth">
       <div class="flex flex-wrap items-baseline justify-between gap-4 border-b border-[#DDD6C9] pb-3.5 mb-8">
         <div class="flex items-baseline gap-4">
-          <span class="gf-eyebrow">Everyone</span>
+          <span class="h-label">Everyone</span>
           <span class="font-display text-[25px] font-semibold tracking-tight">All leads</span>
           <span class="text-[13px] text-[#A9A39A] tabular-nums">{{ total }}</span>
         </div>

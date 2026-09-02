@@ -44,10 +44,10 @@ async function save() {
 </script>
 
 <template>
-  <div class="max-w-[720px] mx-auto">
+  <div class="gf-measure-page">
 
     <header class="mb-14 pt-4">
-      <NuxtLink to="/dashboard/home" class="gf-eyebrow inline-block mb-6 hover:text-[#B5563A] transition-colors gf-rise"
+      <NuxtLink to="/dashboard/home" class="h-label inline-block mb-6 hover:text-[#4C5741] transition-colors gf-rise"
         style="--d:.04s">
         ← All properties
       </NuxtLink>
@@ -65,9 +65,9 @@ async function save() {
       <form class="space-y-8" @submit.prevent="save">
 
         <div>
-          <label for="address" class="gf-eyebrow block mb-3">Address <span class="text-[#B5563A]">*</span></label>
+          <label for="address" class="h-label block mb-3">Address <span class="text-[#B5563A]">*</span></label>
           <input id="address" v-model="input.address" placeholder="348 Whitefish Stage Rd, City, State"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#B5563A] transition-colors" />
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#4C5741] transition-colors" />
           <p class="text-[12.5px] text-[#A9A39A] mt-2.5">
             This is what gets attached to each lead, so write it how you'd say it.
           </p>
@@ -75,18 +75,18 @@ async function save() {
 
         <div class="grid sm:grid-cols-2 gap-6">
           <div>
-            <label for="name" class="gf-eyebrow block mb-3">Nickname</label>
+            <label for="name" class="h-label block mb-3">Nickname</label>
             <input id="name" v-model="input.name" placeholder="The lake cabin"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#B5563A] transition-colors" />
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#4C5741] transition-colors" />
             <p class="text-[12.5px] text-[#A9A39A] mt-2.5">
               Optional — makes it easier to spot in the picker.
             </p>
           </div>
 
           <div>
-            <label for="status" class="gf-eyebrow block mb-3">Status</label>
+            <label for="status" class="h-label block mb-3">Status</label>
             <select id="status" v-model="input.status"
-              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#B5563A] transition-colors">
+              class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#4C5741] transition-colors">
               <option value="active">Active</option>
               <option value="pending">Pending</option>
               <option value="sold">Sold</option>
@@ -95,16 +95,16 @@ async function save() {
         </div>
 
         <div>
-          <label for="owner" class="gf-eyebrow block mb-3">Owner</label>
+          <label for="owner" class="h-label block mb-3">Owner</label>
           <input id="owner" v-model="input.owner" placeholder="Who you're representing"
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#B5563A] transition-colors" />
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] focus:outline-none focus:border-[#4C5741] transition-colors" />
         </div>
 
         <div>
-          <label for="notes" class="gf-eyebrow block mb-3">Notes</label>
+          <label for="notes" class="h-label block mb-3">Notes</label>
           <textarea id="notes" v-model="input.notes" rows="5"
             placeholder="Anything you want to remember — showing times, quirks, what buyers keep asking about."
-            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A] transition-colors" />
+            class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3.5 text-[16px] leading-relaxed resize-none focus:outline-none focus:border-[#4C5741] transition-colors" />
         </div>
 
         <div v-if="errorMessage" class="p-4 border-l-2 border-[#B5563A] bg-[#B5563A]/5">
@@ -113,7 +113,7 @@ async function save() {
 
         <div class="flex flex-wrap gap-3 pt-2">
           <button type="submit" :disabled="isLoading || !canSave"
-            class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            class="px-7 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
             {{ isLoading ? 'Saving…' : 'Save property' }}
           </button>
 

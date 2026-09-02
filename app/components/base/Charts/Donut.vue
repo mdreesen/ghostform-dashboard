@@ -18,7 +18,7 @@ let monthData = ref({})
 const marketShareLabels = {
   'January': {
     name: 'January',
-    color: '#B5563A'
+    color: '#4C5741'
   },
   'February': {
     name: 'February',

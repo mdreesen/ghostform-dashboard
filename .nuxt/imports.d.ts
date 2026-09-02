@@ -43,7 +43,7 @@ export { ghostFormUrl, customGhostFormUrl } from '../app/utils/ghostFormUrl';
 export { guessColumns, parseCsv, mapRows, ColumnGuess, MappedLead, ImportResult } from '../app/utils/leadImport';
 export { default as loggedInUser } from '../app/utils/loggedInUser';
 export { nameSpreadsheet } from '../app/utils/names';
-export { PRIORITIES, effectivePriority, isHighStakes, daysUntil, whenLabel, sortDeadlines, Priority, PriorityStyle } from '../app/utils/priority';
+export { PRIORITIES, effectivePriority, isHighStakes, localDate, toDateInput, daysUntil, whenLabel, sortDeadlines, Priority, PriorityStyle } from '../app/utils/priority';
 export { useSpreadsheet, LeadRecord } from '../app/utils/spreadsheet';
 export { hasR2, assertUploadable, buildKey, presignUpload, readUrl, deleteObject, fetchAsBase64 } from '../app/utils/storage';
 export { formVarient, containerVarient, itemVarient, inputVarient, navVarient, navMenuVarient } from '../app/utils/varients';
@@ -67,3 +67,4 @@ export { useToast } from '../node_modules/@nuxt/ui/dist/runtime/composables/useT
 export { useTour } from '../node_modules/@nuxt/ui/dist/runtime/composables/useTour';
 export { usePWA, useTransparentPwaIcon, useMaskablePwaIcon, useFaviconPwaIcon, useApplePwaIcon, useAppleSplashScreenPwaIcon } from '../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index';
 export { useUserSession } from '../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session';
+export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';

@@ -300,13 +300,13 @@ const previewAspect = computed(() => {
     <!-- ── Controls ────────────────────────────────────────── -->
     <div>
       <!-- Template -->
-      <p class="gf-eyebrow mb-3">Card style</p>
+      <p class="h-label mb-3">Card style</p>
       <div class="flex gap-2 mb-7">
         <button
           v-for="t in (['event','stat','quote'] as const)"
           :key="t"
           class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors"
-          :class="template === t ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+          :class="template === t ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
           @click="template = t"
         >
           {{ t === 'event' ? 'Event' : t === 'stat' ? 'Number' : 'Quote' }}
@@ -314,13 +314,13 @@ const previewAspect = computed(() => {
       </div>
 
       <!-- Size -->
-      <p class="gf-eyebrow mb-3">Size</p>
+      <p class="h-label mb-3">Size</p>
       <div class="flex gap-2 mb-2">
         <button
           v-for="(r, key) in RATIOS"
           :key="key"
           class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors"
-          :class="style.ratio === key ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+          :class="style.ratio === key ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
           @click="style.ratio = key as Ratio"
         >
           {{ r.label }}
@@ -331,20 +331,20 @@ const previewAspect = computed(() => {
       </p>
 
       <!-- Colours -->
-      <p class="gf-eyebrow mb-3">Colours</p>
+      <p class="h-label mb-3">Colours</p>
       <div class="flex gap-2 mb-4">
         <button
           v-for="(t, key) in THEMES"
           :key="key"
           class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors"
-          :class="style.theme === key ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+          :class="style.theme === key ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
           @click="applyTheme(key as string)"
         >
           {{ t.label }}
         </button>
         <button
           class="flex-1 py-3 text-[11px] uppercase tracking-[0.1em] border transition-colors"
-          :class="style.theme === 'custom' ? 'bg-[#B5563A]/10 border-[#B5563A] text-[#B5563A]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
+          :class="style.theme === 'custom' ? 'bg-[#4C5741]/10 border-[#4C5741] text-[#4C5741]' : 'border-[#DDD6C9] text-[#8A847C] hover:text-[#1F1B16]'"
           @click="style.theme = 'custom'"
         >
           Custom
@@ -356,21 +356,21 @@ const previewAspect = computed(() => {
           <label class="block text-[11px] text-[#A9A39A] mb-2">Accent</label>
           <div class="flex gap-2">
             <input v-model="style.accent" type="color" class="h-[42px] w-11 border border-[#DDD6C9] bg-[#F7F4EF] cursor-pointer" />
-            <input v-model="style.accent" class="min-w-0 flex-1 bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-2.5 text-[13px] focus:outline-none focus:border-[#B5563A]" />
+            <input v-model="style.accent" class="min-w-0 flex-1 bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-2.5 text-[13px] focus:outline-none focus:border-[#4C5741]" />
           </div>
         </div>
         <div>
           <label class="block text-[11px] text-[#A9A39A] mb-2">Background</label>
           <div class="flex gap-2">
             <input v-model="style.bg" type="color" class="h-[42px] w-11 border border-[#DDD6C9] bg-[#F7F4EF] cursor-pointer" @input="style.theme = 'custom'" />
-            <input v-model="style.bg" class="min-w-0 flex-1 bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-2.5 text-[13px] focus:outline-none focus:border-[#B5563A]" @input="style.theme = 'custom'" />
+            <input v-model="style.bg" class="min-w-0 flex-1 bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-2.5 text-[13px] focus:outline-none focus:border-[#4C5741]" @input="style.theme = 'custom'" />
           </div>
         </div>
         <div>
           <label class="block text-[11px] text-[#A9A39A] mb-2">Text</label>
           <div class="flex gap-2">
             <input v-model="style.fg" type="color" class="h-[42px] w-11 border border-[#DDD6C9] bg-[#F7F4EF] cursor-pointer" @input="style.theme = 'custom'" />
-            <input v-model="style.fg" class="min-w-0 flex-1 bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-2.5 text-[13px] focus:outline-none focus:border-[#B5563A]" @input="style.theme = 'custom'" />
+            <input v-model="style.fg" class="min-w-0 flex-1 bg-[#F7F4EF] border border-[#DDD6C9] px-2.5 py-2.5 text-[13px] focus:outline-none focus:border-[#4C5741]" @input="style.theme = 'custom'" />
           </div>
         </div>
       </div>
@@ -387,21 +387,21 @@ const previewAspect = computed(() => {
       </div>
 
       <!-- Content -->
-      <p class="gf-eyebrow mb-3">Wording</p>
+      <p class="h-label mb-3">Wording</p>
       <div class="space-y-5">
         <div>
           <label class="block text-[11px] text-[#A9A39A] mb-2">Small label</label>
-          <input v-model="fields.eyebrow" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+          <input v-model="fields.eyebrow" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
         </div>
 
         <template v-if="template === 'event'">
           <div>
             <label class="block text-[11px] text-[#A9A39A] mb-2">Big text</label>
-            <textarea v-model="fields.headline" rows="2" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] resize-none focus:outline-none focus:border-[#B5563A]" />
+            <textarea v-model="fields.headline" rows="2" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] resize-none focus:outline-none focus:border-[#4C5741]" />
           </div>
           <div>
             <label class="block text-[11px] text-[#A9A39A] mb-2">Address or detail</label>
-            <textarea v-model="fields.sub" rows="2" placeholder="123 Whitefish Stage Rd&#10;City, State" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] resize-none focus:outline-none focus:border-[#B5563A]" />
+            <textarea v-model="fields.sub" rows="2" placeholder="123 Whitefish Stage Rd&#10;City, State" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] resize-none focus:outline-none focus:border-[#4C5741]" />
           </div>
         </template>
 
@@ -409,16 +409,16 @@ const previewAspect = computed(() => {
           <div class="grid grid-cols-3 gap-4">
             <div>
               <label class="block text-[11px] text-[#A9A39A] mb-2">Number</label>
-              <input v-model="fields.statNumber" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+              <input v-model="fields.statNumber" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
             </div>
             <div class="col-span-2">
               <label class="block text-[11px] text-[#A9A39A] mb-2">What it means</label>
-              <input v-model="fields.statLabel" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+              <input v-model="fields.statLabel" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
             </div>
           </div>
           <div>
             <label class="block text-[11px] text-[#A9A39A] mb-2">Context (optional)</label>
-            <input v-model="fields.sub" placeholder="down from 58 last spring" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#B5563A]" />
+            <input v-model="fields.sub" placeholder="down from 58 last spring" class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] focus:outline-none focus:border-[#4C5741]" />
           </div>
           <p class="text-[12px] text-[#A9A39A] leading-relaxed">
             Use a figure you can back up — from your MLS or local board, not memory.
@@ -428,7 +428,7 @@ const previewAspect = computed(() => {
         <template v-else>
           <div>
             <label class="block text-[11px] text-[#A9A39A] mb-2">The line</label>
-            <textarea v-model="fields.quote" rows="4" placeholder="Get your financing sorted before you fall in love with a house." class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#B5563A]" />
+            <textarea v-model="fields.quote" rows="4" placeholder="Get your financing sorted before you fall in love with a house." class="w-full bg-[#F7F4EF] border border-[#DDD6C9] px-4 py-3 text-[15px] leading-relaxed resize-none focus:outline-none focus:border-[#4C5741]" />
           </div>
         </template>
       </div>
@@ -436,7 +436,7 @@ const previewAspect = computed(() => {
       <div class="flex flex-wrap gap-3 mt-8">
         <button
           :disabled="downloading"
-          class="px-7 py-3.5 bg-[#B5563A] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:bg-[#9d4830] transition-colors disabled:opacity-40"
+          class="px-7 py-3.5 bg-[#1F1B16] text-[#F7F4EF] text-[11px] uppercase tracking-[0.12em] font-semibold hover:opacity-[0.86] transition-colors disabled:opacity-40"
           @click="download"
         >
           {{ downloading ? 'Making it…' : 'Download image' }}
@@ -453,7 +453,7 @@ const previewAspect = computed(() => {
 
     <!-- ── Preview ─────────────────────────────────────────── -->
     <div class="lg:sticky lg:top-28">
-      <p class="gf-eyebrow mb-3">Preview</p>
+      <p class="h-label mb-3">Preview</p>
       <div
         class="relative w-full max-w-[400px] mx-auto overflow-hidden flex flex-col justify-between border border-[#DDD6C9]"
         :style="{
