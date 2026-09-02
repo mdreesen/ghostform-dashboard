@@ -42,6 +42,12 @@ export function useVoiceInput() {
 
   function start() {
     error.value = ''
+
+    // Tear down any previous instance. Calling start() twice without this
+    // leaves two recognisers running, and both write to the same transcript —
+    // a second route to duplicated text.
+    try { recognition?.abort() } catch { /* nothing running */ }
+    recognition = null
     const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
     if (!SR) {
       error.value = 'This browser can\'t do voice. Chrome, Edge or Safari will work.'
@@ -54,15 +60,30 @@ export function useVoiceInput() {
     recognition.lang = navigator.language || 'en-US'
 
     recognition.onresult = (event: any) => {
+      /**
+       * REBUILD from every result, don't append.
+       *
+       * The previous version appended finalised text on each event, starting
+       * from event.resultIndex. That assumes resultIndex advances past results
+       * already handled — and on Android Chrome it often stays at 0, so the
+       * same growing phrase got appended again and again:
+       *
+       *   "remind me remind me to remind me to test remind me to test this…"
+       *
+       * Rebuilding from the full results array is idempotent: replaying the
+       * same event twice produces the same string, so it cannot duplicate
+       * however the browser chooses to index things.
+       */
       let final = ''
       let partial = ''
-      for (let i = event.resultIndex; i < event.results.length; i++) {
+      for (let i = 0; i < event.results.length; i++) {
         const r = event.results[i]
-        if (r.isFinal) final += r[0].transcript
+        if (!r?.[0]) continue
+        if (r.isFinal) final += r[0].transcript + ' '
         else partial += r[0].transcript
       }
-      if (final) transcript.value = (transcript.value + ' ' + final).trim()
-      interim.value = partial
+      transcript.value = final.trim()
+      interim.value = partial.trim()
     }
 
     recognition.onerror = (e: any) => {
