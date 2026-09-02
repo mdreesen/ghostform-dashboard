@@ -134,7 +134,14 @@ export async function readDocument(
       const res = await extractText(pdf, { mergePages: true })
       text = String(res.text || '').trim()
     } catch (err: any) {
-      console.error('[document] pdf text extraction failed:', err?.message)
+      const m = String(err?.message || '')
+      // A missing dependency and an unreadable PDF need different fixes, and
+      // "could not read that PDF" would send you looking at the file.
+      if (/Cannot find module|Failed to resolve|ERR_MODULE_NOT_FOUND/i.test(m)) {
+        console.error('[document] unpdf is not installed. Run: npm install')
+        throw new Error('CONFIG: the PDF reader is not installed — run npm install.')
+      }
+      console.error('[document] pdf text extraction failed:', m)
       throw new Error('PDF: could not read that PDF.')
     }
 

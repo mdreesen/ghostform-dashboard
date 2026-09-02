@@ -66,7 +66,9 @@ function startPolling() {
     ticks++
     await refresh()
     const working = list.value.some((d: any) => d.status === 'reading')
-    if (!working || ticks > 40) { clearInterval(poll!); poll = null }
+    // 24 ticks x 2.5s = 60s, just past the server's own 55s timeout. Polling
+    // longer than the server can possibly take is only a longer spinner.
+    if (!working || ticks > 24) { clearInterval(poll!); poll = null }
   }, 2500)
 }
 

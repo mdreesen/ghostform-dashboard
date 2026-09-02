@@ -66,6 +66,8 @@ export default defineEventHandler(async (event) => {
         reason = 'Document reading is not configured yet. This is on us — the AI key is missing or rejected.'
       } else if (msg.startsWith('RATE:')) {
         reason = 'Too many requests right now. Wait a minute and try reading it again.'
+      } else if (msg.startsWith('TIMEOUT:')) {
+        reason = 'Reading took too long. Try uploading it again.'
       } else if (msg.startsWith('SCANNED:')) {
         // A scan has no text layer. Photographing the pages routes through
         // the vision path instead, which does work.
@@ -80,6 +82,44 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  event.waitUntil ? event.waitUntil(run()) : run()
-  return { status: 'reading' }
+  /** Ensure a stuck row never stays on 'reading'. */
+  const markTimedOut = async () => {
+    await Doc.updateOne(
+      { _id: id, status: 'reading' },
+      { $set: { status: 'failed', failureReason: 'Reading took too long. Try uploading it again.' } }
+    )
+  }
+
+  /**
+   * AWAIT IT. Do not fire-and-forget.
+   *
+   * This used `event.waitUntil(run())` and returned immediately. On Vercel the
+   * function is FROZEN as soon as the response is sent, so the extraction was
+   * killed mid-flight — the document sat on status 'reading' forever and the
+   * client polled a row that would never change.
+   *
+   * Extraction is one text parse plus one model call, ~5-15s. That's well
+   * within the function limit and worth waiting for, since the alternative is
+   * a queue we don't need yet.
+   *
+   * The timeout below guarantees the status always resolves. A spinner that
+   * never stops on a legal document is worse than an error.
+   */
+  const TIMEOUT_MS = 55_000
+  let timer: ReturnType<typeof setTimeout> | undefined
+
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new Error('TIMEOUT: reading took too long.')), TIMEOUT_MS)
+  })
+
+  try {
+    await Promise.race([run(), timeout])
+  } catch (err: any) {
+    if (String(err?.message || '').startsWith('TIMEOUT:')) await markTimedOut()
+  } finally {
+    if (timer) clearTimeout(timer)
+  }
+
+  const fresh = await Doc.findOne({ _id: id }, { status: 1, failureReason: 1 }).lean() as any
+  return { status: fresh?.status ?? 'ready', failureReason: fresh?.failureReason ?? '' }
 })

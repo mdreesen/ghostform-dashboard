@@ -159,7 +159,9 @@ async function handle(file: File) {
     })
 
     // Reading is fire-and-forget on the server; the list polls for the result.
-    stage.value = 'Reading dates'
+    // This now WAITS for extraction (~5-15s) rather than returning instantly,
+    // so the label has to set the right expectation.
+    stage.value = 'Reading the document'
     await $fetch(`/api/documents/${_id}/read`, { method: 'POST' }).catch(() => {
       // A failed read isn't a failed upload — the file is safely stored and
       // the realtor can add dates by hand.
@@ -202,7 +204,9 @@ async function handle(file: File) {
       <!-- Uploading -->
       <template v-if="busy">
         <p class="text-[14.5px] font-semibold mb-1">{{ stage }}…</p>
-        <p class="text-[12.5px] text-[#8A847C]">Keep this page open</p>
+        <p class="text-[12.5px] text-[#8A847C]">
+          {{ stage === 'Reading the document' ? 'Pulling out the dates — about 10 seconds' : 'Keep this page open' }}
+        </p>
       </template>
 
       <!-- Dragging over -->
