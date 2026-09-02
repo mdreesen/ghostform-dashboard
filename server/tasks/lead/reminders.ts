@@ -188,11 +188,24 @@ export default defineTask({
         campaignsFired++
       }
 
+      // Morning push, for anyone who's turned notifications on. Wrapped so a
+      // push failure can never break the email run, which matters more.
+      let pushesSent = 0
+      try {
+        const { sendMorningPushes } = await import('../../utils/pushBriefing');
+        const r = await sendMorningPushes()
+        pushesSent = r.sent
+        console.log('[cron] pushes:', r.sent, 'to', r.users, 'users')
+      } catch (err: any) {
+        console.error('[cron] push step failed (emails unaffected):', err?.message)
+      }
+
       const summary = {
         result: 'All background delivery pipelines processed successfully.',
         individualSent,
         campaignsFired,
-        campaignEmails
+        campaignEmails,
+        pushesSent
       }
       console.log('Pipeline summary:', summary)
       return summary

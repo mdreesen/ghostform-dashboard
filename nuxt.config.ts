@@ -127,7 +127,7 @@ export default defineNuxtConfig({
       globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
       'navigateFallback': '/login',
       navigateFallbackDenylist: [/^\/api\//],
-
+      importScripts: ['/push-sw.js'],
       runtimeCaching: [
         {
           // The document itself: serve from network when possible so config
