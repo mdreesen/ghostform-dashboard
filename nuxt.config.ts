@@ -7,6 +7,16 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.css", "~/assets/css/theme.css", "~/assets/css/system.css"],
 
   nitro: {
+    /**
+     * Nitro tasks are EXPERIMENTAL and must be enabled explicitly. Without
+     * this, defineTask() files under server/tasks are never registered, and
+     * runTask('lead:reminders') throws:
+     *
+     *   H3Error: Task `lead:reminders` is not available!
+     *
+     * The task file and vercel.json were both correct — only the flag was
+     * missing, which is why it failed at run time rather than at build.
+     */
     experimental: {
       tasks: true
     }
@@ -100,11 +110,51 @@ export default defineNuxtConfig({
       skipWaiting: true,
       globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'],
 
+      // ── THE KEY TO OFFLINE LOADING ─────────────────────────────────
+      // The form is always opened with unique query params, e.g.
+      //   /?category=realtor&id=...&company_email=<hash>&...
+      // Precached entries are keyed by full URL, so that request never
+      // matches a cache entry and the page fails to open offline.
+      // navigateFallback tells the service worker: for ANY navigation
+      // request it can't otherwise satisfy, serve the cached app shell.
+      // The query string is then read by the app as normal.
+      /**
+       * NO navigateFallback.
+       *
+       * It pointed at '/', which isn't a precached file — workbox threw
+       * `non-precached-url` on every load. The obvious fix (prerender '/')
+       * BROKE THE BUILD, because auth.global.ts redirects '/' to '/login'
+       * when there's no session, and prerendering runs without one.
+       *
+       * The runtimeCaching NetworkFirst rule below already serves cached
+       * navigations offline, which covers the real case: a form that has been
+       * opened once. A first-ever offline open was never going to work
+       * regardless — there'd be nothing cached to serve.
+       */
+      // Never hijack API calls with the shell — they must fail honestly
+      // so the offline queue can catch them.
+
       runtimeCaching: [
         {
-          // The document itself: serve from network when possible so config
-          // changes land, but fall back to cache the moment signal drops.
-          urlPattern: ({ request }) => request.mode === 'navigate',
+          /**
+           * Navigation caching, scoped to the CAPTURE FORM only.
+           *
+           * This previously matched every navigation, including /login and the
+           * whole dashboard. A service worker that intercepts every page load
+           * is a single point of failure for the entire site — and it became
+           * one: a bad navigateFallback left the installed worker throwing on
+           * navigation, so pages rendered blank with no console error, and a
+           * corrected deploy couldn't take over because the broken worker was
+           * still in control.
+           *
+           * Offline only matters for the capture form. The dashboard needs a
+           * network anyway — it has nothing useful to show without one.
+           */
+          urlPattern: ({ request, url }) =>
+            request.mode === 'navigate' &&
+            !url.pathname.startsWith('/dashboard') &&
+            !url.pathname.startsWith('/login') &&
+            !url.pathname.startsWith('/signup'),
           handler: 'NetworkFirst',
           options: {
             cacheName: 'ghostform-pages',
