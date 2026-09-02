@@ -10,8 +10,6 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
       cdnURL: string,
    },
 
-   anthropicModel: string,
-
    nitro: {
       envPrefix: string,
    },

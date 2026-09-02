@@ -81,19 +81,23 @@ utils are auto-imported, but see the caveat below.
 
 These are all the result of a bug. Following them avoids repeating it.
 
-### Authenticated fetches must be client-only
+### Fetches inside `<ClientOnly>` need `server: false`
+
+Page-level `useFetch` to an internal `/api/` route is fine — Nuxt forwards the
+session cookie during SSR, which is why `home/index.vue` and
+`leads/[id]/details.vue` work without it.
+
+The problem is a fetch inside a component rendered under `<ClientOnly>`. It
+doesn't run during SSR, and the payload key resolves to nothing. The symptom is
+data that **disappears on hard reload and returns when you navigate back**.
 
 ```ts
 useFetch('/api/whatever', { server: false, lazy: true })
 ```
 
-The session lives in a cookie the SSR pass doesn't forward, so a server-side
-fetch gets a 401. The symptom is data that **disappears on hard reload and
-returns when you navigate back** — the client-side fetch works because the
-browser sends the cookie.
-
-Don't paper over it with `default: () => []`. That turns an auth failure into
-an empty result and hides the next one.
+Don't paper over it with `default: () => []`. That turns a failure into an
+empty result and hides the next one — which is exactly what happened with the
+deadlines.
 
 ### Import server utils explicitly inside closures
 

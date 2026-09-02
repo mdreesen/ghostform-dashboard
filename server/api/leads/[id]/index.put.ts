@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import LeadModel from '../../../../lib/database/models/Lead';
 import type { Lead } from '~/types/lead';
 
+import loggedInUser from '~/utils/loggedInUser';
+
 const Lead = LeadModel as Model<Lead>;
 
 const bodySchema = z.object({
@@ -30,6 +32,9 @@ const bodySchema = z.object({
 })
 
 export default defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' });
+
   const body = await readValidatedBody(event, bodySchema.parse);
 
   try {
@@ -52,10 +57,14 @@ export default defineEventHandler(async (event) => {
       const mongoUpdate: Record<string, any> = { $set: setFields };
       if ($inc) mongoUpdate.$inc = $inc;
 
-      await Lead.findOneAndUpdate(
-        { _id: body._id },
+      // userId in the filter — otherwise a valid session could edit ANY
+      // lead in the database just by sending a different _id in the body.
+      const updated = await Lead.findOneAndUpdate(
+        { _id: body._id, userId: user._id },
         mongoUpdate,
         { new: true });
+
+      if (!updated) throw createError({ statusCode: 404, message: 'Lead not found.' });
 
   } catch (error) {
     console.log(error);

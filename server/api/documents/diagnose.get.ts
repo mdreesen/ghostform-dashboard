@@ -14,14 +14,16 @@ export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
 
-  const cfg = useRuntimeConfig()
-  const key = cfg.anthropicKey as string
+  // Same source the real code reads, or this endpoint reports on config that
+  // isn't actually being used — which is worse than not having it.
+  const key = process.env.ANTHROPIC_API_KEY
+  const model = process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001'
 
   const out: Record<string, any> = {
     storageDriver: hasR2() ? 'r2' : 'local (.data/uploads)',
     anthropicKeyPresent: Boolean(key),
     anthropicKeyLooksValid: Boolean(key && key.startsWith('sk-ant-')),
-    model: cfg.anthropicModel
+    model
   }
 
   if (!key) {
@@ -37,7 +39,7 @@ export default defineEventHandler(async (event) => {
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json'
       },
-      body: { model: cfg.anthropicModel, max_tokens: 4, messages: [{ role: 'user', content: 'hi' }] }
+      body: { model: model, max_tokens: 4, messages: [{ role: 'user', content: 'hi' }] }
     })
     out.apiReachable = true
     out.verdict = 'Key and model both work. If reading still fails, the issue is the PDF itself — check the server log for [document] read failed.'
@@ -49,7 +51,7 @@ export default defineEventHandler(async (event) => {
     out.verdict = out.status === 401
       ? 'The API key was rejected. Check ANTHROPIC_API_KEY.'
       : out.status === 404
-      ? `The model "${cfg.anthropicModel}" was not found. Set ANTHROPIC_MODEL to one your key can use.`
+      ? `The model "${model}" was not found. Set ANTHROPIC_MODEL to one your key can use.`
       : 'The API call failed — see detail.'
   }
 

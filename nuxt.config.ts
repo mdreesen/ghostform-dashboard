@@ -100,8 +100,13 @@ export default defineNuxtConfig({
         {
           src: '/images/maskable-icon.png',
           sizes: '445x445',
-          type: 'image/webp',
-          purpose: "png"
+          // Was image/webp on a .png file — a mismatched type can make a
+          // browser skip the icon.
+          type: 'image/png',
+          // Was purpose: "png" — not a valid value. The spec allows only
+          // any | maskable | monochrome, so browsers discarded this entry
+          // entirely: "found icon with no valid purpose; ignoring it".
+          purpose: "any"
         },
         {
           src: '/images/maskable-icon.png',
@@ -168,9 +173,8 @@ export default defineNuxtConfig({
 
   // @vueuse/motion/nuxt
   runtimeConfig: {
-    // Used by documentRead to extract deadlines.
-    anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001',
-
+    // Server keys are read from process.env directly — see storage.ts and
+    // documentRead.ts. Nothing private belongs here.
     public: {
       motion: {
         directives: {

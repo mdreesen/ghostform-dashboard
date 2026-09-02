@@ -182,6 +182,9 @@ declare module "nitropack/types" {
     '/api/voice/note': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/voice/note.post').default>>>>
     }
+    '/gf-manifest.webmanifest': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/gf-manifest.webmanifest.get').default>>>>
+    }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>
     }

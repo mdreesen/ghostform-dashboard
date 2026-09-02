@@ -14,6 +14,21 @@ const CampaignModel = CampaignModelImport as Model<any>
 const resend = new Resend(process.env.RESEND_KEY)
 
 export default defineEventHandler(async (event) => {
+  /**
+   * DEBUG ENDPOINT — it sends REAL email through Resend.
+   *
+   * It had no auth at all, so anyone who knew the URL could trigger sends
+   * against live campaign data. Gated behind CRON_SECRET (already used by
+   * /api/cron) and blocked in production entirely.
+   */
+  if (process.env.NODE_ENV === 'production') {
+    throw createError({ statusCode: 404, message: 'Not found.' })
+  }
+  const auth = getHeader(event, 'Authorization')
+  if (!process.env.CRON_SECRET || auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    throw createError({ statusCode: 401, message: 'Unauthorized.' })
+  }
+
   if (process.env.NODE_ENV !== 'development') {
     throw createError({ statusCode: 403, message: 'Forbidden outside dev mode.' })
   }
