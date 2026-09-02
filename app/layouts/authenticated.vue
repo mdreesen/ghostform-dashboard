@@ -28,5 +28,10 @@ const authenticated = computed(() => user ? true : navigateTo(`/login`));
         <template v-else>
             <appAccess />
         </template>
+
+      <!-- Persistent voice input, on every page -->
+
+      <ClientOnly><appVoiceDock /></ClientOnly>
+
     </main>
 </template>

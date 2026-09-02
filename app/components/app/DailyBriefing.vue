@@ -445,7 +445,7 @@ function beginReschedule(d: any) {
         </NuxtLink>
 
         <div
-          class="gf-actions flex gap-2.5 opacity-60 group-hover:opacity-100 transition-opacity"
+          class="gf-actions flex gap-2.5"
           :data-tour="lead._id === visibleLeads[0]?._id ? 'lead-actions' : undefined"
         >
           <appLeadMessageComposer
@@ -456,7 +456,7 @@ function beginReschedule(d: any) {
           />
           <button
             :disabled="marking.has(lead._id)"
-            class="gf-label uppercase tracking-[0.1em] px-4 py-2.5 border border-[#1F1B16] text-[#1F1B16] hover:bg-[#1F1B16] hover:text-[#F7F4EF] transition-colors disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+            class="gf-pair-btn border-[#1F1B16] text-[#1F1B16] hover:bg-[#1F1B16] hover:text-[#F7F4EF] disabled:opacity-40 disabled:cursor-not-allowed"
             @click="markContacted(lead)"
           >
             {{ marking.has(lead._id) ? 'Saving…' : 'Contacted' }}

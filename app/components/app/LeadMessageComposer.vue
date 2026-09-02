@@ -140,7 +140,7 @@ async function copyMessage() {
 <template>
   <div class="inline-block">
     <button
-      class="text-[11px] uppercase tracking-[0.1em] px-4 py-2.5 border border-[#DDD6C9] text-[#8A847C] hover:border-[#1F1B16] hover:text-[#1F1B16] transition-colors whitespace-nowrap"
+      class="gf-pair-btn border-[#C7BFAF] text-[#1F1B16] hover:border-[#1F1B16] hover:bg-[#EFEAE0]"
       @click="openComposer"
     >
       Draft

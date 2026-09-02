@@ -159,7 +159,6 @@ async function setStatus(status: string) {
           Contracts, inspections, disclosures. We'll pull out the dates that
           matter and you confirm each one before it becomes a reminder.
         </p>
-        <div class="mb-6"><appVoiceCapture :home-id="id" /></div>
         <appAskDocuments :home-id="id" class="mb-8" />
         <appDocumentUpload :home-id="id" class="mb-2"  />
         <appDocumentList :home-id="id" />

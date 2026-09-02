@@ -47,10 +47,14 @@
   --nav-clear: var(--s3);     /* breathing room below it */
 }
 
+/* The voice dock is fixed bottom-right. Give the page enough bottom padding
+   that the last row of content isn't sitting underneath it. */
+:root { --dock-clear: 84px; }
+
 .gf-shell {
   padding-inline: var(--gutter);
   padding-top: calc(var(--nav-h) + var(--nav-clear));
-  padding-bottom: clamp(64px, 10vw, 112px);
+  padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--dock-clear));
 }
 
 /* Desktop gets more air below the bar — there's room for it, and the page
@@ -169,3 +173,68 @@
    reading width — not pad itself again. */
 .gf-measure-page      { width: 100%; max-width: 820px; margin-inline: auto; }
 .gf-measure-page-wide { width: 100%; max-width: 1100px; margin-inline: auto; }
+
+
+/* ---------- Voice dock ----------
+   Fixed in the bottom-right thumb zone. Positioned here rather than with
+   utility classes: this is the primary input, so it shouldn't depend on a
+   class surviving a purge or rename. */
+.gf-dock {
+  position: fixed;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding-inline: 20px;
+  border: 0;
+  border-radius: 2px;
+  background: var(--ink, #1F1B16);
+  color: var(--paper, #F7F4EF);
+  cursor: pointer;
+  transition: opacity .16s ease;
+}
+.gf-dock:hover { opacity: .9; }
+
+/* Clear the iOS home indicator so the button isn't half under it */
+@supports (padding: max(0px)) {
+  .gf-dock { bottom: max(var(--gutter), env(safe-area-inset-bottom, 0px)); }
+}
+
+
+/* ---------- Paired buttons ----------
+   Two actions offered together must share metrics, or the larger one reads as
+   the "real" one and the other as disabled. Draft and Contacted are equally
+   available, so they get identical size, padding and weight — the only
+   difference is border strength, which is enough to signal primary vs
+   secondary without dimming anything.
+
+   Note there is no opacity here. The cluster used to sit at 60% and clear on
+   hover, which on a phone meant permanently faded: there is no hover on touch.
+*/
+.gf-pair-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding-inline: 18px;
+  border: 1px solid;
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+}
+
+/* On narrow screens they share the row evenly rather than one dominating */
+@media (max-width: 480px) {
+  .gf-actions { width: 100%; }
+  .gf-actions > * { flex: 1; }
+  .gf-pair-btn { width: 100%; padding-inline: 12px; }
+}

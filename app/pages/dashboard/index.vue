@@ -82,8 +82,6 @@ const activeLeads = computed(() =>
 
     <!-- ── 01 Who to reach ──────────────────────────────────── -->
     <section class="gf-depth mb-28" style="--d:.05s" data-tour="briefing">
-      <!-- Capture a note from the morning screen, where they already are. -->
-      <div class="mb-8"><appVoiceCapture /></div>
 
       <ClientOnly>
         <appDailyBriefing />
