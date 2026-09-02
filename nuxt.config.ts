@@ -5,6 +5,22 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   css: ["~/assets/css/main.css", "~/assets/css/theme.css", "~/assets/css/system.css"],
+
+  nitro: {
+    /**
+     * Nitro tasks are EXPERIMENTAL and must be enabled explicitly. Without
+     * this, defineTask() files under server/tasks are never registered, and
+     * runTask('lead:reminders') throws:
+     *
+     *   H3Error: Task `lead:reminders` is not available!
+     *
+     * The task file and vercel.json were both correct — only the flag was
+     * missing, which is why it failed at run time rather than at build.
+     */
+    experimental: {
+      tasks: true
+    }
+  },
   modules: [
     '@vueuse/motion/nuxt',
     '@nuxt/image',

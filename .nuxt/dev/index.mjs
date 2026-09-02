@@ -5,12 +5,12 @@ import { resolve, dirname, join, normalize, extname } from 'node:path';
 import crypto$1, { timingSafeEqual, createHmac } from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@vue/shared/dist/shared.cjs.js';
+import { Resend } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import viteNodeEntry_mjs from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
 import Stripe from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
 import { z } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/zod/index.js';
 import { nanoid } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/nanoid/index.js';
-import { Resend } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import bcrypt from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
@@ -3121,9 +3121,22 @@ function defineRenderHandler(render) {
 const scheduledTasks = false;
 
 const tasks = {
-  
+  "lead:reminders": {
+          meta: {
+            description: "",
+          },
+          resolve: () => Promise.resolve().then(function () { return reminders$1; }).then(r => r.default || r),
+        }
 };
 
+function defineTask(def) {
+  if (typeof def.run !== "function") {
+    def.run = () => {
+      throw new TypeError("Task must implement a `run` method!");
+    };
+  }
+  return def;
+}
 const __runningTasks__ = {};
 async function runTask(name, {
   payload = {},
@@ -3272,7 +3285,7 @@ const leadSchema = new Schema({
 }, { timestamps: true });
 const schemaImport = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 
-const LeadModel$9 = schemaImport;
+const LeadModel$a = schemaImport;
 function resolveLastContact(lead) {
   if (lead.lastContactedAt) return new Date(lead.lastContactedAt);
   if (lead.contactCount && lead.contactCount > 0) {
@@ -3290,7 +3303,7 @@ async function buildDailyBriefing(userId, opts = {}) {
   var _a, _b;
   const now = (_a = opts.now) != null ? _a : /* @__PURE__ */ new Date();
   const coldAfter = (_b = opts.cold_lead_after_days) != null ? _b : 14;
-  const leads = await LeadModel$9.find({
+  const leads = await LeadModel$a.find({
     userId,
     status: { $nin: ["closed", "archive"] }
   }).select(
@@ -5352,6 +5365,246 @@ const error500 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   template: template$1
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const campaignSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+  title: { type: String, required: true },
+  targetStatus: { type: String, required: true },
+  // 'new', 'appointment', 'active', etc.
+  subject: { type: String, required: true },
+  messageBody: { type: String, required: true },
+  dayOfWeek: { type: Number, required: true, min: 0, max: 6 },
+  // 0 = Sun, 1 = Mon, etc.
+  // Cadence: how often the campaign repeats.
+  //   4 = weekly, 2 = biweekly (every other week), 1 = monthly (every 4 weeks)
+  // Kept the field name for backwards-compat with existing saved campaigns.
+  timesPerMonth: { type: Number, required: true, enum: [1, 2, 4], default: 1 },
+  // Whether this campaign is currently sending. Lets realtors pause a
+  // sequence without deleting it.
+  active: { type: Boolean, default: true },
+  lastFiredAt: { type: Date, default: null }
+}, { timestamps: true });
+const CampaignModelImport = mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);
+
+function useCleanString(str) {
+  return str.replace(/[^a-zA-Z0-9]/g, "");
+}
+
+function email_by_status(status, lead_name, company_name) {
+  const greeting = `Hi ${lead_name},
+
+`;
+  const signoff = `
+
+Best,
+
+${company_name}`;
+  switch (status.toLowerCase()) {
+    case "new":
+      return greeting + `Thanks for checking out the property info details through our digital flyer.
+
+I wanted to personally reach out and see if you had any quick questions about the home, the neighborhood, or local market trends that I can track down for you?
+
+Just reply straight to this email whenever you have a second.` + signoff;
+    case "appointment":
+      return greeting + `I'm looking forward to our upcoming strategy session to go over your property goals.
+
+Before we sync up, did any quick questions pop up about the neighborhood, local market data, or specific listings you've been tracking online?
+
+Just reply straight to this email if there's anything specific you want me to pull ahead of time.` + signoff;
+    case "active":
+      return greeting + `We've been keeping a close eye on the market for you, and a few interesting shifts are happening locally.
+
+As we keep sorting through inventory, do you have any quick questions about recent listings, pricing adjustments, or neighborhood trends?
+
+Just reply straight to this email whenever you have a second and we can fine-tune our search.` + signoff;
+    case "under contract":
+      return greeting + `Things are moving along beautifully behind the scenes on your contract file.
+
+I know there are a lot of moving parts right now during escrow. Did you have any quick questions about the inspection timelines, appraisal parameters, or next steps that I can clarify for you?
+
+Just reply straight to this email whenever you have a second\u2014I'm tracking everything closely.` + signoff;
+    case "closed":
+      return greeting + `Congratulations again on your recent closing! I hope you are settling into the new space perfectly.
+
+Now that the dust has settled, I wanted to reach out and see if you had any remaining questions about the home, local utility configurations, or contractors in the area?
+
+Just reply straight to this email if anything comes up. I'm always here to help.` + signoff;
+    case "archive":
+      return greeting + `It's been a little while since we last touched base about your property search parameters.
+
+I wanted to quickly check in and see if you had any new questions about the local market trends, or if your home buying timelines have shifted at all recently?
+
+Just reply straight to this email whenever you have a second if you'd like to dive back in.` + signoff;
+    default:
+      return greeting + `I wanted to personally reach out and check in on your real estate goals.
+
+Did you have any quick questions about current listings, neighborhood developments, or local market trends that I can track down for you?
+
+Just reply straight to this email whenever you have a second.` + signoff;
+  }
+}
+
+const LeadModel$9 = schemaImport;
+const CampaignModel$1 = CampaignModelImport;
+const resend$2 = new Resend(process.env.RESEND_KEY);
+function localWeekday(tz, now) {
+  var _a, _b, _c;
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone: tz,
+      weekday: "short"
+    }).formatToParts(now);
+    const weekdayStr = (_b = (_a = parts.find((p) => p.type === "weekday")) == null ? void 0 : _a.value) != null ? _b : "";
+    const dayMap = {
+      Sun: 0,
+      Mon: 1,
+      Tue: 2,
+      Wed: 3,
+      Thu: 4,
+      Fri: 5,
+      Sat: 6
+    };
+    return (_c = dayMap[weekdayStr]) != null ? _c : now.getUTCDay();
+  } catch {
+    return now.getUTCDay();
+  }
+}
+function minDaysBetweenFires(timesPerMonth) {
+  switch (timesPerMonth) {
+    case 4:
+      return 6;
+    // weekly
+    case 2:
+      return 13;
+    // biweekly
+    case 1:
+      return 27;
+    // monthly
+    default:
+      return 27;
+  }
+}
+const reminders = defineTask({
+  meta: {
+    name: "lead:reminders",
+    description: "Processes custom individual queues and recurring marketing blasts"
+  },
+  async run() {
+    var _a;
+    console.log("Orchestrating automated pipelines...");
+    await connectDB();
+    const now = /* @__PURE__ */ new Date();
+    const startOfToday = new Date((/* @__PURE__ */ new Date()).setHours(0, 0, 0, 0));
+    let individualSent = 0;
+    let campaignsFired = 0;
+    let campaignEmails = 0;
+    try {
+      const activeQueue = await LeadModel$9.find({
+        reminderStatus: "scheduled",
+        reminderScheduledAt: { $lte: now },
+        email: { $ne: "", $exists: true }
+      }).populate("userId");
+      if (activeQueue.length > 0) {
+        const individualOps = [];
+        for (const lead of activeQueue) {
+          const company_name = (lead == null ? void 0 : lead.company_name) || "Your Connected Realtor";
+          const replyEmail = lead == null ? void 0 : lead.company_email;
+          const lead_name = lead.name ? lead.name.split(" ")[0] : "there";
+          const status = lead == null ? void 0 : lead.status;
+          const useResponse = email_by_status(status, lead_name, company_name);
+          await resend$2.emails.send({
+            from: `${useCleanString(company_name)}@ascendpod.com`,
+            to: lead.email,
+            replyTo: replyEmail,
+            subject: "Quick question regarding your property search",
+            text: useResponse
+          });
+          individualSent++;
+          individualOps.push({
+            updateOne: {
+              filter: { _id: lead._id },
+              update: {
+                $set: { reminderStatus: "sent", lastContactedAt: now },
+                $inc: { contactCount: 1 },
+                $unset: { reminderScheduledAt: "" }
+              }
+            }
+          });
+        }
+        await LeadModel$9.bulkWrite(individualOps, { ordered: false });
+      }
+      const candidateCampaigns = await CampaignModel$1.find({
+        active: { $ne: false },
+        // treat missing 'active' as active (legacy rows)
+        $or: [
+          { lastFiredAt: null },
+          { lastFiredAt: { $lt: startOfToday } }
+        ]
+      }).populate("userId");
+      for (const campaign of candidateCampaigns) {
+        const tz = ((_a = campaign.userId) == null ? void 0 : _a.timezone) || "America/Denver";
+        const localDay = localWeekday(tz, now);
+        if (campaign.dayOfWeek !== localDay) continue;
+        if (campaign.lastFiredAt) {
+          const daysSinceLastFire = (now.getTime() - new Date(campaign.lastFiredAt).getTime()) / (1e3 * 60 * 60 * 24);
+          if (daysSinceLastFire < minDaysBetweenFires(campaign.timesPerMonth)) {
+            continue;
+          }
+        }
+        const targets = await LeadModel$9.find({
+          userId: campaign.userId._id,
+          status: campaign.targetStatus,
+          email: { $ne: "", $exists: true }
+        }).lean();
+        if (targets.length > 0) {
+          const agentName = campaign.userId.name || "Your Realtor";
+          const batchPayload = targets.map((lead) => {
+            const greetingName = lead.name ? lead.name.split(" ")[0] : "there";
+            const personalizedText = campaign.messageBody.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, agentName);
+            return {
+              from: `${useCleanString(agentName)}@ascendpod.com`,
+              to: lead.email,
+              replyTo: campaign.userId.email || "whiteravendev90@gmail.com",
+              subject: campaign.subject,
+              text: personalizedText
+            };
+          });
+          await resend$2.batch.send(batchPayload);
+          campaignEmails += batchPayload.length;
+          await LeadModel$9.updateMany(
+            { _id: { $in: targets.map((t) => t._id) } },
+            { $set: { lastContactedAt: now }, $inc: { contactCount: 1 } }
+          );
+        }
+        campaign.lastFiredAt = now;
+        await campaign.save();
+        campaignsFired++;
+      }
+      const summary = {
+        result: "All background delivery pipelines processed successfully.",
+        individualSent,
+        campaignsFired,
+        campaignEmails
+      };
+      console.log("Pipeline summary:", summary);
+      return summary;
+    } catch (error) {
+      console.error("Automation engine loop failed:", error);
+      return { result: `Fault: ${error.message}` };
+    }
+  }
+});
+
+const reminders$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: reminders
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const server = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: viteNodeEntry_mjs
@@ -5443,31 +5696,6 @@ const loggedInUser = defineEventHandler(async (event) => {
     });
   }
 });
-
-const campaignSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true
-  },
-  title: { type: String, required: true },
-  targetStatus: { type: String, required: true },
-  // 'new', 'appointment', 'active', etc.
-  subject: { type: String, required: true },
-  messageBody: { type: String, required: true },
-  dayOfWeek: { type: Number, required: true, min: 0, max: 6 },
-  // 0 = Sun, 1 = Mon, etc.
-  // Cadence: how often the campaign repeats.
-  //   4 = weekly, 2 = biweekly (every other week), 1 = monthly (every 4 weeks)
-  // Kept the field name for backwards-compat with existing saved campaigns.
-  timesPerMonth: { type: Number, required: true, enum: [1, 2, 4], default: 1 },
-  // Whether this campaign is currently sending. Lets realtors pause a
-  // sequence without deleting it.
-  active: { type: Boolean, default: true },
-  lastFiredAt: { type: Date, default: null }
-}, { timestamps: true });
-const CampaignModelImport = mongoose.models.Campaign || mongoose.model("Campaign", campaignSchema);
 
 const homeSchema = new Schema({
   userId: {
@@ -5920,10 +6148,18 @@ const cron = defineEventHandler(async (event) => {
       ...taskResult
     };
   } catch (error) {
-    console.error("Vercel Cron automation step crashed:", error);
+    const msg = String((error == null ? void 0 : error.message) || "");
+    if (/is not available/i.test(msg)) {
+      console.error("[cron] Task not registered. Check nitro.experimental.tasks is true in nuxt.config.ts.");
+      throw createError({
+        statusCode: 500,
+        message: "Task not registered \u2014 nitro.experimental.tasks must be enabled."
+      });
+    }
+    console.error("[cron] task failed:", msg, error == null ? void 0 : error.stack);
     throw createError({
       statusCode: 500,
-      message: error.message || "Internal task handler fault."
+      message: msg || "Internal task handler fault."
     });
   }
 });
@@ -6944,10 +7180,6 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   __proto__: null,
   default: schedule_post
 }, Symbol.toStringTag, { value: 'Module' }));
-
-function useCleanString(str) {
-  return str.replace(/[^a-zA-Z0-9]/g, "");
-}
 
 const LeadModel$4 = schemaImport;
 const resend$1 = new Resend(process.env.RESEND_KEY);
