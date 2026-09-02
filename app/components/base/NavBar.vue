@@ -31,8 +31,9 @@ watch(() => route.path, () => { open.value = false; });
 
 <template>
   <header
-    class="fixed top-0 left-0 right-0 z-50 border-b transition-colors duration-500 backdrop-blur-md"
-    :class="stuck ? 'border-[#DDD6C9] bg-[#F7F4EF]/85' : 'border-transparent bg-[#F7F4EF]/70'"
+    class="gf-navbar border-b transition-colors duration-500"
+    :class="stuck ? 'border-[#DDD6C9]' : 'border-transparent'"
+    :data-stuck="stuck"
   >
     <div class="flex items-center justify-between px-6 sm:px-10 lg:px-12 py-5">
       <NuxtLink to="/dashboard" class="font-display font-bold text-[17px] tracking-tight">
