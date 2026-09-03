@@ -20,6 +20,7 @@ export const AppCardsOverview: typeof import("../app/components/app/CardsOvervie
 export const AppDailyBriefing: typeof import("../app/components/app/DailyBriefing.vue")['default']
 export const AppDocumentList: typeof import("../app/components/app/DocumentList.vue")['default']
 export const AppDocumentUpload: typeof import("../app/components/app/DocumentUpload.vue")['default']
+export const AppDocumentViewer: typeof import("../app/components/app/DocumentViewer.vue")['default']
 export const AppHeader: typeof import("../app/components/app/Header.vue")['default']
 export const AppLeadMessageComposer: typeof import("../app/components/app/LeadMessageComposer.vue")['default']
 export const AppSocialCard: typeof import("../app/components/app/SocialCard.vue")['default']
@@ -243,6 +244,7 @@ export const LazyAppCardsOverview: LazyComponent<typeof import("../app/component
 export const LazyAppDailyBriefing: LazyComponent<typeof import("../app/components/app/DailyBriefing.vue")['default']>
 export const LazyAppDocumentList: LazyComponent<typeof import("../app/components/app/DocumentList.vue")['default']>
 export const LazyAppDocumentUpload: LazyComponent<typeof import("../app/components/app/DocumentUpload.vue")['default']>
+export const LazyAppDocumentViewer: LazyComponent<typeof import("../app/components/app/DocumentViewer.vue")['default']>
 export const LazyAppHeader: LazyComponent<typeof import("../app/components/app/Header.vue")['default']>
 export const LazyAppLeadMessageComposer: LazyComponent<typeof import("../app/components/app/LeadMessageComposer.vue")['default']>
 export const LazyAppSocialCard: LazyComponent<typeof import("../app/components/app/SocialCard.vue")['default']>

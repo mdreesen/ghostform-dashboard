@@ -142,6 +142,11 @@ defineExpose({ refresh })
           >
             {{ unconfirmedCount(doc) }} to check
           </span>
+          <appDocumentViewer
+            :document-id="doc._id"
+            :filename="doc.filename"
+            :mime="doc.mime"
+          />
           <button
             v-if="confirmingDelete !== doc._id"
             class="text-[12px] text-[#A9A39A] hover:text-[#4C5741] transition-colors"

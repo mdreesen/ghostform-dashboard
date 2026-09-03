@@ -2992,7 +2992,22 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {};
+const assets = {
+  "/index.mjs": {
+    "type": "text/javascript; charset=utf-8",
+    "etag": "\"4ff69-fRgG3QaGg7nmSRwEQAN4Ed1d7bY\"",
+    "mtime": "2026-09-03T15:39:16.388Z",
+    "size": 327529,
+    "path": "index.mjs"
+  },
+  "/index.mjs.map": {
+    "type": "application/json",
+    "etag": "\"11eda5-JldNb0lK4hIwQSfnMHSteVLxFbg\"",
+    "mtime": "2026-09-03T15:39:16.388Z",
+    "size": 1174949,
+    "path": "index.mjs.map"
+  }
+};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -5003,6 +5018,7 @@ const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; }
 const _lazy_kA9GOf = () => Promise.resolve().then(function () { return deadline_post$1; });
 const _lazy_aV7cm5 = () => Promise.resolve().then(function () { return delete_post$3; });
 const _lazy_SaAvss = () => Promise.resolve().then(function () { return read_post$1; });
+const _lazy_fNLlHv = () => Promise.resolve().then(function () { return view_get$1; });
 const _lazy_wMMA2J = () => Promise.resolve().then(function () { return ask_post$1; });
 const _lazy_i6MJs0 = () => Promise.resolve().then(function () { return create_post$5; });
 const _lazy_fGRu2X = () => Promise.resolve().then(function () { return deadlines_get$1; });
@@ -5073,6 +5089,7 @@ const handlers = [
   { route: '/api/documents/:id/deadline', handler: _lazy_kA9GOf, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/:id/delete', handler: _lazy_aV7cm5, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/:id/read', handler: _lazy_SaAvss, lazy: true, middleware: false, method: "post" },
+  { route: '/api/documents/:id/view', handler: _lazy_fNLlHv, lazy: true, middleware: false, method: "get" },
   { route: '/api/documents/ask', handler: _lazy_wMMA2J, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/create', handler: _lazy_i6MJs0, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/deadlines', handler: _lazy_fGRu2X, lazy: true, middleware: false, method: "get" },
@@ -6241,7 +6258,7 @@ function localDate(value) {
   return new Date(value);
 }
 
-const Doc$7 = DocumentModel;
+const Doc$8 = DocumentModel;
 const bodySchema$m = z.object({
   deadlineId: z.string(),
   action: z.enum(["confirm", "dismiss", "complete", "reopen"]),
@@ -6272,7 +6289,7 @@ const deadline_post = defineEventHandler(async (event) => {
   }
   if (label) set["deadlines.$.label"] = label;
   if (priority) set["deadlines.$.priority"] = priority;
-  const res = await Doc$7.updateOne(
+  const res = await Doc$8.updateOne(
     { _id: (_a = event.context.params) == null ? void 0 : _a.id, userId: user._id, "deadlines._id": deadlineId },
     { $set: set }
   );
@@ -6386,13 +6403,13 @@ async function fetchAsBase64(key) {
   }
 }
 
-const Doc$6 = DocumentModel;
+const Doc$7 = DocumentModel;
 const delete_post$2 = defineEventHandler(async (event) => {
   var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$6.findOne({ _id: id, userId: user._id }).lean();
+  const doc = await Doc$7.findOne({ _id: id, userId: user._id }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
   const liveDeadlines = ((_b = doc.deadlines) != null ? _b : []).filter(
     (d) => d.confirmed && !d.dismissed && !d.completed
@@ -6406,7 +6423,7 @@ const delete_post$2 = defineEventHandler(async (event) => {
       console.error("[document] could not remove stored file for", id);
     }
   }
-  await Doc$6.deleteOne({ _id: id, userId: user._id });
+  await Doc$7.deleteOne({ _id: id, userId: user._id });
   if (!fileRemoved) {
     console.warn(`[document] record ${id} deleted but its file remains in storage.`);
   }
@@ -6573,22 +6590,22 @@ ${text.slice(0, 6e4)}
   }
 }
 
-const Doc$5 = DocumentModel;
+const Doc$6 = DocumentModel;
 const read_post = defineEventHandler(async (event) => {
   var _a, _b, _c;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$5.findOne({ _id: id, userId: user._id }).lean();
+  const doc = await Doc$6.findOne({ _id: id, userId: user._id }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
-  await Doc$5.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
+  await Doc$6.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
   const run = async () => {
     try {
       const file = await fetchAsBase64(doc.storageKey);
       if (!file) throw new Error("Could not read the file from storage.");
       const reading = await readDocument(file.data, file.mime || doc.mime, doc.filename);
       if (!reading) throw new Error("The document could not be read.");
-      await Doc$5.updateOne({ _id: id }, {
+      await Doc$6.updateOne({ _id: id }, {
         $set: {
           docType: reading.docType,
           summary: reading.summary,
@@ -6622,11 +6639,11 @@ const read_post = defineEventHandler(async (event) => {
       } else if (/storage/i.test(msg)) {
         reason = "We could not open that file. Try uploading it again.";
       }
-      await Doc$5.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
+      await Doc$6.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
     }
   };
   const markTimedOut = async () => {
-    await Doc$5.updateOne(
+    await Doc$6.updateOne(
       { _id: id, status: "reading" },
       { $set: { status: "failed", failureReason: "Reading took too long. Try uploading it again." } }
     );
@@ -6643,13 +6660,54 @@ const read_post = defineEventHandler(async (event) => {
   } finally {
     if (timer) clearTimeout(timer);
   }
-  const fresh = await Doc$5.findOne({ _id: id }, { status: 1, failureReason: 1 }).lean();
+  const fresh = await Doc$6.findOne({ _id: id }, { status: 1, failureReason: 1 }).lean();
   return { status: (_b = fresh == null ? void 0 : fresh.status) != null ? _b : "ready", failureReason: (_c = fresh == null ? void 0 : fresh.failureReason) != null ? _c : "" };
 });
 
 const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: read_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Doc$5 = DocumentModel;
+const view_get = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const id = (_a = event.context.params) == null ? void 0 : _a.id;
+  const doc = await Doc$5.findOne({ _id: id, userId: user._id }, { storageKey: 1, filename: 1, mime: 1 }).lean();
+  if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
+  if (!hasR2()) {
+    return { url: `/api/uploads/local/${doc.storageKey}`, filename: doc.filename, mime: doc.mime };
+  }
+  const { getSignedUrl } = await import('file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/s3-request-presigner/dist-cjs/index.js');
+  const { GetObjectCommand, S3Client } = await import('file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/client-s3/dist-cjs/index.js');
+  const s3 = new S3Client({
+    region: "auto",
+    endpoint: `https://${process.env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId: process.env.R2_ACCESS_KEY_ID,
+      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY
+    }
+  });
+  const url = await getSignedUrl(
+    s3,
+    new GetObjectCommand({
+      Bucket: process.env.R2_BUCKET,
+      Key: doc.storageKey,
+      // Makes the browser show the real filename rather than the storage key,
+      // and display rather than force-download.
+      ResponseContentDisposition: `inline; filename="${doc.filename.replace(/"/g, "")}"`,
+      ResponseContentType: doc.mime || "application/pdf"
+    }),
+    { expiresIn: 300 }
+  );
+  return { url, filename: doc.filename, mime: doc.mime };
+});
+
+const view_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: view_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Doc$4 = DocumentModel;
