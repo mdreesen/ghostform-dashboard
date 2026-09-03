@@ -12,6 +12,7 @@ import Stripe from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_mod
 import { z } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/zod/index.js';
 import { nanoid } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/nanoid/index.js';
 import bcrypt from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
+import webpush from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/web-push/src/index.js';
 import mongoose, { Schema } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/mongoose/index.js';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { DeleteObjectCommand, PutObjectCommand, S3Client, GetObjectCommand } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@aws-sdk/client-s3/dist-cjs/index.js';
@@ -2995,16 +2996,16 @@ _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 const assets = {
   "/index.mjs": {
     "type": "text/javascript; charset=utf-8",
-    "etag": "\"4ff69-fRgG3QaGg7nmSRwEQAN4Ed1d7bY\"",
-    "mtime": "2026-09-03T15:39:16.388Z",
-    "size": 327529,
+    "etag": "\"5784a-IHpWobE1eoZE7mkXJ0NDxbw2CFM\"",
+    "mtime": "2026-09-03T18:29:00.598Z",
+    "size": 358474,
     "path": "index.mjs"
   },
   "/index.mjs.map": {
     "type": "application/json",
-    "etag": "\"11eda5-JldNb0lK4hIwQSfnMHSteVLxFbg\"",
-    "mtime": "2026-09-03T15:39:16.388Z",
-    "size": 1174949,
+    "etag": "\"139a19-vfaB368ktybi/oS3za7hDXOAC1Y\"",
+    "mtime": "2026-09-03T18:29:00.598Z",
+    "size": 1284633,
     "path": "index.mjs.map"
   }
 };
@@ -3252,6 +3253,55 @@ async function narrateBriefing(briefing) {
   return (_a = useOpenAi([{ role: "user", content: buildPrompt$4(briefing) }])) != null ? _a : null;
 }
 
+const deadlineSchema = new Schema({
+  label: { type: String, required: true },
+  // "Inspection contingency expires"
+  date: { type: Date, required: true },
+  /**
+   * The sentence this came from, quoted verbatim.
+   *
+   * Non-negotiable. A misread contingency date is a real financial loss and
+   * it's the agent's liability — so every extracted date shows its source and
+   * must be confirmed before it becomes a reminder.
+   */
+  sourceText: { type: String, default: "" },
+  priority: {
+    type: String,
+    enum: ["high", "medium", "low"],
+    default: "medium"
+  },
+  /** Extracted dates are proposals until a human agrees. */
+  confirmed: { type: Boolean, default: false },
+  dismissed: { type: Boolean, default: false },
+  completed: { type: Boolean, default: false },
+  completedAt: Date
+}, { timestamps: true });
+const documentSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  // A document belongs to a property, a lead, or both.
+  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
+  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
+  filename: { type: String, required: true },
+  storageKey: { type: String, required: true },
+  mime: { type: String, default: "" },
+  bytes: { type: Number, default: 0 },
+  /** What the AI decided this is. Free text — we don't constrain the set. */
+  docType: { type: String, default: "" },
+  /** Two or three lines. Not the full text — see the note above. */
+  summary: { type: String, default: "" },
+  deadlines: [deadlineSchema],
+  status: {
+    type: String,
+    enum: ["uploaded", "reading", "ready", "failed"],
+    default: "uploaded",
+    index: true
+  },
+  failureReason: { type: String, default: "" },
+  uploadedAt: { type: Date, default: Date.now }
+}, { timestamps: true });
+documentSchema.index({ userId: 1, homeId: 1 });
+const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
+
 const leadSchema = new Schema({
   // Which property this lead is interested in. Optional — plenty of leads
   // aren't tied to a specific listing.
@@ -3286,7 +3336,69 @@ const leadSchema = new Schema({
   seeing_an_agent: String,
   ai_analysis: Object,
   seen_at: String,
+  /**
+   * ------------------------------------------------------------------
+   * STAGE — where this person is in the one journey they're on.
+   * ------------------------------------------------------------------
+   * The app previously split a single person across "Leads" and "Homes"
+   * and a past-client concept that only existed in the briefing. Same
+   * human, three places, nothing connecting them.
+   *
+   * One field instead. It moves in one direction, and each value answers
+   * "what do I do next?" rather than describing a database state:
+   *
+   *   new           they signed in; call them
+   *   working       you're in contact; qualify them
+   *   showing       actively looking; find them houses
+   *   under_contract  offer accepted; watch the deadlines
+   *   past_client   closed; stay in touch
+   *   lost          didn't happen; keep for the sphere anyway
+   *
+   * `status` is kept for the existing briefing logic rather than migrated
+   * in one go — moving both at once is how you break a working morning
+   * list.
+   */
+  stage: {
+    type: String,
+    enum: ["new", "working", "showing", "under_contract", "past_client", "lost"],
+    default: "new",
+    index: true
+  },
   status: { type: String, default: "new" },
+  /**
+   * ------------------------------------------------------------------
+   * SPHERE — the past-client side of the business.
+   * ------------------------------------------------------------------
+   * 76% of buyers say they'd use their agent again. Around 12% do. That
+   * gap lives entirely in the months after closing, and it's the largest
+   * money leak in the industry.
+   *
+   * A past client is not a separate object — it's this lead, closed. Same
+   * record, same history, so nothing has to be re-entered at the moment the
+   * relationship actually becomes valuable.
+   */
+  closedAt: { type: Date, index: true },
+  closedAddress: { type: String, default: "" },
+  /**
+   * Things you know about them as PEOPLE, not as a transaction.
+   *
+   * This is the data that makes sphere nurture work and that nobody ever
+   * types — "second kid on the way", "his mother is in Whitefish", "hated
+   * the commute". Captured by speaking, because a form for this would stay
+   * empty forever.
+   *
+   * Each carries the words it came from, so a call opens with something
+   * true rather than something generic.
+   */
+  sphereNotes: [{
+    text: { type: String, required: true },
+    capturedAt: { type: Date, default: Date.now },
+    source: { type: String, enum: ["voice", "typed"], default: "typed" }
+  }],
+  /** Last time you actually reached out — not last time the system emailed. */
+  lastTouchAt: { type: Date, index: true },
+  /** How often this person is worth hearing from. Months. */
+  touchEveryMonths: { type: Number, default: 4 },
   date: { type: String, default: () => (/* @__PURE__ */ new Date()).toISOString() },
   reminderSent: { type: Boolean, default: false },
   reminderStatus: {
@@ -3310,9 +3422,81 @@ const leadSchema = new Schema({
     answers: { type: Object, default: {} }
   }
 }, { timestamps: true });
-const schemaImport = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
+const LeadModel$b = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 
-const LeadModel$a = schemaImport;
+const homeSchema = new Schema({
+  userId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true
+  },
+  name: { type: String, required: false },
+  address: { type: String, required: true },
+  owner: { type: String, required: false },
+  notes: { type: String, required: false },
+  // Lets a realtor keep sold listings for reference without them cluttering
+  // the form dropdown.
+  status: {
+    type: String,
+    enum: ["active", "pending", "sold"],
+    default: "active",
+    index: true
+  }
+}, { timestamps: true });
+const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
+
+const Doc$9 = DocumentModel;
+const Lead$h = LeadModel$b;
+const Home$8 = HomeModel;
+const CLOSING_WORDS = /closing|settlement|close of escrow|possession/i;
+async function buildClosingPrompts(userId) {
+  var _a;
+  const now = /* @__PURE__ */ new Date();
+  const docs = await Doc$9.find(
+    { userId, leadId: { $ne: null }, "deadlines.confirmed": true },
+    { leadId: 1, homeId: 1, deadlines: 1 }
+  ).lean();
+  if (!docs.length) return [];
+  const leadIds = [...new Set(docs.map((d) => String(d.leadId)))];
+  const leads = await Lead$h.find(
+    // Only leads NOT already marked closed — asking twice is worse than not asking.
+    { _id: { $in: leadIds }, userId, closedAt: null },
+    { name: 1, email: 1, address: 1 }
+  ).lean();
+  const leadById = new Map(leads.map((l) => [String(l._id), l]));
+  if (!leadById.size) return [];
+  const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
+  const homes = homeIds.length ? await Home$8.find({ _id: { $in: homeIds }, userId }, { address: 1 }).lean() : [];
+  const homeById = new Map(homes.map((h) => [String(h._id), h]));
+  const out = [];
+  const seen = /* @__PURE__ */ new Set();
+  for (const doc of docs) {
+    const lead = leadById.get(String(doc.leadId));
+    if (!lead || seen.has(String(lead._id))) continue;
+    for (const d of (_a = doc.deadlines) != null ? _a : []) {
+      if (!d.confirmed || d.dismissed) continue;
+      if (!CLOSING_WORDS.test(String(d.label || ""))) continue;
+      const when = new Date(d.date);
+      if (Number.isNaN(when.getTime()) || when > now) continue;
+      const daysSince = Math.floor((now.getTime() - when.getTime()) / 864e5);
+      if (daysSince < 1) continue;
+      const home = doc.homeId ? homeById.get(String(doc.homeId)) : null;
+      out.push({
+        leadId: String(lead._id),
+        leadName: lead.name || lead.email,
+        address: (home == null ? void 0 : home.address) || lead.address || "",
+        closedOn: when.toISOString(),
+        documentId: String(doc._id)
+      });
+      seen.add(String(lead._id));
+      break;
+    }
+  }
+  return out;
+}
+
+const LeadModel$a = LeadModel$b;
 function resolveLastContact(lead) {
   if (lead.lastContactedAt) return new Date(lead.lastContactedAt);
   if (lead.contactCount && lead.contactCount > 0) {
@@ -3725,6 +3909,185 @@ async function generateLeadDraft(lead, channel = "sms") {
   if (aiText) return { message: aiText, source: "ai" };
   return { message: templateDraft(lead, channel), source: "template" };
 }
+
+const pushSubscriptionSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  // The endpoint is unique per device+browser and is the natural key.
+  endpoint: { type: String, required: true, unique: true },
+  keys: {
+    p256dh: { type: String, required: true },
+    auth: { type: String, required: true }
+  },
+  /** So a realtor can tell "iPhone" from "MacBook" when revoking one. */
+  label: { type: String, default: "" },
+  /** What they actually want. Defaults are deliberately conservative. */
+  prefs: {
+    deadlines: { type: Boolean, default: true },
+    // overdue / due today
+    briefing: { type: Boolean, default: true },
+    // the 7am summary
+    newLeads: { type: Boolean, default: false }
+    // off by default — see below
+  },
+  lastSentAt: Date,
+  failureCount: { type: Number, default: 0 }
+}, { timestamps: true });
+pushSubscriptionSchema.index({ userId: 1, endpoint: 1 });
+const PushSubscriptionModel = mongoose.models.PushSubscription || mongoose.model("PushSubscription", pushSubscriptionSchema);
+
+const Sub$4 = PushSubscriptionModel;
+let configured = false;
+function configure() {
+  if (configured) return true;
+  const pub = process.env.VAPID_PUBLIC_KEY;
+  const priv = process.env.VAPID_PRIVATE_KEY;
+  if (!pub || !priv) return false;
+  webpush.setVapidDetails(
+    // Must be a mailto: or https: URL — the push service uses it to contact
+    // you if your pushes start misbehaving.
+    process.env.VAPID_SUBJECT || "mailto:support@ghostform.app",
+    pub,
+    priv
+  );
+  configured = true;
+  return true;
+}
+async function sendToUser(userId, payload, kind = "briefing") {
+  if (!configure()) {
+    console.warn("[push] VAPID keys not set \u2014 skipping");
+    return { sent: 0, removed: 0 };
+  }
+  const subs = await Sub$4.find({ userId, [`prefs.${kind}`]: true }).lean();
+  if (!subs.length) return { sent: 0, removed: 0 };
+  let sent = 0;
+  let removed = 0;
+  await Promise.all(subs.map(async (s) => {
+    try {
+      await webpush.sendNotification(
+        { endpoint: s.endpoint, keys: s.keys },
+        JSON.stringify(payload),
+        { TTL: 60 * 60 * 12 }
+        // a briefing is worthless tomorrow
+      );
+      sent++;
+      await Sub$4.updateOne({ _id: s._id }, { $set: { lastSentAt: /* @__PURE__ */ new Date(), failureCount: 0 } });
+    } catch (err) {
+      const code = err == null ? void 0 : err.statusCode;
+      if (code === 404 || code === 410) {
+        await Sub$4.deleteOne({ _id: s._id });
+        removed++;
+        return;
+      }
+      console.error("[push] send failed", code, (err == null ? void 0 : err.body) || (err == null ? void 0 : err.message));
+      await Sub$4.updateOne({ _id: s._id }, { $inc: { failureCount: 1 } });
+      await Sub$4.deleteOne({ _id: s._id, failureCount: { $gte: 10 } });
+    }
+  }));
+  return { sent, removed };
+}
+function pushConfigured() {
+  return Boolean(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY);
+}
+
+const Doc$8 = DocumentModel;
+const Home$7 = HomeModel;
+const Lead$g = LeadModel$b;
+async function buildDeadlineBriefing(userId, horizonDays = 14) {
+  var _a, _b, _c, _d, _e;
+  const now = /* @__PURE__ */ new Date();
+  const start = new Date(now);
+  start.setHours(0, 0, 0, 0);
+  const horizon = new Date(start);
+  horizon.setDate(horizon.getDate() + horizonDays);
+  const docs = await Doc$8.find(
+    { userId, "deadlines.confirmed": true },
+    { filename: 1, deadlines: 1, homeId: 1, leadId: 1, docType: 1 }
+  ).lean();
+  const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
+  const leadIds = [...new Set(docs.map((d) => d.leadId).filter(Boolean).map(String))];
+  const [homes, leads] = await Promise.all([
+    homeIds.length ? Home$7.find({ _id: { $in: homeIds }, userId }, { name: 1, address: 1 }).lean() : Promise.resolve([]),
+    leadIds.length ? Lead$g.find({ _id: { $in: leadIds }, userId }, { name: 1, email: 1 }).lean() : Promise.resolve([])
+  ]);
+  const homeById = new Map(homes.map((h) => [String(h._id), h]));
+  const leadById = new Map(leads.map((l) => [String(l._id), l]));
+  const out = [];
+  for (const doc of docs) {
+    for (const d of (_a = doc.deadlines) != null ? _a : []) {
+      if (!d.confirmed || d.dismissed || d.completed) continue;
+      const when = new Date(d.date);
+      if (Number.isNaN(when.getTime())) continue;
+      if (when > horizon) continue;
+      const home = doc.homeId ? homeById.get(String(doc.homeId)) : null;
+      const lead = doc.leadId ? leadById.get(String(doc.leadId)) : null;
+      out.push({
+        documentId: String(doc._id),
+        deadlineId: String(d._id),
+        filename: doc.filename,
+        propertyName: (_b = home == null ? void 0 : home.name) != null ? _b : "",
+        propertyAddress: (_c = home == null ? void 0 : home.address) != null ? _c : "",
+        leadName: (lead == null ? void 0 : lead.name) || (lead == null ? void 0 : lead.email) || "",
+        docType: (_d = doc.docType) != null ? _d : "",
+        label: d.label,
+        date: when.toISOString(),
+        priority: (_e = d.priority) != null ? _e : "medium",
+        daysUntil: Math.round((new Date(when).setHours(0, 0, 0, 0) - start.getTime()) / 864e5),
+        homeId: doc.homeId ? String(doc.homeId) : void 0,
+        leadId: doc.leadId ? String(doc.leadId) : void 0
+      });
+    }
+  }
+  return out.sort((a, b) => a.daysUntil - b.daysUntil);
+}
+function deadlineHeadline(items) {
+  const overdue = items.filter((i) => i.daysUntil < 0).length;
+  const today = items.filter((i) => i.daysUntil === 0).length;
+  if (overdue) return `${overdue} deadline${overdue === 1 ? "" : "s"} overdue`;
+  if (today) return `${today} deadline${today === 1 ? "" : "s"} today`;
+  const soon = items.filter((i) => i.daysUntil <= 3).length;
+  if (soon) return `${soon} deadline${soon === 1 ? "" : "s"} in the next few days`;
+  return "";
+}
+
+const Sub$3 = PushSubscriptionModel;
+async function sendMorningPushes() {
+  var _a, _b;
+  const userIds = await Sub$3.distinct("userId");
+  if (!userIds.length) return { users: 0, sent: 0 };
+  let sent = 0;
+  for (const userId of userIds) {
+    try {
+      const [briefing, deadlines] = await Promise.all([
+        buildDailyBriefing(String(userId), {}),
+        buildDeadlineBriefing(userId)
+      ]);
+      const overdue = deadlines.filter((d) => d.daysUntil < 0).length;
+      const today = deadlines.filter((d) => d.daysUntil === 0).length;
+      const people = (_b = (_a = briefing == null ? void 0 : briefing.totals) == null ? void 0 : _a.total) != null ? _b : 0;
+      if (!overdue && !today && !people) continue;
+      const parts = [];
+      if (overdue) parts.push(`${overdue} deadline${overdue === 1 ? "" : "s"} overdue`);
+      if (today) parts.push(`${today} due today`);
+      if (people) parts.push(`${people} ${people === 1 ? "person" : "people"} to reach`);
+      const res = await sendToUser(userId, {
+        title: overdue ? "Something is overdue" : "Today at a glance",
+        body: parts.join(" \xB7 "),
+        url: "/dashboard",
+        tag: "gf-briefing"
+        // replaces yesterday's rather than stacking
+      }, "briefing");
+      sent += res.sent;
+    } catch (err) {
+      console.error("[push] briefing failed for", String(userId), err == null ? void 0 : err.message);
+    }
+  }
+  return { users: userIds.length, sent };
+}
+
+const pushBriefing = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  sendMorningPushes: sendMorningPushes
+}, Symbol.toStringTag, { value: 'Module' }));
 
 const BUYER_QUESTIONS = [
   {
@@ -4237,6 +4600,66 @@ Write a DIFFERENT post from the one you'd write first \u2014 a different angle o
     posts: [templatePost(platform, topicKey, ctx, opts.details)],
     source: "template"
   };
+}
+
+const Lead$f = LeadModel$b;
+const MONTH = 1e3 * 60 * 60 * 24 * 30.44;
+async function buildSphereBriefing(userId, limit = 5) {
+  var _a, _b, _c, _d;
+  const now = /* @__PURE__ */ new Date();
+  const clients = await Lead$f.find(
+    { userId, closedAt: { $ne: null } },
+    {
+      name: 1,
+      email: 1,
+      phone: 1,
+      closedAt: 1,
+      closedAddress: 1,
+      sphereNotes: 1,
+      lastTouchAt: 1,
+      touchEveryMonths: 1
+    }
+  ).lean();
+  const out = [];
+  for (const c of clients) {
+    const last = c.lastTouchAt ? new Date(c.lastTouchAt) : new Date(c.closedAt);
+    const monthsQuiet = Math.floor((now.getTime() - last.getTime()) / MONTH);
+    const cadence = (_a = c.touchEveryMonths) != null ? _a : 4;
+    let anniversary = "";
+    if (c.closedAt) {
+      const closed = new Date(c.closedAt);
+      const next = new Date(now.getFullYear(), closed.getMonth(), closed.getDate());
+      if (next < now) next.setFullYear(next.getFullYear() + 1);
+      const days = Math.round((next.getTime() - now.getTime()) / 864e5);
+      if (days <= 30) {
+        const years = next.getFullYear() - closed.getFullYear();
+        anniversary = years > 0 ? `${years} year${years === 1 ? "" : "s"} in the house on ${next.toLocaleDateString(void 0, { month: "short", day: "numeric" })}` : "";
+      }
+    }
+    const overdue = monthsQuiet >= cadence;
+    if (!overdue && !anniversary) continue;
+    const notes = [...(_b = c.sphereNotes) != null ? _b : []].sort(
+      (a, b) => new Date(b.capturedAt).getTime() - new Date(a.capturedAt).getTime()
+    );
+    const opener = (_d = (_c = notes[0]) == null ? void 0 : _c.text) != null ? _d : "";
+    out.push({
+      _id: String(c._id),
+      name: c.name || c.email,
+      email: c.email || "",
+      phone: c.phone || "",
+      closedAddress: c.closedAddress || "",
+      monthsQuiet,
+      overdue,
+      anniversary,
+      opener,
+      reason: anniversary ? anniversary : `${monthsQuiet} months since you last spoke`
+    });
+  }
+  out.sort((a, b) => {
+    if (Boolean(a.anniversary) !== Boolean(b.anniversary)) return a.anniversary ? -1 : 1;
+    return b.monthsQuiet - a.monthsQuiet;
+  });
+  return out.slice(0, limit);
 }
 
 const PALETTE = {
@@ -5007,13 +5430,14 @@ const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_po
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_d8uRs7 = () => Promise.resolve().then(function () { return reset$1; });
 const _lazy_z7u2Qs = () => Promise.resolve().then(function () { return signup_post$1; });
-const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$j; });
+const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$n; });
 const _lazy_0YaBRe = () => Promise.resolve().then(function () { return index_delete$5; });
-const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$h; });
+const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$l; });
 const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$3; });
 const _lazy_6dQdG0 = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_vknMpb = () => Promise.resolve().then(function () { return vary_post$1; });
 const _lazy_oJWXNf = () => Promise.resolve().then(function () { return lead_get$1; });
+const _lazy_Q5YO6z = () => Promise.resolve().then(function () { return index_get$j; });
 const _lazy_kQloHj = () => Promise.resolve().then(function () { return cron$1; });
 const _lazy_kA9GOf = () => Promise.resolve().then(function () { return deadline_post$1; });
 const _lazy_aV7cm5 = () => Promise.resolve().then(function () { return delete_post$3; });
@@ -5023,35 +5447,44 @@ const _lazy_wMMA2J = () => Promise.resolve().then(function () { return ask_post$
 const _lazy_i6MJs0 = () => Promise.resolve().then(function () { return create_post$5; });
 const _lazy_fGRu2X = () => Promise.resolve().then(function () { return deadlines_get$1; });
 const _lazy_xqNoig = () => Promise.resolve().then(function () { return diagnose_get$1; });
-const _lazy_8nucrz = () => Promise.resolve().then(function () { return index_get$f; });
-const _lazy_62qNmD = () => Promise.resolve().then(function () { return index_get$d; });
+const _lazy_8nucrz = () => Promise.resolve().then(function () { return index_get$h; });
+const _lazy_62qNmD = () => Promise.resolve().then(function () { return index_get$f; });
 const _lazy_6aFyol = () => Promise.resolve().then(function () { return create_post$3; });
 const _lazy_tq6B3q = () => Promise.resolve().then(function () { return delete_post$1; });
-const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$b; });
+const _lazy_TuGNAE = () => Promise.resolve().then(function () { return index_get$d; });
 const _lazy__fdLCf = () => Promise.resolve().then(function () { return update_post$1; });
 const _lazy_fhNUjB = () => Promise.resolve().then(function () { return analyse_post$1; });
+const _lazy_bk1sq7 = () => Promise.resolve().then(function () { return close_post$1; });
 const _lazy_0rvesM = () => Promise.resolve().then(function () { return contacted_post$1; });
 const _lazy_yBxanF = () => Promise.resolve().then(function () { return draft_post$1; });
 const _lazy_qc34eq = () => Promise.resolve().then(function () { return index_delete$3; });
-const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$9; });
+const _lazy_i2f0Wa = () => Promise.resolve().then(function () { return index_get$b; });
 const _lazy_f4xwzm = () => Promise.resolve().then(function () { return index_put$3; });
 const _lazy_ygINZT = () => Promise.resolve().then(function () { return schedule_post$1; });
 const _lazy_lZmAO2 = () => Promise.resolve().then(function () { return sendMessage_post$1; });
 const _lazy_IxLe3T = () => Promise.resolve().then(function () { return sendQuestionnaire_post$1; });
+const _lazy_fhmFgy = () => Promise.resolve().then(function () { return sphereNote_post$1; });
+const _lazy_9ZIUrA = () => Promise.resolve().then(function () { return stage_post$1; });
 const _lazy_YUWevn = () => Promise.resolve().then(function () { return create_post$1; });
 const _lazy_7YgUZ_ = () => Promise.resolve().then(function () { return import_post$1; });
-const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$7; });
+const _lazy_t9F3bu = () => Promise.resolve().then(function () { return index_get$9; });
 const _lazy_0Doaks = () => Promise.resolve().then(function () { return tiers_get$1; });
+const _lazy_qvzIkh = () => Promise.resolve().then(function () { return status_get$1; });
+const _lazy_OfRs6u = () => Promise.resolve().then(function () { return subscribe_post$3; });
+const _lazy_vT6GfT = () => Promise.resolve().then(function () { return test_post$1; });
+const _lazy_RvFFBS = () => Promise.resolve().then(function () { return unsubscribe_post$1; });
 const _lazy_i191PU = () => Promise.resolve().then(function () { return _id__get$3; });
 const _lazy_nSdyfJ = () => Promise.resolve().then(function () { return _id__get$1; });
 const _lazy_0GAYoF = () => Promise.resolve().then(function () { return _id__post$1; });
 const _lazy_lDNG7s = () => Promise.resolve().then(function () { return index_post$1; });
-const _lazy_swIHoU = () => Promise.resolve().then(function () { return index_get$5; });
+const _lazy_swIHoU = () => Promise.resolve().then(function () { return index_get$7; });
 const _lazy_rfaZfx = () => Promise.resolve().then(function () { return generate_post$1; });
 const _lazy_Z1oZ9j = () => Promise.resolve().then(function () { return index_delete$1; });
-const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$3; });
+const _lazy_W7kQn6 = () => Promise.resolve().then(function () { return index_get$5; });
 const _lazy_YyhPdT = () => Promise.resolve().then(function () { return save_post$1; });
 const _lazy_PGwJYq = () => Promise.resolve().then(function () { return status_post$1; });
+const _lazy_55Zsx3 = () => Promise.resolve().then(function () { return touched_post$1; });
+const _lazy_EcCecI = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_6lsoPX = () => Promise.resolve().then(function () { return storageMode_get$1; });
 const _lazy_UPg2Ir = () => Promise.resolve().then(function () { return subscribe_post$1; });
 const _lazy_pjRUBv = () => Promise.resolve().then(function () { return webhook_post$1; });
@@ -5085,6 +5518,7 @@ const handlers = [
   { route: '/api/campaigns/toggle', handler: _lazy_6dQdG0, lazy: true, middleware: false, method: "post" },
   { route: '/api/campaigns/vary', handler: _lazy_vknMpb, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_oJWXNf, lazy: true, middleware: false, method: "get" },
+  { route: '/api/closings', handler: _lazy_Q5YO6z, lazy: true, middleware: false, method: "get" },
   { route: '/api/cron', handler: _lazy_kQloHj, lazy: true, middleware: false, method: undefined },
   { route: '/api/documents/:id/deadline', handler: _lazy_kA9GOf, lazy: true, middleware: false, method: "post" },
   { route: '/api/documents/:id/delete', handler: _lazy_aV7cm5, lazy: true, middleware: false, method: "post" },
@@ -5101,6 +5535,7 @@ const handlers = [
   { route: '/api/homes', handler: _lazy_TuGNAE, lazy: true, middleware: false, method: "get" },
   { route: '/api/homes/update', handler: _lazy__fdLCf, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/analyse', handler: _lazy_fhNUjB, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/close', handler: _lazy_bk1sq7, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/contacted', handler: _lazy_0rvesM, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/draft', handler: _lazy_yBxanF, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id', handler: _lazy_qc34eq, lazy: true, middleware: false, method: "delete" },
@@ -5109,10 +5544,16 @@ const handlers = [
   { route: '/api/leads/:id/schedule', handler: _lazy_ygINZT, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/send-message', handler: _lazy_lZmAO2, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/:id/send-questionnaire', handler: _lazy_IxLe3T, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/sphere-note', handler: _lazy_fhmFgy, lazy: true, middleware: false, method: "post" },
+  { route: '/api/leads/:id/stage', handler: _lazy_9ZIUrA, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/create', handler: _lazy_YUWevn, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads/import', handler: _lazy_7YgUZ_, lazy: true, middleware: false, method: "post" },
   { route: '/api/leads', handler: _lazy_t9F3bu, lazy: true, middleware: false, method: "get" },
   { route: '/api/leads/tiers', handler: _lazy_0Doaks, lazy: true, middleware: false, method: "get" },
+  { route: '/api/push/status', handler: _lazy_qvzIkh, lazy: true, middleware: false, method: "get" },
+  { route: '/api/push/subscribe', handler: _lazy_OfRs6u, lazy: true, middleware: false, method: "post" },
+  { route: '/api/push/test', handler: _lazy_vT6GfT, lazy: true, middleware: false, method: "post" },
+  { route: '/api/push/unsubscribe', handler: _lazy_RvFFBS, lazy: true, middleware: false, method: "post" },
   { route: '/api/qr_code/:id', handler: _lazy_i191PU, lazy: true, middleware: false, method: "get" },
   { route: '/api/qualify/:id', handler: _lazy_nSdyfJ, lazy: true, middleware: false, method: "get" },
   { route: '/api/qualify/:id', handler: _lazy_0GAYoF, lazy: true, middleware: false, method: "post" },
@@ -5123,6 +5564,8 @@ const handlers = [
   { route: '/api/social', handler: _lazy_W7kQn6, lazy: true, middleware: false, method: "get" },
   { route: '/api/social/save', handler: _lazy_YyhPdT, lazy: true, middleware: false, method: "post" },
   { route: '/api/social/status', handler: _lazy_PGwJYq, lazy: true, middleware: false, method: "post" },
+  { route: '/api/sphere/:id/touched', handler: _lazy_55Zsx3, lazy: true, middleware: false, method: "post" },
+  { route: '/api/sphere', handler: _lazy_EcCecI, lazy: true, middleware: false, method: "get" },
   { route: '/api/storage-mode', handler: _lazy_6lsoPX, lazy: true, middleware: false, method: "get" },
   { route: '/api/stripe/subscribe', handler: _lazy_UPg2Ir, lazy: true, middleware: false, method: "post" },
   { route: '/api/stripe/webhook', handler: _lazy_pjRUBv, lazy: true, middleware: false, method: "post" },
@@ -5480,7 +5923,7 @@ Just reply straight to this email whenever you have a second.` + signoff;
   }
 }
 
-const LeadModel$9 = schemaImport;
+const LeadModel$9 = LeadModel$b;
 const CampaignModel$1 = CampaignModelImport;
 const resend$2 = new Resend(process.env.RESEND_KEY);
 function localWeekday(tz, now) {
@@ -5616,11 +6059,21 @@ const reminders = defineTask({
         await campaign.save();
         campaignsFired++;
       }
+      let pushesSent = 0;
+      try {
+        const { sendMorningPushes } = await Promise.resolve().then(function () { return pushBriefing; });
+        const r = await sendMorningPushes();
+        pushesSent = r.sent;
+        console.log("[cron] pushes:", r.sent, "to", r.users, "users");
+      } catch (err) {
+        console.error("[cron] push step failed (emails unaffected):", err == null ? void 0 : err.message);
+      }
       const summary = {
         result: "All background delivery pipelines processed successfully.",
         individualSent,
         campaignsFired,
-        campaignEmails
+        campaignEmails,
+        pushesSent
       };
       console.log("Pipeline summary:", summary);
       return summary;
@@ -5728,32 +6181,10 @@ const loggedInUser = defineEventHandler(async (event) => {
   }
 });
 
-const homeSchema = new Schema({
-  userId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    index: true
-  },
-  name: { type: String, required: false },
-  address: { type: String, required: true },
-  owner: { type: String, required: false },
-  notes: { type: String, required: false },
-  // Lets a realtor keep sold listings for reference without them cluttering
-  // the form dropdown.
-  status: {
-    type: String,
-    enum: ["active", "pending", "sold"],
-    default: "active",
-    index: true
-  }
-}, { timestamps: true });
-const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
-
 const UserDoc$1 = UserModelImport;
-const Lead$a = schemaImport;
+const Lead$e = LeadModel$b;
 const Campaign$5 = CampaignModelImport;
-const Home$7 = HomeModel;
+const Home$6 = HomeModel;
 const stripe$2 = new Stripe(process.env.STRIPE_SECRET_KEY);
 const delete_delete = defineEventHandler(async (event) => {
   try {
@@ -5770,9 +6201,9 @@ const delete_delete = defineEventHandler(async (event) => {
       }
     }
     await Promise.all([
-      Lead$a.deleteMany({ userId: user._id }),
+      Lead$e.deleteMany({ userId: user._id }),
       Campaign$5.deleteMany({ userId: user._id }),
-      Home$7.deleteMany({ userId: user._id })
+      Home$6.deleteMany({ userId: user._id })
     ]);
     await UserDoc$1.deleteOne({ _id: user._id });
   } catch (error) {
@@ -5790,12 +6221,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$9 = UserModelImport;
-const bodySchema$t = z.object({
+const bodySchema$y = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$t.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$y.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -5834,13 +6265,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$8 = UserModelImport;
-const bodySchema$s = z.object({
+const bodySchema$x = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$s.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$x.parse);
   try {
     await connectDB();
     const user = await User$8.findOne({ email });
@@ -5894,13 +6325,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$7 = UserModelImport;
-const bodySchema$r = z.object({
+const bodySchema$w = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$r.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$w.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -5923,7 +6354,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$q = z.object({
+const bodySchema$v = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -5932,7 +6363,7 @@ const bodySchema$q = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$q.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$v.parse);
   try {
     await connectDB();
     const user = await User$6.findOne({ email });
@@ -5973,7 +6404,7 @@ const signup_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: signup_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const index_get$i = defineEventHandler(async (event) => {
+const index_get$m = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) {
@@ -5987,20 +6418,20 @@ const index_get$i = defineEventHandler(async (event) => {
   return briefing;
 });
 
-const index_get$j = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$n = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$i
+  default: index_get$m
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$p = z.object({
+const bodySchema$u = z.object({
   _id: z.string()
 });
 const index_delete$4 = defineEventHandler(async (event) => {
   try {
     const user = await loggedInUser(event);
     if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-    const body = await readValidatedBody(event, bodySchema$p.parse);
+    const body = await readValidatedBody(event, bodySchema$u.parse);
     await Campaign$4.deleteOne({ _id: body._id, userId: user._id });
   } catch (error) {
     console.log(error);
@@ -6017,15 +6448,15 @@ const index_delete$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$3 = CampaignModelImport;
-const index_get$g = defineEventHandler(async (event) => {
+const index_get$k = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
   const data = await Campaign$3.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$l = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$g
+  default: index_get$k
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$2 = CampaignModelImport;
@@ -6080,7 +6511,7 @@ const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
-const bodySchema$o = z.object({
+const bodySchema$t = z.object({
   _id: z.string(),
   active: z.boolean()
 });
@@ -6089,7 +6520,7 @@ const toggle_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session trace missing or expired." });
   }
-  const body = await readValidatedBody(event, bodySchema$o.parse);
+  const body = await readValidatedBody(event, bodySchema$t.parse);
   try {
     await Campaign$1.updateOne(
       { _id: body._id, userId: user._id },
@@ -6107,14 +6538,14 @@ const toggle_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign = CampaignModelImport;
-const bodySchema$n = z.object({
+const bodySchema$s = z.object({
   _id: z.string(),
   varyWording: z.boolean()
 });
 const vary_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, varyWording } = await readValidatedBody(event, bodySchema$n.parse);
+  const { _id, varyWording } = await readValidatedBody(event, bodySchema$s.parse);
   const res = await Campaign.updateOne(
     { _id, userId: user._id },
     { $set: { varyWording } }
@@ -6135,10 +6566,10 @@ function month(date2) {
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$9 = schemaImport;
+const Lead$d = LeadModel$b;
 const lead_get = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
-  const leads = await Lead$9.find({ userId: user == null ? void 0 : user._id }).lean();
+  const leads = await Lead$d.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
@@ -6162,6 +6593,17 @@ const lead_get = defineEventHandler(async (event) => {
 const lead_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: lead_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const index_get$i = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  return buildClosingPrompts(user._id);
+});
+
+const index_get$j = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$i
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const cron = defineEventHandler(async (event) => {
@@ -6202,55 +6644,6 @@ const cron$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   default: cron
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const deadlineSchema = new Schema({
-  label: { type: String, required: true },
-  // "Inspection contingency expires"
-  date: { type: Date, required: true },
-  /**
-   * The sentence this came from, quoted verbatim.
-   *
-   * Non-negotiable. A misread contingency date is a real financial loss and
-   * it's the agent's liability — so every extracted date shows its source and
-   * must be confirmed before it becomes a reminder.
-   */
-  sourceText: { type: String, default: "" },
-  priority: {
-    type: String,
-    enum: ["high", "medium", "low"],
-    default: "medium"
-  },
-  /** Extracted dates are proposals until a human agrees. */
-  confirmed: { type: Boolean, default: false },
-  dismissed: { type: Boolean, default: false },
-  completed: { type: Boolean, default: false },
-  completedAt: Date
-}, { timestamps: true });
-const documentSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-  // A document belongs to a property, a lead, or both.
-  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
-  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
-  filename: { type: String, required: true },
-  storageKey: { type: String, required: true },
-  mime: { type: String, default: "" },
-  bytes: { type: Number, default: 0 },
-  /** What the AI decided this is. Free text — we don't constrain the set. */
-  docType: { type: String, default: "" },
-  /** Two or three lines. Not the full text — see the note above. */
-  summary: { type: String, default: "" },
-  deadlines: [deadlineSchema],
-  status: {
-    type: String,
-    enum: ["uploaded", "reading", "ready", "failed"],
-    default: "uploaded",
-    index: true
-  },
-  failureReason: { type: String, default: "" },
-  uploadedAt: { type: Date, default: Date.now }
-}, { timestamps: true });
-documentSchema.index({ userId: 1, homeId: 1 });
-const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
-
 function localDate(value) {
   if (value instanceof Date) return value;
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value).trim());
@@ -6258,8 +6651,12 @@ function localDate(value) {
   return new Date(value);
 }
 
-const Doc$8 = DocumentModel;
-const bodySchema$m = z.object({
+function isObjectId(v) {
+  return typeof v === "string" && /^[a-f\d]{24}$/i.test(v);
+}
+
+const Doc$7 = DocumentModel;
+const bodySchema$r = z.object({
   deadlineId: z.string(),
   action: z.enum(["confirm", "dismiss", "complete", "reopen"]),
   // Corrections — the realtor may fix a misread date or reprioritise.
@@ -6268,10 +6665,14 @@ const bodySchema$m = z.object({
   priority: z.enum(["high", "medium", "low"]).optional()
 });
 const deadline_post = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { deadlineId, action, date, label, priority } = await readValidatedBody(event, bodySchema$m.parse);
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const { deadlineId, action, date, label, priority } = await readValidatedBody(event, bodySchema$r.parse);
   const set = {};
   if (action === "confirm") set["deadlines.$.confirmed"] = true;
   if (action === "dismiss") set["deadlines.$.dismissed"] = true;
@@ -6289,8 +6690,8 @@ const deadline_post = defineEventHandler(async (event) => {
   }
   if (label) set["deadlines.$.label"] = label;
   if (priority) set["deadlines.$.priority"] = priority;
-  const res = await Doc$8.updateOne(
-    { _id: (_a = event.context.params) == null ? void 0 : _a.id, userId: user._id, "deadlines._id": deadlineId },
+  const res = await Doc$7.updateOne(
+    { _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id, "deadlines._id": deadlineId },
     { $set: set }
   );
   if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Not found." });
@@ -6403,15 +6804,19 @@ async function fetchAsBase64(key) {
   }
 }
 
-const Doc$7 = DocumentModel;
+const Doc$6 = DocumentModel;
 const delete_post$2 = defineEventHandler(async (event) => {
-  var _a, _b;
+  var _a, _b, _c;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$7.findOne({ _id: id, userId: user._id }).lean();
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const id = (_b = event.context.params) == null ? void 0 : _b.id;
+  const doc = await Doc$6.findOne({ _id: id, userId: user._id }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
-  const liveDeadlines = ((_b = doc.deadlines) != null ? _b : []).filter(
+  const liveDeadlines = ((_c = doc.deadlines) != null ? _c : []).filter(
     (d) => d.confirmed && !d.dismissed && !d.completed
   ).length;
   let fileRemoved = true;
@@ -6423,7 +6828,7 @@ const delete_post$2 = defineEventHandler(async (event) => {
       console.error("[document] could not remove stored file for", id);
     }
   }
-  await Doc$7.deleteOne({ _id: id, userId: user._id });
+  await Doc$6.deleteOne({ _id: id, userId: user._id });
   if (!fileRemoved) {
     console.warn(`[document] record ${id} deleted but its file remains in storage.`);
   }
@@ -6590,22 +6995,26 @@ ${text.slice(0, 6e4)}
   }
 }
 
-const Doc$6 = DocumentModel;
+const Doc$5 = DocumentModel;
 const read_post = defineEventHandler(async (event) => {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$6.findOne({ _id: id, userId: user._id }).lean();
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const id = (_b = event.context.params) == null ? void 0 : _b.id;
+  const doc = await Doc$5.findOne({ _id: id, userId: user._id }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
-  await Doc$6.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
+  await Doc$5.updateOne({ _id: id }, { $set: { status: "reading", failureReason: "" } });
   const run = async () => {
     try {
       const file = await fetchAsBase64(doc.storageKey);
       if (!file) throw new Error("Could not read the file from storage.");
       const reading = await readDocument(file.data, file.mime || doc.mime, doc.filename);
       if (!reading) throw new Error("The document could not be read.");
-      await Doc$6.updateOne({ _id: id }, {
+      await Doc$5.updateOne({ _id: id }, {
         $set: {
           docType: reading.docType,
           summary: reading.summary,
@@ -6639,11 +7048,11 @@ const read_post = defineEventHandler(async (event) => {
       } else if (/storage/i.test(msg)) {
         reason = "We could not open that file. Try uploading it again.";
       }
-      await Doc$6.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
+      await Doc$5.updateOne({ _id: id }, { $set: { status: "failed", failureReason: reason } });
     }
   };
   const markTimedOut = async () => {
-    await Doc$6.updateOne(
+    await Doc$5.updateOne(
       { _id: id, status: "reading" },
       { $set: { status: "failed", failureReason: "Reading took too long. Try uploading it again." } }
     );
@@ -6660,8 +7069,8 @@ const read_post = defineEventHandler(async (event) => {
   } finally {
     if (timer) clearTimeout(timer);
   }
-  const fresh = await Doc$6.findOne({ _id: id }, { status: 1, failureReason: 1 }).lean();
-  return { status: (_b = fresh == null ? void 0 : fresh.status) != null ? _b : "ready", failureReason: (_c = fresh == null ? void 0 : fresh.failureReason) != null ? _c : "" };
+  const fresh = await Doc$5.findOne({ _id: id }, { status: 1, failureReason: 1 }).lean();
+  return { status: (_c = fresh == null ? void 0 : fresh.status) != null ? _c : "ready", failureReason: (_d = fresh == null ? void 0 : fresh.failureReason) != null ? _d : "" };
 });
 
 const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -6669,13 +7078,17 @@ const read_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: read_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Doc$5 = DocumentModel;
+const Doc$4 = DocumentModel;
 const view_get = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const id = (_a = event.context.params) == null ? void 0 : _a.id;
-  const doc = await Doc$5.findOne({ _id: id, userId: user._id }, { storageKey: 1, filename: 1, mime: 1 }).lean();
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const id = (_b = event.context.params) == null ? void 0 : _b.id;
+  const doc = await Doc$4.findOne({ _id: id, userId: user._id }, { storageKey: 1, filename: 1, mime: 1 }).lean();
   if (!doc) throw createError({ statusCode: 404, message: "Document not found." });
   if (!hasR2()) {
     return { url: `/api/uploads/local/${doc.storageKey}`, filename: doc.filename, mime: doc.mime };
@@ -6710,9 +7123,9 @@ const view_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: view_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Doc$4 = DocumentModel;
-const Home$6 = HomeModel;
-const bodySchema$l = z.object({
+const Doc$3 = DocumentModel;
+const Home$5 = HomeModel;
+const bodySchema$q = z.object({
   question: z.string().min(3).max(500),
   homeId: z.string().optional(),
   leadId: z.string().optional()
@@ -6721,14 +7134,14 @@ const ask_post = defineEventHandler(async (event) => {
   var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { question, homeId, leadId } = await readValidatedBody(event, bodySchema$l.parse);
+  const { question, homeId, leadId } = await readValidatedBody(event, bodySchema$q.parse);
   if (!process.env.OPENAI_API_KEY) {
     throw createError({ statusCode: 503, message: "Answering is not configured yet." });
   }
   const filter = { userId: user._id };
   if (homeId) filter.homeId = homeId;
   if (leadId) filter.leadId = leadId;
-  const docs = await Doc$4.find(filter, {
+  const docs = await Doc$3.find(filter, {
     filename: 1,
     docType: 1,
     summary: 1,
@@ -6739,7 +7152,7 @@ const ask_post = defineEventHandler(async (event) => {
     return { answer: "There are no documents here yet, so there is nothing for me to check.", sources: [] };
   }
   const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
-  const homes = homeIds.length ? await Home$6.find({ _id: { $in: homeIds }, userId: user._id }, { name: 1, address: 1 }).lean() : [];
+  const homes = homeIds.length ? await Home$5.find({ _id: { $in: homeIds }, userId: user._id }, { name: 1, address: 1 }).lean() : [];
   const homeById = new Map(homes.map((h) => [String(h._id), h]));
   const context = docs.map((d) => {
     var _a2;
@@ -6797,8 +7210,8 @@ const ask_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: ask_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Doc$3 = DocumentModel;
-const bodySchema$k = z.object({
+const Doc$2 = DocumentModel;
+const bodySchema$p = z.object({
   filename: z.string().min(1),
   storageKey: z.string().min(1),
   mime: z.string().default(""),
@@ -6809,8 +7222,8 @@ const bodySchema$k = z.object({
 const create_post$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const body = await readValidatedBody(event, bodySchema$k.parse);
-  const doc = await Doc$3.create({
+  const body = await readValidatedBody(event, bodySchema$p.parse);
+  const doc = await Doc$2.create({
     userId: user._id,
     filename: body.filename,
     storageKey: body.storageKey,
@@ -6827,66 +7240,6 @@ const create_post$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   __proto__: null,
   default: create_post$4
 }, Symbol.toStringTag, { value: 'Module' }));
-
-const Doc$2 = DocumentModel;
-const Home$5 = HomeModel;
-const Lead$8 = schemaImport;
-async function buildDeadlineBriefing(userId, horizonDays = 14) {
-  var _a, _b, _c, _d, _e;
-  const now = /* @__PURE__ */ new Date();
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  const horizon = new Date(start);
-  horizon.setDate(horizon.getDate() + horizonDays);
-  const docs = await Doc$2.find(
-    { userId, "deadlines.confirmed": true },
-    { filename: 1, deadlines: 1, homeId: 1, leadId: 1, docType: 1 }
-  ).lean();
-  const homeIds = [...new Set(docs.map((d) => d.homeId).filter(Boolean).map(String))];
-  const leadIds = [...new Set(docs.map((d) => d.leadId).filter(Boolean).map(String))];
-  const [homes, leads] = await Promise.all([
-    homeIds.length ? Home$5.find({ _id: { $in: homeIds }, userId }, { name: 1, address: 1 }).lean() : Promise.resolve([]),
-    leadIds.length ? Lead$8.find({ _id: { $in: leadIds }, userId }, { name: 1, email: 1 }).lean() : Promise.resolve([])
-  ]);
-  const homeById = new Map(homes.map((h) => [String(h._id), h]));
-  const leadById = new Map(leads.map((l) => [String(l._id), l]));
-  const out = [];
-  for (const doc of docs) {
-    for (const d of (_a = doc.deadlines) != null ? _a : []) {
-      if (!d.confirmed || d.dismissed || d.completed) continue;
-      const when = new Date(d.date);
-      if (Number.isNaN(when.getTime())) continue;
-      if (when > horizon) continue;
-      const home = doc.homeId ? homeById.get(String(doc.homeId)) : null;
-      const lead = doc.leadId ? leadById.get(String(doc.leadId)) : null;
-      out.push({
-        documentId: String(doc._id),
-        deadlineId: String(d._id),
-        filename: doc.filename,
-        propertyName: (_b = home == null ? void 0 : home.name) != null ? _b : "",
-        propertyAddress: (_c = home == null ? void 0 : home.address) != null ? _c : "",
-        leadName: (lead == null ? void 0 : lead.name) || (lead == null ? void 0 : lead.email) || "",
-        docType: (_d = doc.docType) != null ? _d : "",
-        label: d.label,
-        date: when.toISOString(),
-        priority: (_e = d.priority) != null ? _e : "medium",
-        daysUntil: Math.round((new Date(when).setHours(0, 0, 0, 0) - start.getTime()) / 864e5),
-        homeId: doc.homeId ? String(doc.homeId) : void 0,
-        leadId: doc.leadId ? String(doc.leadId) : void 0
-      });
-    }
-  }
-  return out.sort((a, b) => a.daysUntil - b.daysUntil);
-}
-function deadlineHeadline(items) {
-  const overdue = items.filter((i) => i.daysUntil < 0).length;
-  const today = items.filter((i) => i.daysUntil === 0).length;
-  if (overdue) return `${overdue} deadline${overdue === 1 ? "" : "s"} overdue`;
-  if (today) return `${today} deadline${today === 1 ? "" : "s"} today`;
-  const soon = items.filter((i) => i.daysUntil <= 3).length;
-  if (soon) return `${soon} deadline${soon === 1 ? "" : "s"} in the next few days`;
-  return "";
-}
 
 const deadlines_get = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
@@ -6944,7 +7297,7 @@ const diagnose_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Doc$1 = DocumentModel;
-const index_get$e = defineEventHandler(async (event) => {
+const index_get$g = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const q = getQuery$1(event);
@@ -6954,21 +7307,21 @@ const index_get$e = defineEventHandler(async (event) => {
   return Doc$1.find(filter).sort({ createdAt: -1 }).limit(200).lean();
 });
 
-const index_get$f = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$e
+  default: index_get$g
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$4 = HomeModel;
-const Lead$7 = schemaImport;
-const index_get$c = defineEventHandler(async (event) => {
+const Lead$c = LeadModel$b;
+const index_get$e = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
   const home = await Home$4.findOne({ _id: id, userId: user._id }).lean();
   if (!home) throw createError({ statusCode: 404, message: "Property not found." });
-  const leads = await Lead$7.find({
+  const leads = await Lead$c.find({
     userId: user._id,
     $or: [
       { homeId: home._id },
@@ -6978,13 +7331,13 @@ const index_get$c = defineEventHandler(async (event) => {
   return { home, leads };
 });
 
-const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$f = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$c
+  default: index_get$e
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$6 = HomeModel;
-const bodySchema$j = z.object({
+const Lead$b = HomeModel;
+const bodySchema$o = z.object({
   name: z.string().nullish(),
   // The address is the only field that genuinely matters — it's what gets
   // attached to a captured lead so the realtor knows which listing it came from.
@@ -6994,10 +7347,10 @@ const bodySchema$j = z.object({
   status: z.enum(["active", "pending", "sold"]).optional()
 });
 const create_post$2 = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$j.parse);
+  const body = await readValidatedBody(event, bodySchema$o.parse);
   const user = await loggedInUser(event);
   try {
-    const created = await Lead$6.create({ userId: user == null ? void 0 : user._id, ...body });
+    const created = await Lead$b.create({ userId: user == null ? void 0 : user._id, ...body });
     return { success: true, _id: String(created._id) };
   } catch (error) {
     console.error("Something went wrong", error);
@@ -7014,11 +7367,11 @@ const create_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$3 = HomeModel;
-const bodySchema$i = z.object({ _id: z.string() });
+const bodySchema$n = z.object({ _id: z.string() });
 const delete_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id } = await readValidatedBody(event, bodySchema$i.parse);
+  const { _id } = await readValidatedBody(event, bodySchema$n.parse);
   const res = await Home$3.deleteOne({ _id, userId: user._id });
   if (res.deletedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
@@ -7032,19 +7385,19 @@ const delete_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$2 = HomeModel;
-const index_get$a = defineEventHandler(async (event) => {
+const index_get$c = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   const data = await Home$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   return data;
 });
 
-const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$d = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$a
+  default: index_get$c
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$1 = HomeModel;
-const bodySchema$h = z.object({
+const bodySchema$m = z.object({
   _id: z.string(),
   name: z.string().nullish(),
   address: z.string().min(1),
@@ -7055,7 +7408,7 @@ const bodySchema$h = z.object({
 const update_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { _id, ...fields } = await readValidatedBody(event, bodySchema$h.parse);
+  const { _id, ...fields } = await readValidatedBody(event, bodySchema$m.parse);
   const res = await Home$1.updateOne({ _id, userId: user._id }, { $set: fields });
   if (res.matchedCount === 0) {
     throw createError({ statusCode: 404, message: "Property not found." });
@@ -7068,15 +7421,19 @@ const update_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: update_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$8 = schemaImport;
+const LeadModel$8 = LeadModel$b;
 const analyse_post = defineEventHandler(async (event) => {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const routeId = (_b = event.context.params) == null ? void 0 : _b.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
   const lead = await LeadModel$8.findOne({ _id: leadId }).lean();
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
-  const answers = (_c = (_b = lead == null ? void 0 : lead.qualification) == null ? void 0 : _b.answers) != null ? _c : {};
+  const answers = (_d = (_c = lead == null ? void 0 : lead.qualification) == null ? void 0 : _c.answers) != null ? _d : {};
   const answered = Object.values(answers).filter((v) => String(v != null ? v : "").trim()).length;
   if (answered < 4) {
     throw createError({
@@ -7084,7 +7441,7 @@ const analyse_post = defineEventHandler(async (event) => {
       message: "Not enough information yet. Send the questionnaire first \u2014 analysis needs real answers to be worth anything."
     });
   }
-  const intent = ((_d = lead == null ? void 0 : lead.qualification) == null ? void 0 : _d.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
+  const intent = ((_e = lead == null ? void 0 : lead.qualification) == null ? void 0 : _e.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
   const result = await analyseLead(answers, intent, (lead == null ? void 0 : lead.name) || "");
   await LeadModel$8.findOneAndUpdate({ _id: leadId }, { ai_analysis: result });
   return result;
@@ -7095,7 +7452,53 @@ const analyse_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: analyse_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$7 = schemaImport;
+const Lead$a = LeadModel$b;
+const bodySchema$l = z.object({
+  closedAt: z.string().optional(),
+  closedAddress: z.string().max(160).optional(),
+  /** How often this person is worth hearing from, in months. */
+  touchEveryMonths: z.number().min(1).max(24).optional(),
+  /** Undo — puts them back to an active lead. */
+  reopen: z.boolean().optional()
+});
+const close_post = defineEventHandler(async (event) => {
+  var _a, _b, _c, _d;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const body = await readValidatedBody(event, bodySchema$l.parse);
+  const id = (_b = event.context.params) == null ? void 0 : _b.id;
+  if (body.reopen) {
+    const r = await Lead$a.updateOne(
+      { _id: id, userId: user._id },
+      { $set: { status: "contacted" }, $unset: { closedAt: "", closedAddress: "" } }
+    );
+    if (r.matchedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
+    return { success: true, closed: false };
+  }
+  const closedAt = body.closedAt ? localDate(body.closedAt) : /* @__PURE__ */ new Date();
+  const existing = await Lead$a.findOne({ _id: id, userId: user._id }, { lastTouchAt: 1 }).lean();
+  if (!existing) throw createError({ statusCode: 404, message: "Lead not found." });
+  const set = {
+    status: "closed",
+    closedAt,
+    closedAddress: (_c = body.closedAddress) != null ? _c : "",
+    touchEveryMonths: (_d = body.touchEveryMonths) != null ? _d : 4
+  };
+  if (!existing.lastTouchAt) set.lastTouchAt = closedAt;
+  await Lead$a.updateOne({ _id: id, userId: user._id }, { $set: set });
+  return { success: true, closed: true };
+});
+
+const close_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: close_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const LeadModel$7 = LeadModel$b;
 const contacted_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -7129,7 +7532,7 @@ const contacted_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePr
   default: contacted_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$6 = schemaImport;
+const LeadModel$6 = LeadModel$b;
 const draft_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -7166,13 +7569,18 @@ const draft_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: draft_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$5 = schemaImport;
+const Lead$9 = LeadModel$b;
 const index_delete$2 = defineEventHandler(async (event) => {
+  var _a;
   try {
     const user = await loggedInUser(event);
     if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+    const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+    if (!isObjectId(routeId)) {
+      throw createError({ statusCode: 400, message: "That link is missing an id." });
+    }
     const id = getRouterParam(event, "id");
-    const res = await Lead$5.deleteOne({ _id: id, userId: user._id });
+    const res = await Lead$9.deleteOne({ _id: id, userId: user._id });
     if (res.deletedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
   } catch (error) {
     console.log(error);
@@ -7188,13 +7596,18 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: index_delete$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$4 = schemaImport;
-const index_get$8 = defineEventHandler(async (event) => {
+const Lead$8 = LeadModel$b;
+const index_get$a = defineEventHandler(async (event) => {
+  var _a;
   try {
     const user = await loggedInUser(event);
     if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+    const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+    if (!isObjectId(routeId)) {
+      throw createError({ statusCode: 400, message: "That link is missing an id." });
+    }
     const id = getRouterParam(event, "id");
-    const data = await Lead$4.findOne({ _id: id, userId: user._id }).lean();
+    const data = await Lead$8.findOne({ _id: id, userId: user._id }).lean();
     if (!data) throw createError({ statusCode: 404, message: "Lead not found." });
     return data;
   } catch (error) {
@@ -7206,13 +7619,13 @@ const index_get$8 = defineEventHandler(async (event) => {
   }
 });
 
-const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$8
+  default: index_get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$3 = schemaImport;
-const bodySchema$g = z.object({
+const Lead$7 = LeadModel$b;
+const bodySchema$k = z.object({
   _id: z.string(),
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -7235,11 +7648,16 @@ const bodySchema$g = z.object({
   ai_analysis: z.string().nullable()
 });
 const index_put$2 = defineEventHandler(async (event) => {
+  var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const body = await readValidatedBody(event, bodySchema$g.parse);
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const body = await readValidatedBody(event, bodySchema$k.parse);
   try {
-    const existing = await Lead$3.findById(body._id).select("status").lean();
+    const existing = await Lead$7.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
     const update = { ...body };
     if (statusChanged) {
@@ -7249,7 +7667,7 @@ const index_put$2 = defineEventHandler(async (event) => {
     const { $inc, ...setFields } = update;
     const mongoUpdate = { $set: setFields };
     if ($inc) mongoUpdate.$inc = $inc;
-    const updated = await Lead$3.findOneAndUpdate(
+    const updated = await Lead$7.findOneAndUpdate(
       { _id: body._id, userId: user._id },
       mongoUpdate,
       { new: true }
@@ -7269,7 +7687,7 @@ const index_put$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_put$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$5 = schemaImport;
+const LeadModel$5 = LeadModel$b;
 const schedule_post = defineEventHandler(async (event) => {
   var _a;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
@@ -7305,9 +7723,9 @@ const schedule_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: schedule_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$4 = schemaImport;
+const LeadModel$4 = LeadModel$b;
 const resend$1 = new Resend(process.env.RESEND_KEY);
-const bodySchema$f = z.object({
+const bodySchema$j = z.object({
   // The (possibly realtor-edited) message body to send.
   message: z.string().min(1),
   // Optional custom subject; defaults to a friendly follow-up line.
@@ -7320,7 +7738,7 @@ const sendMessage_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) {
     throw createError({ statusCode: 401, message: "Session expired." });
   }
-  const { message, subject } = await readValidatedBody(event, bodySchema$f.parse);
+  const { message, subject } = await readValidatedBody(event, bodySchema$j.parse);
   const lead = await LeadModel$4.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) {
     throw createError({ statusCode: 404, message: "Lead not found." });
@@ -7382,16 +7800,20 @@ function customGhostFormUrl({
   return `${base}?${params.toString()}`;
 }
 
-const LeadModel$3 = schemaImport;
-const bodySchema$e = z.object({
+const LeadModel$3 = LeadModel$b;
+const bodySchema$i = z.object({
   intent: z.enum(["buy", "sell"]).optional()
 });
 const sendQuestionnaire_post = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b;
   const leadId = (_a = event.context.params) == null ? void 0 : _a.id;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { intent } = await readValidatedBody(event, bodySchema$e.parse);
+  const routeId = (_b = event.context.params) == null ? void 0 : _b.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const { intent } = await readValidatedBody(event, bodySchema$i.parse);
   const lead = await LeadModel$3.findOne({ _id: leadId, userId: user._id }).lean();
   if (!lead) throw createError({ statusCode: 404, message: "Lead not found." });
   if (!lead.email) throw createError({ statusCode: 400, message: "This lead has no email address." });
@@ -7452,8 +7874,77 @@ const sendQuestionnaire_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.
   default: sendQuestionnaire_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$2 = schemaImport;
-const bodySchema$d = z.object({
+const Lead$6 = LeadModel$b;
+const bodySchema$h = z.object({
+  text: z.string().min(2).max(200).optional(),
+  /** Remove one by its captured timestamp. */
+  removeAt: z.string().optional()
+});
+const sphereNote_post = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const { text, removeAt } = await readValidatedBody(event, bodySchema$h.parse);
+  const id = (_b = event.context.params) == null ? void 0 : _b.id;
+  if (removeAt) {
+    const r2 = await Lead$6.updateOne(
+      { _id: id, userId: user._id },
+      { $pull: { sphereNotes: { capturedAt: new Date(removeAt) } } }
+    );
+    if (r2.matchedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
+    return { success: true };
+  }
+  if (!text) throw createError({ statusCode: 400, message: "Nothing to save." });
+  const r = await Lead$6.updateOne(
+    { _id: id, userId: user._id },
+    { $push: { sphereNotes: { text, source: "typed", capturedAt: /* @__PURE__ */ new Date() } } }
+  );
+  if (r.matchedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
+  return { success: true };
+});
+
+const sphereNote_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: sphereNote_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Lead$5 = LeadModel$b;
+const bodySchema$g = z.object({
+  stage: z.enum(["new", "working", "showing", "under_contract", "past_client", "lost"])
+});
+const stage_post = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const { stage } = await readValidatedBody(event, bodySchema$g.parse);
+  if (stage === "past_client") {
+    throw createError({
+      statusCode: 400,
+      message: "Use the closing form so the anniversary date is captured."
+    });
+  }
+  const set = { stage };
+  if (stage !== "new") set.status = "contacted";
+  const res = await Lead$5.updateOne({ _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id }, { $set: set });
+  if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
+  return { success: true, stage };
+});
+
+const stage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: stage_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Lead$4 = LeadModel$b;
+const bodySchema$f = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
   age: z.number().nullable(),
@@ -7474,10 +7965,10 @@ const bodySchema$d = z.object({
   seeing_an_agent: z.string().nullable()
 });
 const create_post = defineEventHandler(async (event) => {
-  const body = await readValidatedBody(event, bodySchema$d.parse);
+  const body = await readValidatedBody(event, bodySchema$f.parse);
   const user = await loggedInUser(event);
   try {
-    await Lead$2.create({ userId: user == null ? void 0 : user._id, ...body });
+    await Lead$4.create({ userId: user == null ? void 0 : user._id, ...body });
   } catch (error) {
     console.error("Something went wrong", error);
     throw createError({
@@ -7492,8 +7983,8 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: create_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$1 = schemaImport;
-const bodySchema$c = z.object({
+const Lead$3 = LeadModel$b;
+const bodySchema$e = z.object({
   leads: z.array(z.object({
     name: z.string().optional(),
     email: z.string(),
@@ -7510,9 +8001,9 @@ const bodySchema$c = z.object({
 const import_post = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$c.parse);
+  const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$e.parse);
   const emails = leads.map((l) => l.email.toLowerCase());
-  const existing = await Lead$1.find(
+  const existing = await Lead$3.find(
     { userId: user._id, email: { $in: emails } },
     { email: 1 }
   ).lean();
@@ -7543,7 +8034,7 @@ const import_post = defineEventHandler(async (event) => {
   }
   let inserted = 0;
   if (toInsert.length) {
-    const res = await Lead$1.insertMany(toInsert, { ordered: false }).catch((err) => {
+    const res = await Lead$3.insertMany(toInsert, { ordered: false }).catch((err) => {
       var _a;
       console.error("[import] partial insert:", err == null ? void 0 : err.message);
       return (_a = err == null ? void 0 : err.insertedDocs) != null ? _a : [];
@@ -7554,7 +8045,7 @@ const import_post = defineEventHandler(async (event) => {
   for (const doc of toUpdate) {
     const { userId, email, ...fields } = doc;
     const set = Object.fromEntries(Object.entries(fields).filter(([, v]) => v !== "" && v !== void 0));
-    const r = await Lead$1.updateOne({ userId: user._id, email }, { $set: set });
+    const r = await Lead$3.updateOne({ userId: user._id, email }, { $set: set });
     updated += r.modifiedCount;
   }
   return {
@@ -7580,10 +8071,10 @@ const selection_status_lead = [
   { label: "archive", value: "archive" }
 ];
 
-const Lead = schemaImport;
-const index_get$6 = defineEventHandler(async (event) => {
+const Lead$2 = LeadModel$b;
+const index_get$8 = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
-  const leads = await Lead.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const leads = await Lead$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   const findLeadStatus = selection_status_lead.map((item) => {
     const status = item.value;
     const filterLeads = leads == null ? void 0 : leads.filter((lead) => {
@@ -7598,9 +8089,9 @@ const index_get$6 = defineEventHandler(async (event) => {
   };
 });
 
-const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$9 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$6
+  default: index_get$8
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const tiers_get = defineEventHandler(async (event) => {
@@ -7624,6 +8115,86 @@ const tiers_get = defineEventHandler(async (event) => {
 const tiers_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: tiers_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Sub$2 = PushSubscriptionModel;
+const status_get = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const devices = await Sub$2.find({ userId: user._id }, { endpoint: 1, label: 1, prefs: 1, createdAt: 1 }).lean();
+  return {
+    configured: pushConfigured(),
+    publicKey: process.env.VAPID_PUBLIC_KEY || "",
+    devices: devices.map((d) => ({
+      endpoint: d.endpoint,
+      label: d.label,
+      prefs: d.prefs,
+      createdAt: d.createdAt
+    }))
+  };
+});
+
+const status_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: status_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Sub$1 = PushSubscriptionModel;
+const bodySchema$d = z.object({
+  endpoint: z.string().url(),
+  keys: z.object({ p256dh: z.string(), auth: z.string() }),
+  label: z.string().max(60).optional()
+});
+const subscribe_post$2 = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { endpoint, keys, label } = await readValidatedBody(event, bodySchema$d.parse);
+  await Sub$1.findOneAndUpdate(
+    { endpoint },
+    {
+      $set: { userId: user._id, endpoint, keys, label: label || "", failureCount: 0 },
+      // Only on insert — never stomp preferences a returning device already set.
+      $setOnInsert: { prefs: { deadlines: true, briefing: true, newLeads: false } }
+    },
+    { upsert: true, new: true }
+  );
+  return { success: true };
+});
+
+const subscribe_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: subscribe_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const test_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const result = await sendToUser(user._id, {
+    title: "GhostForm",
+    body: "Notifications are working. This is the only test you'll get.",
+    url: "/dashboard"
+  }, "briefing");
+  return result;
+});
+
+const test_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: test_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Sub = PushSubscriptionModel;
+const bodySchema$c = z.object({ endpoint: z.string() });
+const unsubscribe_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { endpoint } = await readValidatedBody(event, bodySchema$c.parse);
+  await Sub.deleteOne({ endpoint, userId: user._id });
+  return { success: true };
+});
+
+const unsubscribe_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: unsubscribe_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const _id__get$2 = defineEventHandler(async (event) => {
@@ -7652,7 +8223,7 @@ const _id__get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: _id__get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$2 = schemaImport;
+const LeadModel$2 = LeadModel$b;
 const _id__get = defineEventHandler(async (event) => {
   var _a, _b, _c;
   setHeader(event, "Access-Control-Allow-Origin", "*");
@@ -7690,7 +8261,7 @@ const _id__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: _id__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel$1 = schemaImport;
+const LeadModel$1 = LeadModel$b;
 const bodySchema$b = z.object({
   answers: z.record(z.string(), z.union([z.string(), z.number()]))
 });
@@ -7816,7 +8387,7 @@ const index_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 
 const Reminder$1 = ReminderModel;
 const Home = HomeModel;
-const index_get$4 = defineEventHandler(async (event) => {
+const index_get$6 = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
@@ -7854,9 +8425,9 @@ const index_get$4 = defineEventHandler(async (event) => {
   });
 });
 
-const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$7 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$4
+  default: index_get$6
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const bodySchema$9 = z.object({
@@ -7945,7 +8516,7 @@ const index_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost$2 = SocialPostModel;
-const index_get$2 = defineEventHandler(async (event) => {
+const index_get$4 = defineEventHandler(async (event) => {
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const all = await SocialPost$2.find({
@@ -7959,9 +8530,9 @@ const index_get$2 = defineEventHandler(async (event) => {
   };
 });
 
-const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+const index_get$5 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
-  default: index_get$2
+  default: index_get$4
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const SocialPost$1 = SocialPostModel;
@@ -8009,6 +8580,41 @@ const status_post = defineEventHandler(async (event) => {
 const status_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: status_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Lead$1 = LeadModel$b;
+const touched_post = defineEventHandler(async (event) => {
+  var _a, _b;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const res = await Lead$1.updateOne(
+    { _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id },
+    { $set: { lastTouchAt: /* @__PURE__ */ new Date() } }
+  );
+  if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Not found." });
+  return { success: true };
+});
+
+const touched_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: touched_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const index_get$2 = defineEventHandler(async (event) => {
+  var _a;
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const limit = Math.min(Number((_a = getQuery$1(event).limit) != null ? _a : 5), 20);
+  return buildSphereBriefing(user._id, limit);
+});
+
+const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: index_get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const storageMode_get = defineEventHandler(() => ({ driver: hasR2() ? "r2" : "local" }));
@@ -8155,7 +8761,7 @@ const webhook_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: webhook_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const LeadModel = schemaImport;
+const LeadModel = LeadModel$b;
 const CampaignModel = CampaignModelImport;
 const resend = new Resend(process.env.RESEND_KEY);
 const testReminder_get = defineEventHandler(async (event) => {
@@ -8532,6 +9138,10 @@ ${context}` : "",
     `  question \u2014 they want an answer. "When's the inspection deadline?"`,
     `  reminder \u2014 they want a nudge later. "Remind me to call them Thursday."`,
     `  mixed    \u2014 a note AND a reminder, or a note AND a question.`,
+    `  sphere   \u2014 something about a PERSON you know, not a property or a task.`,
+    `             "Ran into the Kellers, second kid on the way." "Tom's mother`,
+    `             is moving to Whitefish." This is what makes a call later feel`,
+    `             personal instead of generic, so capture it precisely.`,
     `  unclear  \u2014 you genuinely can't tell.`,
     ``,
     `FOR REMINDERS, extract each one:`,
@@ -8555,6 +9165,15 @@ ${context}` : "",
     `- Speech-to-text mishears names and streets. If a word looks garbled,`,
     `  leave it as heard rather than guessing at a correction.`,
     ``,
+    `FOR SPHERE, extract each fact:`,
+    `  about \u2014 the person's name exactly as spoken. Do not guess a surname.`,
+    `  fact  \u2014 what you learned, in ONE short clause, phrased so it still makes`,
+    `          sense read aloud in six months: "second kid on the way" not "they`,
+    `          said they might be having another one".`,
+    ``,
+    `Do NOT invent a sphere fact from a property observation. "The kitchen was`,
+    `dated" is a note about a house, not a fact about a person.`,
+    ``,
     `Return ONLY JSON, no fence:`,
     `{"intent":"mixed","note":"...","question":"...","reminders":[{"text":"...",`,
     `"dueAt":"YYYY-MM-DD","priority":"medium","heardAs":"..."}]}`
@@ -8567,18 +9186,25 @@ function plausibleDate(iso, today = /* @__PURE__ */ new Date()) {
   return days >= 0 && days <= 365;
 }
 function parseAnalysis(raw) {
-  var _a, _b, _c;
+  var _a, _b, _c, _d;
   try {
     const cleaned = raw.replace(/```json|```/g, "").trim();
     const s = cleaned.indexOf("{"), e = cleaned.lastIndexOf("}");
     if (s === -1) return null;
     const p = JSON.parse(cleaned.slice(s, e + 1));
-    const intents = ["note", "question", "reminder", "mixed", "unclear"];
+    const intents = ["note", "question", "reminder", "sphere", "mixed", "unclear"];
     return {
       intent: intents.includes(p.intent) ? p.intent : "note",
       note: String((_a = p.note) != null ? _a : "").slice(0, 2e3),
       question: String((_b = p.question) != null ? _b : "").slice(0, 500),
-      reminders: ((_c = p.reminders) != null ? _c : []).map((r) => {
+      sphere: ((_c = p.sphere) != null ? _c : []).map((x) => {
+        var _a2, _b2;
+        return {
+          about: String((_a2 = x.about) != null ? _a2 : "").slice(0, 80),
+          fact: String((_b2 = x.fact) != null ? _b2 : "").slice(0, 200)
+        };
+      }).filter((x) => x.about && x.fact),
+      reminders: ((_d = p.reminders) != null ? _d : []).map((r) => {
         var _a2, _b2, _c2;
         return {
           text: String((_a2 = r.text) != null ? _a2 : "").slice(0, 200),
@@ -8596,13 +9222,14 @@ function parseAnalysis(raw) {
 const Note = VoiceNoteModel;
 const Reminder = ReminderModel;
 const Doc = DocumentModel;
+const Lead = LeadModel$b;
 const bodySchema = z.object({
   transcript: z.string().min(2).max(4e3),
   homeId: z.string().optional(),
   leadId: z.string().optional()
 });
 const note_post = defineEventHandler(async (event) => {
-  var _a, _b;
+  var _a, _b, _c, _d;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const { transcript, homeId, leadId } = await readValidatedBody(event, bodySchema.parse);
@@ -8634,10 +9261,10 @@ const note_post = defineEventHandler(async (event) => {
       // Low temperature because this is extraction, not writing.
       { maxTokens: 1200, temperature: 0.2 }
     );
-    const analysis = raw ? parseAnalysis(raw) : null;
-    if (!analysis) throw new Error("could not understand the note");
+    const analysis2 = raw ? parseAnalysis(raw) : null;
+    if (!analysis2) throw new Error("could not understand the note");
     const reminderIds = [];
-    for (const r of analysis.reminders) {
+    for (const r of analysis2.reminders) {
       const created = await Reminder.create({
         userId: user._id,
         text: r.text,
@@ -8651,19 +9278,38 @@ const note_post = defineEventHandler(async (event) => {
       });
       reminderIds.push(created._id);
     }
+    const sphereSaved = [];
+    for (const f of (_a = analysis2.sphere) != null ? _a : []) {
+      const needle = String(f.about).replace(/^the\s+/i, "").trim();
+      if (needle.length < 2) continue;
+      const matches = await Lead.find({
+        userId: user._id,
+        name: { $regex: needle.split(/\s+/)[0], $options: "i" }
+      }, { _id: 1, name: 1 }).limit(2).lean();
+      if (matches.length === 1) {
+        await Lead.updateOne(
+          { _id: matches[0]._id, userId: user._id },
+          { $push: { sphereNotes: { text: f.fact, source: "voice", capturedAt: /* @__PURE__ */ new Date() } } }
+        );
+        sphereSaved.push({ about: matches[0].name, fact: f.fact, matched: true });
+      } else {
+        sphereSaved.push({ about: f.about, fact: f.fact, matched: false });
+      }
+    }
     await Note.updateOne({ _id: note._id }, {
       $set: {
-        intent: analysis.intent,
+        intent: analysis2.intent,
         reminderIds,
         status: "ready"
       }
     });
     return {
       noteId: String(note._id),
-      intent: analysis.intent,
-      note: analysis.note,
-      question: analysis.question,
-      reminders: analysis.reminders.map((r, i) => {
+      intent: analysis2.intent,
+      note: analysis2.note,
+      question: analysis2.question,
+      sphere: sphereSaved,
+      reminders: analysis2.reminders.map((r, i) => {
         var _a2;
         return {
           _id: String((_a2 = reminderIds[i]) != null ? _a2 : ""),
@@ -8672,7 +9318,25 @@ const note_post = defineEventHandler(async (event) => {
       })
     };
   } catch (err) {
-    console.error("[voice] note failed:", ((_b = (_a = err == null ? void 0 : err.data) == null ? void 0 : _a.error) == null ? void 0 : _b.message) || (err == null ? void 0 : err.message));
+    console.error("[voice] note failed:", ((_c = (_b = err == null ? void 0 : err.data) == null ? void 0 : _b.error) == null ? void 0 : _c.message) || (err == null ? void 0 : err.message));
+    const sphereSaved = [];
+    for (const f of (_d = analysis.sphere) != null ? _d : []) {
+      const needle = String(f.about).replace(/^the\s+/i, "").trim();
+      if (needle.length < 2) continue;
+      const matches = await Lead.find({
+        userId: user._id,
+        name: { $regex: needle.split(/\s+/)[0], $options: "i" }
+      }, { _id: 1, name: 1 }).limit(2).lean();
+      if (matches.length === 1) {
+        await Lead.updateOne(
+          { _id: matches[0]._id, userId: user._id },
+          { $push: { sphereNotes: { text: f.fact, source: "voice", capturedAt: /* @__PURE__ */ new Date() } } }
+        );
+        sphereSaved.push({ about: matches[0].name, fact: f.fact, matched: true });
+      } else {
+        sphereSaved.push({ about: f.about, fact: f.fact, matched: false });
+      }
+    }
     await Note.updateOne({ _id: note._id }, {
       $set: {
         status: "failed",

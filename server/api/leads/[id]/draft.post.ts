@@ -1,6 +1,7 @@
 import type { Model } from 'mongoose'
 import LeadModelImport from '../../../../lib/database/models/Lead'
 import loggedInUser from '~/utils/loggedInUser'
+import { isObjectId } from '~/utils/objectId'
 
 const LeadModel = LeadModelImport as Model<any>
 

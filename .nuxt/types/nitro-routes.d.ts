@@ -40,6 +40,9 @@ declare module "nitropack/types" {
     '/api/charts/lead': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/charts/lead.get').default>>>>
     }
+    '/api/closings': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/closings/index.get').default>>>>
+    }
     '/api/cron': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/cron').default>>>>
     }
@@ -88,6 +91,9 @@ declare module "nitropack/types" {
     '/api/leads/:id/analyse': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/analyse.post').default>>>>
     }
+    '/api/leads/:id/close': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/close.post').default>>>>
+    }
     '/api/leads/:id/contacted': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/contacted.post').default>>>>
     }
@@ -108,6 +114,12 @@ declare module "nitropack/types" {
     '/api/leads/:id/send-questionnaire': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/send-questionnaire.post').default>>>>
     }
+    '/api/leads/:id/sphere-note': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/sphere-note.post').default>>>>
+    }
+    '/api/leads/:id/stage': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/[id]/stage.post').default>>>>
+    }
     '/api/leads/create': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/create.post').default>>>>
     }
@@ -119,6 +131,18 @@ declare module "nitropack/types" {
     }
     '/api/leads/tiers': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/leads/tiers.get').default>>>>
+    }
+    '/api/push/status': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/status.get').default>>>>
+    }
+    '/api/push/subscribe': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/subscribe.post').default>>>>
+    }
+    '/api/push/test': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/test.post').default>>>>
+    }
+    '/api/push/unsubscribe': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/push/unsubscribe.post').default>>>>
     }
     '/api/qr_code/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/qr_code/[id].get').default>>>>
@@ -145,6 +169,12 @@ declare module "nitropack/types" {
     }
     '/api/social/status': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/social/status.post').default>>>>
+    }
+    '/api/sphere/:id/touched': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sphere/[id]/touched.post').default>>>>
+    }
+    '/api/sphere': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/sphere/index.get').default>>>>
     }
     '/api/storage-mode': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/storage-mode.get').default>>>>

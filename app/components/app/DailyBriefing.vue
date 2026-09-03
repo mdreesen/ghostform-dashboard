@@ -479,6 +479,16 @@ function beginReschedule(d: any) {
         Nothing needs a follow-up right now. New and cold leads appear here automatically.
       </p>
     </div>
+
+    <!-- Below the call list, deliberately.
+         Contract deadlines and today's people are time-bound. These two are
+         valuable but never urgent — putting them above the call list would
+         bury the thing the realtor opened this screen for.
+
+         Order between them matters too: the closing prompt comes first because
+         answering it is what FILLS the sphere list underneath. -->
+    <appClosingPrompt />
+    <appSphereList />
   </div>
 </template>
 

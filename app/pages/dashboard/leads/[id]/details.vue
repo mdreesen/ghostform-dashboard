@@ -11,6 +11,15 @@ const toast = useToast();
 const { data, pending: pending_data } = await useFetch<Lead>(`/api/leads/${route.params.id}`);
 const lead = ref(data.value);
 
+/**
+ * The page keeps a local copy of the lead, so refreshNuxtData alone won't
+ * update what's on screen. Refetch into the ref instead.
+ */
+async function reloadLead() {
+  const fresh = await $fetch<Lead>(`/api/leads/${route.params.id}`);
+  lead.value = fresh;
+}
+
 useHead({ title: () => `GhostForm | ${lead.value?.name || 'Lead'}` });
 
 const marking = ref(false);
@@ -147,11 +156,8 @@ async function markContacted() {
             {{ lead?.name || 'Unnamed lead' }}
           </h1>
           <div class="flex flex-wrap items-center gap-3 text-[13px] text-[#8A847C]">
-            <span class="inline-flex items-center gap-2">
-              <span class="w-[7px] h-[7px] bg-[#1F1B16]" />
-              <span class="uppercase tracking-[0.14em] text-[10.5px]">{{ lead?.status }}</span>
-            </span>
-            <span class="text-[#DDD6C9]">·</span>
+            <!-- The raw `status` chip lived here. It said the same thing as
+                 the stage bar below, in database words. One source. -->
             <span>{{ lastContact }}</span>
           </div>
         </div>
@@ -170,6 +176,10 @@ async function markContacted() {
         </div>
       </div>
     </header>
+
+    <!-- Where they are and what to do next. Directly under the name, because
+         it's the first question anyone opening a lead has. -->
+    <appStageBar v-if="lead" :lead="lead" @changed="reloadLead" class="mb-16" />
 
     <!-- ── 01 Reach them ─────────────────────────────────────── -->
     <!-- ── Qualification & analysis ──────────────────────────── -->
@@ -500,14 +510,26 @@ async function markContacted() {
 
   </div>
 
-    <!-- Documents for this lead — offers, pre-approvals, disclosures -->
-    <section class="mt-14 pt-10 border-t border-[#DDD6C9]">
+    <!-- ==================================================================
+         Everything below follows the order a realtor moves through:
+         where they are now → their documents → what happens after the sale.
+
+         Previously the stage bar and the closing form sat INSIDE the
+         Documents section, between its heading and its upload box — my
+         insertion, and it read as three unrelated things under one label.
+         ================================================================== -->
+
+    <!-- Their paperwork -->
+    <section class="mt-14">
       <p class="h-label mb-2">Documents</p>
-      <p class="text-[13.5px] text-[#8A847C] leading-relaxed max-w-[54ch] mb-6">
-        Add a contract or pre-approval and we'll pull out the dates you need to
-        watch. You confirm each one before it becomes a reminder.
+      <p class="gf-meta gf-measure-tight mb-6">
+        A contract or pre-approval. We'll pull out the dates you need to watch,
+        and you confirm each one before it becomes a reminder.
       </p>
       <appDocumentUpload :lead-id="String($route.params.id)" class="mb-2" />
       <appDocumentList :lead-id="String($route.params.id)" />
     </section>
+
+    <!-- Only relevant once the deal is done or nearly done -->
+    <appLeadClose v-if="lead" :lead="lead" @changed="reloadLead" />
 </template>

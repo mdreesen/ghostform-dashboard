@@ -30,7 +30,12 @@ export interface ExtractedReminder {
 }
 
 export interface VoiceAnalysis {
-  intent: 'note' | 'question' | 'reminder' | 'mixed' | 'unclear'
+  intent: 'note' | 'question' | 'reminder' | 'sphere' | 'mixed' | 'unclear'
+  /**
+   * Something learned about a PERSON — the data that makes sphere nurture work
+   * and that nobody ever types into a form.
+   */
+  sphere: { about: string; fact: string }[]
   /** Cleaned-up note text, when there's something worth keeping. */
   note: string
   /** The question asked, when there is one. */
@@ -51,6 +56,10 @@ export function buildIntentPrompt(transcript: string, today: string, context: st
     `  question — they want an answer. "When's the inspection deadline?"`,
     `  reminder — they want a nudge later. "Remind me to call them Thursday."`,
     `  mixed    — a note AND a reminder, or a note AND a question.`,
+    `  sphere   — something about a PERSON you know, not a property or a task.`,
+    `             "Ran into the Kellers, second kid on the way." "Tom's mother`,
+    `             is moving to Whitefish." This is what makes a call later feel`,
+    `             personal instead of generic, so capture it precisely.`,
     `  unclear  — you genuinely can't tell.`,
     ``,
     `FOR REMINDERS, extract each one:`,
@@ -73,6 +82,15 @@ export function buildIntentPrompt(transcript: string, today: string, context: st
     `  meaning, and never add detail they didn't say.`,
     `- Speech-to-text mishears names and streets. If a word looks garbled,`,
     `  leave it as heard rather than guessing at a correction.`,
+    ``,
+    `FOR SPHERE, extract each fact:`,
+    `  about — the person's name exactly as spoken. Do not guess a surname.`,
+    `  fact  — what you learned, in ONE short clause, phrased so it still makes`,
+    `          sense read aloud in six months: "second kid on the way" not "they`,
+    `          said they might be having another one".`,
+    ``,
+    `Do NOT invent a sphere fact from a property observation. "The kitchen was`,
+    `dated" is a note about a house, not a fact about a person.`,
     ``,
     `Return ONLY JSON, no fence:`,
     `{"intent":"mixed","note":"...","question":"...","reminders":[{"text":"...",`,
@@ -97,11 +115,17 @@ export function parseAnalysis(raw: string): VoiceAnalysis | null {
     if (s === -1) return null
     const p = JSON.parse(cleaned.slice(s, e + 1))
 
-    const intents = ['note', 'question', 'reminder', 'mixed', 'unclear']
+    const intents = ['note', 'question', 'reminder', 'sphere', 'mixed', 'unclear']
     return {
       intent: intents.includes(p.intent) ? p.intent : 'note',
       note: String(p.note ?? '').slice(0, 2000),
       question: String(p.question ?? '').slice(0, 500),
+      sphere: (p.sphere ?? [])
+        .map((x: any) => ({
+          about: String(x.about ?? '').slice(0, 80),
+          fact: String(x.fact ?? '').slice(0, 200)
+        }))
+        .filter((x: any) => x.about && x.fact),
       reminders: (p.reminders ?? [])
         .map((r: any) => ({
           text: String(r.text ?? '').slice(0, 200),

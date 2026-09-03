@@ -4,6 +4,7 @@ import { Resend } from 'resend'
 import LeadModelImport from '../../../../lib/database/models/Lead'
 import loggedInUser from '~/utils/loggedInUser'
 import { useCleanString } from '~/utils/formatters/useCleanString'
+import { isObjectId } from '~/utils/objectId'
 
 const LeadModel = LeadModelImport as Model<any>
 const resend = new Resend(process.env.RESEND_KEY)

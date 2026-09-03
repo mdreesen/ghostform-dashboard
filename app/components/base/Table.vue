@@ -200,10 +200,20 @@ const pagination = ref({
           tr: 'hover:bg-[#EFEAE0]/60 transition-colors'
         }">
         <template #name-cell="{ row }">
-          <NuxtLink :to="`/dashboard/leads/${row.original?._id}/details`"
+          <!-- Only render a link when there IS an id.
+               `${row.original?._id}` produces the literal string "undefined"
+               when the row has no id, which then reaches Mongoose as an
+               ObjectId and throws:
+                 Cast to ObjectId failed for value "undefined"
+               Optional chaining protects the property access, not the
+               template literal. -->
+          <NuxtLink
+            v-if="row.original?._id"
+            :to="`/dashboard/leads/${row.original._id}/details`"
             class="text-[#1F1B16] hover:text-[#4C5741] underline underline-offset-2 decoration-[#C7BFAF] hover:decoration-[#4C5741] font-medium transition-colors">
-            {{ row.original?.name ? row.original?.name : 'Not Specified' }}
+            {{ row.original?.name || 'Not Specified' }}
           </NuxtLink>
+          <span v-else class="text-[#A9A39A]">{{ row.original?.name || 'Not Specified' }}</span>
         </template>
 
         <template #email-cell="{ row }">

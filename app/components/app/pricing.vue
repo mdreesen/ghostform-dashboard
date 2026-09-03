@@ -8,7 +8,15 @@ const props = defineProps({
 
 const { data: user } = useNuxtData<any>('user');
 
-const tiers = [
+/**
+ * A computed, not a plain array.
+ *
+ * `useNuxtData` resolves asynchronously, so a plain array evaluated at setup
+ * builds the Stripe URLs before `user` exists — producing
+ * `client_reference_id=undefined` and a payment that can't be matched back to
+ * an account. The reference is only appended once there IS an id.
+ */
+const tiers = computed(() => [
   {
     name: 'Shadow',
     subtitle: 'Solo agent',
@@ -24,7 +32,9 @@ const tiers = [
       '25 AI-written messages a month'
     ],
     cta: 'Start free trial',
-    stripe: `https://buy.stripe.com/8x2aEZe6D6j40B3cCn3wQ02?client_reference_id=${user?.value?._id}`,
+    stripe: user.value?._id
+      ? `https://buy.stripe.com/8x2aEZe6D6j40B3cCn3wQ02?client_reference_id=${user.value._id}`
+      : '',
     highlighted: true
   },
   {
@@ -43,10 +53,12 @@ const tiers = [
       { text: 'Same-day help from the developer', upgrade: true }
     ],
     cta: 'Start free trial',
-    stripe: `https://buy.stripe.com/aFaeVffaHcHs1F759V3wQ03?client_reference_id=${user?.value?._id}`,
+    stripe: user.value?._id
+      ? `https://buy.stripe.com/aFaeVffaHcHs1F759V3wQ03?client_reference_id=${user.value._id}`
+      : '',
     highlighted: false
   },
-];
+]);
 
 // Features are either plain strings or { text, upgrade } — normalise for render.
 const asFeature = (f: any) => (typeof f === 'string' ? { text: f, upgrade: false } : f);
