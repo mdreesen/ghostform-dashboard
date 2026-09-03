@@ -333,5 +333,7 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
       </div>
 
     </div>
+    <appPushSettings />
+
   </div>
 </template>

@@ -17,13 +17,18 @@ interface _GlobalComponents {
   AppAccess: typeof import("../../app/components/app/Access.vue")['default']
   AppAskDocuments: typeof import("../../app/components/app/AskDocuments.vue")['default']
   AppCardsOverview: typeof import("../../app/components/app/CardsOverview.vue")['default']
+  AppClosingPrompt: typeof import("../../app/components/app/ClosingPrompt.vue")['default']
   AppDailyBriefing: typeof import("../../app/components/app/DailyBriefing.vue")['default']
   AppDocumentList: typeof import("../../app/components/app/DocumentList.vue")['default']
   AppDocumentUpload: typeof import("../../app/components/app/DocumentUpload.vue")['default']
+  AppDocumentViewer: typeof import("../../app/components/app/DocumentViewer.vue")['default']
   AppHeader: typeof import("../../app/components/app/Header.vue")['default']
+  AppLeadClose: typeof import("../../app/components/app/LeadClose.vue")['default']
   AppLeadMessageComposer: typeof import("../../app/components/app/LeadMessageComposer.vue")['default']
+  AppPushSettings: typeof import("../../app/components/app/PushSettings.vue")['default']
   AppSocialCard: typeof import("../../app/components/app/SocialCard.vue")['default']
-  AppVoiceCapture: typeof import("../../app/components/app/VoiceCapture.vue")['default']
+  AppSphereList: typeof import("../../app/components/app/SphereList.vue")['default']
+  AppStageBar: typeof import("../../app/components/app/StageBar.vue")['default']
   AppVoiceDock: typeof import("../../app/components/app/VoiceDock.vue")['default']
   AppReminderEmail: typeof import("../../app/components/app/appReminderEmail.vue")['default']
   AppPricing: typeof import("../../app/components/app/pricing.vue")['default']
@@ -50,7 +55,6 @@ interface _GlobalComponents {
   BaseTable: typeof import("../../app/components/base/Table.vue")['default']
   BaseTerrain: typeof import("../../app/components/base/Terrain.vue")['default']
   BaseTour: typeof import("../../app/components/base/Tour.vue")['default']
-  BaseVoiceField: typeof import("../../app/components/base/VoiceField.vue")['default']
   BaseButton: typeof import("../../app/components/base/button.vue")['default']
   BaseFooter: typeof import("../../app/components/base/footer.vue")['default']
   BaseIcon: typeof import("../../app/components/base/icon.vue")['default']
@@ -240,13 +244,18 @@ interface _GlobalComponents {
   LazyAppAccess: LazyComponent<typeof import("../../app/components/app/Access.vue")['default']>
   LazyAppAskDocuments: LazyComponent<typeof import("../../app/components/app/AskDocuments.vue")['default']>
   LazyAppCardsOverview: LazyComponent<typeof import("../../app/components/app/CardsOverview.vue")['default']>
+  LazyAppClosingPrompt: LazyComponent<typeof import("../../app/components/app/ClosingPrompt.vue")['default']>
   LazyAppDailyBriefing: LazyComponent<typeof import("../../app/components/app/DailyBriefing.vue")['default']>
   LazyAppDocumentList: LazyComponent<typeof import("../../app/components/app/DocumentList.vue")['default']>
   LazyAppDocumentUpload: LazyComponent<typeof import("../../app/components/app/DocumentUpload.vue")['default']>
+  LazyAppDocumentViewer: LazyComponent<typeof import("../../app/components/app/DocumentViewer.vue")['default']>
   LazyAppHeader: LazyComponent<typeof import("../../app/components/app/Header.vue")['default']>
+  LazyAppLeadClose: LazyComponent<typeof import("../../app/components/app/LeadClose.vue")['default']>
   LazyAppLeadMessageComposer: LazyComponent<typeof import("../../app/components/app/LeadMessageComposer.vue")['default']>
+  LazyAppPushSettings: LazyComponent<typeof import("../../app/components/app/PushSettings.vue")['default']>
   LazyAppSocialCard: LazyComponent<typeof import("../../app/components/app/SocialCard.vue")['default']>
-  LazyAppVoiceCapture: LazyComponent<typeof import("../../app/components/app/VoiceCapture.vue")['default']>
+  LazyAppSphereList: LazyComponent<typeof import("../../app/components/app/SphereList.vue")['default']>
+  LazyAppStageBar: LazyComponent<typeof import("../../app/components/app/StageBar.vue")['default']>
   LazyAppVoiceDock: LazyComponent<typeof import("../../app/components/app/VoiceDock.vue")['default']>
   LazyAppReminderEmail: LazyComponent<typeof import("../../app/components/app/appReminderEmail.vue")['default']>
   LazyAppPricing: LazyComponent<typeof import("../../app/components/app/pricing.vue")['default']>
@@ -273,7 +282,6 @@ interface _GlobalComponents {
   LazyBaseTable: LazyComponent<typeof import("../../app/components/base/Table.vue")['default']>
   LazyBaseTerrain: LazyComponent<typeof import("../../app/components/base/Terrain.vue")['default']>
   LazyBaseTour: LazyComponent<typeof import("../../app/components/base/Tour.vue")['default']>
-  LazyBaseVoiceField: LazyComponent<typeof import("../../app/components/base/VoiceField.vue")['default']>
   LazyBaseButton: LazyComponent<typeof import("../../app/components/base/button.vue")['default']>
   LazyBaseFooter: LazyComponent<typeof import("../../app/components/base/footer.vue")['default']>
   LazyBaseIcon: LazyComponent<typeof import("../../app/components/base/icon.vue")['default']>

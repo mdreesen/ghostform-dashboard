@@ -10,6 +10,8 @@ declare global {
   const LegendPosition: typeof import('../../node_modules/vue-chrts/enums').LegendPosition
   const Orientation: typeof import('../../node_modules/vue-chrts/enums').Orientation
   const PRIORITIES: typeof import('../../app/utils/priority').PRIORITIES
+  const STAGES: typeof import('../../app/utils/stages').STAGES
+  const STAGE_ORDER: typeof import('../../app/utils/stages').STAGE_ORDER
   const UKTopoJSON: typeof import('../../node_modules/vue-chrts').UKTopoJSON
   const USATopoJSON: typeof import('../../node_modules/vue-chrts').USATopoJSON
   const USCountiesTopoJSON: typeof import('../../node_modules/vue-chrts').USCountiesTopoJSON
@@ -59,6 +61,7 @@ declare global {
   const extendLocale: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineLocale').extendLocale
   const extractShortcuts: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts').extractShortcuts
   const fetchAsBase64: typeof import('../../app/utils/storage').fetchAsBase64
+  const findStage: typeof import('../../app/utils/stages').findStage
   const formVarient: typeof import('../../app/utils/varients').formVarient
   const formatDate: typeof import('../../app/utils/date').formatDate
   const geoMercator: typeof import('../../node_modules/vue-chrts').geoMercator
@@ -73,11 +76,13 @@ declare global {
   const h: typeof import('vue').h
   const hasInjectionContext: typeof import('vue').hasInjectionContext
   const hasR2: typeof import('../../app/utils/storage').hasR2
+  const inferStage: typeof import('../../app/utils/stages').inferStage
   const inject: typeof import('vue').inject
   const injectHead: typeof import('../../node_modules/nuxt/dist/app/composables/head').injectHead
   const inputVarient: typeof import('../../app/utils/varients').inputVarient
   const isHighStakes: typeof import('../../app/utils/priority').isHighStakes
   const isNuxtError: typeof import('../../node_modules/nuxt/dist/app/composables/error').isNuxtError
+  const isObjectId: typeof import('../../app/utils/objectId').isObjectId
   const isPrerendered: typeof import('../../node_modules/nuxt/dist/app/composables/payload').isPrerendered
   const isProxy: typeof import('vue').isProxy
   const isReactive: typeof import('vue').isReactive
@@ -201,6 +206,7 @@ declare global {
   const useOverlay: typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useOverlay').useOverlay
   const usePWA: typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index').usePWA
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview').usePreviewMode
+  const usePush: typeof import('../../app/composables/usePush').usePush
   const useQrcode: typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode').useQrcode
   const useQrcodeRead: typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode-read').useQrcodeRead
   const useReducedMotion: typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index').useReducedMotion
@@ -320,6 +326,9 @@ declare global {
   export type { LeadRecord } from '../../app/utils/spreadsheet'
   import('../../app/utils/spreadsheet')
   // @ts-ignore
+  export type { Stage } from '../../app/utils/stages'
+  import('../../app/utils/stages')
+  // @ts-ignore
   export type { ExtractedReminder, VoiceAnalysis } from '../../app/utils/voiceIntent'
   import('../../app/utils/voiceIntent')
 }
@@ -336,6 +345,8 @@ declare module 'vue' {
     readonly LegendPosition: UnwrapRef<typeof import('../../node_modules/vue-chrts/enums')['LegendPosition']>
     readonly Orientation: UnwrapRef<typeof import('../../node_modules/vue-chrts/enums')['Orientation']>
     readonly PRIORITIES: UnwrapRef<typeof import('../../app/utils/priority')['PRIORITIES']>
+    readonly STAGES: UnwrapRef<typeof import('../../app/utils/stages')['STAGES']>
+    readonly STAGE_ORDER: UnwrapRef<typeof import('../../app/utils/stages')['STAGE_ORDER']>
     readonly UKTopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['UKTopoJSON']>
     readonly USATopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['USATopoJSON']>
     readonly USCountiesTopoJSON: UnwrapRef<typeof import('../../node_modules/vue-chrts')['USCountiesTopoJSON']>
@@ -385,6 +396,7 @@ declare module 'vue' {
     readonly extendLocale: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineLocale')['extendLocale']>
     readonly extractShortcuts: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts')['extractShortcuts']>
     readonly fetchAsBase64: UnwrapRef<typeof import('../../app/utils/storage')['fetchAsBase64']>
+    readonly findStage: UnwrapRef<typeof import('../../app/utils/stages')['findStage']>
     readonly formVarient: UnwrapRef<typeof import('../../app/utils/varients')['formVarient']>
     readonly formatDate: UnwrapRef<typeof import('../../app/utils/date')['formatDate']>
     readonly geoMercator: UnwrapRef<typeof import('../../node_modules/vue-chrts')['geoMercator']>
@@ -399,11 +411,13 @@ declare module 'vue' {
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly hasInjectionContext: UnwrapRef<typeof import('vue')['hasInjectionContext']>
     readonly hasR2: UnwrapRef<typeof import('../../app/utils/storage')['hasR2']>
+    readonly inferStage: UnwrapRef<typeof import('../../app/utils/stages')['inferStage']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
     readonly injectHead: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/head')['injectHead']>
     readonly inputVarient: UnwrapRef<typeof import('../../app/utils/varients')['inputVarient']>
     readonly isHighStakes: UnwrapRef<typeof import('../../app/utils/priority')['isHighStakes']>
     readonly isNuxtError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['isNuxtError']>
+    readonly isObjectId: UnwrapRef<typeof import('../../app/utils/objectId')['isObjectId']>
     readonly isPrerendered: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['isPrerendered']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
@@ -527,6 +541,7 @@ declare module 'vue' {
     readonly useOverlay: UnwrapRef<typeof import('../../node_modules/@nuxt/ui/dist/runtime/composables/useOverlay')['useOverlay']>
     readonly usePWA: UnwrapRef<typeof import('../../node_modules/@vite-pwa/nuxt/dist/runtime/composables/index')['usePWA']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
+    readonly usePush: UnwrapRef<typeof import('../../app/composables/usePush')['usePush']>
     readonly useQrcode: UnwrapRef<typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode')['useQrcode']>
     readonly useQrcodeRead: UnwrapRef<typeof import('../../node_modules/nuxt-qrcode/dist/runtime/app/composables/use-qrcode-read')['useQrcodeRead']>
     readonly useReducedMotion: UnwrapRef<typeof import('../../node_modules/@vueuse/motion/dist/nuxt/runtime/composables/index')['useReducedMotion']>

@@ -3,6 +3,7 @@ import type { Model } from 'mongoose'
 import VoiceNoteModel from '../../../lib/database/models/VoiceNote'
 import ReminderModel from '../../../lib/database/models/Reminder'
 import DocumentModel from '../../../lib/database/models/Document'
+import LeadModel from '../../../lib/database/models/Lead'
 import { buildIntentPrompt, parseAnalysis } from '~/utils/voiceIntent'
 // Parses 'YYYY-MM-DD' as local midnight — see the note in priority.ts.
 import { localDate } from '~/utils/priority'
@@ -12,6 +13,7 @@ import loggedInUser from '~/utils/loggedInUser'
 const Note = VoiceNoteModel as Model<any>
 const Reminder = ReminderModel as Model<any>
 const Doc = DocumentModel as Model<any>
+const Lead = LeadModel as Model<any>
 
 const bodySchema = z.object({
   transcript: z.string().min(2).max(4000),
@@ -105,6 +107,35 @@ export default defineEventHandler(async (event) => {
       reminderIds.push(created._id)
     }
 
+    /**
+     * Attach anything learned about a person to that person.
+     *
+     * Matched loosely by name, because speech gives "the Kellers" not an id.
+     * If no confident match, it is NOT saved to a random contact — an
+     * unattached fact is better than one filed against the wrong client.
+     */
+    const sphereSaved: { about: string; fact: string; matched: boolean }[] = []
+    for (const f of (analysis as any).sphere ?? []) {
+      const needle = String(f.about).replace(/^the\s+/i, '').trim()
+      if (needle.length < 2) continue
+
+      const matches = await Lead.find({
+        userId: user._id,
+        name: { $regex: needle.split(/\s+/)[0], $options: 'i' }
+      }, { _id: 1, name: 1 }).limit(2).lean() as any[]
+
+      // Exactly one match, or we don't guess.
+      if (matches.length === 1) {
+        await Lead.updateOne(
+          { _id: matches[0]._id, userId: user._id },
+          { $push: { sphereNotes: { text: f.fact, source: 'voice', capturedAt: new Date() } } }
+        )
+        sphereSaved.push({ about: matches[0].name, fact: f.fact, matched: true })
+      } else {
+        sphereSaved.push({ about: f.about, fact: f.fact, matched: false })
+      }
+    }
+
     await Note.updateOne({ _id: note._id }, {
       $set: {
         intent: analysis.intent,
@@ -118,6 +149,7 @@ export default defineEventHandler(async (event) => {
       intent: analysis.intent,
       note: analysis.note,
       question: analysis.question,
+      sphere: sphereSaved,
       reminders: analysis.reminders.map((r, i) => ({
         _id: String(reminderIds[i] ?? ''),
         ...r
@@ -125,6 +157,35 @@ export default defineEventHandler(async (event) => {
     }
   } catch (err: any) {
     console.error('[voice] note failed:', err?.data?.error?.message || err?.message)
+    /**
+     * Attach anything learned about a person to that person.
+     *
+     * Matched loosely by name, because speech gives "the Kellers" not an id.
+     * If no confident match, it is NOT saved to a random contact — an
+     * unattached fact is better than one filed against the wrong client.
+     */
+    const sphereSaved: { about: string; fact: string; matched: boolean }[] = []
+    for (const f of (analysis as any).sphere ?? []) {
+      const needle = String(f.about).replace(/^the\s+/i, '').trim()
+      if (needle.length < 2) continue
+
+      const matches = await Lead.find({
+        userId: user._id,
+        name: { $regex: needle.split(/\s+/)[0], $options: 'i' }
+      }, { _id: 1, name: 1 }).limit(2).lean() as any[]
+
+      // Exactly one match, or we don't guess.
+      if (matches.length === 1) {
+        await Lead.updateOne(
+          { _id: matches[0]._id, userId: user._id },
+          { $push: { sphereNotes: { text: f.fact, source: 'voice', capturedAt: new Date() } } }
+        )
+        sphereSaved.push({ about: matches[0].name, fact: f.fact, matched: true })
+      } else {
+        sphereSaved.push({ about: f.about, fact: f.fact, matched: false })
+      }
+    }
+
     await Note.updateOne({ _id: note._id }, {
       $set: {
         status: 'failed',

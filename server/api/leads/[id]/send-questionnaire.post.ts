@@ -4,6 +4,7 @@ import type { Model } from 'mongoose'
 import LeadModelImport from '../../../../lib/database/models/Lead'
 import loggedInUser from '~/utils/loggedInUser'
 import { ghostFormUrl, customGhostFormUrl } from '~/utils/ghostFormUrl';
+import { isObjectId } from '~/utils/objectId'
 
 const LeadModel = LeadModelImport as Model<any>
 
@@ -22,6 +23,11 @@ export default defineEventHandler(async (event) => {
   const leadId = event.context.params?.id
   const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
+
+  const routeId = event.context.params?.id
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: 'That link is missing an id.' })
+  }
 
   const { intent } = await readValidatedBody(event, bodySchema.parse)
 

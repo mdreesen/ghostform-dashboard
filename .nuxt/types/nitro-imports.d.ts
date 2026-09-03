@@ -15,9 +15,11 @@ declare global {
   const appendResponseHeader: typeof import('../../node_modules/h3').appendResponseHeader
   const appendResponseHeaders: typeof import('../../node_modules/h3').appendResponseHeaders
   const assertMethod: typeof import('../../node_modules/h3').assertMethod
+  const buildClosingPrompts: typeof import('../../server/utils/closingPrompt').buildClosingPrompts
   const buildDailyBriefing: typeof import('../../server/utils/dailyBriefing').buildDailyBriefing
   const buildHeadline: typeof import('../../server/utils/dailyBriefing').buildHeadline
   const buildScorecard: typeof import('../../server/utils/leadAnalysis').buildScorecard
+  const buildSphereBriefing: typeof import('../../server/utils/sphereBriefing').buildSphereBriefing
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedEventHandler
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache').cachedFunction
   const callNodeListener: typeof import('../../node_modules/h3').callNodeListener
@@ -150,6 +152,7 @@ declare global {
   const passwordNeedsReHash: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').passwordNeedsReHash
   const promisifyNodeListener: typeof import('../../node_modules/h3').promisifyNodeListener
   const proxyRequest: typeof import('../../node_modules/h3').proxyRequest
+  const pushConfigured: typeof import('../../server/utils/push').pushConfigured
   const questionsFor: typeof import('../../server/utils/qualificationQuestions').questionsFor
   const readBody: typeof import('../../node_modules/h3').readBody
   const readFormData: typeof import('../../node_modules/h3').readFormData
@@ -168,10 +171,12 @@ declare global {
   const send: typeof import('../../node_modules/h3').send
   const sendError: typeof import('../../node_modules/h3').sendError
   const sendIterable: typeof import('../../node_modules/h3').sendIterable
+  const sendMorningPushes: typeof import('../../server/utils/pushBriefing').sendMorningPushes
   const sendNoContent: typeof import('../../node_modules/h3').sendNoContent
   const sendProxy: typeof import('../../node_modules/h3').sendProxy
   const sendRedirect: typeof import('../../node_modules/h3').sendRedirect
   const sendStream: typeof import('../../node_modules/h3').sendStream
+  const sendToUser: typeof import('../../server/utils/push').sendToUser
   const sendWebResponse: typeof import('../../node_modules/h3').sendWebResponse
   const sendWelcomeEmail: typeof import('../../server/utils/welcomeEmail').sendWelcomeEmail
   const serveStatic: typeof import('../../node_modules/h3').serveStatic
@@ -357,6 +362,9 @@ declare global {
   export type { SessionHooks } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session.d'
   import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session.d')
   // @ts-ignore
+  export type { ClosingPrompt } from '../../server/utils/closingPrompt'
+  import('../../server/utils/closingPrompt')
+  // @ts-ignore
   export type { BriefingLead, DailyBriefing } from '../../server/utils/dailyBriefing'
   import('../../server/utils/dailyBriefing')
   // @ts-ignore
@@ -366,11 +374,17 @@ declare global {
   export type { DraftInput, DraftChannel } from '../../server/utils/leadMessageDraft'
   import('../../server/utils/leadMessageDraft')
   // @ts-ignore
+  export type { PushPayload } from '../../server/utils/push'
+  import('../../server/utils/push')
+  // @ts-ignore
   export type { QualQuestion } from '../../server/utils/qualificationQuestions'
   import('../../server/utils/qualificationQuestions')
   // @ts-ignore
   export type { Platform, VoiceProfile, DraftContext, GeneratedPost } from '../../server/utils/socialDraft'
   import('../../server/utils/socialDraft')
+  // @ts-ignore
+  export type { SphereContact } from '../../server/utils/sphereBriefing'
+  import('../../server/utils/sphereBriefing')
 }
 export { H3Event, H3Error, appendCorsHeaders, appendCorsPreflightHeaders, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callNodeListener, clearResponseHeaders, clearSession, createApp, createAppEventHandler, createError, createEvent, createEventStream, createRouter, defaultContentType, defineEventHandler, defineLazyEventHandler, defineNodeListener, defineNodeMiddleware, defineRequestMiddleware, defineResponseMiddleware, defineWebSocket, defineWebSocketHandler, deleteCookie, dynamicEventHandler, eventHandler, fetchWithEvent, fromNodeMiddleware, fromPlainHandler, fromWebHandler, getCookie, getHeader, getHeaders, getMethod, getProxyRequestHeaders, getQuery, getRequestFingerprint, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestPath, getRequestProtocol, getRequestURL, getRequestWebStream, getResponseHeader, getResponseHeaders, getResponseStatus, getResponseStatusText, getRouterParam, getRouterParams, getSession, getValidatedQuery, getValidatedRouterParams, handleCacheHeaders, handleCors, isCorsOriginAllowed, isError, isEvent, isEventHandler, isMethod, isPreflightRequest, isStream, isWebResponse, lazyEventHandler, parseCookies, promisifyNodeListener, proxyRequest, readBody, readFormData, readMultipartFormData, readRawBody, readValidatedBody, removeResponseHeader, sanitizeStatusCode, sanitizeStatusMessage, sealSession, send, sendError, sendIterable, sendNoContent, sendProxy, sendRedirect, sendStream, sendWebResponse, serveStatic, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, setResponseStatus, splitCookiesString, toEventHandler, toNodeListener, toPlainHandler, toWebHandler, toWebRequest, unsealSession, updateSession, useBase, useSession, writeEarlyHints } from 'h3';
 export { useNitroApp } from 'nitropack/runtime/internal/app';
@@ -440,11 +454,15 @@ export { hashPassword, verifyPassword, passwordNeedsReHash } from '/Users/mdrees
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
+export { buildClosingPrompts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/closingPrompt';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
 export { buildScorecard, analyseLead } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadAnalysis';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
+export { sendToUser, pushConfigured } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/push';
+export { sendMorningPushes } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/pushBriefing';
 export { BUYER_QUESTIONS, SELLER_QUESTIONS, questionsFor } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualificationQuestions';
 export { createQualifyToken, readQualifyToken } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/qualifyToken';
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';
 export { TOPICS, generateSocialPosts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/socialDraft';
+export { buildSphereBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/sphereBriefing';
 export { sendWelcomeEmail } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/welcomeEmail';

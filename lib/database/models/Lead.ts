@@ -30,7 +30,75 @@ const leadSchema = new Schema({
     seeing_an_agent: String,
     ai_analysis: Object,
     seen_at: String,
+    /**
+     * ------------------------------------------------------------------
+     * STAGE — where this person is in the one journey they're on.
+     * ------------------------------------------------------------------
+     * The app previously split a single person across "Leads" and "Homes"
+     * and a past-client concept that only existed in the briefing. Same
+     * human, three places, nothing connecting them.
+     *
+     * One field instead. It moves in one direction, and each value answers
+     * "what do I do next?" rather than describing a database state:
+     *
+     *   new           they signed in; call them
+     *   working       you're in contact; qualify them
+     *   showing       actively looking; find them houses
+     *   under_contract  offer accepted; watch the deadlines
+     *   past_client   closed; stay in touch
+     *   lost          didn't happen; keep for the sphere anyway
+     *
+     * `status` is kept for the existing briefing logic rather than migrated
+     * in one go — moving both at once is how you break a working morning
+     * list.
+     */
+    stage: {
+      type: String,
+      enum: ['new', 'working', 'showing', 'under_contract', 'past_client', 'lost'],
+      default: 'new',
+      index: true
+    },
+
     status: { type: String, default: 'new' },
+
+    /**
+     * ------------------------------------------------------------------
+     * SPHERE — the past-client side of the business.
+     * ------------------------------------------------------------------
+     * 76% of buyers say they'd use their agent again. Around 12% do. That
+     * gap lives entirely in the months after closing, and it's the largest
+     * money leak in the industry.
+     *
+     * A past client is not a separate object — it's this lead, closed. Same
+     * record, same history, so nothing has to be re-entered at the moment the
+     * relationship actually becomes valuable.
+     */
+    closedAt: { type: Date, index: true },
+    closedAddress: { type: String, default: '' },
+
+    /**
+     * Things you know about them as PEOPLE, not as a transaction.
+     *
+     * This is the data that makes sphere nurture work and that nobody ever
+     * types — "second kid on the way", "his mother is in Whitefish", "hated
+     * the commute". Captured by speaking, because a form for this would stay
+     * empty forever.
+     *
+     * Each carries the words it came from, so a call opens with something
+     * true rather than something generic.
+     */
+    sphereNotes: [{
+      text: { type: String, required: true },
+      capturedAt: { type: Date, default: Date.now },
+      source: { type: String, enum: ['voice', 'typed'], default: 'typed' }
+    }],
+
+    /** Last time you actually reached out — not last time the system emailed. */
+    lastTouchAt: { type: Date, index: true },
+
+    /** How often this person is worth hearing from. Months. */
+    touchEveryMonths: { type: Number, default: 4 },
+
     date: { type: String, default: () => new Date().toISOString() },
     reminderSent: { type: Boolean, default: false },
     reminderStatus: {

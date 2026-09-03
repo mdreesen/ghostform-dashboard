@@ -2,6 +2,7 @@ import type { Model } from 'mongoose'
 import DocumentModel from '../../../../lib/database/models/Document'
 import { deleteObject } from '~/utils/storage'
 import loggedInUser from '~/utils/loggedInUser'
+import { isObjectId } from '~/utils/objectId'
 
 const Doc = DocumentModel as Model<any>
 
@@ -18,6 +19,11 @@ const Doc = DocumentModel as Model<any>
 export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
+
+  const routeId = event.context.params?.id
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: 'That link is missing an id.' })
+  }
 
   const id = event.context.params?.id
 
