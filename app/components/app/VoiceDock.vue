@@ -190,7 +190,16 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
             <template v-else>
               <p class="gf-meta mb-3">{{ INTENT_LABEL[result.intent] || 'Saved' }}</p>
 
-              <div v-if="result.note" class="p-3.5 bg-[#EFEAE0] mb-4">
+              <!-- Corrections, shown rather than made silently. If it guessed wrong,
+             the realtor is the only one who can tell — and only if we say. -->
+        <p v-if="result.corrected?.length" class="gf-label gf-muted mb-3">
+          Heard
+          <template v-for="(c, i) in result.corrected" :key="i">
+            <em>"{{ c.heard }}"</em> — used <strong>{{ c.used }}</strong><template v-if="i < result.corrected.length - 1">, </template>
+          </template>
+        </p>
+
+        <div v-if="result.note" class="p-3.5 bg-[#EFEAE0] mb-4">
                 <p class="gf-body leading-relaxed">{{ result.note }}</p>
               </div>
 
