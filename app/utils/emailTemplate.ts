@@ -1,27 +1,3 @@
-/**
- * ============================================================================
- * EMAIL TEMPLATE
- * ============================================================================
- * Campaign emails were plain text joined with \n\n. That reaches the inbox
- * looking like a system notification, which is the opposite of what a realtor
- * wants — every email goes out as THEM, not as software.
- *
- * EMAIL HTML IS NOT WEB HTML. The constraints below are not preferences:
- *
- *   · TABLES, not flex or grid. Outlook uses Word's rendering engine and
- *     ignores both entirely.
- *   · INLINE STYLES. Gmail strips <style> blocks in some contexts, and most
- *     clients ignore external stylesheets.
- *   · NO WEB FONTS in Outlook. Fraunces is requested and falls back to Georgia,
- *     which is on every Windows and Mac machine — so the email still reads as
- *     a serif rather than collapsing to Times.
- *   · 600px MAX. Wider is cut off in the Outlook reading pane.
- *   · IMAGES NEED width, height AND alt. Many clients block images by default,
- *     so the layout must hold with none of them loaded and the alt text must
- *     say something useful.
- * ============================================================================
- */
-
 export interface EmailBrand {
   name: string
   email: string
