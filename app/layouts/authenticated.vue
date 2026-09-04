@@ -20,8 +20,12 @@ const authenticated = computed(() => user ? true : navigateTo(`/login`));
               <baseTour :auto="!user?.tour_completed" />
             </ClientOnly>
 
+            <!-- nav-offset shifts content right of the sidebar above 1000px,
+                 and is a no-op below it where the tab bar is used instead. -->
+            <div class="nav-offset">
             <div class="gf-stage gf-shell">
                 <slot />
+            </div>
             </div>
         </template>
 

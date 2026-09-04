@@ -4,6 +4,7 @@ import VoiceNoteModel from '../../../lib/database/models/VoiceNote'
 import ReminderModel from '../../../lib/database/models/Reminder'
 import DocumentModel from '../../../lib/database/models/Document'
 import LeadModel from '../../../lib/database/models/Lead'
+import HomeModel from '../../../lib/database/models/Home'
 import { buildIntentPrompt, parseAnalysis } from '~/utils/voiceIntent'
 // Parses 'YYYY-MM-DD' as local midnight — see the note in priority.ts.
 import { localDate } from '~/utils/priority'
@@ -68,6 +69,44 @@ export default defineEventHandler(async (event) => {
       return [`  ${d.docType || 'Document'}`, dates].filter(Boolean).join('\n')
     }).join('\n')
 
+    /**
+     * NAME PRIMING — the single biggest accuracy win available here.
+     *
+     * Speech recognition mangles proper nouns: "Whitefish Stage" becomes
+     * "white fish stage", surnames become near-homophones. In real estate the
+     * names and addresses ARE the content — a sphere fact filed under "the
+     * Sellers" when they said "the Kellers" is worse than not capturing it.
+     *
+     * The model can't guess a correction from nothing. But given the
+     * realtor's ACTUAL clients and properties, it can match a garbled sound to
+     * a real name — which is something a better recognition engine still
+     * couldn't do, because the engine doesn't know who this agent works with.
+     *
+     * Capped, and names only. No emails, no phone numbers, nothing sensitive.
+     */
+    const [knownLeads, knownHomes] = await Promise.all([
+      Lead.find({ userId: user._id }, { name: 1 }).sort({ updatedAt: -1 }).limit(120).lean() as any,
+      HomeModel.find({ userId: user._id }, { name: 1, address: 1 }).limit(60).lean() as any
+    ])
+
+    const names = [...new Set(
+      (knownLeads as any[]).map((l) => String(l.name || '').trim()).filter((n) => n.length > 1)
+    )]
+    const places = [...new Set(
+      (knownHomes as any[]).flatMap((h) => [h.name, h.address]).map((x) => String(x || '').trim()).filter((x) => x.length > 3)
+    )]
+
+    const priming = [
+      names.length ? `KNOWN NAMES (people this agent works with):\n  ${names.join(', ')}` : '',
+      places.length ? `KNOWN PLACES (their properties):\n  ${places.join(', ')}` : '',
+      (names.length || places.length)
+        ? `Speech-to-text mangles proper nouns. If a name or address in the transcript is\n` +
+          `CLOSE to one above, use the version above — "white fish stage" is almost certainly\n` +
+          `"Whitefish Stage". If it is not close to anything, leave it exactly as heard rather\n` +
+          `than forcing a match; a wrong name is worse than an unfamiliar one.`
+        : ''
+    ].filter(Boolean).join('\n\n')
+
     const today = new Date().toISOString().slice(0, 10)
 
     // Uses the app's existing OpenAI helper rather than a hand-rolled call.
@@ -80,7 +119,7 @@ export default defineEventHandler(async (event) => {
     // Anthropic stays for document reading — PDF document blocks are a real
     // capability difference, not a preference.
     const raw = await useOpenAi(
-      [{ role: 'user', content: buildIntentPrompt(transcript, today, context) }],
+      [{ role: 'user', content: buildIntentPrompt(transcript, today, [priming, context].filter(Boolean).join('\n\n')) }],
       // Headroom so the JSON can't be cut off mid-object — a truncated
       // response parses as a failure and silently loses a reminder.
       // Low temperature because this is extraction, not writing.
@@ -150,6 +189,7 @@ export default defineEventHandler(async (event) => {
       note: analysis.note,
       question: analysis.question,
       sphere: sphereSaved,
+      corrected: (analysis as any).corrected ?? [],
       reminders: analysis.reminders.map((r, i) => ({
         _id: String(reminderIds[i] ?? ''),
         ...r

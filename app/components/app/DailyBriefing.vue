@@ -266,6 +266,90 @@ function beginReschedule(d: any) {
 
     <!-- Document deadlines. Above the leads deliberately — a contingency
          expiring today can't wait for the call list. -->
+    <!-- Two columns above 1000px. The call list gets the wide one because
+         it's what the realtor opened this screen for; deadlines, reminders
+         and the sphere are context beside it rather than competing below. -->
+    <div class="db-grid">
+      <div>
+        <!-- Ranked list -->
+    <div v-if="briefing?.leads?.length">
+      <div
+        v-for="lead in visibleLeads"
+        :key="lead._id"
+        class="gf-lead group grid items-center gap-4 sm:gap-6 border-t border-[#DDD6C9] last:border-b py-6 pl-1.5 pr-3 relative transition-colors duration-300 hover:bg-[#DDD6C9]/30"
+        :class="filing.has(lead._id) ? 'gf-filing' : ''"
+      >
+        <!-- rust bar grows on hover -->
+        <span
+          class="absolute left-0 top-0 bottom-0 w-0.5 bg-[#4C5741] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center"
+        />
+
+        <span class="gf-ref hidden sm:block gf-label tracking-[0.1em] text-[#A9A39A] tabular-nums">
+          № {{ lead._id.slice(-4).toUpperCase() }}
+        </span>
+
+        <span class="gf-marker flex items-center gap-2.5">
+          <span class="w-[7px] h-[7px] shrink-0 transition-transform" :class="bucketMeta[lead.bucket].sq" />
+          <span class="gf-label uppercase tracking-[0.14em] text-[#8A847C]">
+            {{ bucketMeta[lead.bucket].label }}
+          </span>
+        </span>
+
+        <NuxtLink :to="`/dashboard/leads/${lead._id}/details`" class="gf-main min-w-0">
+          <p class="font-display gf-lead font-semibold tracking-tight mb-0.5 truncate group-hover:text-[#4C5741] transition-colors">
+            {{ lead.name }}
+          </p>
+          <p class="gf-meta text-[#8A847C] truncate">
+            {{ lead.reason }} · {{ lead.lastContactLabel }}
+          </p>
+        </NuxtLink>
+
+        <div
+          class="gf-actions flex gap-2.5"
+          :data-tour="lead._id === visibleLeads[0]?._id ? 'lead-actions' : undefined"
+        >
+          <appLeadMessageComposer
+            :lead-id="lead._id"
+            :lead-name="lead.name"
+            :lead-phone="lead.phone"
+            @sent="onLeadSent"
+          />
+          <button
+            :disabled="marking.has(lead._id)"
+            class="gf-pair-btn border-[#1F1B16] text-[#1F1B16] hover:bg-[#1F1B16] hover:text-[#F7F4EF] disabled:opacity-40 disabled:cursor-not-allowed"
+            @click="markContacted(lead)"
+          >
+            {{ marking.has(lead._id) ? 'Saving…' : 'Contacted' }}
+          </button>
+        </div>
+      </div>
+
+      <button
+        v-if="briefing.leads.length > VISIBLE_LIMIT"
+        class="mt-8 gf-eyebrow hover:text-[#4C5741] transition-colors"
+        @click="showAll = !showAll"
+      >
+        {{ showAll ? '— Show less' : `— Show all ${briefing.leads.length}` }}
+      </button>
+    </div>
+
+    <!-- Caught up -->
+    <div v-else-if="!pending" class="border-t border-b border-[#DDD6C9] py-14 text-center">
+      <p class="gf-body text-[#8A847C]">
+        Nothing needs a follow-up right now. New and cold leads appear here automatically.
+      </p>
+    </div>
+
+    <!-- Below the call list, deliberately.
+         Contract deadlines and today's people are time-bound. These two are
+         valuable but never urgent — putting them above the call list would
+         bury the thing the realtor opened this screen for.
+
+         Order between them matters too: the closing prompt comes first because
+         answering it is what FILLS the sphere list underneath. -->
+      </div>
+
+      <aside class="db-stack">
     <section v-if="urgentDeadlines.length" class="mb-11">
       <p class="h-label mb-4">Deadlines</p>
 
@@ -361,6 +445,7 @@ function beginReschedule(d: any) {
     <!-- Self-set reminders. Separate from contract deadlines because they
          are a different kind of obligation, but in the same place because the
          realtor shouldn't have to look twice. -->
+
     <section v-if="reminders.length" class="mb-11">
       <p class="h-label mb-4">Reminders</p>
       <div
@@ -411,84 +496,10 @@ function beginReschedule(d: any) {
       </div>
     </section>
 
-    <!-- Ranked list -->
-    <div v-if="briefing?.leads?.length">
-      <div
-        v-for="lead in visibleLeads"
-        :key="lead._id"
-        class="gf-lead group grid items-center gap-4 sm:gap-6 border-t border-[#DDD6C9] last:border-b py-6 pl-1.5 pr-3 relative transition-colors duration-300 hover:bg-[#DDD6C9]/30"
-        :class="filing.has(lead._id) ? 'gf-filing' : ''"
-      >
-        <!-- rust bar grows on hover -->
-        <span
-          class="absolute left-0 top-0 bottom-0 w-0.5 bg-[#4C5741] scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-center"
-        />
-
-        <span class="gf-ref hidden sm:block gf-label tracking-[0.1em] text-[#A9A39A] tabular-nums">
-          № {{ lead._id.slice(-4).toUpperCase() }}
-        </span>
-
-        <span class="gf-marker flex items-center gap-2.5">
-          <span class="w-[7px] h-[7px] shrink-0 transition-transform" :class="bucketMeta[lead.bucket].sq" />
-          <span class="gf-label uppercase tracking-[0.14em] text-[#8A847C]">
-            {{ bucketMeta[lead.bucket].label }}
-          </span>
-        </span>
-
-        <NuxtLink :to="`/dashboard/leads/${lead._id}/details`" class="gf-main min-w-0">
-          <p class="font-display gf-lead font-semibold tracking-tight mb-0.5 truncate group-hover:text-[#4C5741] transition-colors">
-            {{ lead.name }}
-          </p>
-          <p class="gf-meta text-[#8A847C] truncate">
-            {{ lead.reason }} · {{ lead.lastContactLabel }}
-          </p>
-        </NuxtLink>
-
-        <div
-          class="gf-actions flex gap-2.5"
-          :data-tour="lead._id === visibleLeads[0]?._id ? 'lead-actions' : undefined"
-        >
-          <appLeadMessageComposer
-            :lead-id="lead._id"
-            :lead-name="lead.name"
-            :lead-phone="lead.phone"
-            @sent="onLeadSent"
-          />
-          <button
-            :disabled="marking.has(lead._id)"
-            class="gf-pair-btn border-[#1F1B16] text-[#1F1B16] hover:bg-[#1F1B16] hover:text-[#F7F4EF] disabled:opacity-40 disabled:cursor-not-allowed"
-            @click="markContacted(lead)"
-          >
-            {{ marking.has(lead._id) ? 'Saving…' : 'Contacted' }}
-          </button>
-        </div>
-      </div>
-
-      <button
-        v-if="briefing.leads.length > VISIBLE_LIMIT"
-        class="mt-8 gf-eyebrow hover:text-[#4C5741] transition-colors"
-        @click="showAll = !showAll"
-      >
-        {{ showAll ? '— Show less' : `— Show all ${briefing.leads.length}` }}
-      </button>
+        <appClosingPrompt />
+        <appSphereList />
+      </aside>
     </div>
-
-    <!-- Caught up -->
-    <div v-else-if="!pending" class="border-t border-b border-[#DDD6C9] py-14 text-center">
-      <p class="gf-body text-[#8A847C]">
-        Nothing needs a follow-up right now. New and cold leads appear here automatically.
-      </p>
-    </div>
-
-    <!-- Below the call list, deliberately.
-         Contract deadlines and today's people are time-bound. These two are
-         valuable but never urgent — putting them above the call list would
-         bury the thing the realtor opened this screen for.
-
-         Order between them matters too: the closing prompt comes first because
-         answering it is what FILLS the sphere list underneath. -->
-    <appClosingPrompt />
-    <appSphereList />
   </div>
 </template>
 

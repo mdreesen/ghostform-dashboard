@@ -40,6 +40,12 @@ export interface VoiceAnalysis {
   note: string
   /** The question asked, when there is one. */
   question: string
+  /**
+   * Names the model corrected against the known list.
+   * Shown to the realtor, because a silent correction is a silent error when
+   * it's wrong — and they're the only one who can tell.
+   */
+  corrected: { heard: string; used: string }[]
   reminders: ExtractedReminder[]
 }
 
@@ -92,6 +98,11 @@ export function buildIntentPrompt(transcript: string, today: string, context: st
     `Do NOT invent a sphere fact from a property observation. "The kitchen was`,
     `dated" is a note about a house, not a fact about a person.`,
     ``,
+    `IF YOU CORRECT A NAME against the known list, record it:`,
+    `  corrected: [{"heard":"white fish stage","used":"Whitefish Stage"}]`,
+    `Leave the array empty when you changed nothing. Never list a correction`,
+    `you did not actually make.`,
+    ``,
     `Return ONLY JSON, no fence:`,
     `{"intent":"mixed","note":"...","question":"...","reminders":[{"text":"...",`,
     `"dueAt":"YYYY-MM-DD","priority":"medium","heardAs":"..."}]}`
@@ -120,6 +131,12 @@ export function parseAnalysis(raw: string): VoiceAnalysis | null {
       intent: intents.includes(p.intent) ? p.intent : 'note',
       note: String(p.note ?? '').slice(0, 2000),
       question: String(p.question ?? '').slice(0, 500),
+      corrected: (p.corrected ?? [])
+        .map((c: any) => ({
+          heard: String(c.heard ?? '').slice(0, 80),
+          used: String(c.used ?? '').slice(0, 80)
+        }))
+        .filter((c: any) => c.heard && c.used && c.heard.toLowerCase() !== c.used.toLowerCase()),
       sphere: (p.sphere ?? [])
         .map((x: any) => ({
           about: String(x.about ?? '').slice(0, 80),

@@ -2993,22 +2993,7 @@ __lNdKKPKR6mLiwFlPOsO8k6EkQYVEzOlLk2aywnkSnU,
 _wH6JrtIxmaSoA8lCPWFnE9z4lQeXW6H5z3l5aymEQw
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"5784a-IHpWobE1eoZE7mkXJ0NDxbw2CFM\"",
-    "mtime": "2026-09-03T18:29:00.598Z",
-    "size": 358474,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"139a19-vfaB368ktybi/oS3za7hDXOAC1Y\"",
-    "mtime": "2026-09-03T18:29:00.598Z",
-    "size": 1284633,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(globalThis._importMeta_.url));
@@ -9174,6 +9159,11 @@ ${context}` : "",
     `Do NOT invent a sphere fact from a property observation. "The kitchen was`,
     `dated" is a note about a house, not a fact about a person.`,
     ``,
+    `IF YOU CORRECT A NAME against the known list, record it:`,
+    `  corrected: [{"heard":"white fish stage","used":"Whitefish Stage"}]`,
+    `Leave the array empty when you changed nothing. Never list a correction`,
+    `you did not actually make.`,
+    ``,
     `Return ONLY JSON, no fence:`,
     `{"intent":"mixed","note":"...","question":"...","reminders":[{"text":"...",`,
     `"dueAt":"YYYY-MM-DD","priority":"medium","heardAs":"..."}]}`
@@ -9186,7 +9176,7 @@ function plausibleDate(iso, today = /* @__PURE__ */ new Date()) {
   return days >= 0 && days <= 365;
 }
 function parseAnalysis(raw) {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e;
   try {
     const cleaned = raw.replace(/```json|```/g, "").trim();
     const s = cleaned.indexOf("{"), e = cleaned.lastIndexOf("}");
@@ -9197,14 +9187,21 @@ function parseAnalysis(raw) {
       intent: intents.includes(p.intent) ? p.intent : "note",
       note: String((_a = p.note) != null ? _a : "").slice(0, 2e3),
       question: String((_b = p.question) != null ? _b : "").slice(0, 500),
-      sphere: ((_c = p.sphere) != null ? _c : []).map((x) => {
+      corrected: ((_c = p.corrected) != null ? _c : []).map((c) => {
+        var _a2, _b2;
+        return {
+          heard: String((_a2 = c.heard) != null ? _a2 : "").slice(0, 80),
+          used: String((_b2 = c.used) != null ? _b2 : "").slice(0, 80)
+        };
+      }).filter((c) => c.heard && c.used && c.heard.toLowerCase() !== c.used.toLowerCase()),
+      sphere: ((_d = p.sphere) != null ? _d : []).map((x) => {
         var _a2, _b2;
         return {
           about: String((_a2 = x.about) != null ? _a2 : "").slice(0, 80),
           fact: String((_b2 = x.fact) != null ? _b2 : "").slice(0, 200)
         };
       }).filter((x) => x.about && x.fact),
-      reminders: ((_d = p.reminders) != null ? _d : []).map((r) => {
+      reminders: ((_e = p.reminders) != null ? _e : []).map((r) => {
         var _a2, _b2, _c2;
         return {
           text: String((_a2 = r.text) != null ? _a2 : "").slice(0, 200),
@@ -9229,7 +9226,7 @@ const bodySchema = z.object({
   leadId: z.string().optional()
 });
 const note_post = defineEventHandler(async (event) => {
-  var _a, _b, _c, _d;
+  var _a, _b, _c, _d, _e;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const { transcript, homeId, leadId } = await readValidatedBody(event, bodySchema.parse);
@@ -9253,9 +9250,29 @@ const note_post = defineEventHandler(async (event) => {
       const dates = ((_a2 = d.deadlines) != null ? _a2 : []).filter((x) => !x.dismissed && !x.completed).map((x) => `    ${x.label}: ${new Date(x.date).toISOString().slice(0, 10)}`).join("\n");
       return [`  ${d.docType || "Document"}`, dates].filter(Boolean).join("\n");
     }).join("\n");
+    const [knownLeads, knownHomes] = await Promise.all([
+      Lead.find({ userId: user._id }, { name: 1 }).sort({ updatedAt: -1 }).limit(120).lean(),
+      HomeModel.find({ userId: user._id }, { name: 1, address: 1 }).limit(60).lean()
+    ]);
+    const names = [...new Set(
+      knownLeads.map((l) => String(l.name || "").trim()).filter((n) => n.length > 1)
+    )];
+    const places = [...new Set(
+      knownHomes.flatMap((h) => [h.name, h.address]).map((x) => String(x || "").trim()).filter((x) => x.length > 3)
+    )];
+    const priming = [
+      names.length ? `KNOWN NAMES (people this agent works with):
+  ${names.join(", ")}` : "",
+      places.length ? `KNOWN PLACES (their properties):
+  ${places.join(", ")}` : "",
+      names.length || places.length ? `Speech-to-text mangles proper nouns. If a name or address in the transcript is
+CLOSE to one above, use the version above \u2014 "white fish stage" is almost certainly
+"Whitefish Stage". If it is not close to anything, leave it exactly as heard rather
+than forcing a match; a wrong name is worse than an unfamiliar one.` : ""
+    ].filter(Boolean).join("\n\n");
     const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
     const raw = await useOpenAi(
-      [{ role: "user", content: buildIntentPrompt(transcript, today, context) }],
+      [{ role: "user", content: buildIntentPrompt(transcript, today, [priming, context].filter(Boolean).join("\n\n")) }],
       // Headroom so the JSON can't be cut off mid-object — a truncated
       // response parses as a failure and silently loses a reminder.
       // Low temperature because this is extraction, not writing.
@@ -9309,6 +9326,7 @@ const note_post = defineEventHandler(async (event) => {
       note: analysis2.note,
       question: analysis2.question,
       sphere: sphereSaved,
+      corrected: (_b = analysis2.corrected) != null ? _b : [],
       reminders: analysis2.reminders.map((r, i) => {
         var _a2;
         return {
@@ -9318,9 +9336,9 @@ const note_post = defineEventHandler(async (event) => {
       })
     };
   } catch (err) {
-    console.error("[voice] note failed:", ((_c = (_b = err == null ? void 0 : err.data) == null ? void 0 : _b.error) == null ? void 0 : _c.message) || (err == null ? void 0 : err.message));
+    console.error("[voice] note failed:", ((_d = (_c = err == null ? void 0 : err.data) == null ? void 0 : _c.error) == null ? void 0 : _d.message) || (err == null ? void 0 : err.message));
     const sphereSaved = [];
-    for (const f of (_d = analysis.sphere) != null ? _d : []) {
+    for (const f of (_e = analysis.sphere) != null ? _e : []) {
       const needle = String(f.about).replace(/^the\s+/i, "").trim();
       if (needle.length < 2) continue;
       const matches = await Lead.find({
