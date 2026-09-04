@@ -49,7 +49,13 @@
 
 /* The voice dock is fixed bottom-right. Give the page enough bottom padding
    that the last row of content isn't sitting underneath it. */
-:root { --dock-clear: 84px; }
+:root {
+  --dock-clear: 84px;
+  /* The mobile tab bar. Referenced by the voice dock and the page shell so
+     neither can end up underneath it — which is exactly what happened when
+     the tab bar was added and the dock kept its old bottom offset. */
+  --tabs-h: 56px;
+}
 
 .gf-shell {
   padding-inline: var(--gutter);
@@ -59,10 +65,10 @@
   padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--dock-clear));
 }
 
-/* Desktop gets more air below the bar — there's room for it, and the page
-   reads better with the heading further from the chrome. */
-@media (min-width: 1024px) {
-  .gf-shell { padding-top: calc(var(--nav-h) + var(--s5) + env(safe-area-inset-top, 0px)); }
+/* Above 1000px the navigation is a SIDEBAR — there is no top bar to clear, so
+   reserving --nav-h would leave 72px of dead space above every page title. */
+@media (min-width: 1000px) {
+  .gf-shell { padding-top: var(--s4); }
 }
 
 /* Anchor links and in-page jumps land below the fixed bar rather than
@@ -203,6 +209,14 @@
 /* Clear the iOS home indicator so the button isn't half under it */
 @supports (padding: max(0px)) {
   .gf-dock { bottom: max(var(--gutter), env(safe-area-inset-bottom, 0px)); }
+}
+
+/* Below 1000px the tab bar occupies the bottom edge, so the dock sits above
+   it rather than behind it. */
+@media (max-width: 999px) {
+  .gf-dock {
+    bottom: calc(var(--tabs-h) + 12px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 
@@ -491,4 +505,134 @@
   display: flex; flex-wrap: wrap; gap: var(--s1);
   padding-top: var(--s3);
   border-top: 1px solid var(--hair, #DDD6C9);
+}
+
+/* ============================================================================
+   NAVIGATION
+   ============================================================================
+   Seven flat links across a top bar gave equal weight to "Today" and
+   "Profile". Grouping them makes seven readable without removing any.
+
+   DESKTOP: a sidebar. It's persistent, it has room for grouping, and it frees
+   the top of every page for that page's own title.
+
+   MOBILE: bottom tabs, not a hamburger. A realtor uses this one-handed in a
+   truck — the four things they need daily should be one thumb-tap away, and
+   a hamburger hides all of them behind a gesture.
+   ============================================================================ */
+
+.nav-side {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 232px;
+  padding: var(--s3) var(--s2);
+  background: var(--paper, #F7F4EF);
+  border-right: 1px solid var(--hair, #DDD6C9);
+  display: none;
+  flex-direction: column;
+  gap: var(--s3);
+  z-index: 60;
+  overflow-y: auto;
+}
+@media (min-width: 1000px) { .nav-side { display: flex; } }
+
+.nav-mark {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.02em;
+  color: var(--ink, #1F1B16);
+  text-decoration: none;
+  padding-inline: 10px;
+}
+
+.nav-group { display: flex; flex-direction: column; gap: 1px; }
+.nav-group-label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3, #A9A39A);
+  padding: 0 10px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 2px;
+  font-size: 14.5px;
+  color: var(--ink-2, #6B655C);
+  text-decoration: none;
+  transition: background .16s ease, color .16s ease;
+}
+.nav-item:hover { background: var(--paper-2, #EFEAE0); color: var(--ink, #1F1B16); }
+.nav-item[aria-current="page"] {
+  background: var(--paper-2, #EFEAE0);
+  color: var(--ink, #1F1B16);
+  font-weight: 500;
+  /* A left rule rather than a filled block — the accent marks position, and
+     rust is reserved for alerts. */
+  box-shadow: inset 2px 0 0 var(--moss, #4C5741);
+}
+/* A count beside a link, so "3 overdue" is visible without opening the page */
+.nav-badge {
+  font-size: 11.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3, #A9A39A);
+}
+.nav-badge[data-alert="true"] { color: var(--rust, #B5563A); font-weight: 600; }
+
+/* Content sits beside the sidebar */
+@media (min-width: 1000px) {
+  .nav-offset { padding-left: 232px; }
+}
+
+/* ---- Mobile: bottom tabs ---- */
+.nav-tabs {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 60;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--paper, #F7F4EF);
+  border-top: 1px solid var(--hair, #DDD6C9);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (min-width: 1000px) { .nav-tabs { display: none; } }
+
+.nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-height: var(--tabs-h);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3, #A9A39A);
+  text-decoration: none;
+  position: relative;
+}
+.nav-tab[aria-current="page"] { color: var(--ink, #1F1B16); }
+.nav-tab[aria-current="page"]::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 22%; right: 22%;
+  height: 2px;
+  background: var(--moss, #4C5741);
+}
+.nav-tab-dot {
+  position: absolute; top: 9px; right: 50%; margin-right: -16px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rust, #B5563A);
+}
+
+/* Clear the tab bar so the last row isn't underneath it */
+@media (max-width: 999px) {
+  /* Room for the tab bar AND the voice dock sitting above it. */
+  .gf-shell {
+    padding-bottom: calc(clamp(64px, 10vw, 112px) + var(--tabs-h) + 64px + env(safe-area-inset-bottom, 0px));
+  }
 }
