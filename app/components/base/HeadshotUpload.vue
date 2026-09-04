@@ -67,12 +67,12 @@ async function onFile(e: Event) {
   if (!file) return
 
   if (!file.type.startsWith('image/')) {
-    toast.error('Please choose an image file.')
+    toast.add({ title: 'Please choose an image file.', color: 'error', duration: 8000 })
     return
   }
   // Generous guard — the compressor handles the rest.
   if (file.size > 15 * 1024 * 1024) {
-    toast.error('That image is very large. Please choose one under 15MB.')
+    toast.add({ title: 'That image is very large. Please choose one under 15MB.', color: 'error', duration: 8000 })
     return
   }
 
@@ -89,10 +89,10 @@ async function onFile(e: Event) {
 
     await refreshNuxtData('user')
     emit('updated', res.url)
-    toast.success('Headshot saved.')
+    toast.add({ title: 'Headshot saved.', color: 'success' })
   } catch (err: any) {
     preview.value = ''
-    toast.error(err?.data?.message || 'Could not upload that image.')
+    toast.add({ title: err?.data?.message || 'Could not upload that image.', color: 'error', duration: 8000 })
   } finally {
     uploading.value = false
     if (fileInput.value) fileInput.value.value = ''
@@ -106,9 +106,9 @@ async function remove() {
     preview.value = ''
     await refreshNuxtData('user')
     emit('updated', '')
-    toast.success('Headshot removed.')
+    toast.add({ title: 'Headshot removed.', color: 'success' })
   } catch {
-    toast.error('Could not remove it.')
+    toast.add({ title: 'Could not remove it.', color: 'error', duration: 8000 })
   } finally {
     removing.value = false
   }

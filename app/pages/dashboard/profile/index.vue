@@ -63,7 +63,8 @@ const schema = z.object({
   company: z.string().min(2, 'Professional affiliation required'),
   region: z.string().min(2, 'Operational area baseline required'),
   calendar_link: z.string().nullable(),
-  cold_lead_after_days: z.string().nullable()
+  cold_lead_after_days: z.string().nullable(),
+  mailingAddress: z.string().nullable().optional()
 })
 
 type Schema = z.infer<typeof schema>
@@ -75,7 +76,8 @@ const state = reactive<Schema>({
   company: data.value?.company,
   region: data.value?.region,
   calendar_link: data.value?.calendar_link,
-  cold_lead_after_days: data.value?.cold_lead_after_days
+  cold_lead_after_days: data.value?.cold_lead_after_days,
+  mailingAddress: data.value?.mailingAddress || ''
 });
 
 const isEditing = ref(false)
@@ -89,9 +91,9 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
     })
 
     isEditing.value = false
-    toast.success('Updated Profile');
+    toast.add({ title: 'Updated Profile', color: 'success' });
   } catch (error) {
-    toast.error("Failed to delete", 'Try again');
+    toast.add({ title: "Failed to delete", description: 'Try again', color: 'error', duration: 8000 });
   }
 }
 
@@ -152,6 +154,18 @@ const onSubmit = async (event: FormSubmitEvent<Schema>) => {
                       <span v-else class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
                         :title="state.email">
                         {{ state.email || '—' }}
+                      </span>
+                    </UFormField>
+
+                    <!-- CAN-SPAM requires a physical postal address in every
+                         commercial email. Without it, campaigns are not
+                         legally compliant — so it's asked for plainly. -->
+                    <UFormField label="Mailing address" name="mailingAddress">
+                      <UInput v-if="isEditing" v-model="state.mailingAddress" variant="none"
+                        placeholder="123 Main St, Kalispell, MT 59901" class="truncate" />
+                      <span v-else class="block truncate text-sm font-medium text-[#8A847C] max-w-50"
+                        :title="state.mailingAddress">
+                        {{ state.mailingAddress || '— required for email campaigns' }}
                       </span>
                     </UFormField>
                   </div>

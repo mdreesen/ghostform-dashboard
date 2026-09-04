@@ -50,25 +50,18 @@ watch(() => route.path, () => { moreOpen.value = false })
 
       <div v-for="g in groups" :key="g.label" class="nav-group">
         <p class="nav-group-label">{{ g.label }}</p>
-        <NuxtLink
-          v-for="i in g.items" :key="i.to"
-          :to="i.to"
-          class="nav-item"
-          :aria-current="isCurrent(i.to) ? 'page' : undefined"
-        >
+        <NuxtLink v-for="i in g.items" :key="i.to" :to="i.to" class="nav-item"
+          :aria-current="isCurrent(i.to) ? 'page' : undefined">
           {{ i.label }}
           <span v-if="i.badge" class="nav-badge" :data-alert="i.alert || undefined">{{ i.badge }}</span>
         </NuxtLink>
       </div>
 
       <div class="nav-group" style="margin-top:auto">
-        <NuxtLink
-          to="/dashboard/profile"
-          class="nav-item"
-          :aria-current="isCurrent('/dashboard/profile') ? 'page' : undefined"
-        >
-                <img v-if="user?.headshot_url" :src="user?.headshot_url" :alt="user?.name"
-          class="w-11 h-11 rounded-full object-cover shrink-0" />
+        <NuxtLink to="/dashboard/profile" class="nav-item"
+          :aria-current="isCurrent('/dashboard/profile') ? 'page' : undefined">
+          <img v-if="user?.headshot_url" :src="user?.headshot_url" :alt="user?.name"
+            class="w-11 h-11 rounded-full object-cover shrink-0" />
           Profile &amp; settings
         </NuxtLink>
       </div>
@@ -78,35 +71,38 @@ watch(() => route.path, () => { moreOpen.value = false })
     <nav class="nav-tabs" aria-label="Main">
       <NuxtLink to="/dashboard" class="nav-tab" :aria-current="isCurrent('/dashboard') ? 'page' : undefined">
         <span v-if="overdue > 0" class="nav-tab-dot"></span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <rect x="3" y="5" width="18" height="16" rx="2" /><path d="M3 9h18M8 3v4M16 3v4" />
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round">
+          <rect x="3" y="5" width="18" height="16" rx="2" />
+          <path d="M3 9h18M8 3v4M16 3v4" />
         </svg>
         Today
       </NuxtLink>
 
-      <NuxtLink to="/dashboard/leads" class="nav-tab" :aria-current="isCurrent('/dashboard/leads') ? 'page' : undefined">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-          <path d="M16 20v-2a4 4 0 0 0-8 0v2" /><circle cx="12" cy="8" r="4" />
+      <NuxtLink to="/dashboard/leads" class="nav-tab"
+        :aria-current="isCurrent('/dashboard/leads') ? 'page' : undefined">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round">
+          <path d="M16 20v-2a4 4 0 0 0-8 0v2" />
+          <circle cx="12" cy="8" r="4" />
         </svg>
         People
       </NuxtLink>
 
       <NuxtLink to="/dashboard/home" class="nav-tab" :aria-current="isCurrent('/dashboard/home') ? 'page' : undefined">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+          stroke-linecap="round" stroke-linejoin="round">
           <path d="M3 10 12 3l9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z" />
         </svg>
         Properties
       </NuxtLink>
 
-      <button
-        class="nav-tab"
-        type="button"
-        :aria-current="moreActive ? 'page' : undefined"
-        :aria-expanded="moreOpen"
-        @click="moreOpen = !moreOpen"
-      >
+      <button class="nav-tab" type="button" :aria-current="moreActive ? 'page' : undefined" :aria-expanded="moreOpen"
+        @click="moreOpen = !moreOpen">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" />
+          <circle cx="5" cy="12" r="1.6" />
+          <circle cx="12" cy="12" r="1.6" />
+          <circle cx="19" cy="12" r="1.6" />
         </svg>
         More
       </button>
@@ -114,17 +110,10 @@ watch(() => route.path, () => { moreOpen.value = false })
 
     <!-- More sheet. Weekly tasks, not daily — so they're one tap deeper. -->
     <Teleport to="body">
-      <div
-        v-if="moreOpen"
-        class="fixed inset-0 z-[59]"
-        style="background:rgba(31,27,22,.4)"
-        @click="moreOpen = false"
-      >
-        <div
-          class="fixed left-0 right-0"
+      <div v-if="moreOpen" class="fixed inset-0 z-[59]" style="background:rgba(31,27,22,.4)" @click="moreOpen = false">
+        <div class="fixed left-0 right-0"
           style="bottom:calc(56px + env(safe-area-inset-bottom, 0px));background:#F7F4EF;border-top:1px solid #DDD6C9"
-          @click.stop
-        >
+          @click.stop>
           <NuxtLink to="/dashboard/campaigns" class="nav-item" style="padding:16px 20px">Campaigns</NuxtLink>
           <NuxtLink to="/dashboard/social" class="nav-item" style="padding:16px 20px">Social</NuxtLink>
           <NuxtLink to="/dashboard/forms" class="nav-item" style="padding:16px 20px">Forms &amp; QR codes</NuxtLink>

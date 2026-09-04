@@ -161,6 +161,8 @@ declare global {
   const readRawBody: typeof import('../../node_modules/h3').readRawBody
   const readValidatedBody: typeof import('../../node_modules/h3').readValidatedBody
   const removeResponseHeader: typeof import('../../node_modules/h3').removeResponseHeader
+  const renderEmail: typeof import('../../server/utils/emailTemplate').renderEmail
+  const renderEmailText: typeof import('../../server/utils/emailTemplate').renderEmailText
   const replaceUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').replaceUserSession
   const requirePaidUser: typeof import('../../server/utils/requirePaidUser').default
   const requireUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').requireUserSession
@@ -188,6 +190,7 @@ declare global {
   const setResponseHeaders: typeof import('../../node_modules/h3').setResponseHeaders
   const setResponseStatus: typeof import('../../node_modules/h3').setResponseStatus
   const setUserSession: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session').setUserSession
+  const signUnsubscribe: typeof import('../../server/utils/unsubscribe').signUnsubscribe
   const splitCookiesString: typeof import('../../node_modules/h3').splitCookiesString
   const templateDraft: typeof import('../../server/utils/leadMessageDraft').templateDraft
   const toEventHandler: typeof import('../../node_modules/h3').toEventHandler
@@ -196,6 +199,7 @@ declare global {
   const toWebHandler: typeof import('../../node_modules/h3').toWebHandler
   const toWebRequest: typeof import('../../node_modules/h3').toWebRequest
   const unsealSession: typeof import('../../node_modules/h3').unsealSession
+  const unsubscribeUrl: typeof import('../../server/utils/unsubscribe').unsubscribeUrl
   const updateSession: typeof import('../../node_modules/h3').updateSession
   const useAppConfig: typeof import('../../node_modules/nitropack/dist/runtime/internal/config').useAppConfig
   const useBase: typeof import('../../node_modules/h3').useBase
@@ -207,6 +211,7 @@ declare global {
   const useSession: typeof import('../../node_modules/h3').useSession
   const useStorage: typeof import('../../node_modules/nitropack/dist/runtime/internal/storage').useStorage
   const verifyPassword: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password').verifyPassword
+  const verifyUnsubscribe: typeof import('../../server/utils/unsubscribe').verifyUnsubscribe
   const writeEarlyHints: typeof import('../../node_modules/h3').writeEarlyHints
 }
 // for type re-export
@@ -368,6 +373,9 @@ declare global {
   export type { BriefingLead, DailyBriefing } from '../../server/utils/dailyBriefing'
   import('../../server/utils/dailyBriefing')
   // @ts-ignore
+  export type { EmailBrand, EmailBlock } from '../../server/utils/emailTemplate'
+  import('../../server/utils/emailTemplate')
+  // @ts-ignore
   export type { QualAnswers, Scorecard, LeadAnalysis } from '../../server/utils/leadAnalysis'
   import('../../server/utils/leadAnalysis')
   // @ts-ignore
@@ -456,6 +464,7 @@ export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_mod
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
 export { buildClosingPrompts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/closingPrompt';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
+export { renderEmail, renderEmailText } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/emailTemplate';
 export { buildScorecard, analyseLead } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadAnalysis';
 export { templateDraft, generateLeadDraft } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/leadMessageDraft';
 export { sendToUser, pushConfigured } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/push';
@@ -465,4 +474,5 @@ export { createQualifyToken, readQualifyToken } from '/Users/mdreesen/projects/g
 export { default as requirePaidUser } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/requirePaidUser';
 export { TOPICS, generateSocialPosts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/socialDraft';
 export { buildSphereBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/sphereBriefing';
+export { signUnsubscribe, verifyUnsubscribe, unsubscribeUrl } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/unsubscribe';
 export { sendWelcomeEmail } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/welcomeEmail';

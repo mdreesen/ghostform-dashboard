@@ -16,10 +16,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording } = body
+  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording, blocks, preheader } = body
 
   // 2. Comprehensive input parameter presence checks
-  if (!targetStatus || !subject || !messageBody || dayOfWeek === undefined || !timesPerMonth) {
+  const hasBlocks = Array.isArray(blocks) && blocks.length > 0
+
+  // messageBody OR blocks — a campaign built entirely from blocks has no
+  // messageBody, and requiring it would make the builder unusable.
+  if (!targetStatus || !subject || (!messageBody && !hasBlocks) || dayOfWeek === undefined || !timesPerMonth) {
     throw createError({ 
       statusCode: 400, 
       message: 'Missing required automated workflow properties.' 
@@ -33,7 +37,14 @@ export default defineEventHandler(async (event) => {
       title: title || `${targetStatus.toUpperCase()} Automated Loop`,
       targetStatus,
       subject,
-      messageBody,
+      messageBody: messageBody || '',
+      // Only the block types the renderer knows — anything else is dropped
+      // rather than stored and silently ignored at send time.
+      blocks: hasBlocks
+        ? blocks.filter((b: any) =>
+            ['text', 'image', 'button', 'property', 'divider'].includes(b?.type))
+        : [],
+      preheader: typeof preheader === 'string' ? preheader.slice(0, 160) : '',
       dayOfWeek: Number(dayOfWeek),
       timesPerMonth: Number(timesPerMonth),
       // Default ON: repeated identical copy reads as a robot and hurts

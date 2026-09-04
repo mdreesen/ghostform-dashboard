@@ -59,6 +59,26 @@ const leadSchema = new Schema({
       index: true
     },
 
+    /**
+     * ------------------------------------------------------------------
+     * EMAIL CONSENT
+     * ------------------------------------------------------------------
+     * CAN-SPAM requires a working opt-out in every commercial email and
+     * that it be honoured within 10 business days. The realtor is the
+     * sender; GhostForm is the machine that sends. Without this field a
+     * "stop emailing me" reply goes to their inbox and the cron sends
+     * again on Monday regardless.
+     *
+     * Checked in the campaign query, so an unsubscribe takes effect on the
+     * next run rather than needing anyone to act on it.
+     */
+    unsubscribedAt: { type: Date, default: null, index: true },
+    /** Set from a Resend webhook. A hard bounce or spam complaint must stop
+     *  sending immediately — the sending domain is shared across every
+     *  realtor on the platform, so one bad list hurts all of them. */
+    emailSuppressedAt: { type: Date, default: null, index: true },
+    emailSuppressedReason: { type: String, default: '' },
+
     status: { type: String, default: 'new' },
 
     /**

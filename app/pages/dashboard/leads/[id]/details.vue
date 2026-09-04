@@ -48,7 +48,7 @@ async function sendQuestionnaire() {
       method: 'POST',
       body: { intent: intent.value }
     });
-    toast.success('Questionnaire sent.');
+    toast.add({ title: 'Questionnaire sent.', color: 'success' });
     // Reflect sentAt locally so the button state updates without a reload.
     (lead.value as any).qualification = {
       ...(lead.value as any).qualification,
@@ -56,7 +56,7 @@ async function sendQuestionnaire() {
       intent: intent.value
     };
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not send the questionnaire.');
+    toast.add({ title: err?.data?.message || 'Could not send the questionnaire.', color: 'error', duration: 8000 });
   } finally {
     sendingQuestionnaire.value = false;
   }
@@ -76,9 +76,9 @@ async function runAnalysis() {
     };
     await refreshNuxtData(['leads']);
 
-    toast.success('Analysis updated.');
+    toast.add({ title: 'Analysis updated.', color: 'success' });
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not run the analysis.');
+    toast.add({ title: err?.data?.message || 'Could not run the analysis.', color: 'error', duration: 8000 });
   } finally {
     analysing.value = false;
   }
@@ -120,13 +120,13 @@ async function markContacted() {
     await $fetch(`/api/leads/${route.params.id}/contacted`, { method: 'POST' });
   } catch {
     // Only a failed WRITE is an error worth showing.
-    toast.error('Could not update. Please try again.');
+    toast.add({ title: 'Could not update. Please try again.', color: 'error', duration: 8000 });
     marking.value = false;
     return;
   }
 
   (lead.value as any).lastContactedAt = new Date().toISOString();
-  toast.success('Marked as contacted');
+  toast.add({ title: 'Marked as contacted', color: 'success' });
 
   // Refresh is best-effort — the contact is already saved, so a failed
   // refetch must not surface as "could not update".

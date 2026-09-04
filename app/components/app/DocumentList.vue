@@ -51,7 +51,7 @@ async function removeDoc(doc: any) {
     await refreshNuxtData('briefing-deadlines')
     toast.add({ title: 'Document deleted.' })
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not delete that document.')
+    toast.add({ title: err?.data?.message || 'Could not delete that document.', color: 'error', duration: 8000 })
   } finally {
     deleting.value = false
   }

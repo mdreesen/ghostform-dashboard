@@ -41,9 +41,9 @@ const useToggle = async () => {
             body: { _id: props.data._id, active: !isActive.value }
         })
         await refreshNuxtData('campaigns');
-        toast.success(isActive.value ? 'Campaign paused' : 'Campaign resumed');
+        toast.add({ title: isActive.value ? 'Campaign paused' : 'Campaign resumed', color: 'success' });
     } catch (error) {
-        toast.error('Could not update campaign.');
+        toast.add({ title: 'Could not update campaign.', color: 'error', duration: 8000 });
     } finally {
         toggling.value = false
     }
@@ -60,9 +60,9 @@ const useVaryToggle = async () => {
             body: { _id: props.data._id, varyWording: !varying.value }
         })
         await refreshNuxtData('campaigns');
-        toast.success(varying.value ? 'Wording will stay exactly as written' : 'Wording will vary each send');
+        toast.add({ title: varying.value ? 'Wording will stay exactly as written' : 'Wording will vary each send', color: 'success' });
     } catch (error) {
-        toast.error('Could not update.');
+        toast.add({ title: 'Could not update.', color: 'error', duration: 8000 });
     } finally {
         togglingVary.value = false
     }
@@ -78,11 +78,11 @@ const useDelete = async () => {
         })
         await refreshSession();
         await refreshNuxtData('campaigns');
-        toast.success('Automation Deleted');
+        toast.add({ title: 'Automation Deleted', color: 'success' });
         open.value = false;
 
     } catch (error) {
-        toast.error('Failed to mount criteria templates.');
+        toast.add({ title: 'Failed to mount criteria templates.', color: 'error', duration: 8000 });
     } finally {
         loading.value = false
     }

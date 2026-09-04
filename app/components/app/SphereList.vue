@@ -24,7 +24,7 @@ async function touched(p: any) {
     await $fetch(`/api/sphere/${p._id}/touched`, { method: 'POST' })
     await refresh()
   } catch {
-    toast.error('Could not update that.')
+    toast.add({ title: 'Could not update that.', color: 'error', duration: 8000 })
   } finally {
     busy.value = null
   }

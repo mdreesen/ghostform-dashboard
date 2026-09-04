@@ -40,6 +40,7 @@ export { useCSV } from '../app/utils/csv';
 export { date, month, timeZone, formatDate, useFormatDate, yearMonthDayFormat } from '../app/utils/date';
 export { buildDeadlineBriefing, deadlineHeadline, BriefingDeadline } from '../app/utils/deadlineBriefing';
 export { readDocument, ExtractedDeadline, DocumentReading } from '../app/utils/documentRead';
+export { renderEmail, renderEmailText, EmailBrand, EmailBlock } from '../app/utils/emailTemplate';
 export { ghostFormUrl, customGhostFormUrl } from '../app/utils/ghostFormUrl';
 export { guessColumns, parseCsv, mapRows, ColumnGuess, MappedLead, ImportResult } from '../app/utils/leadImport';
 export { default as loggedInUser } from '../app/utils/loggedInUser';

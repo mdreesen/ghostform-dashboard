@@ -248,7 +248,7 @@ async function download() {
     try {
       url = canvas.toDataURL('image/png')
     } catch {
-      toast.error('That headshot blocks downloads. Upload your photo on the profile page instead of pasting a link.')
+      toast.add({ title: 'That headshot blocks downloads. Upload your photo on the profile page instead of pasting a link.', color: 'error', duration: 8000 })
       return
     }
 
@@ -257,7 +257,7 @@ async function download() {
     a.download = `ghostform-${template.value}-${style.ratio}.png`
     a.click()
   } catch {
-    toast.error('Could not create the image.')
+    toast.add({ title: 'Could not create the image.', color: 'error', duration: 8000 })
   } finally {
     downloading.value = false
   }
@@ -279,9 +279,9 @@ async function saveStyle() {
       }
     })
     await refreshNuxtData('user')
-    toast.success('Saved — your next card will look like this.')
+    toast.add({ title: 'Saved — your next card will look like this.', color: 'success' })
   } catch {
-    toast.error('Could not save your style.')
+    toast.add({ title: 'Could not save your style.', color: 'error', duration: 8000 })
   } finally {
     savingStyle.value = false
   }

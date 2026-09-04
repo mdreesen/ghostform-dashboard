@@ -23,14 +23,15 @@ const updateSchedule = async (hoursOffset: number | null) => {
             body: { scheduledTime: targetDate }
         })
 
-        toast.success(
-            'Queue Synchronized',
-            hoursOffset ? `Reminder target scheduled for execution.` : 'Automated follow-up cancelled.',
-        );
+        toast.add({
+            title: 'Queue Synchronized',
+            description: hoursOffset ? 'Reminder target scheduled for execution.' : 'Automated follow-up cancelled.',
+            color: 'success'
+        });
 
         clearNuxtData('agent-pipeline-stream')
     } catch (error) {
-        toast.error("Failed to update", 'Try again');
+        toast.add({ title: "Failed to update", description: 'Try again', color: 'error', duration: 8000 });
     } finally {
         isSaving.value = false
     }

@@ -3349,6 +3349,25 @@ const leadSchema = new Schema({
     default: "new",
     index: true
   },
+  /**
+   * ------------------------------------------------------------------
+   * EMAIL CONSENT
+   * ------------------------------------------------------------------
+   * CAN-SPAM requires a working opt-out in every commercial email and
+   * that it be honoured within 10 business days. The realtor is the
+   * sender; GhostForm is the machine that sends. Without this field a
+   * "stop emailing me" reply goes to their inbox and the cron sends
+   * again on Monday regardless.
+   *
+   * Checked in the campaign query, so an unsubscribe takes effect on the
+   * next run rather than needing anyone to act on it.
+   */
+  unsubscribedAt: { type: Date, default: null, index: true },
+  /** Set from a Resend webhook. A hard bounce or spam complaint must stop
+   *  sending immediately — the sending domain is shared across every
+   *  realtor on the platform, so one bad list hurts all of them. */
+  emailSuppressedAt: { type: Date, default: null, index: true },
+  emailSuppressedReason: { type: String, default: "" },
   status: { type: String, default: "new" },
   /**
    * ------------------------------------------------------------------
@@ -3432,7 +3451,7 @@ const homeSchema = new Schema({
 const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
 
 const Doc$9 = DocumentModel;
-const Lead$h = LeadModel$b;
+const Lead$i = LeadModel$b;
 const Home$8 = HomeModel;
 const CLOSING_WORDS = /closing|settlement|close of escrow|possession/i;
 async function buildClosingPrompts(userId) {
@@ -3444,7 +3463,7 @@ async function buildClosingPrompts(userId) {
   ).lean();
   if (!docs.length) return [];
   const leadIds = [...new Set(docs.map((d) => String(d.leadId)))];
-  const leads = await Lead$h.find(
+  const leads = await Lead$i.find(
     // Only leads NOT already marked closed — asking twice is worse than not asking.
     { _id: { $in: leadIds }, userId, closedAt: null },
     { name: 1, email: 1, address: 1 }
@@ -3575,6 +3594,134 @@ function buildHeadline(totals) {
   else if (parts.length === 2) list = `${parts[0]} and ${parts[1]}`;
   else list = `${parts.slice(0, -1).join(", ")} and ${parts[parts.length - 1]}`;
   return `You have ${list} today.`;
+}
+
+const INK$1 = "#1F1B16";
+const MUTED$1 = "#6B655C";
+const HAIR$1 = "#DDD6C9";
+const PAPER$1 = "#F7F4EF";
+const esc$1 = (s) => String(s != null ? s : "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const SERIF$1 = "Fraunces, Georgia, 'Times New Roman', serif";
+const SANS$1 = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+function block$1(b, accent) {
+  var _a, _b;
+  switch (b.type) {
+    case "text":
+      return String((_a = b.text) != null ? _a : "").split(/\n{2,}/).filter(Boolean).map((p) => `<p style="margin:0 0 18px;font-family:${SANS$1};font-size:16px;line-height:1.6;color:${INK$1};">${esc$1(p).replace(/\n/g, "<br>")}</p>`).join("");
+    case "image":
+      if (!b.src) return "";
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px;">
+        <tr><td>
+          <img src="${esc$1(b.src)}" alt="${esc$1(b.alt || "")}" width="600"
+               style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:none;text-decoration:none;" />
+        </td></tr></table>`;
+    case "property":
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+              style="margin:0 0 22px;border:1px solid ${HAIR$1};background:${PAPER$1};">
+        ${b.src ? `<tr><td><img src="${esc$1(b.src)}" alt="${esc$1(b.alt || b.address || "Property")}" width="600"
+             style="display:block;width:100%;max-width:600px;height:auto;border:0;" /></td></tr>` : ""}
+        <tr><td style="padding:20px 24px;">
+          <p style="margin:0 0 6px;font-family:${SERIF$1};font-size:21px;line-height:1.25;color:${INK$1};font-weight:600;">${esc$1((_b = b.address) != null ? _b : "")}</p>
+          ${b.price ? `<p style="margin:0 0 4px;font-family:${SANS$1};font-size:17px;color:${accent};font-weight:600;">${esc$1(b.price)}</p>` : ""}
+          ${b.beds || b.baths ? `<p style="margin:0;font-family:${SANS$1};font-size:14px;color:${MUTED$1};">${esc$1([b.beds && `${b.beds} bed`, b.baths && `${b.baths} bath`].filter(Boolean).join(" \xB7 "))}</p>` : ""}
+        </td></tr>
+      </table>`;
+    case "button":
+      if (!b.href) return "";
+      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+        <tr><td style="background:${INK$1};">
+          <a href="${esc$1(b.href)}"
+             style="display:inline-block;padding:14px 28px;font-family:${SANS$1};font-size:15px;font-weight:600;color:${PAPER$1};text-decoration:none;">
+            ${esc$1(b.label || "View")}
+          </a>
+        </td></tr></table>`;
+    case "divider":
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+        <tr><td style="border-top:1px solid ${HAIR$1};font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
+    default:
+      return "";
+  }
+}
+function renderEmail$1(opts) {
+  const accent = opts.brand.accent || "#B5563A";
+  const body = opts.blocks.map((b) => block$1(b, accent)).join("");
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="x-apple-disable-message-reformatting" />
+<title>${esc$1(opts.heading || opts.brand.name)}</title>
+<!--[if mso]><style>body,table,td{font-family:Georgia,serif !important;}</style><![endif]-->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+</head>
+<body style="margin:0;padding:0;background:#EFEAE0;-webkit-font-smoothing:antialiased;">
+
+<!-- Preheader: the grey text beside the subject in an inbox list. Hidden in
+     the body itself. Writing it deliberately is one of the cheapest wins
+     available in email. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc$1(opts.preheader || "")}</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EFEAE0;">
+  <tr><td align="center" style="padding:32px 16px;">
+
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+           style="width:600px;max-width:600px;background:${PAPER$1};border:1px solid ${HAIR$1};">
+
+      ${opts.heading ? `<tr><td style="padding:36px 32px 8px;">
+        <h1 style="margin:0;font-family:${SERIF$1};font-size:29px;line-height:1.15;color:${INK$1};font-weight:600;">${esc$1(opts.heading)}</h1>
+      </td></tr>` : ""}
+
+      <tr><td style="padding:${opts.heading ? "20px" : "36px"} 32px 8px;">
+        ${body}
+      </td></tr>
+
+      <!-- Signature. This is why the email looks like it came from a person. -->
+      <tr><td style="padding:8px 32px 34px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${HAIR$1};width:100%;">
+          <tr><td style="padding-top:22px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                ${opts.brand.photo ? `<td style="padding-right:14px;" valign="top">
+                  <img src="${esc$1(opts.brand.photo)}" alt="${esc$1(opts.brand.name)}" width="48" height="48"
+                       style="display:block;width:48px;height:48px;border-radius:50%;border:0;" />
+                </td>` : ""}
+                <td valign="middle">
+                  <p style="margin:0;font-family:${SERIF$1};font-size:17px;color:${INK$1};font-weight:600;">${esc$1(opts.brand.name)}</p>
+                  <p style="margin:2px 0 0;font-family:${SANS$1};font-size:13px;color:${MUTED$1};">
+                    ${esc$1(opts.brand.email)}${opts.brand.phone ? ` &middot; ${esc$1(opts.brand.phone)}` : ""}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+
+    <!-- CAN-SPAM footer. The address and the opt-out are legal requirements,
+         not design choices. -->
+    ${opts.unsubscribeUrl || opts.brand.mailingAddress ? `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
+      <tr><td align="center" style="padding:18px 16px;">
+        ${opts.brand.mailingAddress ? `<p style="margin:0 0 6px;font-family:${SANS$1};font-size:12px;line-height:1.5;color:#A9A39A;">${esc$1(opts.brand.mailingAddress)}</p>` : ""}
+        ${opts.unsubscribeUrl ? `<p style="margin:0;font-family:${SANS$1};font-size:12px;color:#A9A39A;">
+          <a href="${esc$1(opts.unsubscribeUrl)}" style="color:#A9A39A;text-decoration:underline;">Unsubscribe from these emails</a>
+        </p>` : ""}
+      </td></tr></table>` : ""}
+
+  </td></tr>
+</table>
+</body></html>`;
+}
+function renderEmailText$1(opts) {
+  const parts = [];
+  if (opts.heading) parts.push(opts.heading, "");
+  for (const b of opts.blocks) {
+    if (b.type === "text" && b.text) parts.push(b.text, "");
+    if (b.type === "property") parts.push([b.address, b.price, [b.beds && `${b.beds} bed`, b.baths && `${b.baths} bath`].filter(Boolean).join(" \xB7 ")].filter(Boolean).join("\n"), "");
+    if (b.type === "button" && b.href) parts.push(`${b.label || "View"}: ${b.href}`, "");
+  }
+  parts.push("\u2014", opts.brand.name, opts.brand.email);
+  return parts.join("\n");
 }
 
 const TIMELINE_SCORE = {
@@ -3976,7 +4123,7 @@ function pushConfigured() {
 
 const Doc$8 = DocumentModel;
 const Home$7 = HomeModel;
-const Lead$g = LeadModel$b;
+const Lead$h = LeadModel$b;
 async function buildDeadlineBriefing(userId, horizonDays = 14) {
   var _a, _b, _c, _d, _e;
   const now = /* @__PURE__ */ new Date();
@@ -3992,7 +4139,7 @@ async function buildDeadlineBriefing(userId, horizonDays = 14) {
   const leadIds = [...new Set(docs.map((d) => d.leadId).filter(Boolean).map(String))];
   const [homes, leads] = await Promise.all([
     homeIds.length ? Home$7.find({ _id: { $in: homeIds }, userId }, { name: 1, address: 1 }).lean() : Promise.resolve([]),
-    leadIds.length ? Lead$g.find({ _id: { $in: leadIds }, userId }, { name: 1, email: 1 }).lean() : Promise.resolve([])
+    leadIds.length ? Lead$h.find({ _id: { $in: leadIds }, userId }, { name: 1, email: 1 }).lean() : Promise.resolve([])
   ]);
   const homeById = new Map(homes.map((h) => [String(h._id), h]));
   const leadById = new Map(leads.map((l) => [String(l._id), l]));
@@ -4246,13 +4393,13 @@ function questionsFor(intent) {
   return BUYER_QUESTIONS;
 }
 
-function secret() {
+function secret$1() {
   const s = process.env.QUALIFY_SECRET || process.env.NUXT_SESSION_PASSWORD;
   if (!s) throw new Error("QUALIFY_SECRET (or NUXT_SESSION_PASSWORD) must be set to sign questionnaire links.");
   return s;
 }
 function sign(payload) {
-  return createHmac("sha256", secret()).update(payload).digest("base64url");
+  return createHmac("sha256", secret$1()).update(payload).digest("base64url");
 }
 function readQualifyToken(token) {
   if (!token || typeof token !== "string") return null;
@@ -4317,6 +4464,11 @@ const userSchema = new Schema({
   leads_captured: { type: Number, default: 0 },
   name: String,
   email: { type: String, unique: true, required: true },
+  /**
+     * Required in the footer of every commercial email under CAN-SPAM. A PO
+     * box is acceptable; nothing is not.
+     */
+  mailingAddress: { type: String, default: "" },
   email_hashed: String,
   phone: String,
   password: String,
@@ -4587,12 +4739,12 @@ Write a DIFFERENT post from the one you'd write first \u2014 a different angle o
   };
 }
 
-const Lead$f = LeadModel$b;
+const Lead$g = LeadModel$b;
 const MONTH = 1e3 * 60 * 60 * 24 * 30.44;
 async function buildSphereBriefing(userId, limit = 5) {
   var _a, _b, _c, _d;
   const now = /* @__PURE__ */ new Date();
-  const clients = await Lead$f.find(
+  const clients = await Lead$g.find(
     { userId, closedAt: { $ne: null } },
     {
       name: 1,
@@ -4645,6 +4797,24 @@ async function buildSphereBriefing(userId, limit = 5) {
     return b.monthsQuiet - a.monthsQuiet;
   });
   return out.slice(0, limit);
+}
+
+function secret() {
+  return process.env.NUXT_SESSION_PASSWORD || process.env.CRON_SECRET || "ghostform-fallback";
+}
+function signUnsubscribe(leadId) {
+  const sig = createHmac("sha256", secret()).update(leadId).digest("base64url").slice(0, 24);
+  return `${leadId}.${sig}`;
+}
+function verifyUnsubscribe(token) {
+  const [id, sig] = String(token || "").split(".");
+  if (!id || !sig) return null;
+  const expected = createHmac("sha256", secret()).update(id).digest("base64url").slice(0, 24);
+  return sig === expected ? id : null;
+}
+function unsubscribeUrl(leadId, base) {
+  const domain = process.env.PROJECT_DOMAIN || "https://ghostform.app";
+  return `${domain.replace(/\/$/, "")}/u/${signUnsubscribe(leadId)}`;
 }
 
 const PALETTE = {
@@ -5418,7 +5588,9 @@ const _lazy_z7u2Qs = () => Promise.resolve().then(function () { return signup_po
 const _lazy_bz6IRH = () => Promise.resolve().then(function () { return index_get$n; });
 const _lazy_0YaBRe = () => Promise.resolve().then(function () { return index_delete$5; });
 const _lazy_Df3_bo = () => Promise.resolve().then(function () { return index_get$l; });
+const _lazy_y5s31U = () => Promise.resolve().then(function () { return preview_post$1; });
 const _lazy_uu0vQv = () => Promise.resolve().then(function () { return save_post$3; });
+const _lazy_TFM_lS = () => Promise.resolve().then(function () { return sendTest_post$1; });
 const _lazy_6dQdG0 = () => Promise.resolve().then(function () { return toggle_post$1; });
 const _lazy_vknMpb = () => Promise.resolve().then(function () { return vary_post$1; });
 const _lazy_oJWXNf = () => Promise.resolve().then(function () { return lead_get$1; });
@@ -5486,6 +5658,7 @@ const _lazy_q1wdXI = () => Promise.resolve().then(function () { return tour_post
 const _lazy_5mZRNa = () => Promise.resolve().then(function () { return voice_post$1; });
 const _lazy_aU6sq3 = () => Promise.resolve().then(function () { return note_post$1; });
 const _lazy_8DagdQ = () => Promise.resolve().then(function () { return gfManifest_webmanifest_get$1; });
+const _lazy_1Adccg = () => Promise.resolve().then(function () { return _token__get$1; });
 const _lazy_mqdDEE = () => Promise.resolve().then(function () { return renderer; });
 
 const handlers = [
@@ -5499,7 +5672,9 @@ const handlers = [
   { route: '/api/briefing', handler: _lazy_bz6IRH, lazy: true, middleware: false, method: "get" },
   { route: '/api/campaigns', handler: _lazy_0YaBRe, lazy: true, middleware: false, method: "delete" },
   { route: '/api/campaigns', handler: _lazy_Df3_bo, lazy: true, middleware: false, method: "get" },
+  { route: '/api/campaigns/preview', handler: _lazy_y5s31U, lazy: true, middleware: false, method: "post" },
   { route: '/api/campaigns/save', handler: _lazy_uu0vQv, lazy: true, middleware: false, method: "post" },
+  { route: '/api/campaigns/send-test', handler: _lazy_TFM_lS, lazy: true, middleware: false, method: "post" },
   { route: '/api/campaigns/toggle', handler: _lazy_6dQdG0, lazy: true, middleware: false, method: "post" },
   { route: '/api/campaigns/vary', handler: _lazy_vknMpb, lazy: true, middleware: false, method: "post" },
   { route: '/api/charts/lead', handler: _lazy_oJWXNf, lazy: true, middleware: false, method: "get" },
@@ -5567,6 +5742,7 @@ const handlers = [
   { route: '/api/user/voice', handler: _lazy_5mZRNa, lazy: true, middleware: false, method: "post" },
   { route: '/api/voice/note', handler: _lazy_aU6sq3, lazy: true, middleware: false, method: "post" },
   { route: '/gf-manifest.webmanifest', handler: _lazy_8DagdQ, lazy: true, middleware: false, method: "get" },
+  { route: '/u/:token', handler: _lazy_1Adccg, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_mqdDEE, lazy: true, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _z1ZgpX, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _QEBMFR, lazy: false, middleware: false, method: "get" },
@@ -5836,6 +6012,25 @@ const campaignSchema = new Schema({
   // 'new', 'appointment', 'active', etc.
   subject: { type: String, required: true },
   messageBody: { type: String, required: true },
+  /**
+   * Rich content blocks. Optional — a campaign with none falls back to
+   * messageBody as a single text block, so existing campaigns keep sending
+   * without a migration.
+   */
+  blocks: [{
+    type: { type: String, enum: ["text", "image", "button", "property", "divider"], required: true },
+    text: String,
+    src: String,
+    alt: String,
+    href: String,
+    label: String,
+    address: String,
+    price: String,
+    beds: String,
+    baths: String
+  }],
+  /** The grey line beside the subject in an inbox list. */
+  preheader: { type: String, default: "" },
   dayOfWeek: { type: Number, required: true, min: 0, max: 6 },
   // 0 = Sun, 1 = Mon, etc.
   // Cadence: how often the campaign repeats.
@@ -5908,9 +6103,134 @@ Just reply straight to this email whenever you have a second.` + signoff;
   }
 }
 
+const INK = "#1F1B16";
+const MUTED = "#6B655C";
+const HAIR = "#DDD6C9";
+const PAPER = "#F7F4EF";
+const esc = (s) => String(s != null ? s : "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+const SERIF = "Fraunces, Georgia, 'Times New Roman', serif";
+const SANS = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+function block(b, accent) {
+  var _a, _b;
+  switch (b.type) {
+    case "text":
+      return String((_a = b.text) != null ? _a : "").split(/\n{2,}/).filter(Boolean).map((p) => `<p style="margin:0 0 18px;font-family:${SANS};font-size:16px;line-height:1.6;color:${INK};">${esc(p).replace(/\n/g, "<br>")}</p>`).join("");
+    case "image":
+      if (!b.src) return "";
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 22px;">
+        <tr><td>
+          <img src="${esc(b.src)}" alt="${esc(b.alt || "")}" width="600"
+               style="display:block;width:100%;max-width:600px;height:auto;border:0;outline:none;text-decoration:none;" />
+        </td></tr></table>`;
+    case "property":
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
+              style="margin:0 0 22px;border:1px solid ${HAIR};background:${PAPER};">
+        ${b.src ? `<tr><td><img src="${esc(b.src)}" alt="${esc(b.alt || b.address || "Property")}" width="600"
+             style="display:block;width:100%;max-width:600px;height:auto;border:0;" /></td></tr>` : ""}
+        <tr><td style="padding:20px 24px;">
+          <p style="margin:0 0 6px;font-family:${SERIF};font-size:21px;line-height:1.25;color:${INK};font-weight:600;">${esc((_b = b.address) != null ? _b : "")}</p>
+          ${b.price ? `<p style="margin:0 0 4px;font-family:${SANS};font-size:17px;color:${accent};font-weight:600;">${esc(b.price)}</p>` : ""}
+          ${b.beds || b.baths ? `<p style="margin:0;font-family:${SANS};font-size:14px;color:${MUTED};">${esc([b.beds && `${b.beds} bed`, b.baths && `${b.baths} bath`].filter(Boolean).join(" \xB7 "))}</p>` : ""}
+        </td></tr>
+      </table>`;
+    case "button":
+      if (!b.href) return "";
+      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+        <tr><td style="background:${INK};">
+          <a href="${esc(b.href)}"
+             style="display:inline-block;padding:14px 28px;font-family:${SANS};font-size:15px;font-weight:600;color:${PAPER};text-decoration:none;">
+            ${esc(b.label || "View")}
+          </a>
+        </td></tr></table>`;
+    case "divider":
+      return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">
+        <tr><td style="border-top:1px solid ${HAIR};font-size:0;line-height:0;">&nbsp;</td></tr></table>`;
+    default:
+      return "";
+  }
+}
+function renderEmail(opts) {
+  const accent = opts.brand.accent || "#B5563A";
+  const body = opts.blocks.map((b) => block(b, accent)).join("");
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="x-apple-disable-message-reformatting" />
+<title>${esc(opts.heading || opts.brand.name)}</title>
+<!--[if mso]><style>body,table,td{font-family:Georgia,serif !important;}</style><![endif]-->
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet" />
+</head>
+<body style="margin:0;padding:0;background:#EFEAE0;-webkit-font-smoothing:antialiased;">
+
+<!-- Preheader: the grey text beside the subject in an inbox list. Hidden in
+     the body itself. Writing it deliberately is one of the cheapest wins
+     available in email. -->
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">${esc(opts.preheader || "")}</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#EFEAE0;">
+  <tr><td align="center" style="padding:32px 16px;">
+
+    <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"
+           style="width:600px;max-width:600px;background:${PAPER};border:1px solid ${HAIR};">
+
+      ${opts.heading ? `<tr><td style="padding:36px 32px 8px;">
+        <h1 style="margin:0;font-family:${SERIF};font-size:29px;line-height:1.15;color:${INK};font-weight:600;">${esc(opts.heading)}</h1>
+      </td></tr>` : ""}
+
+      <tr><td style="padding:${opts.heading ? "20px" : "36px"} 32px 8px;">
+        ${body}
+      </td></tr>
+
+      <!-- Signature. This is why the email looks like it came from a person. -->
+      <tr><td style="padding:8px 32px 34px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${HAIR};width:100%;">
+          <tr><td style="padding-top:22px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                ${opts.brand.photo ? `<td style="padding-right:14px;" valign="top">
+                  <img src="${esc(opts.brand.photo)}" alt="${esc(opts.brand.name)}" width="48" height="48"
+                       style="display:block;width:48px;height:48px;border-radius:50%;border:0;" />
+                </td>` : ""}
+                <td valign="middle">
+                  <p style="margin:0;font-family:${SERIF};font-size:17px;color:${INK};font-weight:600;">${esc(opts.brand.name)}</p>
+                  <p style="margin:2px 0 0;font-family:${SANS};font-size:13px;color:${MUTED};">
+                    ${esc(opts.brand.email)}${opts.brand.phone ? ` &middot; ${esc(opts.brand.phone)}` : ""}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td></tr>
+        </table>
+      </td></tr>
+    </table>
+
+    ${opts.unsubscribeUrl ? `<table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;">
+      <tr><td align="center" style="padding:18px 16px;">
+        <p style="margin:0;font-family:${SANS};font-size:12px;color:#A9A39A;">
+          <a href="${esc(opts.unsubscribeUrl)}" style="color:#A9A39A;text-decoration:underline;">Unsubscribe</a>
+        </p>
+      </td></tr></table>` : ""}
+
+  </td></tr>
+</table>
+</body></html>`;
+}
+function renderEmailText(opts) {
+  const parts = [];
+  if (opts.heading) parts.push(opts.heading, "");
+  for (const b of opts.blocks) {
+    if (b.type === "text" && b.text) parts.push(b.text, "");
+    if (b.type === "property") parts.push([b.address, b.price, [b.beds && `${b.beds} bed`, b.baths && `${b.baths} bath`].filter(Boolean).join(" \xB7 ")].filter(Boolean).join("\n"), "");
+    if (b.type === "button" && b.href) parts.push(`${b.label || "View"}: ${b.href}`, "");
+  }
+  parts.push("\u2014", opts.brand.name, opts.brand.email);
+  return parts.join("\n");
+}
+
 const LeadModel$9 = LeadModel$b;
 const CampaignModel$1 = CampaignModelImport;
-const resend$2 = new Resend(process.env.RESEND_KEY);
+const resend$3 = new Resend(process.env.RESEND_KEY);
 function localWeekday(tz, now) {
   var _a, _b, _c;
   try {
@@ -5954,7 +6274,7 @@ const reminders = defineTask({
     description: "Processes custom individual queues and recurring marketing blasts"
   },
   async run() {
-    var _a;
+    var _a, _b, _c, _d, _e;
     console.log("Orchestrating automated pipelines...");
     await connectDB();
     const now = /* @__PURE__ */ new Date();
@@ -5966,7 +6286,11 @@ const reminders = defineTask({
       const activeQueue = await LeadModel$9.find({
         reminderStatus: "scheduled",
         reminderScheduledAt: { $lte: now },
-        email: { $ne: "", $exists: true }
+        email: { $ne: "", $exists: true },
+        // An opt-out is an opt-out — it applies to scheduled reminders too,
+        // not only to bulk campaigns.
+        unsubscribedAt: null,
+        emailSuppressedAt: null
       }).populate("userId");
       if (activeQueue.length > 0) {
         const individualOps = [];
@@ -5976,12 +6300,30 @@ const reminders = defineTask({
           const lead_name = lead.name ? lead.name.split(" ")[0] : "there";
           const status = lead == null ? void 0 : lead.status;
           const useResponse = email_by_status(status, lead_name, company_name);
-          await resend$2.emails.send({
+          const brand = {
+            name: company_name,
+            email: replyEmail || "",
+            photo: ((_a = lead == null ? void 0 : lead.userId) == null ? void 0 : _a.photo) || void 0,
+            phone: ((_b = lead == null ? void 0 : lead.userId) == null ? void 0 : _b.phone) || void 0,
+            accent: ((_c = lead == null ? void 0 : lead.userId) == null ? void 0 : _c.accent_color) || void 0
+          };
+          const blocks = [{ type: "text", text: useResponse }];
+          brand.mailingAddress = ((_d = lead == null ? void 0 : lead.userId) == null ? void 0 : _d.mailingAddress) || void 0;
+          await resend$3.emails.send({
             from: `${useCleanString(company_name)}@ascendpod.com`,
             to: lead.email,
             replyTo: replyEmail,
             subject: "Quick question regarding your property search",
-            text: useResponse
+            html: renderEmail({
+              brand,
+              blocks,
+              // The grey line beside the subject in an inbox list. Left blank
+              // it auto-fills with the first words of the body, which is a
+              // wasted line.
+              preheader: "A quick note about your property search.",
+              unsubscribeUrl: unsubscribeUrl(String(lead._id))
+            }),
+            text: renderEmailText({ brand, blocks })
           });
           individualSent++;
           individualOps.push({
@@ -6006,7 +6348,7 @@ const reminders = defineTask({
         ]
       }).populate("userId");
       for (const campaign of candidateCampaigns) {
-        const tz = ((_a = campaign.userId) == null ? void 0 : _a.timezone) || "America/Denver";
+        const tz = ((_e = campaign.userId) == null ? void 0 : _e.timezone) || "America/Denver";
         const localDay = localWeekday(tz, now);
         if (campaign.dayOfWeek !== localDay) continue;
         if (campaign.lastFiredAt) {
@@ -6018,22 +6360,48 @@ const reminders = defineTask({
         const targets = await LeadModel$9.find({
           userId: campaign.userId._id,
           status: campaign.targetStatus,
-          email: { $ne: "", $exists: true }
+          email: { $ne: "", $exists: true },
+          // THE POINT OF THE WHOLE FEATURE. An unsubscribe link that doesn't
+          // stop the next send is worse than none — it tells the recipient
+          // you ignored them, and the next step is a spam complaint.
+          unsubscribedAt: null,
+          emailSuppressedAt: null
         }).lean();
         if (targets.length > 0) {
           const agentName = campaign.userId.name || "Your Realtor";
           const batchPayload = targets.map((lead) => {
+            var _a2, _b2, _c2, _d2, _e2;
             const greetingName = lead.name ? lead.name.split(" ")[0] : "there";
             const personalizedText = campaign.messageBody.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, agentName);
+            const brand = {
+              name: agentName,
+              email: ((_a2 = campaign.userId) == null ? void 0 : _a2.email) || "",
+              photo: ((_b2 = campaign.userId) == null ? void 0 : _b2.photo) || void 0,
+              phone: ((_c2 = campaign.userId) == null ? void 0 : _c2.phone) || void 0,
+              accent: ((_d2 = campaign.userId) == null ? void 0 : _d2.accent_color) || void 0,
+              mailingAddress: ((_e2 = campaign.userId) == null ? void 0 : _e2.mailingAddress) || void 0
+            };
+            const blocks = Array.isArray(campaign.blocks) && campaign.blocks.length ? campaign.blocks.map((b) => ({
+              ...b,
+              text: typeof b.text === "string" ? b.text.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, agentName) : b.text
+            })) : [{ type: "text", text: personalizedText }];
             return {
               from: `${useCleanString(agentName)}@ascendpod.com`,
               to: lead.email,
               replyTo: campaign.userId.email || "whiteravendev90@gmail.com",
               subject: campaign.subject,
-              text: personalizedText
+              html: renderEmail({
+                brand,
+                blocks,
+                preheader: campaign.preheader || void 0,
+                // Per LEAD, not per campaign — the link has to identify who
+                // is opting out.
+                unsubscribeUrl: unsubscribeUrl(String(lead._id))
+              }),
+              text: renderEmailText({ brand, blocks })
             };
           });
-          await resend$2.batch.send(batchPayload);
+          await resend$3.batch.send(batchPayload);
           campaignEmails += batchPayload.length;
           await LeadModel$9.updateMany(
             { _id: { $in: targets.map((t) => t._id) } },
@@ -6167,7 +6535,7 @@ const loggedInUser = defineEventHandler(async (event) => {
 });
 
 const UserDoc$1 = UserModelImport;
-const Lead$e = LeadModel$b;
+const Lead$f = LeadModel$b;
 const Campaign$5 = CampaignModelImport;
 const Home$6 = HomeModel;
 const stripe$2 = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -6186,7 +6554,7 @@ const delete_delete = defineEventHandler(async (event) => {
       }
     }
     await Promise.all([
-      Lead$e.deleteMany({ userId: user._id }),
+      Lead$f.deleteMany({ userId: user._id }),
       Campaign$5.deleteMany({ userId: user._id }),
       Home$6.deleteMany({ userId: user._id })
     ]);
@@ -6206,12 +6574,12 @@ const delete_delete$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$9 = UserModelImport;
-const bodySchema$y = z.object({
+const bodySchema$A = z.object({
   email: z.email(),
   question: z.string()
 });
 const forgot_post = defineEventHandler(async (event) => {
-  const { email, question } = await readValidatedBody(event, bodySchema$y.parse);
+  const { email, question } = await readValidatedBody(event, bodySchema$A.parse);
   const token = nanoid(32);
   const htmlBody = `
     <div>
@@ -6250,13 +6618,13 @@ const forgot_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$8 = UserModelImport;
-const bodySchema$x = z.object({
+const bodySchema$z = z.object({
   email: z.email(),
   password: z.string().min(8)
 });
 const login_post = defineEventHandler(async (event) => {
   var _a;
-  const { email, password } = await readValidatedBody(event, bodySchema$x.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema$z.parse);
   try {
     await connectDB();
     const user = await User$8.findOne({ email });
@@ -6310,13 +6678,13 @@ const login_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$7 = UserModelImport;
-const bodySchema$w = z.object({
+const bodySchema$y = z.object({
   password: z.string(),
   confirm_password: z.string(),
   token: z.string()
 });
 const reset = defineEventHandler(async (event) => {
-  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$w.parse);
+  const { password, confirm_password, token } = await readValidatedBody(event, bodySchema$y.parse);
   const hashedPassword = await bcrypt.hash(password, 10);
   try {
     await connectDB();
@@ -6339,7 +6707,7 @@ const reset$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const User$6 = UserModelImport;
-const bodySchema$v = z.object({
+const bodySchema$x = z.object({
   company: z.string(),
   category: z.string(),
   email: z.email(),
@@ -6348,7 +6716,7 @@ const bodySchema$v = z.object({
   privacy_policy: z.boolean()
 });
 const signup_post = defineEventHandler(async (event) => {
-  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$v.parse);
+  const { company, category, email, password, confirm_password, privacy_policy } = await readValidatedBody(event, bodySchema$x.parse);
   try {
     await connectDB();
     const user = await User$6.findOne({ email });
@@ -6409,14 +6777,14 @@ const index_get$n = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$4 = CampaignModelImport;
-const bodySchema$u = z.object({
+const bodySchema$w = z.object({
   _id: z.string()
 });
 const index_delete$4 = defineEventHandler(async (event) => {
   try {
     const user = await loggedInUser(event);
     if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-    const body = await readValidatedBody(event, bodySchema$u.parse);
+    const body = await readValidatedBody(event, bodySchema$w.parse);
     await Campaign$4.deleteOne({ _id: body._id, userId: user._id });
   } catch (error) {
     console.log(error);
@@ -6444,6 +6812,56 @@ const index_get$l = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$k
 }, Symbol.toStringTag, { value: 'Module' }));
 
+const blockSchema = z.object({
+  type: z.enum(["text", "image", "button", "property", "divider"]),
+  text: z.string().optional(),
+  src: z.string().optional(),
+  alt: z.string().optional(),
+  href: z.string().optional(),
+  label: z.string().optional(),
+  address: z.string().optional(),
+  price: z.string().optional(),
+  beds: z.string().optional(),
+  baths: z.string().optional()
+});
+const bodySchema$v = z.object({
+  blocks: z.array(blockSchema).max(30),
+  heading: z.string().max(120).optional(),
+  preheader: z.string().max(160).optional()
+});
+const preview_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { blocks, heading, preheader } = await readValidatedBody(event, bodySchema$v.parse);
+  const filled = blocks.map((b) => {
+    var _a, _b;
+    return {
+      ...b,
+      text: (_b = (_a = b.text) == null ? void 0 : _a.replace(/\{\{name\}\}/g, "Sarah")) == null ? void 0 : _b.replace(/\{\{agent\}\}/g, user.name || "you")
+    };
+  });
+  return {
+    html: renderEmail({
+      brand: {
+        name: user.name || "",
+        email: user.email || "",
+        photo: user.photo || void 0,
+        phone: user.phone || void 0,
+        accent: user.accent_color || void 0
+      },
+      heading,
+      preheader,
+      blocks: filled,
+      unsubscribeUrl: "https://example.com/unsubscribe"
+    })
+  };
+});
+
+const preview_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: preview_post
+}, Symbol.toStringTag, { value: 'Module' }));
+
 const Campaign$2 = CampaignModelImport;
 const save_post$2 = defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -6454,8 +6872,9 @@ const save_post$2 = defineEventHandler(async (event) => {
       message: "Session trace missing or expired."
     });
   }
-  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording } = body;
-  if (!targetStatus || !subject || !messageBody || dayOfWeek === void 0 || !timesPerMonth) {
+  const { title, targetStatus, subject, messageBody, dayOfWeek, timesPerMonth, varyWording, blocks, preheader } = body;
+  const hasBlocks = Array.isArray(blocks) && blocks.length > 0;
+  if (!targetStatus || !subject || !messageBody && !hasBlocks || dayOfWeek === void 0 || !timesPerMonth) {
     throw createError({
       statusCode: 400,
       message: "Missing required automated workflow properties."
@@ -6467,7 +6886,11 @@ const save_post$2 = defineEventHandler(async (event) => {
       title: title || `${targetStatus.toUpperCase()} Automated Loop`,
       targetStatus,
       subject,
-      messageBody,
+      messageBody: messageBody || "",
+      // Only the block types the renderer knows — anything else is dropped
+      // rather than stored and silently ignored at send time.
+      blocks: hasBlocks ? blocks.filter((b) => ["text", "image", "button", "property", "divider"].includes(b == null ? void 0 : b.type)) : [],
+      preheader: typeof preheader === "string" ? preheader.slice(0, 160) : "",
       dayOfWeek: Number(dayOfWeek),
       timesPerMonth: Number(timesPerMonth),
       // Default ON: repeated identical copy reads as a robot and hurts
@@ -6493,6 +6916,73 @@ const save_post$2 = defineEventHandler(async (event) => {
 const save_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: save_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const resend$2 = new Resend(process.env.RESEND_KEY);
+const bodySchema$u = z.object({
+  subject: z.string().min(1).max(200),
+  preheader: z.string().max(160).optional(),
+  blocks: z.array(z.object({
+    type: z.enum(["text", "image", "button", "property", "divider"]),
+    text: z.string().optional(),
+    src: z.string().optional(),
+    alt: z.string().optional(),
+    href: z.string().optional(),
+    label: z.string().optional(),
+    address: z.string().optional(),
+    price: z.string().optional(),
+    beds: z.string().optional(),
+    baths: z.string().optional()
+  })).max(30)
+});
+const sendTest_post = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  if (!user.email) throw createError({ statusCode: 400, message: "Your account has no email address." });
+  if (!process.env.RESEND_KEY) throw createError({ statusCode: 500, message: "Email is not configured on the server." });
+  const { subject, preheader, blocks } = await readValidatedBody(event, bodySchema$u.parse);
+  const filled = blocks.map((b) => {
+    var _a;
+    return {
+      ...b,
+      text: (_a = b.text) == null ? void 0 : _a.replace(/\{\{name\}\}/g, "Sarah").replace(/\{\{agent\}\}/g, user.name || "you")
+    };
+  });
+  const brand = {
+    name: user.name || "",
+    email: user.email,
+    photo: user.photo || void 0,
+    phone: user.phone || void 0,
+    accent: user.accent_color || void 0,
+    mailingAddress: user.mailingAddress || void 0
+  };
+  try {
+    await resend$2.emails.send({
+      from: `GhostForm <noreply@ascendpod.com>`,
+      to: user.email,
+      replyTo: user.email,
+      // Marked, so a test can never be mistaken for a real send in their inbox.
+      subject: `[Test] ${subject}`,
+      html: renderEmail$1({
+        brand,
+        preheader,
+        blocks: filled,
+        // A real, working link — testing the email without testing the
+        // unsubscribe would miss the thing most likely to be broken.
+        unsubscribeUrl: `${process.env.PROJECT_DOMAIN || "https://ghostform.app"}/u/test`
+      }),
+      text: renderEmailText$1({ brand, blocks: filled })
+    });
+    return { success: true, sentTo: user.email };
+  } catch (err) {
+    console.error("[campaign] test send failed:", err == null ? void 0 : err.message);
+    throw createError({ statusCode: 502, message: "Could not send the test. Check the server email settings." });
+  }
+});
+
+const sendTest_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: sendTest_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Campaign$1 = CampaignModelImport;
@@ -6551,10 +7041,10 @@ function month(date2) {
   return dateObj.toLocaleString("default", { month: "long" });
 }
 
-const Lead$d = LeadModel$b;
+const Lead$e = LeadModel$b;
 const lead_get = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
-  const leads = await Lead$d.find({ userId: user == null ? void 0 : user._id }).lean();
+  const leads = await Lead$e.find({ userId: user == null ? void 0 : user._id }).lean();
   const leadByMonth = leads == null ? void 0 : leads.map((item) => {
     const createdDate = item == null ? void 0 : item.date;
     return month(createdDate);
@@ -7298,7 +7788,7 @@ const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const Home$4 = HomeModel;
-const Lead$c = LeadModel$b;
+const Lead$d = LeadModel$b;
 const index_get$e = defineEventHandler(async (event) => {
   var _a;
   const user = await loggedInUser(event);
@@ -7306,7 +7796,7 @@ const index_get$e = defineEventHandler(async (event) => {
   const id = (_a = event.context.params) == null ? void 0 : _a.id;
   const home = await Home$4.findOne({ _id: id, userId: user._id }).lean();
   if (!home) throw createError({ statusCode: 404, message: "Property not found." });
-  const leads = await Lead$c.find({
+  const leads = await Lead$d.find({
     userId: user._id,
     $or: [
       { homeId: home._id },
@@ -7321,7 +7811,7 @@ const index_get$f = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$e
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$b = HomeModel;
+const Lead$c = HomeModel;
 const bodySchema$o = z.object({
   name: z.string().nullish(),
   // The address is the only field that genuinely matters — it's what gets
@@ -7335,7 +7825,7 @@ const create_post$2 = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema$o.parse);
   const user = await loggedInUser(event);
   try {
-    const created = await Lead$b.create({ userId: user == null ? void 0 : user._id, ...body });
+    const created = await Lead$c.create({ userId: user == null ? void 0 : user._id, ...body });
     return { success: true, _id: String(created._id) };
   } catch (error) {
     console.error("Something went wrong", error);
@@ -7437,7 +7927,7 @@ const analyse_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: analyse_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$a = LeadModel$b;
+const Lead$b = LeadModel$b;
 const bodySchema$l = z.object({
   closedAt: z.string().optional(),
   closedAddress: z.string().max(160).optional(),
@@ -7457,7 +7947,7 @@ const close_post = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema$l.parse);
   const id = (_b = event.context.params) == null ? void 0 : _b.id;
   if (body.reopen) {
-    const r = await Lead$a.updateOne(
+    const r = await Lead$b.updateOne(
       { _id: id, userId: user._id },
       { $set: { status: "contacted" }, $unset: { closedAt: "", closedAddress: "" } }
     );
@@ -7465,7 +7955,7 @@ const close_post = defineEventHandler(async (event) => {
     return { success: true, closed: false };
   }
   const closedAt = body.closedAt ? localDate(body.closedAt) : /* @__PURE__ */ new Date();
-  const existing = await Lead$a.findOne({ _id: id, userId: user._id }, { lastTouchAt: 1 }).lean();
+  const existing = await Lead$b.findOne({ _id: id, userId: user._id }, { lastTouchAt: 1 }).lean();
   if (!existing) throw createError({ statusCode: 404, message: "Lead not found." });
   const set = {
     status: "closed",
@@ -7474,7 +7964,7 @@ const close_post = defineEventHandler(async (event) => {
     touchEveryMonths: (_d = body.touchEveryMonths) != null ? _d : 4
   };
   if (!existing.lastTouchAt) set.lastTouchAt = closedAt;
-  await Lead$a.updateOne({ _id: id, userId: user._id }, { $set: set });
+  await Lead$b.updateOne({ _id: id, userId: user._id }, { $set: set });
   return { success: true, closed: true };
 });
 
@@ -7554,7 +8044,7 @@ const draft_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: draft_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$9 = LeadModel$b;
+const Lead$a = LeadModel$b;
 const index_delete$2 = defineEventHandler(async (event) => {
   var _a;
   try {
@@ -7565,7 +8055,7 @@ const index_delete$2 = defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "That link is missing an id." });
     }
     const id = getRouterParam(event, "id");
-    const res = await Lead$9.deleteOne({ _id: id, userId: user._id });
+    const res = await Lead$a.deleteOne({ _id: id, userId: user._id });
     if (res.deletedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
   } catch (error) {
     console.log(error);
@@ -7581,7 +8071,7 @@ const index_delete$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
   default: index_delete$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$8 = LeadModel$b;
+const Lead$9 = LeadModel$b;
 const index_get$a = defineEventHandler(async (event) => {
   var _a;
   try {
@@ -7592,7 +8082,7 @@ const index_get$a = defineEventHandler(async (event) => {
       throw createError({ statusCode: 400, message: "That link is missing an id." });
     }
     const id = getRouterParam(event, "id");
-    const data = await Lead$8.findOne({ _id: id, userId: user._id }).lean();
+    const data = await Lead$9.findOne({ _id: id, userId: user._id }).lean();
     if (!data) throw createError({ statusCode: 404, message: "Lead not found." });
     return data;
   } catch (error) {
@@ -7609,7 +8099,7 @@ const index_get$b = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$a
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$7 = LeadModel$b;
+const Lead$8 = LeadModel$b;
 const bodySchema$k = z.object({
   _id: z.string(),
   source: z.string().nullable(),
@@ -7642,7 +8132,7 @@ const index_put$2 = defineEventHandler(async (event) => {
   }
   const body = await readValidatedBody(event, bodySchema$k.parse);
   try {
-    const existing = await Lead$7.findById(body._id).select("status").lean();
+    const existing = await Lead$8.findById(body._id).select("status").lean();
     const statusChanged = !!body.status && (existing == null ? void 0 : existing.status) !== body.status;
     const update = { ...body };
     if (statusChanged) {
@@ -7652,7 +8142,7 @@ const index_put$2 = defineEventHandler(async (event) => {
     const { $inc, ...setFields } = update;
     const mongoUpdate = { $set: setFields };
     if ($inc) mongoUpdate.$inc = $inc;
-    const updated = await Lead$7.findOneAndUpdate(
+    const updated = await Lead$8.findOneAndUpdate(
       { _id: body._id, userId: user._id },
       mongoUpdate,
       { new: true }
@@ -7859,7 +8349,7 @@ const sendQuestionnaire_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.
   default: sendQuestionnaire_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$6 = LeadModel$b;
+const Lead$7 = LeadModel$b;
 const bodySchema$h = z.object({
   text: z.string().min(2).max(200).optional(),
   /** Remove one by its captured timestamp. */
@@ -7876,7 +8366,7 @@ const sphereNote_post = defineEventHandler(async (event) => {
   const { text, removeAt } = await readValidatedBody(event, bodySchema$h.parse);
   const id = (_b = event.context.params) == null ? void 0 : _b.id;
   if (removeAt) {
-    const r2 = await Lead$6.updateOne(
+    const r2 = await Lead$7.updateOne(
       { _id: id, userId: user._id },
       { $pull: { sphereNotes: { capturedAt: new Date(removeAt) } } }
     );
@@ -7884,7 +8374,7 @@ const sphereNote_post = defineEventHandler(async (event) => {
     return { success: true };
   }
   if (!text) throw createError({ statusCode: 400, message: "Nothing to save." });
-  const r = await Lead$6.updateOne(
+  const r = await Lead$7.updateOne(
     { _id: id, userId: user._id },
     { $push: { sphereNotes: { text, source: "typed", capturedAt: /* @__PURE__ */ new Date() } } }
   );
@@ -7897,7 +8387,7 @@ const sphereNote_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineP
   default: sphereNote_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$5 = LeadModel$b;
+const Lead$6 = LeadModel$b;
 const bodySchema$g = z.object({
   stage: z.enum(["new", "working", "showing", "under_contract", "past_client", "lost"])
 });
@@ -7918,7 +8408,7 @@ const stage_post = defineEventHandler(async (event) => {
   }
   const set = { stage };
   if (stage !== "new") set.status = "contacted";
-  const res = await Lead$5.updateOne({ _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id }, { $set: set });
+  const res = await Lead$6.updateOne({ _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id }, { $set: set });
   if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Lead not found." });
   return { success: true, stage };
 });
@@ -7928,7 +8418,7 @@ const stage_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: stage_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$4 = LeadModel$b;
+const Lead$5 = LeadModel$b;
 const bodySchema$f = z.object({
   source: z.string().nullable(),
   name: z.string().nullable(),
@@ -7953,7 +8443,7 @@ const create_post = defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, bodySchema$f.parse);
   const user = await loggedInUser(event);
   try {
-    await Lead$4.create({ userId: user == null ? void 0 : user._id, ...body });
+    await Lead$5.create({ userId: user == null ? void 0 : user._id, ...body });
   } catch (error) {
     console.error("Something went wrong", error);
     throw createError({
@@ -7968,7 +8458,7 @@ const create_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: create_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$3 = LeadModel$b;
+const Lead$4 = LeadModel$b;
 const bodySchema$e = z.object({
   leads: z.array(z.object({
     name: z.string().optional(),
@@ -7988,7 +8478,7 @@ const import_post = defineEventHandler(async (event) => {
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
   const { leads, onDuplicate } = await readValidatedBody(event, bodySchema$e.parse);
   const emails = leads.map((l) => l.email.toLowerCase());
-  const existing = await Lead$3.find(
+  const existing = await Lead$4.find(
     { userId: user._id, email: { $in: emails } },
     { email: 1 }
   ).lean();
@@ -8019,7 +8509,7 @@ const import_post = defineEventHandler(async (event) => {
   }
   let inserted = 0;
   if (toInsert.length) {
-    const res = await Lead$3.insertMany(toInsert, { ordered: false }).catch((err) => {
+    const res = await Lead$4.insertMany(toInsert, { ordered: false }).catch((err) => {
       var _a;
       console.error("[import] partial insert:", err == null ? void 0 : err.message);
       return (_a = err == null ? void 0 : err.insertedDocs) != null ? _a : [];
@@ -8030,7 +8520,7 @@ const import_post = defineEventHandler(async (event) => {
   for (const doc of toUpdate) {
     const { userId, email, ...fields } = doc;
     const set = Object.fromEntries(Object.entries(fields).filter(([, v]) => v !== "" && v !== void 0));
-    const r = await Lead$3.updateOne({ userId: user._id, email }, { $set: set });
+    const r = await Lead$4.updateOne({ userId: user._id, email }, { $set: set });
     updated += r.modifiedCount;
   }
   return {
@@ -8056,10 +8546,10 @@ const selection_status_lead = [
   { label: "archive", value: "archive" }
 ];
 
-const Lead$2 = LeadModel$b;
+const Lead$3 = LeadModel$b;
 const index_get$8 = defineEventHandler(async (event) => {
   const user = await requirePaidUser(event);
-  const leads = await Lead$2.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
+  const leads = await Lead$3.find({ userId: user == null ? void 0 : user._id }).sort({ createdAt: -1 }).lean();
   const findLeadStatus = selection_status_lead.map((item) => {
     const status = item.value;
     const filterLeads = leads == null ? void 0 : leads.filter((lead) => {
@@ -8567,7 +9057,7 @@ const status_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: status_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const Lead$1 = LeadModel$b;
+const Lead$2 = LeadModel$b;
 const touched_post = defineEventHandler(async (event) => {
   var _a, _b;
   const user = await loggedInUser(event);
@@ -8576,7 +9066,7 @@ const touched_post = defineEventHandler(async (event) => {
   if (!isObjectId(routeId)) {
     throw createError({ statusCode: 400, message: "That link is missing an id." });
   }
-  const res = await Lead$1.updateOne(
+  const res = await Lead$2.updateOne(
     { _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id },
     { $set: { lastTouchAt: /* @__PURE__ */ new Date() } }
   );
@@ -9011,10 +9501,12 @@ const bodySchema$2 = z.object({
   email: z.string().nullable(),
   region: z.string().nullable(),
   calendar_link: z.string().nullable(),
-  cold_lead_after_days: z.string().nullable()
+  cold_lead_after_days: z.string().nullable(),
+  // Required in the footer of every commercial email under CAN-SPAM.
+  mailingAddress: z.string().max(200).nullable().optional()
 });
 const index_put = defineEventHandler(async (event) => {
-  const { name, company, phone, email, region, calendar_link, cold_lead_after_days } = await readValidatedBody(event, bodySchema$2.parse);
+  const { name, company, phone, email, region, calendar_link, cold_lead_after_days, mailingAddress } = await readValidatedBody(event, bodySchema$2.parse);
   console.log(typeof cold_lead_after_days);
   const obj = {
     name,
@@ -9023,7 +9515,8 @@ const index_put = defineEventHandler(async (event) => {
     email,
     region,
     calendar_link,
-    cold_lead_after_days: Number(cold_lead_after_days)
+    cold_lead_after_days: Number(cold_lead_after_days),
+    mailingAddress: mailingAddress != null ? mailingAddress : ""
   };
   try {
     const user = await loggedInUser(event);
@@ -9219,7 +9712,7 @@ function parseAnalysis(raw) {
 const Note = VoiceNoteModel;
 const Reminder = ReminderModel;
 const Doc = DocumentModel;
-const Lead = LeadModel$b;
+const Lead$1 = LeadModel$b;
 const bodySchema = z.object({
   transcript: z.string().min(2).max(4e3),
   homeId: z.string().optional(),
@@ -9251,7 +9744,7 @@ const note_post = defineEventHandler(async (event) => {
       return [`  ${d.docType || "Document"}`, dates].filter(Boolean).join("\n");
     }).join("\n");
     const [knownLeads, knownHomes] = await Promise.all([
-      Lead.find({ userId: user._id }, { name: 1 }).sort({ updatedAt: -1 }).limit(120).lean(),
+      Lead$1.find({ userId: user._id }, { name: 1 }).sort({ updatedAt: -1 }).limit(120).lean(),
       HomeModel.find({ userId: user._id }, { name: 1, address: 1 }).limit(60).lean()
     ]);
     const names = [...new Set(
@@ -9299,12 +9792,12 @@ than forcing a match; a wrong name is worse than an unfamiliar one.` : ""
     for (const f of (_a = analysis2.sphere) != null ? _a : []) {
       const needle = String(f.about).replace(/^the\s+/i, "").trim();
       if (needle.length < 2) continue;
-      const matches = await Lead.find({
+      const matches = await Lead$1.find({
         userId: user._id,
         name: { $regex: needle.split(/\s+/)[0], $options: "i" }
       }, { _id: 1, name: 1 }).limit(2).lean();
       if (matches.length === 1) {
-        await Lead.updateOne(
+        await Lead$1.updateOne(
           { _id: matches[0]._id, userId: user._id },
           { $push: { sphereNotes: { text: f.fact, source: "voice", capturedAt: /* @__PURE__ */ new Date() } } }
         );
@@ -9341,12 +9834,12 @@ than forcing a match; a wrong name is worse than an unfamiliar one.` : ""
     for (const f of (_e = analysis.sphere) != null ? _e : []) {
       const needle = String(f.about).replace(/^the\s+/i, "").trim();
       if (needle.length < 2) continue;
-      const matches = await Lead.find({
+      const matches = await Lead$1.find({
         userId: user._id,
         name: { $regex: needle.split(/\s+/)[0], $options: "i" }
       }, { _id: 1, name: 1 }).limit(2).lean();
       if (matches.length === 1) {
-        await Lead.updateOne(
+        await Lead$1.updateOne(
           { _id: matches[0]._id, userId: user._id },
           { $push: { sphereNotes: { text: f.fact, source: "voice", capturedAt: /* @__PURE__ */ new Date() } } }
         );
@@ -9429,6 +9922,46 @@ const gfManifest_webmanifest_get = defineEventHandler((event) => {
 const gfManifest_webmanifest_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
   __proto__: null,
   default: gfManifest_webmanifest_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+const Lead = LeadModel$b;
+const _token__get = defineEventHandler(async (event) => {
+  var _a;
+  const token = (_a = event.context.params) == null ? void 0 : _a.token;
+  const leadId = verifyUnsubscribe(String(token || ""));
+  const page = (title, body) => {
+    setHeader(event, "Content-Type", "text/html; charset=utf-8");
+    return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400&display=swap" rel="stylesheet">
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#F7F4EF;color:#1F1B16;
+font-family:Inter,-apple-system,sans-serif;padding:24px}
+.c{max-width:32rem;text-align:center}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:28px;margin:0 0 12px;letter-spacing:-.02em}
+p{margin:0;color:#6B655C;line-height:1.6}</style></head>
+<body><div class="c"><h1>${title}</h1><p>${body}</p></div></body></html>`;
+  };
+  if (!leadId) {
+    setResponseStatus(event, 400);
+    return page("That link isn't valid", "It may have been altered. Reply to any email and we'll take you off the list.");
+  }
+  const lead = await Lead.findOneAndUpdate(
+    { _id: leadId },
+    { $set: { unsubscribedAt: /* @__PURE__ */ new Date() } },
+    { new: true }
+  ).lean();
+  if (!lead) {
+    return page("You're unsubscribed", "You won't receive any more emails.");
+  }
+  return page(
+    "You're unsubscribed",
+    "You won't receive any more marketing emails. If you're working with an agent, they can still reply to you directly."
+  );
+});
+
+const _token__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: _token__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function renderPayloadResponse(ssrContext) {

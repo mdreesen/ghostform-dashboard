@@ -23,7 +23,7 @@ async function handler() {
     await navigateTo('/subscribe');
 
   } catch (error) {
-    toast.error("Sign up failed", 'Try again');
+    toast.add({ title: "Sign up failed", description: 'Try again', color: 'error', duration: 8000 });
     console.log(error)
     errorMessage.value = error.statusMessage;
     isLoading.value = false;

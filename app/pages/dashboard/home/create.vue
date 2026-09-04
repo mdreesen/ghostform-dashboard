@@ -32,11 +32,11 @@ async function save() {
     await $fetch('/api/homes/create', { method: 'POST', body: { ...input } });
     // Refresh the shared cache so the forms page picker has it immediately.
     await refreshNuxtData('homes');
-    toast.success('Property added.');
+    toast.add({ title: 'Property added.', color: 'success' });
     await navigateTo('/dashboard/home');
   } catch (error: any) {
     errorMessage.value = error?.data?.message || 'Could not save that property.';
-    toast.error('Failed to save. Please try again.');
+    toast.add({ title: 'Failed to save. Please try again.', color: 'error', duration: 8000 });
   } finally {
     isLoading.value = false;
   }

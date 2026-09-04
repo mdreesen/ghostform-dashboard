@@ -5,6 +5,7 @@ import LeadModelImport from '../../../lib/database/models/Lead';
 import CampaignModelImport from '../../../lib/database/models/Campaign';
 import { useCleanString } from '~/utils/formatters/useCleanString';
 import { email_by_status } from '~/utils/email/useEmailByStatus';
+import { renderEmail, renderEmailText, type EmailBrand } from '~/utils/emailTemplate';
 
 const LeadModel = LeadModelImport as Model<any>
 const CampaignModel = CampaignModelImport as Model<any>
@@ -78,7 +79,11 @@ export default defineTask({
       const activeQueue = await LeadModel.find({
         reminderStatus: 'scheduled',
         reminderScheduledAt: { $lte: now },
-        email: { $ne: '', $exists: true }
+        email: { $ne: '', $exists: true },
+        // An opt-out is an opt-out — it applies to scheduled reminders too,
+        // not only to bulk campaigns.
+        unsubscribedAt: null,
+        emailSuppressedAt: null
       }).populate('userId')
 
       if (activeQueue.length > 0) {
@@ -91,12 +96,36 @@ export default defineTask({
 
           const useResponse = email_by_status(status, lead_name, company_name);
 
+          /**
+           * The copy is unchanged — only the wrapper. It goes out as HTML with
+           * the agent's name, photo and colours, plus a plain-text
+           * alternative, because HTML-only mail scores worse in spam filters.
+           */
+          const brand: EmailBrand = {
+            name: company_name,
+            email: replyEmail || '',
+            photo: (lead?.userId as any)?.photo || undefined,
+            phone: (lead?.userId as any)?.phone || undefined,
+            accent: (lead?.userId as any)?.accent_color || undefined
+          }
+          const blocks = [{ type: 'text' as const, text: useResponse }]
+          brand.mailingAddress = (lead?.userId as any)?.mailingAddress || undefined
+
           await resend.emails.send({
             from: `${useCleanString(company_name)}@ascendpod.com`,
             to: lead.email,
             replyTo: replyEmail,
             subject: 'Quick question regarding your property search',
-            text: useResponse
+            html: renderEmail({
+              brand,
+              blocks,
+              // The grey line beside the subject in an inbox list. Left blank
+              // it auto-fills with the first words of the body, which is a
+              // wasted line.
+              preheader: 'A quick note about your property search.',
+              unsubscribeUrl: unsubscribeUrl(String(lead._id))
+            }),
+            text: renderEmailText({ brand, blocks })
           })
 
           individualSent++
@@ -151,7 +180,12 @@ export default defineTask({
         const targets = await LeadModel.find({
           userId: campaign.userId._id,
           status: campaign.targetStatus,
-          email: { $ne: '', $exists: true }
+          email: { $ne: '', $exists: true },
+          // THE POINT OF THE WHOLE FEATURE. An unsubscribe link that doesn't
+          // stop the next send is worse than none — it tells the recipient
+          // you ignored them, and the next step is a spam complaint.
+          unsubscribedAt: null,
+          emailSuppressedAt: null
         }).lean()
 
         if (targets.length > 0) {
@@ -163,12 +197,43 @@ export default defineTask({
               .replace(/{{name}}/g, greetingName)
               .replace(/{{agent}}/g, agentName)
 
+            const brand: EmailBrand = {
+              name: agentName,
+              email: campaign.userId?.email || '',
+              photo: campaign.userId?.photo || undefined,
+              phone: campaign.userId?.phone || undefined,
+              accent: campaign.userId?.accent_color || undefined,
+              mailingAddress: campaign.userId?.mailingAddress || undefined
+            }
+
+            /**
+             * Campaign blocks if the campaign has them, otherwise the message
+             * body as a single text block. Existing campaigns keep working
+             * without migration — they just render in the new shell.
+             */
+            const blocks = Array.isArray(campaign.blocks) && campaign.blocks.length
+              ? campaign.blocks.map((b: any) => ({
+                  ...b,
+                  text: typeof b.text === 'string'
+                    ? b.text.replace(/{{name}}/g, greetingName).replace(/{{agent}}/g, agentName)
+                    : b.text
+                }))
+              : [{ type: 'text' as const, text: personalizedText }]
+
             return {
               from: `${useCleanString(agentName)}@ascendpod.com`,
               to: lead.email,
               replyTo: campaign.userId.email || 'whiteravendev90@gmail.com',
               subject: campaign.subject,
-              text: personalizedText
+              html: renderEmail({
+                brand,
+                blocks,
+                preheader: campaign.preheader || undefined,
+                // Per LEAD, not per campaign — the link has to identify who
+                // is opting out.
+                unsubscribeUrl: unsubscribeUrl(String(lead._id))
+              }),
+              text: renderEmailText({ brand, blocks })
             }
           })
 

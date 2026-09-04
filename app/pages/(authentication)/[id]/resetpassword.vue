@@ -40,7 +40,7 @@ async function log() {
             isLoading.value = false;
         })
         .catch(async (error) => {
-            toast.error("Reset password failed", 'Try again');
+            toast.add({ title: "Reset password failed", description: 'Try again', color: 'error', duration: 8000 });
             console.log(error);
             errorMessage.value = error.statusMessage;
             isLoading.value = false;

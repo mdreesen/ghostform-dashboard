@@ -75,7 +75,7 @@ async function send() {
     })
     await refreshNuxtData('reminders')
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not save that note.')
+    toast.add({ title: err?.data?.message || 'Could not save that note.', color: 'error', duration: 8000 })
   } finally {
     sending.value = false
   }
@@ -89,7 +89,7 @@ async function actOnReminder(r: any, action: string, extra: Record<string, any> 
     editing.value = null
     await refreshNuxtData('reminders')
   } catch {
-    toast.error('Could not update that reminder.')
+    toast.add({ title: 'Could not update that reminder.', color: 'error', duration: 8000 })
   }
 }
 

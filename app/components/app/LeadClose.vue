@@ -42,7 +42,7 @@ async function save() {
     emit('changed')
     toast.add({ title: 'Marked closed. They\'ll appear under people worth calling.' })
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not save that.')
+    toast.add({ title: err?.data?.message || 'Could not save that.', color: 'error', duration: 8000 })
   } finally { saving.value = false }
 }
 
@@ -51,7 +51,7 @@ async function reopen() {
   try {
     await $fetch(`/api/leads/${props.lead._id}/close`, { method: 'POST', body: { reopen: true } })
     emit('changed')
-  } catch { toast.error('Could not reopen.') }
+  } catch { toast.add({ title: 'Could not reopen.', color: 'error', duration: 8000 }) }
   finally { saving.value = false }
 }
 
@@ -63,7 +63,7 @@ async function addNote() {
     await $fetch(`/api/leads/${props.lead._id}/sphere-note`, { method: 'POST', body: { text: t } })
     noteText.value = ''
     emit('changed')
-  } catch { toast.error('Could not save that.') }
+  } catch { toast.add({ title: 'Could not save that.', color: 'error', duration: 8000 }) }
   finally { addingNote.value = false }
 }
 
@@ -71,7 +71,7 @@ async function removeNote(capturedAt: string) {
   try {
     await $fetch(`/api/leads/${props.lead._id}/sphere-note`, { method: 'POST', body: { removeAt: capturedAt } })
     emit('changed')
-  } catch { toast.error('Could not remove that.') }
+  } catch { toast.add({ title: 'Could not remove that.', color: 'error', duration: 8000 }) }
 }
 </script>
 

@@ -25,7 +25,7 @@ async function move(stage: string) {
     await $fetch(`/api/leads/${props.lead._id}/stage`, { method: 'POST', body: { stage } })
     emit('changed')
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not move that.')
+    toast.add({ title: err?.data?.message || 'Could not move that.', color: 'error', duration: 8000 })
   } finally {
     busy.value = false
   }

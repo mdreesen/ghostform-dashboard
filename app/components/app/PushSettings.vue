@@ -22,7 +22,7 @@ async function turnOff() {
 async function test() {
   testing.value = true
   try { await sendTest(); toast.add({ title: 'Sent — check your device.' }) }
-  catch { toast.error('Could not send.') }
+  catch { toast.add({ title: 'Could not send.', color: 'error', duration: 8000 }) }
   finally { testing.value = false }
 }
 </script>

@@ -42,10 +42,10 @@ async function markContacted(lead: any) {
   marking.value.add(lead._id);
   try {
     await $fetch(`/api/leads/${lead._id}/contacted`, { method: 'POST' });
-    toast.success(`Marked ${lead.name || 'lead'} as contacted`);
+    toast.add({ title: `Marked ${lead.name || 'lead'} as contacted`, color: 'success' });
     await Promise.all([refreshNuxtData('leads'), refreshNuxtData('briefing')]);
   } catch {
-    toast.error('Could not update. Please try again.');
+    toast.add({ title: 'Could not update. Please try again.', color: 'error', duration: 8000 });
   } finally {
     marking.value.delete(lead._id);
   }

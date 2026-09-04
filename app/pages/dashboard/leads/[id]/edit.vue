@@ -67,7 +67,7 @@ async function log() {
             await navigateTo(`/dashboard/leads/${route.params.id}/details`);
         })
         .catch(async (error) => {
-            toast.error("Failed to update", 'Try again');
+            toast.add({ title: "Failed to update", description: 'Try again', color: 'error', duration: 8000 });
             console.log(error);
             errorMessage.value = error.statusMessage;
             isLoading.value = false;
@@ -85,7 +85,7 @@ async function delete_log() {
             await navigateTo(`/dashboard/leads`);
         })
         .catch(async (error) => {
-            toast.error("Failed to delete", 'Try again');
+            toast.add({ title: "Failed to delete", description: 'Try again', color: 'error', duration: 8000 });
             console.log(error);
             errorMessage.value = error.statusMessage;
             isLoading.value = false;

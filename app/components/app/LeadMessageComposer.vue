@@ -60,7 +60,7 @@ async function generate() {
     message.value = res.message
     source.value = res.source
   } catch {
-    toast.error('Could not generate a draft. Please try again.')
+    toast.add({ title: 'Could not generate a draft. Please try again.', color: 'error', duration: 8000 })
   } finally {
     generating.value = false
   }
@@ -77,7 +77,7 @@ watch(channel, () => { if (open.value) generate() })
 
 /** Shared cleanup after either send path succeeds. */
 async function afterSend(label: string) {
-  toast.success(label)
+  toast.add({ title: label, color: 'success' })
 
   // Close and file the lead away FIRST. A refresh failing must not stop the
   // UI from reflecting a send that already happened — previously a thrown
@@ -102,7 +102,7 @@ async function openMessages() {
     // await $fetch(`/api/leads/${props.leadId}/contacted`, { method: 'POST' })
     await afterSend(`Opened Messages for ${props.leadName || 'lead'}`)
   } catch {
-    toast.error('Could not record the contact. The message app should still open.')
+    toast.add({ title: 'Could not record the contact. The message app should still open.', color: 'error', duration: 8000 })
   } finally {
     sending.value = false
   }
@@ -119,7 +119,7 @@ async function sendEmail() {
     })
     await afterSend(`Message sent to ${props.leadName || 'lead'}`)
   } catch (e: any) {
-    toast.error(e?.data?.message || 'Could not send. Please try again.')
+    toast.add({ title: e?.data?.message || 'Could not send. Please try again.', color: 'error', duration: 8000 })
   } finally {
     sending.value = false
   }
@@ -132,7 +132,7 @@ async function copyMessage() {
     copied.value = true
     setTimeout(() => (copied.value = false), 1800)
   } catch {
-    toast.error('Could not copy.')
+    toast.add({ title: 'Could not copy.', color: 'error', duration: 8000 })
   }
 }
 </script>

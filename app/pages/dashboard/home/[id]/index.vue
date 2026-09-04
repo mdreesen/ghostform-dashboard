@@ -50,7 +50,7 @@ async function save() {
     editing.value = false
     toast.add({ title: 'Saved.' })
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not save.')
+    toast.add({ title: err?.data?.message || 'Could not save.', color: 'error', duration: 8000 })
   } finally {
     saving.value = false
   }

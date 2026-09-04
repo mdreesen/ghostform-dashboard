@@ -28,8 +28,14 @@ declare module "nitropack/types" {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/index.get').default>>>>
     }
+    '/api/campaigns/preview': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/preview.post').default>>>>
+    }
     '/api/campaigns/save': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/save.post').default>>>>
+    }
+    '/api/campaigns/send-test': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/send-test.post').default>>>>
     }
     '/api/campaigns/toggle': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/campaigns/toggle.post').default>>>>
@@ -217,6 +223,9 @@ declare module "nitropack/types" {
     }
     '/gf-manifest.webmanifest': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/gf-manifest.webmanifest.get').default>>>>
+    }
+    '/u/:token': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/routes/u/[token].get').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/nitro-server/dist/runtime/handlers/renderer').default>>>>

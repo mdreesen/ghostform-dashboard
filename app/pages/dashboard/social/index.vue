@@ -65,7 +65,7 @@ async function generate() {
     drafts.value = res.posts.map((p: any) => ({ ...p, edited: p.body }));
     source.value = res.source;
   } catch {
-    toast.error('Could not generate posts. Please try again.');
+    toast.add({ title: 'Could not generate posts. Please try again.', color: 'error', duration: 8000 });
   } finally {
     generating.value = false;
   }
@@ -81,7 +81,7 @@ async function copy(p: any, idx: number) {
     copiedIdx.value = idx;
     setTimeout(() => (copiedIdx.value = null), 1800);
   } catch {
-    toast.error('Could not copy.');
+    toast.add({ title: 'Could not copy.', color: 'error', duration: 8000 });
   }
 }
 
@@ -98,10 +98,10 @@ async function approve(p: any) {
         status: 'approved'
       }
     });
-    toast.success('Saved to your queue');
+    toast.add({ title: 'Saved to your queue', color: 'success' });
     await refreshQueue();
   } catch {
-    toast.error('Could not save.');
+    toast.add({ title: 'Could not save.', color: 'error', duration: 8000 });
   }
 }
 
@@ -111,7 +111,7 @@ async function setStatus(post: any, status: string) {
     await $fetch('/api/social/status', { method: 'POST', body: { _id: post._id, status } });
     await refreshQueue();
   } catch {
-    toast.error('Could not update.');
+    toast.add({ title: 'Could not update.', color: 'error', duration: 8000 });
   } finally {
     savingId.value = null;
   }
@@ -132,7 +132,7 @@ async function share(post: any) {
   }
 
   try { await navigator.clipboard.writeText(text); } catch { /* ignore */ }
-  toast.success('Copied — paste it into the app');
+  toast.add({ title: 'Copied — paste it into the app', color: 'success' });
   window.open(
     post.platform === 'instagram' ? 'https://www.instagram.com/' : 'https://www.facebook.com/',
     '_blank'
@@ -149,11 +149,11 @@ const useDelete = async (post) => {
     })
     await refreshSession();
     await refreshNuxtData('social');
-    toast.success('Deleted social');
+    toast.add({ title: 'Deleted social', color: 'success' });
     open.value = false;
 
   } catch (error) {
-    toast.error('Failed to delete');
+    toast.add({ title: 'Failed to delete', color: 'error', duration: 8000 });
   } finally {
     loading.value = false
   }

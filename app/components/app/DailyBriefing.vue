@@ -86,12 +86,12 @@ async function markContacted(lead: BriefingLead) {
       briefing.value.leads = prevLeads
       briefing.value.totals = prevTotals
     }
-    toast.error('Could not update. Please try again.')
+    toast.add({ title: 'Could not update. Please try again.', color: 'error', duration: 8000 })
     marking.value.delete(lead._id)
     return
   }
 
-  toast.success(`Marked ${lead.name} as contacted`)
+  toast.add({ title: `Marked ${lead.name} as contacted`, color: 'success' })
   fileAway(lead._id);
 
   // Refresh AFTER the write is confirmed, and deliberately outside the
@@ -174,7 +174,7 @@ async function actOnReminder(r: any, action: string) {
     await $fetch(`/api/reminders/${r._id}`, { method: 'POST', body: { action } })
     await refreshNuxtData('reminders')
   } catch {
-    toast.error('Could not update that reminder.')
+    toast.add({ title: 'Could not update that reminder.', color: 'error', duration: 8000 })
   } finally {
     busyReminder.value = null
   }
@@ -210,7 +210,7 @@ async function actOnDeadline(d: any, action: string, extra: Record<string, any> 
     // The document list shows the same deadline, so it's stale too.
     await refreshNuxtData(`docs-${d.homeId || d.leadId || 'all'}`)
   } catch {
-    toast.error('Could not update that deadline.')
+    toast.add({ title: 'Could not update that deadline.', color: 'error', duration: 8000 })
   } finally {
     busyDeadline.value = null
   }

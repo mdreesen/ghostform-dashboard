@@ -28,7 +28,11 @@ const form = ref({
   varyWording: true,
   targetStatus: 'new',
   subject: '',
+  preheader: '',
   messageBody: '',
+  /** Rich blocks. Empty means messageBody is sent as a single text block, so
+   *  an existing campaign keeps working untouched. */
+  blocks: [] as any[],
   dayOfWeek: '1',
   timesPerMonth: '4'
 });
@@ -55,10 +59,10 @@ const saveCampaignTemplate = async () => {
     await $fetch('/api/campaigns/save', { method: 'POST', body: form.value });
     await refreshSession();
     await refreshNuxtData('campaigns');
-    toast.success('Campaign saved — it will start sending on schedule.');
+    toast.add({ title: 'Campaign saved — it will start sending on schedule.', color: 'success' });
     form.value.title = '';
   } catch (error) {
-    toast.error('Could not save the campaign. Please try again.');
+    toast.add({ title: 'Could not save the campaign. Please try again.', color: 'error', duration: 8000 });
   } finally {
     isSaving.value = false;
   }
@@ -158,9 +162,46 @@ const saveCampaignTemplate = async () => {
             <UInput v-model="form.subject" placeholder="Checking in on your home search" class="w-full" />
           </UFormField>
 
-          <UFormField label="Message">
-            <UTextarea v-model="form.messageBody" :rows="12" class="w-full text-sm leading-relaxed" />
+          <UFormField label="Preview line">
+            <UInput
+              v-model="form.preheader"
+              placeholder="The grey line beside your subject in their inbox"
+              class="w-full"
+            />
           </UFormField>
+
+          <!-- Plain message, used when no blocks have been added. Existing
+               campaigns edit exactly as before. -->
+          <UFormField v-if="!form.blocks?.length" label="Message">
+            <UTextarea v-model="form.messageBody" :rows="12" class="w-full text-sm leading-relaxed" />
+            <button
+              type="button"
+              class="gf-meta"
+              style="color:#4C5741;margin-top:10px"
+              @click="form.blocks = [{ type: 'text', text: form.messageBody }]"
+            >
+              — Add images, listings and buttons
+            </button>
+          </UFormField>
+
+          <!-- Block editor with live preview -->
+          <div v-else>
+            <div class="flex items-baseline justify-between gap-4" style="margin-bottom:12px">
+              <p class="h-label">Message</p>
+              <button
+                type="button"
+                class="gf-meta gf-muted"
+                @click="form.blocks = []"
+              >
+                Back to plain text
+              </button>
+            </div>
+            <appEmailBuilder
+              v-model="form.blocks"
+              :heading="form.subject"
+              :preheader="form.preheader"
+            />
+          </div>
 
           <div class="flex flex-wrap items-center justify-between gap-4 pt-1">
             <p class="text-[12px] text-[#A9A39A] leading-relaxed">

@@ -142,6 +142,8 @@ declare global {
   const refreshCookie: typeof import('../../node_modules/nuxt/dist/app/composables/cookie').refreshCookie
   const refreshNuxtData: typeof import('../../node_modules/nuxt/dist/app/composables/asyncData').refreshNuxtData
   const reloadNuxtApp: typeof import('../../node_modules/nuxt/dist/app/composables/chunk').reloadNuxtApp
+  const renderEmail: typeof import('../../app/utils/emailTemplate').renderEmail
+  const renderEmailText: typeof import('../../app/utils/emailTemplate').renderEmailText
   const requestIdleCallback: typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback').requestIdleCallback
   const resolveComponent: typeof import('vue').resolveComponent
   const setInterval: typeof import('../../node_modules/nuxt/dist/app/compat/interval').setInterval
@@ -317,6 +319,9 @@ declare global {
   export type { ExtractedDeadline, DocumentReading } from '../../app/utils/documentRead'
   import('../../app/utils/documentRead')
   // @ts-ignore
+  export type { EmailBrand, EmailBlock } from '../../app/utils/emailTemplate'
+  import('../../app/utils/emailTemplate')
+  // @ts-ignore
   export type { ColumnGuess, MappedLead, ImportResult } from '../../app/utils/leadImport'
   import('../../app/utils/leadImport')
   // @ts-ignore
@@ -477,6 +482,8 @@ declare module 'vue' {
     readonly refreshCookie: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/cookie')['refreshCookie']>
     readonly refreshNuxtData: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/asyncData')['refreshNuxtData']>
     readonly reloadNuxtApp: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/chunk')['reloadNuxtApp']>
+    readonly renderEmail: UnwrapRef<typeof import('../../app/utils/emailTemplate')['renderEmail']>
+    readonly renderEmailText: UnwrapRef<typeof import('../../app/utils/emailTemplate')['renderEmailText']>
     readonly requestIdleCallback: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/idle-callback')['requestIdleCallback']>
     readonly resolveComponent: UnwrapRef<typeof import('vue')['resolveComponent']>
     readonly setInterval: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/compat/interval')['setInterval']>

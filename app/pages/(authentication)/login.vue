@@ -32,7 +32,7 @@ async function login() {
       await navigateTo('/dashboard');
     })
     .catch(async (error) => {
-      toast.error("Log in failed", 'Try again');
+      toast.add({ title: "Log in failed", description: 'Try again', color: 'error', duration: 8000 });
       console.log(error);
       errorMessage.value = error.statusMessage;
       isLoading.value = false;
@@ -50,7 +50,7 @@ async function forgotpassword() {
     .then(async () => {
       await refreshSession();
       isLoading.value = false;
-      // toast.success("Email sent", "Check you email and don't forget checking spam folder!");
+      // toast.add({ title: "Email sent", description: "Check you email and don't forget checking spam folder!", color: 'success' });
     })
     .catch(async (error) => {
       console.log(error);

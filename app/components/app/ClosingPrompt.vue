@@ -34,7 +34,7 @@ async function confirm(p: any) {
     await Promise.all([refresh(), refreshNuxtData('sphere')])
     toast.add({ title: `${p.leadName} moved to past clients.` })
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Could not save that.')
+    toast.add({ title: err?.data?.message || 'Could not save that.', color: 'error', duration: 8000 })
   } finally {
     busy.value = null
   }

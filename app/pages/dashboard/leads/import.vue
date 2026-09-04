@@ -50,7 +50,7 @@ async function onFile(e: Event) {
     const text = await file.text()
     const parsed = parseCsv(text)
     if (parsed.length < 2) {
-      toast.error('That file has no rows under the header.')
+      toast.add({ title: 'That file has no rows under the header.', color: 'error', duration: 8000 })
       return
     }
     rows.value = parsed
@@ -60,7 +60,7 @@ async function onFile(e: Event) {
     mapping.value = m
     step.value = 'map'
   } catch (err) {
-    toast.error('Could not read that file. Make sure it is a CSV.')
+    toast.add({ title: 'Could not read that file. Make sure it is a CSV.', color: 'error', duration: 8000 })
   } finally {
     if (fileInput.value) fileInput.value.value = ''
   }
@@ -77,7 +77,7 @@ async function runImport() {
     await refreshNuxtData('leads')
     step.value = 'done'
   } catch (err: any) {
-    toast.error(err?.data?.message || 'Import failed. Please try again.')
+    toast.add({ title: err?.data?.message || 'Import failed. Please try again.', color: 'error', duration: 8000 })
   } finally {
     importing.value = false
   }

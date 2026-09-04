@@ -11,6 +11,11 @@ const userSchema = new Schema({
   leads_captured: { type: Number, default: 0 },
   name: String,
   email: { type: String, unique: true, required: true },
+  /**
+     * Required in the footer of every commercial email under CAN-SPAM. A PO
+     * box is acceptable; nothing is not.
+     */
+    mailingAddress: { type: String, default: '' },
   email_hashed: String,
   phone: String,
   password: String,

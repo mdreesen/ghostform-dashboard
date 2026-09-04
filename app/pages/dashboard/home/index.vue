@@ -44,7 +44,7 @@ async function setStatus(home: any, status: string) {
     await refresh();
     await refreshNuxtData('homes');
   } catch {
-    toast.error('Could not update that property.');
+    toast.add({ title: 'Could not update that property.', color: 'error', duration: 8000 });
   } finally {
     busyId.value = null;
   }
@@ -57,9 +57,9 @@ async function remove(home: any) {
     await $fetch('/api/homes/delete', { method: 'POST', body: { _id: home._id } });
     await refresh();
     await refreshNuxtData('homes');
-    toast.success('Property removed.');
+    toast.add({ title: 'Property removed.', color: 'success' });
   } catch {
-    toast.error('Could not remove that property.');
+    toast.add({ title: 'Could not remove that property.', color: 'error', duration: 8000 });
   } finally {
     busyId.value = null;
   }

@@ -13,11 +13,13 @@ const bodySchema = z.object({
     email: z.string().nullable(),
     region: z.string().nullable(),
     calendar_link: z.string().nullable(),
-    cold_lead_after_days: z.string().nullable()
+    cold_lead_after_days: z.string().nullable(),
+    // Required in the footer of every commercial email under CAN-SPAM.
+    mailingAddress: z.string().max(200).nullable().optional()
 })
 
 export default defineEventHandler(async (event) => {
-    const { name, company, phone, email, region, calendar_link, cold_lead_after_days } = await readValidatedBody(event, bodySchema.parse);
+    const { name, company, phone, email, region, calendar_link, cold_lead_after_days, mailingAddress } = await readValidatedBody(event, bodySchema.parse);
 console.log(typeof cold_lead_after_days)
     const obj = {
         name: name,
@@ -26,7 +28,8 @@ console.log(typeof cold_lead_after_days)
         email: email,
         region: region,
         calendar_link: calendar_link,
-        cold_lead_after_days: Number(cold_lead_after_days)
+        cold_lead_after_days: Number(cold_lead_after_days),
+        mailingAddress: mailingAddress ?? ''
     };
 
     try {
