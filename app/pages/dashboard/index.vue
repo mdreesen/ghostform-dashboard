@@ -57,61 +57,70 @@ const activeLeads = computed(() =>
 <template>
   <div class="max-w-[1240px] mx-auto">
 
-    <!-- ── Hero with the 3D terrain ─────────────────────────── -->
-    <section class="gf-hero relative gf-bleed mb-24">
+    <!-- ══════════════════════════════════════════════════════════════
+         The morning screen.
+
+         Was: a full-height 3D hero, then the briefing, then stats buried
+         below the fold. A realtor scrolled past decoration to reach the
+         numbers and past the numbers to reach the work.
+
+         Now: what's on fire in the first two seconds, then the work.
+         The terrain stays as a quiet band behind the greeting rather than
+         a full screen of it — it's the brand, not the content.
+         ══════════════════════════════════════════════════════════════ -->
+
+    <section class="gf-hero relative gf-bleed" style="margin-bottom:var(--s4)">
       <ClientOnly>
         <baseTerrain />
       </ClientOnly>
 
-      <div class="relative z-[2] py-16 sm:py-24">
-        <p class="h-label mb-5 gf-rise" style="--d:.05s">
+      <div class="relative z-[2]" style="padding-block:var(--s4)">
+        <p class="h-label gf-rise" style="--d:.05s;margin-bottom:8px">
           {{ today }}<template v-if="firstName"> — Hello, {{ firstName }}</template>
         </p>
-        <h1
-          class="gf-display text-[clamp(36px,5.2vw,68px)] max-w-[15ch] mb-5 gf-rise"
-          style="--d:.14s"
-        >
+        <h1 class="gf-display gf-rise" style="--d:.14s;font-size:clamp(30px,4.4vw,46px);max-width:18ch;margin-bottom:8px">
           {{ heroLine }}
         </h1>
-        <p class="gf-body text-[#8A847C] leading-relaxed max-w-[42ch] gf-rise" style="--d:.24s">
-          Everyone below has gone quiet, come in new, or slipped past a follow-up
-          you meant to make. Start at the top.
+        <p class="gf-meta gf-rise" style="--d:.24s;max-width:52ch">
+          Everyone below has gone quiet, come in new, or slipped past a
+          follow-up you meant to make. Start at the top.
         </p>
       </div>
     </section>
 
-    <!-- ── 01 Who to reach ──────────────────────────────────── -->
-    <section class="gf-depth mb-28" style="--d:.05s" data-tour="briefing">
+    <!-- Metrics. Four, deliberately — an odd count leaves a dead cell when
+         the grid wraps to two columns on a phone. -->
+    <div class="db-stats" style="margin-bottom:var(--s4)">
+      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.overdue ?? 0) === 0">
+        <span class="db-stat-n" :style="{ color: (briefing?.totals?.overdue ?? 0) > 0 ? '#B5563A' : undefined }">
+          {{ briefing?.totals?.overdue ?? 0 }}
+        </span>
+        <span class="db-stat-l">Overdue</span>
+      </NuxtLink>
 
+      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.new ?? 0) === 0">
+        <span class="db-stat-n">{{ briefing?.totals?.new ?? 0 }}</span>
+        <span class="db-stat-l">New leads</span>
+      </NuxtLink>
+
+      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.cold ?? 0) === 0">
+        <span class="db-stat-n">{{ briefing?.totals?.cold ?? 0 }}</span>
+        <span class="db-stat-l">Going cold</span>
+      </NuxtLink>
+
+      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="activeLeads === 0">
+        <span class="db-stat-n">{{ activeLeads }}</span>
+        <span class="db-stat-l">Active leads</span>
+      </NuxtLink>
+    </div>
+
+    <!-- The work. Briefing takes the wide column; it's what they opened
+         this screen for. -->
+    <div data-tour="briefing">
       <ClientOnly>
         <appDailyBriefing />
       </ClientOnly>
-    </section>
-
-    <!-- ── Stats ────────────────────────────────────────────── -->
-    <section class="gf-depth mb-28 grid grid-cols-1 sm:grid-cols-3 gap-px bg-[#DDD6C9] border border-[#DDD6C9]">
-      <div class="bg-[#F7F4EF] p-8 transition-transform duration-500 hover:translate-z-6">
-        <p class="h-label mb-4">Active leads</p>
-        <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
-          <span :data-count="activeLeads">0</span>
-        </p>
-        <p class="gf-meta text-[#8A847C] mt-2.5">Not closed or archived</p>
-      </div>
-      <div class="bg-[#F7F4EF] p-8">
-        <p class="h-label mb-4">Needing attention</p>
-        <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
-          <span :data-count="briefing?.totals?.total ?? 0">0</span>
-        </p>
-        <p class="gf-meta text-[#8A847C] mt-2.5">Surfaced in today’s briefing</p>
-      </div>
-      <div class="bg-[#F7F4EF] p-8">
-        <p class="h-label mb-4">Going cold</p>
-        <p class="font-display text-[44px] font-semibold leading-none tabular-nums">
-          <span :data-count="briefing?.totals?.cold ?? 0">0</span>
-        </p>
-        <p class="gf-meta text-[#8A847C] mt-2.5">Quiet past your threshold</p>
-      </div>
-    </section>
+    </div>
 
     <!-- ── 02 Pipeline ──────────────────────────────────────── -->
     <section class="gf-depth mb-28">
@@ -173,7 +182,7 @@ const activeLeads = computed(() =>
 </template>
 
 <style scoped>
-.gf-hero { min-height: 62vh; }
+.gf-hero { min-height: 25vh; }
 
 /* pipeline bars sweep out when the section reveals */
 .gf-bar {
