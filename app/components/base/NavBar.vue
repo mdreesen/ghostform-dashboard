@@ -1,28 +1,11 @@
 <script setup lang="ts">
-/**
- * ============================================================================
- * NAVIGATION
- * ============================================================================
- * DESKTOP (≥1000px): a grouped sidebar.
- * MOBILE: bottom tabs.
- *
- * Seven flat links across a top bar gave "Today" and "Profile" the same
- * weight. Grouping makes seven readable without deleting any.
- *
- * Bottom tabs rather than a hamburger, because a realtor uses this one-handed
- * in a truck — the four daily destinations should be one thumb-tap away, not
- * hidden behind a gesture.
- *
- * This also removes the iPad bug we paused on. That was a `position: fixed`
- * top bar fighting the 3D transform context on .gf-stage. A sidebar doesn't
- * sit over the scrolling content, so there's nothing to mis-position.
- * ============================================================================
- */
+
 const route = useRoute()
 
 /** Live counts beside the labels — "3 overdue" without opening the page. */
 const { data: briefing } = useNuxtData<any>('briefing')
 const { data: leads } = useNuxtData<any>('leads')
+const { data: user } = useNuxtData('user');
 
 const overdue = computed(() => briefing.value?.totals?.overdue ?? 0)
 const peopleCount = computed(() => (leads.value ?? []).length || 0)
@@ -84,6 +67,8 @@ watch(() => route.path, () => { moreOpen.value = false })
           class="nav-item"
           :aria-current="isCurrent('/dashboard/profile') ? 'page' : undefined"
         >
+                <img v-if="user?.headshot_url" :src="user?.headshot_url" :alt="user?.name"
+          class="w-11 h-11 rounded-full object-cover shrink-0" />
           Profile &amp; settings
         </NuxtLink>
       </div>
