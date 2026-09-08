@@ -91,12 +91,12 @@ const activeLeads = computed(() =>
     <!-- Metrics. Four, deliberately — an odd count leaves a dead cell when
          the grid wraps to two columns on a phone. -->
     <div class="db-stats" style="margin-bottom:var(--s4)">
-      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.overdue ?? 0) === 0">
+      <!-- <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.overdue ?? 0) === 0">
         <span class="db-stat-n" :style="{ color: (briefing?.totals?.overdue ?? 0) > 0 ? '#B5563A' : undefined }">
           {{ briefing?.totals?.overdue ?? 0 }}
         </span>
         <span class="db-stat-l">Overdue</span>
-      </NuxtLink>
+      </NuxtLink> -->
 
       <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.new ?? 0) === 0">
         <span class="db-stat-n">{{ briefing?.totals?.new ?? 0 }}</span>
