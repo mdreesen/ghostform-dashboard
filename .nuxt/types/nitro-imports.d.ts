@@ -15,6 +15,7 @@ declare global {
   const appendResponseHeader: typeof import('../../node_modules/h3').appendResponseHeader
   const appendResponseHeaders: typeof import('../../node_modules/h3').appendResponseHeaders
   const assertMethod: typeof import('../../node_modules/h3').assertMethod
+  const buildAssistantContext: typeof import('../../server/utils/assistantContext').buildAssistantContext
   const buildClosingPrompts: typeof import('../../server/utils/closingPrompt').buildClosingPrompts
   const buildDailyBriefing: typeof import('../../server/utils/dailyBriefing').buildDailyBriefing
   const buildHeadline: typeof import('../../server/utils/dailyBriefing').buildHeadline
@@ -461,6 +462,7 @@ export { getAtprotoClientMetadata } from '/Users/mdreesen/projects/ghostform-das
 export { hashPassword, verifyPassword, passwordNeedsReHash } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { useQrcode } from '/Users/mdreesen/projects/ghostform-dashboard/node_modules/nuxt-qrcode/dist/runtime/server/utils/use-qrcode';
+export { buildAssistantContext } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/assistantContext';
 export { narrateBriefing } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/briefingNarration';
 export { buildClosingPrompts } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/closingPrompt';
 export { buildDailyBriefing, buildHeadline, HUMAN_DAY } from '/Users/mdreesen/projects/ghostform-dashboard/server/utils/dailyBriefing';
