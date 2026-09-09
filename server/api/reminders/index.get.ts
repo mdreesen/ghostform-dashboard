@@ -6,17 +6,6 @@ import loggedInUser from '~/utils/loggedInUser'
 const Reminder = ReminderModel as Model<any>
 const Home = HomeModel as Model<any>
 
-/**
- * GET /api/reminders?horizon=14
- *
- * Returns BOTH confirmed and unconfirmed, flagged — unlike document deadlines,
- * which stay hidden until confirmed.
- *
- * The difference: a contract deadline the AI guessed wrong is a legal date the
- * realtor might act on. A reminder they spoke thirty seconds ago is something
- * they already know about — hiding it until confirmed would just look like the
- * app ignored them.
- */
 export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
