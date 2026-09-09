@@ -6,6 +6,9 @@ declare module "nitropack/types" {
     '/api/assets/headshot/:id': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/assets/headshot/[id].get').default>>>>
     }
+    '/api/assistant/ask': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/assistant/ask.post').default>>>>
+    }
     '/api/authentication/delete': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authentication/delete.delete').default>>>>
     }

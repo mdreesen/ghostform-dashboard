@@ -15,6 +15,49 @@ const { data: leads } = useNuxtData<any>('leads');
 const { data: charts_lead } = useNuxtData<any>('charts_lead');
 const { data: briefing } = useNuxtData<any>('briefing');
 
+/**
+ * The Overdue tile previously read `briefing.totals.overdue`, which counts
+ * LEAD FOLLOW-UPS only. So an expired inspection contingency and an overdue
+ * voice reminder both showed as 0 at the top of the screen while sitting
+ * red in the sidebar.
+ *
+ * An overdue contingency matters more than a late callback, so the tile now
+ * counts everything that's late. Same data the briefing already fetches —
+ * no extra requests.
+ */
+const { data: dlData } = useFetch<any[]>('/api/documents/deadlines', {
+  key: 'briefing-deadlines', server: false, lazy: true
+})
+const { data: remData } = useFetch<any[]>('/api/reminders', {
+  key: 'reminders', server: false, lazy: true
+})
+
+const overdueDeadlines = computed(() =>
+  (dlData.value ?? []).filter((d: any) => d.daysUntil < 0 && !d.completed && !d.dismissed).length
+)
+const overdueReminders = computed(() =>
+  (remData.value ?? []).filter((r: any) => r.daysUntil < 0 && !r.completed && !r.dismissed).length
+)
+const overdueLeads = computed(() => briefing.value?.totals?.overdue ?? 0)
+
+/**
+ * Deadlines coming up but NOT yet overdue — those are already in the Overdue
+ * tile, and counting an item twice makes both numbers untrustworthy.
+ */
+const upcomingDeadlines = computed(() =>
+  (dlData.value ?? []).filter((d: any) =>
+    // 14 days, matching the briefing's window below. A tile counting a
+    // different range than the list it summarises is how the Overdue tile
+    // ended up showing 0 with five overdue items on screen.
+    d.daysUntil >= 0 && d.daysUntil <= 14 && !d.completed && !d.dismissed
+  ).length
+)
+
+/** Everything that is late, in one number. */
+const overdueTotal = computed(() =>
+  overdueLeads.value + overdueDeadlines.value + overdueReminders.value
+)
+
 const chart_data = computed(() => charts_lead?.value?.monthly);
 
 // Warm, human greeting line for the hero.
@@ -49,9 +92,6 @@ const pipeline = computed(() => {
   return stages.map((s) => ({ ...s, ratio: s.value / max }));
 });
 
-const activeLeads = computed(() =>
-  (leads.value?.all ?? []).filter((l: any) => !['closed', 'archive'].includes(l.status)).length
-);
 </script>
 
 <template>
@@ -91,12 +131,12 @@ const activeLeads = computed(() =>
     <!-- Metrics. Four, deliberately — an odd count leaves a dead cell when
          the grid wraps to two columns on a phone. -->
     <div class="db-stats" style="margin-bottom:var(--s4)">
-      <!-- <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.overdue ?? 0) === 0">
-        <span class="db-stat-n" :style="{ color: (briefing?.totals?.overdue ?? 0) > 0 ? '#B5563A' : undefined }">
-          {{ briefing?.totals?.overdue ?? 0 }}
+      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="overdueTotal === 0">
+        <span class="db-stat-n" :style="{ color: overdueTotal > 0 ? '#B5563A' : undefined }">
+          {{ overdueTotal }}
         </span>
         <span class="db-stat-l">Overdue</span>
-      </NuxtLink> -->
+      </NuxtLink>
 
       <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="(briefing?.totals?.new ?? 0) === 0">
         <span class="db-stat-n">{{ briefing?.totals?.new ?? 0 }}</span>
@@ -108,9 +148,14 @@ const activeLeads = computed(() =>
         <span class="db-stat-l">Going cold</span>
       </NuxtLink>
 
-      <NuxtLink to="/dashboard/leads" class="db-stat" :data-zero="activeLeads === 0">
-        <span class="db-stat-n">{{ activeLeads }}</span>
-        <span class="db-stat-l">Active leads</span>
+      <!-- Was "Active leads", which on a small database showed the same
+           number as "Going cold" and gave the realtor nothing to act on.
+           A deadline this week is actionable; a headcount isn't. -->
+      <NuxtLink to="/dashboard" class="db-stat" :data-zero="upcomingDeadlines === 0">
+        <span class="db-stat-n" :style="{ color: upcomingDeadlines > 0 ? '#9A7B2E' : undefined }">
+          {{ upcomingDeadlines }}
+        </span>
+        <span class="db-stat-l">Deadlines coming up</span>
       </NuxtLink>
     </div>
 

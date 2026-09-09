@@ -61,18 +61,49 @@ function closeDock() {
   open.value = false
   result.value = null
   text.value = ''
+  answer.value = ''
 }
+
+/**
+ * ONE SURFACE, TWO OUTCOMES.
+ *
+ * The dock and the assistant were the same interaction with two UIs — say or
+ * type something in plain English, and the app works out what you meant. The
+ * intent router already told notes from questions; it just had nowhere to send
+ * the questions.
+ *
+ * Now a question gets answered here, and everything else files as before. That
+ * removes a whole section from the dashboard and means there's one place to
+ * talk to the app rather than two.
+ */
+const answer = ref('')
+const asked = ref('')
 
 async function send() {
   const t = text.value.trim()
   if (t.length < 2) return
   if (listening.value) stop()
   sending.value = true
+  answer.value = ''
   try {
-    result.value = await $fetch('/api/voice/note', {
+    const res: any = await $fetch('/api/voice/note', {
       method: 'POST',
       body: { transcript: t, homeId: context.value.homeId, leadId: context.value.leadId }
     })
+    result.value = res
+
+    // A question gets an actual answer rather than a label saying it was one.
+    if (res?.intent === 'question' || res?.question) {
+      asked.value = res.question || t
+      try {
+        const a = await $fetch<{ answer: string }>('/api/assistant/ask', {
+          method: 'POST', body: { question: asked.value }
+        })
+        answer.value = a.answer
+      } catch {
+        answer.value = 'I could not look that up just now.'
+      }
+    }
     await refreshNuxtData('reminders')
   } catch (err: any) {
     toast.add({ title: err?.data?.message || 'Could not save that note.', color: 'error', duration: 8000 })
@@ -121,11 +152,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
       aria-label="Add a voice note"
       @click="openDock"
     >
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <!-- <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
         <rect x="9" y="2" width="6" height="12" rx="3" />
         <path d="M5 11a7 7 0 0 0 14 0M12 18v3" />
-      </svg>
-      <span class="text-[12px] uppercase tracking-[0.12em] font-semibold">Speak</span>
+      </svg> -->
+      <span class="text-[12px] uppercase tracking-[0.12em] font-semibold">AI Assistant</span>
     </button>
 
     <!-- Sheet -->
@@ -140,7 +171,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           <div class="p-5 sm:p-6">
             <div class="flex items-baseline justify-between gap-4 mb-4">
               <p class="h-label">
-                Voice note<template v-if="context.label"> · {{ context.label }}</template>
+                AI Assistant
+                <template v-if="context.label"> · {{ context.label }}
+
+                </template>
               </p>
               <button class="gf-meta text-[#A9A39A] hover:text-[#1F1B16]" @click="closeDock">Close</button>
             </div>
@@ -170,11 +204,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
               </div>
 
               <p v-if="listening" class="gf-label mb-4" style="color:#4C5741">
-                Listening — tap the mic when you're done.
+                Listening — make notes or ask questions
               </p>
               <p v-else-if="voiceError" class="gf-label text-[#B5563A] mb-4">{{ voiceError }}</p>
               <p v-else class="gf-label gf-muted mb-4">
-                Notes, questions and reminders all work.
+                Ask a question, leave a note, or set a reminder — it works out which.
               </p>
 
               <button
@@ -199,7 +233,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
           </template>
         </p>
 
-        <div v-if="result.note" class="p-3.5 bg-[#EFEAE0] mb-4">
+              <!-- The answer, when they asked something -->
+              <div v-if="answer" class="mb-4">
+                <p class="gf-label gf-muted" style="margin-bottom:4px">{{ asked }}</p>
+                <p class="gf-body" style="padding:12px 14px;background:#EFEAE0;border-left:2px solid #4C5741;white-space:pre-wrap">{{ answer }}</p>
+              </div>
+
+              <div v-if="result.note" class="p-3.5 bg-[#EFEAE0] mb-4">
                 <p class="gf-body leading-relaxed">{{ result.note }}</p>
               </div>
 

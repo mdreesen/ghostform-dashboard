@@ -8,8 +8,8 @@ import { escapeHtml } from 'file:///Users/mdreesen/projects/ghostform-dashboard/
 import { Resend } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/resend/dist/index.mjs';
 import viteNodeEntry_mjs from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/vite-builder/dist/vite-node-entry.mjs';
 import { viteNodeFetch } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/@nuxt/vite-builder/dist/vite-node.mjs';
-import Stripe from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
 import { z } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/zod/index.js';
+import Stripe from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/stripe/esm/stripe.esm.node.js';
 import { nanoid } from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/nanoid/index.js';
 import bcrypt from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/bcrypt/bcrypt.js';
 import webpush from 'file:///Users/mdreesen/projects/ghostform-dashboard/node_modules/web-push/src/index.js';
@@ -3189,104 +3189,6 @@ function publicAssetsURL(...path) {
 	return path.length ? joinRelativeURL(publicBase, ...path) : publicBase;
 }
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-async function useOpenAi(messages, options) {
-  var _a, _b, _c;
-  try {
-    const res = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages,
-      ...(options == null ? void 0 : options.maxTokens) ? { max_tokens: options.maxTokens } : {},
-      ...(options == null ? void 0 : options.temperature) !== void 0 ? { temperature: options.temperature } : {}
-    });
-    const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
-    return typeof text === "string" && text.trim() ? text.trim() : null;
-  } catch (err) {
-    console.error("OpenAI failed", err);
-    return null;
-  }
-}
-
-const useOpenAi$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  openai: openai,
-  useOpenAi: useOpenAi
-}, Symbol.toStringTag, { value: 'Module' }));
-
-function buildPrompt$4(briefing) {
-  const { totals, leads } = briefing;
-  const sample = leads.slice(0, 5).map((l) => {
-    const first = (l.name || "A lead").split(" ")[0];
-    return `- ${first}: ${l.reason}`;
-  });
-  return [
-    `You are a friendly real-estate assistant writing a one or two sentence morning briefing for a busy realtor.`,
-    `Do not invent any leads or numbers. Use ONLY these facts.`,
-    ``,
-    `Counts today: ${totals.new} new, ${totals.overdue} overdue follow-ups, ${totals.cold} going cold (${totals.total} total needing attention).`,
-    sample.length ? `Top items:
-${sample.join("\n")}` : `No leads need attention today.`,
-    ``,
-    `Write an encouraging, concrete summary. No greeting, no sign-off, no markdown. Max 2 sentences.`
-  ].join("\n");
-}
-async function narrateBriefing(briefing) {
-  var _a;
-  if (briefing.totals.total === 0) return null;
-  return (_a = useOpenAi([{ role: "user", content: buildPrompt$4(briefing) }])) != null ? _a : null;
-}
-
-const deadlineSchema = new Schema({
-  label: { type: String, required: true },
-  // "Inspection contingency expires"
-  date: { type: Date, required: true },
-  /**
-   * The sentence this came from, quoted verbatim.
-   *
-   * Non-negotiable. A misread contingency date is a real financial loss and
-   * it's the agent's liability — so every extracted date shows its source and
-   * must be confirmed before it becomes a reminder.
-   */
-  sourceText: { type: String, default: "" },
-  priority: {
-    type: String,
-    enum: ["high", "medium", "low"],
-    default: "medium"
-  },
-  /** Extracted dates are proposals until a human agrees. */
-  confirmed: { type: Boolean, default: false },
-  dismissed: { type: Boolean, default: false },
-  completed: { type: Boolean, default: false },
-  completedAt: Date
-}, { timestamps: true });
-const documentSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-  // A document belongs to a property, a lead, or both.
-  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
-  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
-  filename: { type: String, required: true },
-  storageKey: { type: String, required: true },
-  mime: { type: String, default: "" },
-  bytes: { type: Number, default: 0 },
-  /** What the AI decided this is. Free text — we don't constrain the set. */
-  docType: { type: String, default: "" },
-  /** Two or three lines. Not the full text — see the note above. */
-  summary: { type: String, default: "" },
-  deadlines: [deadlineSchema],
-  status: {
-    type: String,
-    enum: ["uploaded", "reading", "ready", "failed"],
-    default: "uploaded",
-    index: true
-  },
-  failureReason: { type: String, default: "" },
-  uploadedAt: { type: Date, default: Date.now }
-}, { timestamps: true });
-documentSchema.index({ userId: 1, homeId: 1 });
-const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
-
 const leadSchema = new Schema({
   // Which property this lead is interested in. Optional — plenty of leads
   // aren't tied to a specific listing.
@@ -3428,6 +3330,55 @@ const leadSchema = new Schema({
 }, { timestamps: true });
 const LeadModel$b = mongoose.models.Lead || mongoose.model("Lead", leadSchema);
 
+const deadlineSchema = new Schema({
+  label: { type: String, required: true },
+  // "Inspection contingency expires"
+  date: { type: Date, required: true },
+  /**
+   * The sentence this came from, quoted verbatim.
+   *
+   * Non-negotiable. A misread contingency date is a real financial loss and
+   * it's the agent's liability — so every extracted date shows its source and
+   * must be confirmed before it becomes a reminder.
+   */
+  sourceText: { type: String, default: "" },
+  priority: {
+    type: String,
+    enum: ["high", "medium", "low"],
+    default: "medium"
+  },
+  /** Extracted dates are proposals until a human agrees. */
+  confirmed: { type: Boolean, default: false },
+  dismissed: { type: Boolean, default: false },
+  completed: { type: Boolean, default: false },
+  completedAt: Date
+}, { timestamps: true });
+const documentSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
+  // A document belongs to a property, a lead, or both.
+  homeId: { type: Schema.Types.ObjectId, ref: "Home", index: true },
+  leadId: { type: Schema.Types.ObjectId, ref: "Lead", index: true },
+  filename: { type: String, required: true },
+  storageKey: { type: String, required: true },
+  mime: { type: String, default: "" },
+  bytes: { type: Number, default: 0 },
+  /** What the AI decided this is. Free text — we don't constrain the set. */
+  docType: { type: String, default: "" },
+  /** Two or three lines. Not the full text — see the note above. */
+  summary: { type: String, default: "" },
+  deadlines: [deadlineSchema],
+  status: {
+    type: String,
+    enum: ["uploaded", "reading", "ready", "failed"],
+    default: "uploaded",
+    index: true
+  },
+  failureReason: { type: String, default: "" },
+  uploadedAt: { type: Date, default: Date.now }
+}, { timestamps: true });
+documentSchema.index({ userId: 1, homeId: 1 });
+const DocumentModel = mongoose.models.Document || mongoose.model("Document", documentSchema);
+
 const homeSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
@@ -3449,6 +3400,143 @@ const homeSchema = new Schema({
   }
 }, { timestamps: true });
 const HomeModel = mongoose.models.Home || mongoose.model("Home", homeSchema);
+
+const Lead$j = LeadModel$b;
+const Doc$a = DocumentModel;
+const Home$9 = HomeModel;
+const MONTH$1 = 1e3 * 60 * 60 * 24 * 30.44;
+function days(from) {
+  const t = new Date(from).getTime();
+  const start = /* @__PURE__ */ new Date();
+  start.setHours(0, 0, 0, 0);
+  return Math.round((new Date(t).setHours(0, 0, 0, 0) - start.getTime()) / 864e5);
+}
+async function buildAssistantContext(userId) {
+  var _a, _b, _c;
+  const now = /* @__PURE__ */ new Date();
+  const [leads, docs, homes] = await Promise.all([
+    Lead$j.find({ userId }, {
+      name: 1,
+      email: 1,
+      phone: 1,
+      status: 1,
+      stage: 1,
+      qualification: 1,
+      closedAt: 1,
+      closedAddress: 1,
+      sphereNotes: 1,
+      lastTouchAt: 1,
+      address: 1,
+      budget: 1,
+      intent: 1,
+      updatedAt: 1
+    }).sort({ updatedAt: -1 }).limit(150).lean(),
+    Doc$a.find({ userId, status: "ready" }, { filename: 1, docType: 1, summary: 1, deadlines: 1, homeId: 1, leadId: 1 }).limit(40).lean(),
+    Home$9.find({ userId }, { name: 1, address: 1, status: 1, price: 1 }).limit(60).lean()
+  ]);
+  const homeById = new Map(homes.map((h) => [String(h._id), h]));
+  const parts = [];
+  const active = leads.filter((l) => !l.closedAt);
+  if (active.length) {
+    parts.push("PEOPLE THEY ARE WORKING WITH:");
+    for (const l of active.slice(0, 60)) {
+      const bits = [
+        l.name || l.email,
+        l.intent && `looking to ${l.intent}`,
+        l.budget && `budget ${l.budget}`,
+        l.stage && `stage: ${l.stage}`,
+        ((_a = l.qualification) == null ? void 0 : _a.score) != null && `readiness ${l.qualification.score}/100`,
+        l.address
+      ].filter(Boolean);
+      parts.push(`  \xB7 ${bits.join(" \xB7 ")}`);
+    }
+  }
+  const past = leads.filter((l) => l.closedAt);
+  if (past.length) {
+    parts.push("", "PAST CLIENTS:");
+    for (const l of past.slice(0, 40)) {
+      const quiet = Math.floor((now.getTime() - new Date(l.lastTouchAt || l.closedAt).getTime()) / MONTH$1);
+      const notes = ((_b = l.sphereNotes) != null ? _b : []).map((n) => n.text).slice(0, 3);
+      parts.push(
+        `  \xB7 ${l.name || l.email} \u2014 closed ${new Date(l.closedAt).toISOString().slice(0, 10)}${l.closedAddress ? ` at ${l.closedAddress}` : ""} \xB7 ${quiet} months since last contact` + (notes.length ? `
+      known about them: ${notes.join("; ")}` : "")
+      );
+    }
+  }
+  const dl = [];
+  for (const d of docs) {
+    const home = d.homeId ? homeById.get(String(d.homeId)) : null;
+    for (const x of (_c = d.deadlines) != null ? _c : []) {
+      if (!x.confirmed || x.dismissed || x.completed) continue;
+      const n = days(x.date);
+      dl.push(`  \xB7 ${x.label} \u2014 ${new Date(x.date).toISOString().slice(0, 10)} (${n < 0 ? `${Math.abs(n)} days overdue` : n === 0 ? "today" : `in ${n} days`})${(home == null ? void 0 : home.address) ? ` \xB7 ${home.address}` : ""} \xB7 from ${d.docType || d.filename}`);
+    }
+  }
+  if (dl.length) parts.push("", "CONFIRMED DEADLINES:", ...dl);
+  if (homes.length) {
+    parts.push("", "PROPERTIES:");
+    for (const h of homes) {
+      parts.push(`  \xB7 ${h.address || h.name}${h.status ? ` \xB7 ${h.status}` : ""}${h.price ? ` \xB7 ${h.price}` : ""}`);
+    }
+  }
+  const withSummary = docs.filter((d) => d.summary);
+  if (withSummary.length) {
+    parts.push("", "DOCUMENTS:");
+    for (const d of withSummary.slice(0, 20)) {
+      parts.push(`  \xB7 ${d.docType || d.filename}: ${String(d.summary).slice(0, 220)}`);
+    }
+  }
+  return parts.join("\n");
+}
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+async function useOpenAi(messages, options) {
+  var _a, _b, _c;
+  try {
+    const res = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages,
+      ...(options == null ? void 0 : options.maxTokens) ? { max_tokens: options.maxTokens } : {},
+      ...(options == null ? void 0 : options.temperature) !== void 0 ? { temperature: options.temperature } : {}
+    });
+    const text = (_c = (_b = (_a = res == null ? void 0 : res.choices) == null ? void 0 : _a[0]) == null ? void 0 : _b.message) == null ? void 0 : _c.content;
+    return typeof text === "string" && text.trim() ? text.trim() : null;
+  } catch (err) {
+    console.error("OpenAI failed", err);
+    return null;
+  }
+}
+
+const useOpenAi$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  openai: openai,
+  useOpenAi: useOpenAi
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function buildPrompt$4(briefing) {
+  const { totals, leads } = briefing;
+  const sample = leads.slice(0, 5).map((l) => {
+    const first = (l.name || "A lead").split(" ")[0];
+    return `- ${first}: ${l.reason}`;
+  });
+  return [
+    `You are a friendly real-estate assistant writing a one or two sentence morning briefing for a busy realtor.`,
+    `Do not invent any leads or numbers. Use ONLY these facts.`,
+    ``,
+    `Counts today: ${totals.new} new, ${totals.overdue} overdue follow-ups, ${totals.cold} going cold (${totals.total} total needing attention).`,
+    sample.length ? `Top items:
+${sample.join("\n")}` : `No leads need attention today.`,
+    ``,
+    `Write an encouraging, concrete summary. No greeting, no sign-off, no markdown. Max 2 sentences.`
+  ].join("\n");
+}
+async function narrateBriefing(briefing) {
+  var _a;
+  if (briefing.totals.total === 0) return null;
+  return (_a = useOpenAi([{ role: "user", content: buildPrompt$4(briefing) }])) != null ? _a : null;
+}
 
 const Doc$9 = DocumentModel;
 const Lead$i = LeadModel$b;
@@ -5580,6 +5668,7 @@ const _DGH2dc = lazyEventHandler(() => {
 });
 
 const _lazy_FaiDIZ = () => Promise.resolve().then(function () { return _id__get$5; });
+const _lazy_7amTTW = () => Promise.resolve().then(function () { return ask_post$3; });
 const _lazy_QAyDq3 = () => Promise.resolve().then(function () { return delete_delete$1; });
 const _lazy_M0BQ9P = () => Promise.resolve().then(function () { return forgot_post$1; });
 const _lazy_M4ndqB = () => Promise.resolve().then(function () { return login_post$1; });
@@ -5664,6 +5753,7 @@ const _lazy_mqdDEE = () => Promise.resolve().then(function () { return renderer;
 const handlers = [
   { route: '', handler: _3ugwHv, lazy: false, middleware: true, method: undefined },
   { route: '/api/assets/headshot/:id', handler: _lazy_FaiDIZ, lazy: true, middleware: false, method: "get" },
+  { route: '/api/assistant/ask', handler: _lazy_7amTTW, lazy: true, middleware: false, method: "post" },
   { route: '/api/authentication/delete', handler: _lazy_QAyDq3, lazy: true, middleware: false, method: "delete" },
   { route: '/api/authentication/forgot', handler: _lazy_M0BQ9P, lazy: true, middleware: false, method: "post" },
   { route: '/api/authentication/login', handler: _lazy_M4ndqB, lazy: true, middleware: false, method: "post" },
@@ -6533,6 +6623,68 @@ const loggedInUser = defineEventHandler(async (event) => {
     });
   }
 });
+
+const bodySchema$B = z.object({
+  question: z.string().min(2).max(600),
+  /** Prior turns, so follow-ups work. Capped — this is a working assistant,
+   *  not a place to hold a long conversation. */
+  history: z.array(z.object({
+    role: z.enum(["user", "assistant"]),
+    content: z.string().max(2e3)
+  })).max(8).optional()
+});
+const ask_post$2 = defineEventHandler(async (event) => {
+  const user = await loggedInUser(event);
+  if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const { question, history } = await readValidatedBody(event, bodySchema$B.parse);
+  const context = await buildAssistantContext(user._id);
+  const today = (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  const prompt = [
+    `You are the assistant inside GhostForm, a tool for a solo real estate agent.`,
+    `Today is ${today}. You are talking to ${user.name || "the agent"}.`,
+    ``,
+    `ANSWER ONLY FROM THE DATA BELOW.`,
+    `If the answer is not there, say so plainly \u2014 "I don't have that" is a good`,
+    `answer. NEVER invent a date, a name, a price or a deadline. An agent acting`,
+    `on something you made up has a real problem and it is their liability.`,
+    ``,
+    `Be brief. Two or three sentences unless they asked for a list. Write like a`,
+    `capable assistant talking to a busy person, not like a chatbot \u2014 no`,
+    `preamble, no "Great question!", no offering to help further.`,
+    ``,
+    `When you name a deadline, say which document it came from.`,
+    `When you suggest contacting someone, say why now.`,
+    ``,
+    `FAIR HOUSING: never reference or infer family status, age, national origin,`,
+    `religion, disability or race \u2014 including proxies like school districts or`,
+    `"family-friendly" neighbourhoods. Discuss the transaction, never the person.`,
+    ``,
+    `You cannot take actions. If they ask you to send or change something, tell`,
+    `them where in the app to do it.`,
+    ``,
+    `THEIR DATA:`,
+    context || "  (no data yet)",
+    ``,
+    ...(history == null ? void 0 : history.length) ? ["EARLIER IN THIS CONVERSATION:", ...history.map((h) => `  ${h.role}: ${h.content}`), ""] : [],
+    `QUESTION: ${question}`
+  ].join("\n");
+  try {
+    const answer = await useOpenAi(
+      [{ role: "user", content: prompt }],
+      { maxTokens: 700, temperature: 0.2 }
+    );
+    if (!answer) throw new Error("empty response");
+    return { answer: String(answer).trim() };
+  } catch (err) {
+    console.error("[assistant] failed:", err == null ? void 0 : err.message);
+    throw createError({ statusCode: 502, message: "Could not answer that right now." });
+  }
+});
+
+const ask_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: ask_post$2
+}, Symbol.toStringTag, { value: 'Module' }));
 
 const UserDoc$1 = UserModelImport;
 const Lead$f = LeadModel$b;
