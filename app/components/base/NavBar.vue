@@ -46,7 +46,7 @@ watch(() => route.path, () => { moreOpen.value = false })
   <div>
     <!-- ── Desktop sidebar ───────────────────────────────────── -->
     <nav class="nav-side" aria-label="Main">
-      <NuxtLink to="/dashboard" class="nav-mark">
+      <NuxtLink to="/dashboard" class="nav-mark h-16">
         <NuxtImg class="h-25 w-30 relative rounded-full object-cover" alt="GhostForm Logo" format="webp" width="350px"
           height="200px" src="/images/logo.png" loading="lazy" fetch-priority="low" />
       </NuxtLink>
