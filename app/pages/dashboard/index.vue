@@ -25,18 +25,33 @@ const { data: briefing } = useNuxtData<any>('briefing');
  * counts everything that's late. Same data the briefing already fetches —
  * no extra requests.
  */
-const { data: dlData } = useFetch<any[]>('/api/documents/deadlines', {
+/**
+ * NOTE THE SHAPE. /api/documents/deadlines returns { items, headline }, NOT an
+ * array — I assumed an array when I built the Overdue tile and it threw
+ * "(dlData.value ?? []).filter is not a function" on every dashboard load.
+ *
+ * The helper below normalises both endpoints so a shape change in either can't
+ * crash the page again.
+ */
+const { data: dlData } = useFetch<any>('/api/documents/deadlines', {
   key: 'briefing-deadlines', server: false, lazy: true
 })
-const { data: remData } = useFetch<any[]>('/api/reminders', {
+const { data: remData } = useFetch<any>('/api/reminders', {
   key: 'reminders', server: false, lazy: true
 })
 
+/** Accepts an array, an { items } wrapper, or nothing. */
+function asList(v: any): any[] {
+  if (Array.isArray(v)) return v
+  if (Array.isArray(v?.items)) return v.items
+  return []
+}
+
 const overdueDeadlines = computed(() =>
-  (dlData.value ?? []).filter((d: any) => d.daysUntil < 0 && !d.completed && !d.dismissed).length
+  asList(dlData.value).filter((d: any) => d.daysUntil < 0 && !d.completed && !d.dismissed).length
 )
 const overdueReminders = computed(() =>
-  (remData.value ?? []).filter((r: any) => r.daysUntil < 0 && !r.completed && !r.dismissed).length
+  asList(remData.value).filter((r: any) => r.daysUntil < 0 && !r.completed && !r.dismissed).length
 )
 const overdueLeads = computed(() => briefing.value?.totals?.overdue ?? 0)
 
@@ -45,7 +60,7 @@ const overdueLeads = computed(() => briefing.value?.totals?.overdue ?? 0)
  * tile, and counting an item twice makes both numbers untrustworthy.
  */
 const upcomingDeadlines = computed(() =>
-  (dlData.value ?? []).filter((d: any) =>
+  asList(dlData.value).filter((d: any) =>
     // 14 days, matching the briefing's window below. A tile counting a
     // different range than the list it summarises is how the Overdue tile
     // ended up showing 0 with five overdue items on screen.

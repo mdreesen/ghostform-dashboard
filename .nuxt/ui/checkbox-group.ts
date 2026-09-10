@@ -53,11 +53,15 @@ export default {
       "neutral": {}
     },
     "variant": {
-      "list": {},
-      "card": {},
+      "list": {
+        "fieldset": "flex-wrap"
+      },
+      "card": {
+        "fieldset": "flex-wrap"
+      },
       "table": {
         "item": [
-          "border border-muted hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
+          "border border-default hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
           "transition-colors"
         ]
       }

@@ -2,6 +2,7 @@ import { z } from 'zod'
 import type { Model } from 'mongoose'
 import LeadModelImport from '../../../lib/database/models/Lead'
 import { connectDB } from '../../../lib/database/mongodb'
+import { isObjectId } from '~/utils/objectId'
 
 const LeadModel = LeadModelImport as Model<any>
 
@@ -17,6 +18,11 @@ const bodySchema = z.object({
  * waiting for them rather than having to ask for it.
  */
 export default defineEventHandler(async (event) => {
+  const routeId = event.context.params?.id
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: 'That link is missing an id.' })
+  }
+
   setHeader(event, 'Access-Control-Allow-Origin', '*')
   setHeader(event, 'Access-Control-Allow-Headers', 'content-type')
   if (event.method === 'OPTIONS') return ''

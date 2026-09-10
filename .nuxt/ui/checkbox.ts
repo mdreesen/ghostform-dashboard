@@ -68,7 +68,7 @@ export default {
       },
       "card": {
         "root": [
-          "border border-muted rounded-lg hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
+          "border border-default rounded-lg hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
           "transition-colors"
         ]
       }

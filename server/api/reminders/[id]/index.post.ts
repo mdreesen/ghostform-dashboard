@@ -3,6 +3,7 @@ import type { Model } from 'mongoose'
 import ReminderModel from '../../../../lib/database/models/Reminder'
 import { localDate } from '~/utils/priority'
 import loggedInUser from '~/utils/loggedInUser'
+import { isObjectId } from '~/utils/objectId'
 
 const Reminder = ReminderModel as Model<any>
 
@@ -16,6 +17,11 @@ const bodySchema = z.object({
 export default defineEventHandler(async (event) => {
   const user = await loggedInUser(event)
   if (!user?._id) throw createError({ statusCode: 401, message: 'Session expired.' })
+
+  const routeId = event.context.params?.id
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: 'That link is missing an id.' })
+  }
 
   const { action, dueAt, text } = await readValidatedBody(event, bodySchema.parse)
 
