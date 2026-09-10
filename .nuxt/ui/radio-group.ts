@@ -73,17 +73,19 @@ export default {
     },
     "variant": {
       "list": {
+        "fieldset": "flex-wrap",
         "item": ""
       },
       "card": {
+        "fieldset": "flex-wrap",
         "item": [
-          "border border-muted rounded-lg hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
+          "border border-default rounded-lg hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
           "transition-colors"
         ]
       },
       "table": {
         "item": [
-          "border border-muted hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
+          "border border-default hover:not-has-disabled:not-has-focus-visible:not-has-data-[state=checked]:bg-elevated/50",
           "transition-colors"
         ]
       }

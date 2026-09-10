@@ -7942,10 +7942,14 @@ const index_get$h = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 const Home$4 = HomeModel;
 const Lead$d = LeadModel$b;
 const index_get$e = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
-  const id = (_a = event.context.params) == null ? void 0 : _a.id;
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
+  const id = (_b = event.context.params) == null ? void 0 : _b.id;
   const home = await Home$4.findOne({ _id: id, userId: user._id }).lean();
   if (!home) throw createError({ statusCode: 404, message: "Property not found." });
   const leads = await Lead$d.find({
@@ -8893,11 +8897,15 @@ const bodySchema$b = z.object({
   answers: z.record(z.string(), z.union([z.string(), z.number()]))
 });
 const _id__post = defineEventHandler(async (event) => {
-  var _a, _b;
+  var _a, _b, _c;
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
   setHeader(event, "Access-Control-Allow-Origin", "*");
   setHeader(event, "Access-Control-Allow-Headers", "content-type");
   if (event.method === "OPTIONS") return "";
-  const token = ((_a = event.context.params) == null ? void 0 : _a.token) || "";
+  const token = ((_b = event.context.params) == null ? void 0 : _b.token) || "";
   const parsed = readQualifyToken(token);
   if (!parsed) {
     throw createError({ statusCode: 401, message: "This link is not valid or has expired." });
@@ -8906,7 +8914,7 @@ const _id__post = defineEventHandler(async (event) => {
   await connectDB();
   const lead = await LeadModel$1.findById(parsed.leadId);
   if (!lead) throw createError({ statusCode: 404, message: "We could not find that record." });
-  const intent = ((_b = lead == null ? void 0 : lead.qualification) == null ? void 0 : _b.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
+  const intent = ((_c = lead == null ? void 0 : lead.qualification) == null ? void 0 : _c.intent) || (lead == null ? void 0 : lead.buy_sell_both) || "buy";
   const now = /* @__PURE__ */ new Date();
   await LeadModel$1.updateOne({ _id: lead._id }, {
     $set: {
@@ -8976,9 +8984,13 @@ const bodySchema$a = z.object({
   text: z.string().max(200).optional()
 });
 const index_post = defineEventHandler(async (event) => {
-  var _a;
+  var _a, _b;
   const user = await loggedInUser(event);
   if (!(user == null ? void 0 : user._id)) throw createError({ statusCode: 401, message: "Session expired." });
+  const routeId = (_a = event.context.params) == null ? void 0 : _a.id;
+  if (!isObjectId(routeId)) {
+    throw createError({ statusCode: 400, message: "That link is missing an id." });
+  }
   const { action, dueAt, text } = await readValidatedBody(event, bodySchema$a.parse);
   const set = {};
   if (action === "confirm") set.confirmed = true;
@@ -9000,7 +9012,7 @@ const index_post = defineEventHandler(async (event) => {
     set.confirmed = true;
   }
   const res = await Reminder$2.updateOne(
-    { _id: (_a = event.context.params) == null ? void 0 : _a.id, userId: user._id },
+    { _id: (_b = event.context.params) == null ? void 0 : _b.id, userId: user._id },
     { $set: set }
   );
   if (res.matchedCount === 0) throw createError({ statusCode: 404, message: "Reminder not found." });
@@ -9252,19 +9264,25 @@ const storageMode_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineP
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const stripe$1 = new Stripe(process.env.STRIPE_SECRET_KEY);
+const PLANS = {
+  shadow: process.env.STRIPE_PRICE_TIER_ONE_KEY,
+  phantom: process.env.STRIPE_PRICE_TIER_TWO_KEY
+};
 const subscribe_post = defineEventHandler(async (event) => {
+  const account = await loggedInUser(event);
+  if (!(account == null ? void 0 : account._id)) throw createError({ statusCode: 401, message: "Please sign in first." });
   const body = await readBody(event);
+  const price = PLANS[String((body == null ? void 0 : body.plan) || "").toLowerCase()];
+  if (!price) throw createError({ statusCode: 400, message: "Unknown plan." });
   const user = {
-    userId: body == null ? void 0 : body.id,
-    // Tie this to your MongoDB User ID
-    userEmail: body == null ? void 0 : body.email
+    userId: String(account._id),
+    userEmail: account.email
   };
   const session = await stripe$1.checkout.sessions.create({
-    customer_email: body == null ? void 0 : body.email,
+    customer_email: account.email,
     line_items: [
       {
-        price: body.priceId,
-        // Your Price ID from Stripe
+        price,
         quantity: 1
       }
     ],

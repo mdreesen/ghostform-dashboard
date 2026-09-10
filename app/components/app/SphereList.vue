@@ -32,8 +32,9 @@ async function touched(p: any) {
 </script>
 
 <template>
-  <section v-if="people.length" class="gf-section">
-    <p class="h-label" style="margin-bottom:6px">Worth a call</p>
+  <section v-if="people.length" class="bf-section">
+    <div class="bf-head"><p class="h-label">Worth a call</p></div>
+    <div class="bf-body">
     <p class="gf-meta gf-measure-tight" style="margin-bottom:var(--s3)">
       Past clients you haven't spoken to in a while. Around three quarters of
       buyers say they'd use their agent again — far fewer actually do, and the
@@ -80,6 +81,7 @@ async function touched(p: any) {
           {{ busy === p._id ? 'Saving…' : 'Spoke to them' }}
         </button>
       </div>
+    </div>
     </div>
   </section>
 </template>

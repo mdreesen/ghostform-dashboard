@@ -181,7 +181,21 @@ async function actOnReminder(r: any, action: string) {
 }
 /** Distinguish "still loading" from "genuinely none" so nothing flashes. */
 const deadlinesLoading = computed(() => deadlineStatus.value === 'pending')
-const urgentDeadlines = computed(() => deadlines.value.filter((d: any) => d.daysUntil <= 3))
+/**
+ * 14 days, matching the "Deadlines coming up" tile above.
+ *
+ * Was 3, which hid everything further out — a contract with dates two weeks
+ * away showed nothing, while the tile counted items the realtor could not see
+ * anywhere on screen.
+ */
+const urgentDeadlines = computed(() =>
+  deadlines.value.filter((d: any) => d.daysUntil <= 14)
+)
+
+/** Beyond the window — counted, never silently dropped. */
+const laterDeadlines = computed(() =>
+  deadlines.value.filter((d: any) => d.daysUntil > 14)
+)
 
 function deadlineStyle(d: any) {
   return PRIORITIES[effectivePriority(d.date, d.priority)]
@@ -350,8 +364,14 @@ function beginReschedule(d: any) {
       </div>
 
       <aside class="db-stack">
-    <section v-if="urgentDeadlines.length" class="mb-11">
-      <p class="h-label mb-4">Deadlines</p>
+    <section v-if="urgentDeadlines.length || laterDeadlines.length" class="bf-section">
+      <div class="bf-head">
+        <p class="h-label">Deadlines</p>
+        <span v-if="laterDeadlines.length" class="gf-label gf-muted">
+          +{{ laterDeadlines.length }} further out
+        </span>
+      </div>
+      <div class="bf-body">
 
       <!-- Grouped by property. A realtor holds a deal in their head as an
            address, so three deadlines on one house should read as one block
@@ -440,14 +460,16 @@ function beginReschedule(d: any) {
           </div>
         </div>
       </div>
+      </div>
     </section>
 
     <!-- Self-set reminders. Separate from contract deadlines because they
          are a different kind of obligation, but in the same place because the
          realtor shouldn't have to look twice. -->
 
-    <section v-if="reminders.length" class="mb-11">
-      <p class="h-label mb-4">Reminders</p>
+    <section v-if="reminders.length" class="bf-section">
+      <div class="bf-head"><p class="h-label">Reminders</p></div>
+      <div class="bf-body">
       <div
         v-for="r in reminders" :key="r._id"
         class="gf-row"
@@ -493,6 +515,7 @@ function beginReschedule(d: any) {
             </button>
           </div>
         </div>
+      </div>
       </div>
     </section>
 
