@@ -46,8 +46,9 @@ function notYet(p: any) { dismissed.value.push(p.leadId) }
 </script>
 
 <template>
-  <section v-if="prompts.length" class="gf-section">
-    <p class="h-label" style="margin-bottom:6px">Did this close?</p>
+  <section v-if="prompts.length" class="bf-section">
+    <div class="bf-head"><p class="h-label">Did this close?</p></div>
+    <div class="bf-body">
 
     <div
       v-for="p in prompts" :key="p.leadId"
@@ -73,6 +74,7 @@ function notYet(p: any) { dismissed.value.push(p.leadId) }
         </button>
         <button class="h-btn h-btn-quiet gf-tap" @click="notYet(p)">Not yet</button>
       </div>
+    </div>
     </div>
   </section>
 </template>
